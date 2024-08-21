@@ -1,17 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
 
-body {
-    font-family: 'Roboto', 'Poppins', 'Montserrat';
-    background: #ececec;
-}
-
 /*------------ Login container ------------*/
-.box-area {
-    width: 1000px;
-    height: 550px;
-    position: relative;
-    z-index: 2; /* Ensures the login container is on top */
-}
+
 
 /*------------ Right box ------------*/
 .right-box {
