@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-3ie-9bx+39e+thj%2v+4k54y72y_4+-y4v+4r7n@t&e7gey9^g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'FireDetection',
+    'livereload',
 ]
 
 MIDDLEWARE = [
@@ -119,9 +120,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILESDIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Adjust path as needed
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

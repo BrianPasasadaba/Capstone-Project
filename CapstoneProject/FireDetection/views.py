@@ -7,7 +7,10 @@ from django.views import View
 # Import the User class (model)
 from django.contrib.auth.models import User
 # Import the User class (model)
+from django.http import FileResponse
 
+def serve_css(request):
+    return FileResponse(open('static/styles/style.css', 'rb'))
 
 def login_view(request):
    return render(request, "login.html")

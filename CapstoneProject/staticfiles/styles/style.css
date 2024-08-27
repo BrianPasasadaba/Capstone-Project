@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+:root{
+    --color-primary: rgb(14, 30, 75);
+    --color-secondary: rgb(237, 112, 39);
+}
+
+/*------------ container ------------*/
+
+body{
+    background-color:white;
+    font-family: 'Poppins', 'Roboto', 'Montserrat';
+}
+.box-area {
+    width: 1200px;
+    height: 650px;
+    position: relative;
+    z-index: 7; /* Ensures the login container is on top */
+}
+.top-bar {
+    position: relative; /* or absolute, depending on your layout needs */
+    z-index: 9; /* Higher than the .box-area z-index */
+}
+
+.top-divider {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: auto; /* Ensures the height adjusts automatically */
+    overflow: hidden; /* Hide overflow to avoid white line */
+}
+
+.top-divider svg {
+    width: 101%;
+    height: auto; /* Keeps the aspect ratio intact */
+    display: block; /* Prevents unnecessary bottom space */
+    margin: 0; /* Ensure no margin is causing the white space */
+    padding: 0;
+}
+
+.custom-shape-divider-bottom-1724214088 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+.custom-shape-divider-bottom-1724214088 svg {
+    position: relative;
+    display: block;
+    width: calc(110% + 1.3px);
+    height: 179px;
+    transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom-1724214088 .shape-fill {
+    fill: #ED7027;
+}
+/*------------ Right box ------------*/
+.right-box {
+    padding: 40px 30px 40px 40px;
+}
+
+/*------------ Custom Placeholder ------------*/
+::placeholder {
+    font-size: 16px;
+}
+
+.rounded-4 {
+    border-radius: 20px;
+}
+
+.rounded-5 {
+    border-radius: 30px;
+}
+
+.btn-login {
+    background-color: #0E1E4B;
+    color: white;
+    transition: background-color 0.6s ease, transform 0.6s ease, color 0.6s ease;
+}
+
+.btn-login:hover {
+    background-color: #41589B; /* Change the background color on hover */
+    transform: scale(1.01); /* Slightly increase the size on hover */
+    color: white;
+}
+
+/*------------ For small screens------------*/
+@media only screen and (max-width: 768px) {
+    .box-area {
+        margin: 0 10px;
+    }
+    .left-box {
+        height: 200px;
+        overflow: hidden;
+    }
+    .right-box {
+        padding: 20px;
+    }
+}

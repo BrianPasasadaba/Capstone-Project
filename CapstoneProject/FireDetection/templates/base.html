@@ -6,74 +6,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css' %}"> 
+    {% comment %} material icons {% endcomment %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% comment %} google fonts {% endcomment %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <title>{% block title %} True the Fire {% endblock %}</title>
 </head>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
-    .box-area {
-        width: 1200px;
-        height: 650px;
-        position: relative;
-        z-index: 7; /* Ensures the login container is on top */
-    }
-    .custom-shape-divider-top-1724219914 {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        overflow: hidden;
-        line-height: 0;
-        transform: rotate(180deg);
-    }
-    
-    .custom-shape-divider-top-1724219914 svg {
-        position: relative;
-        display: block;
-        width: calc(194% + 1.3px);
-        height: 372px;
-        filter: drop-shadow(0px 10px 10px rgba(20, 20, 30, 10));
-    }
-    
-    .custom-shape-divider-top-1724219914 .shape-fill {
-        fill: #0E1E4B;
-    }
-
-    .custom-shape-divider-bottom-1724214088 {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        overflow: hidden;
-        line-height: 0;
-        transform: rotate(180deg);
-    }
-    
-    .custom-shape-divider-bottom-1724214088 svg {
-        position: relative;
-        display: block;
-        width: calc(110% + 1.3px);
-        height: 179px;
-        transform: rotateY(180deg);
-    }
-    
-    .custom-shape-divider-bottom-1724214088 .shape-fill {
-        fill: #ED7027;
-    }
-    
-    body{
-        font-family: 'Poppins', 'Roboto', 'Montserrat';
-    }
-</style>
-
 <body>
     <!-- SVG Background -->
-    <div class="custom-shape-divider-top-1724219914">
-        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
-        </svg>
+    <div class="top-divider">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 308" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M1280 0H0C0.622448 0.989264 1.25128 1.97802 1.88558 2.96628C12.1646 18.9896 24.3198 34.7798 42.5916 49.7217C55.5614 60.3364 69.5221 70.6025 85.945 80.1973C98.7745 87.69 112.822 94.5393 127.987 100.849C144.515 107.727 161.596 114.197 179.764 119.858C214.187 130.592 250.783 137.246 288.546 141.598C300.517 142.977 312.52 143.809 324.524 144.641C330.292 145.041 336.061 145.44 341.827 145.901C348.885 146.465 355.958 146.741 363.016 147.016C364.18 147.061 365.344 147.106 366.507 147.153C375.654 147.522 384.795 147.824 393.927 148.125C395.662 148.182 397.397 148.24 399.132 148.297C405.075 148.498 411.013 148.691 416.953 148.883L416.969 148.883C423.738 149.102 430.508 149.322 437.285 149.554C439.077 149.616 440.868 149.677 442.659 149.739L442.66 149.739C451.333 150.036 460 150.333 468.686 150.714C473.31 150.915 477.945 151.164 482.578 151.414L482.581 151.414L482.583 151.414C489.894 151.807 497.203 152.2 504.469 152.404C515.256 152.706 526.066 153.523 536.844 154.339C537.791 154.41 538.737 154.482 539.684 154.553C550.6 155.376 561.537 156.581 572.454 158.279C586.962 160.538 601.224 163.171 615.315 166.248C642.715 172.224 668.349 180.089 693.367 188.589C712.895 195.227 731.922 202.241 750.521 209.596C761.001 213.738 771.57 217.818 782.138 221.898L782.142 221.9L782.146 221.901C792.921 226.062 803.696 230.222 814.376 234.447C837.628 243.652 861.263 252.583 885.313 261.201C897.148 265.446 909.323 269.44 921.532 273.39C934.275 277.515 947.293 281.368 960.68 284.866C974.846 288.563 989.44 291.534 1004.09 294.412C1016.12 296.775 1028.17 299.109 1040.53 300.67C1045.13 300.907 1049.64 301.623 1054.15 302.34C1058.37 303.01 1062.6 303.681 1066.9 303.96C1068.74 304.079 1070.57 304.182 1072.41 304.285C1078.37 304.621 1084.33 304.956 1090.3 305.825C1095.44 306.283 1100.59 306.597 1105.75 306.9C1121.07 307.789 1136.17 307.982 1150.96 307.344C1181.1 306.045 1210.24 303.273 1237.75 298.381C1252.68 295.721 1266.97 292.514 1280 288.307V0Z" fill="#0E1E4B"/>
+          </svg>
     </div>
     <div class="custom-shape-divider-bottom-1724214088">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
