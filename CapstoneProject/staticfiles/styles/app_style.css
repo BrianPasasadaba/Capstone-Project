@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+/* ======== Root Variables ======== */
+:root{
+    /* ======== Colors ======== */
+    --color-primary: rgb(14, 30, 75);
+    --color-secondary: rgb(237, 112, 39);
+    --color-tertiary: rgb(254, 152, 45);
+    --color-default: rgb(238, 239, 243);
+    --color-sidebar: rgba(65, 88, 155, 0.77);
+    --color-white: #ffffff;
+
+    /* ======== Transition ======== */
+    --tran-02: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
+}
+
+/* ======== Global Styles ======== */
+*{
+    font-family: 'Poppins', 'Roboto', 'Montserrat';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    margin:0;
+    display: grid;
+    min-height: 100vh;
+    grid-template-columns: 
+    repeat(14, 1fr);
+    grid-template-rows: 110px auto;
+    grid-template-areas:
+    "sb sb hd hd hd hd hd hd hd hd hd hd hd hd"
+    "sb sb mn mn mn mn mn mn mn mn mn mn mn mn";
+}
+
+aside,
+main{
+    padding: 16px;
+    text-align: center;
+}
+
+/* ======== HEADER ======== */
+
+header {
+    border: burlywood 3px solid;
+    grid-area: hd;
+    z-index: 2;
+    padding-left: 30px;
+    padding-right: 50px;
+    color: #ffffff;
+}
+
+.header-content {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between; /* Distribute space between the title and links */
+    align-items: end;
+    height: 100%;
+    gap: 1rem;
+}
+
+.navigation-list {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding-bottom: 12px;
+}
+
+.navigation-item a{
+    text-decoration: none;
+    color:white;
+    font-size: large;
+}
+
+.navigation-item a:hover{
+    text-decoration: underline;
+    color:#ED7027;
+}
+/* ======== SIDEBAR ======== */
+
+aside{
+    border: green solid 3px;
+    grid-area: sb;
+    z-index: 2;
+}
+
+.sidebar-content{
+    /* border: 2px solid aqua; */
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar{
+    background-color: var(--color-default);
+    width: 100%;
+    height: 100%;
+    border-radius: 1.5rem;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: hidden;
+    /*
+        - 0px horizontal offset (shadow directly underneath the element)
+        - 4px vertical offset (shadow extends 4px downward)
+        - 8px blur radius (softens the shadow edges)
+        - rgba(0, 0, 0, 0.2) color (semi-transparent black shadow) */
+}
+
+.sb-header{
+    /* border: green solid 2px; */
+    width: 100%;
+    padding-top: 15px;
+}
+.sbheader-logo {
+    /* border: var(--color-secondary) solid 2px; */
+    padding: 10px;
+
+}
+.sb-header img{
+    width: 110px;
+    height: 110px;
+}
+
+.sbheader-text{
+    padding: 10px;
+}
+
+.sb-body {
+    /* border: black solid 2px; */
+    width: 100%;
+    height: 72%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column; /* Aligns nav links vertically */
+}
+
+.sb-body nav {
+    /* border: purple solid 2px; */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Stacks nav links in a column */
+}
+
+.sb-body .nav-link {
+    /* border: red solid 2px; */
+    border-radius: 0.5rem;
+    margin-bottom: 0.8rem;
+    padding: 2px;
+    padding-left: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 1rem;
+    width: 100%;
+}
+
+.sb-body .nav-link:last-child {
+    margin-top: auto; /* Pushes the last nav link to the bottom */
+}
+
+.sb-body .icon{
+    /* border: var(--color-sidebar) solid 2px; */
+    font-size: 28px;
+    color: var(--color-sidebar)
+}
+
+.sb-body .description{
+    /* border: var(--color-sidebar) solid 2px; */
+    font-size: 17px;
+    color: var(--color-sidebar)
+}
+
+.sidebar .nav-link:hover {
+    background: var(--color-primary);
+    cursor: pointer;
+
+}
+
+.sidebar .nav-link:hover .icon,
+.sidebar .nav-link:hover .description {
+    color: var(--color-white);
+}
+
+/* ======== MAIN ======== */
+
+main{
+    border: purple 3px solid;;
+    grid-area: mn;
+    z-index: 2;
+    color: #ED7027;
+}
+
+
+/* ======== Media Queries for Responsive Design ======== */
+
+/* Sidebar adjustments for smaller screens */
+@media (max-width: 1600px) {
+    body{
+        grid-template-areas:
+        "sb hd hd hd hd hd hd hd hd hd hd hd hd hd"
+        "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
+    }
+    .sidebar {
+        width: 80px;
+        border-radius: 1rem;
+    }
+    .sb-header img {
+        width: 60px;
+        height: 60px;
+    }
+    .sb-header .sbheader-logo {
+        margin-bottom: 1rem;
+    }
+    .sb-body .description,
+    .sb-header .sbheader-text {
+        display: none;
+    }
+    .sb-body {
+        height:80%
+    }
+    .sb-body  .nav-link {
+        /* border: var(--color-sidebar) solid 2px; */
+        padding: 0;
+        margin: 0;
+        margin-top: 2px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        justify-content: center;
+        align-content: center;
+    }
+
+}
+/* ======== Divider Styles ======== */
+.top-divider {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: auto; /* Ensures the height adjusts automatically */
+    overflow: hidden; /* Hide overflow to avoid white line */
+    z-index: 1; /* Divider is below content */
+}
+
+.top-divider svg {
+    width: 101%;
+    height: auto; /* Keeps the aspect ratio intact */
+    display: block; /* Prevents unnecessary bottom space */
+    margin: 0; /* Ensure no margin is causing the white space */
+    padding: 0;
+}
+
+.custom-shape-divider-bottom-1724214088 {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+    z-index: 1; /* Divider is below content */
+}
+
+.custom-shape-divider-bottom-1724214088 svg {
+    position: relative;
+    display: block;
+    width: calc(110% + 1.3px);
+    height: 179px;
+    transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom-1724214088 .shape-fill {
+    fill: #ED7027;
+}

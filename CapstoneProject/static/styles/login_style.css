@@ -1,21 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+/* ======== Root Variables ======== */
 :root{
+    /* ======== Colors ======== */
     --color-primary: rgb(14, 30, 75);
     --color-secondary: rgb(237, 112, 39);
     --color-tertiary: rgb(254, 152, 45);
     --color-default: rgb(238, 239, 243);
+    --color-sidebar: rgba(65, 88, 155, 0.77);
     --color-white: #ffffff;
+
+    /* ======== Transition ======== */
+    --tran-02: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
 }
 
-/*------------ container ------------*/
+/* ======== Global Styles ======== */
+body{
+    position: relative;
+}
 
 *{
-    background-color: var(--color-secondary);
     font-family: 'Poppins', 'Roboto', 'Montserrat';
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+/* ======== Container Styles ======== */
+.container {
+    position: relative;
+    z-index: 5;
+}
+
 .box-area {
     width: 1200px;
     height: 650px;
@@ -23,13 +42,15 @@
     z-index: 7; /* Ensures the login container is on top */
 }
 
+/* ======== Divider Styles ======== */
 .top-divider {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     width: 100%;
     height: auto; /* Ensures the height adjusts automatically */
     overflow: hidden; /* Hide overflow to avoid white line */
+    z-index: 2;
 }
 
 .top-divider svg {
@@ -38,38 +59,57 @@
     display: block; /* Prevents unnecessary bottom space */
     margin: 0; /* Ensure no margin is causing the white space */
     padding: 0;
+    z-index: 2;
 }
 
 .custom-shape-divider-bottom-1724214088 {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     overflow: hidden;
     line-height: 0;
     transform: rotate(180deg);
+    z-index: 2;
 }
+
 .custom-shape-divider-bottom-1724214088 svg {
     position: relative;
     display: block;
     width: calc(110% + 1.3px);
     height: 179px;
     transform: rotateY(180deg);
+    z-index: 2;
 }
 
 .custom-shape-divider-bottom-1724214088 .shape-fill {
     fill: #ED7027;
 }
-/*------------ Right box ------------*/
+
+/* ======== Right Box Styles ======== */
 .right-box {
     padding: 40px 30px 40px 40px;
 }
 
-/*------------ Custom Placeholder ------------*/
+/* ======== Button Styles ======== */
+.right-box .btn-login {
+    background-color: var(--color-primary);
+    color: white !important;
+    transition: ease-in-out 0.1s, transform 0.1s ease-in-out 0.1s;
+}
+
+.btn-login:hover {
+    background-color: var(--color-sidebar); /* Change the background color on hover */
+    transform: scale(1.01); /* Slightly increase the size on hover */
+    color: white;
+}
+
+/* ======== Placeholder Styles ======== */
 ::placeholder {
     font-size: 16px;
 }
 
+/* ======== Rounded Corners ======== */
 .rounded-4 {
     border-radius: 20px;
 }
@@ -78,19 +118,9 @@
     border-radius: 30px;
 }
 
-.btn-login {
-    background-color: #0E1E4B;
-    color: white;
-    transition: background-color 0.6s ease, transform 0.6s ease, color 0.6s ease;
-}
+/* ======== Media Queries for Responsive Design ======== */
 
-.btn-login:hover {
-    background-color: #41589B; /* Change the background color on hover */
-    transform: scale(1.01); /* Slightly increase the size on hover */
-    color: white;
-}
-
-/*------------ For small screens------------*/
+/* Small screens */
 @media only screen and (max-width: 768px) {
     .box-area {
         margin: 0 10px;
@@ -101,5 +131,8 @@
     }
     .right-box {
         padding: 20px;
+    }
+    .left-box .featured-image {
+        margin-top: 3.5rem;
     }
 }
