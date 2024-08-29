@@ -19,7 +19,7 @@
      /* ======== Border Radius ======== */
      --border-radius-small: 1.5rem;
      --border-radius-medium: 2rem;
-     --border-radius-large: 2.5rem;
+     --border-radius-button: 1rem;
 
 }
 
@@ -274,7 +274,7 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 3rem;
+    gap: 2rem;
     overflow-x: auto;
     color: var(--color-primary);
 }
@@ -287,6 +287,19 @@ main{
     align-content: center;
 }
 
+.create-button{
+    /* border: var(--color-secondary) solid 3px; */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-create{
+    background-color: var(--color-tertiary) !important;
+}
+
 
 
 
@@ -294,7 +307,7 @@ main{
 /* ======== Media Queries for Responsive Design ======== */
 
 /* Sidebar adjustments for smaller screens */
-@media (max-width: 1400px) {
+@media (max-width: 1500px) {
     body {
         grid-template-columns: 85px 1fr; /* Sidebar is 80px, rest of the space is for the main content */
         grid-template-areas:
