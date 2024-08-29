@@ -16,17 +16,10 @@
 </head>
 
 <body>
-    <header>
-        <div class="header-content">
-            <span class="navigation-title">
-                <h1>Analytics</h1>
-            </span>
-            <ul class="navigation-list">
-                <li class="navigation-item"><a href="#">Hotline</a></li>
-                <li class="navigation-item"><a href="#">Hannah Grace Santos</a></li>
-            </ul>
-        </div>
-    </header>
+<!-- FOR CONTENT THAT NEEDS TO BE SHOWN ON EVERY HTML USING SIDEBAR, ADD CODE ABOVE THE CONTENT BLOCK -->
+{%block content%}
+<!-- DO NOT ADD CONTENT HERE -->
+{%endblock%}
     <aside>
         <div class="sidebar-content">
             <div class="sidebar">
@@ -76,9 +69,7 @@
         </div>
 
     </aside>
-    <main>
-        <h1>Main Content</h1>
-    </main>
+
     <!-- SVG Background -->
     <div class="top-divider">
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 308" fill="none">
@@ -93,14 +84,6 @@
         </svg>
     </div>
 
-
-
-
-
-    <!-- FOR CONTENT THAT NEEDS TO BE SHOWN ON EVERY HTML USING BASE, ADD CODE ABOVE THE CONTENT BLOCK -->
-    {%block content%}
-    <!-- DO NOT ADD CONTENT HERE -->
-    {%endblock%}
 
     <!-- FOR SCRIPTS THAT NEED TO BE ADDED ON EVERY PAGE USING BASE, ADD CODE ABOVE THE SCRIPT BLOCK -->
     {%block scripts%}

@@ -15,6 +15,12 @@
     --tran-03: all 0.3s ease;
     --tran-04: all 0.4s ease;
     --tran-05: all 0.5s ease;
+
+     /* ======== Border Radius ======== */
+     --border-radius-small: 1.5rem;
+     --border-radius-medium: 2rem;
+     --border-radius-large: 2.5rem;
+
 }
 
 /* ======== Global Styles ======== */
@@ -26,15 +32,14 @@
 }
 
 body{
-    margin:0;
+     margin: 0;
     display: grid;
     min-height: 100vh;
-    grid-template-columns: 
-    repeat(14, 1fr);
+    grid-template-columns: calc(100% / 13 * 2) 1fr; /* Adjust to account for the fixed sidebar */
     grid-template-rows: 110px auto;
     grid-template-areas:
-    "sb sb hd hd hd hd hd hd hd hd hd hd hd hd"
-    "sb sb mn mn mn mn mn mn mn mn mn mn mn mn";
+    "sb hd hd hd hd hd hd hd hd hd hd hd hd hd"
+    "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
 }
 
 aside,
@@ -46,15 +51,18 @@ main{
 /* ======== HEADER ======== */
 
 header {
-    border: burlywood 3px solid;
+    /* border: burlywood 3px solid; */
     grid-area: hd;
     z-index: 2;
     padding-left: 30px;
     padding-right: 50px;
     color: #ffffff;
+    white-space: nowrap; /* Prevent the content from wrapping */
+    overflow: hidden; /* Hide any overflow content */
 }
 
 .header-content {
+    /* border: burlywood 3px solid; */
     margin: 0;
     padding: 0;
     display: flex;
@@ -65,27 +73,34 @@ header {
 }
 
 .navigation-list {
+    /* border: white 2px solid; */
     list-style: none;
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
     margin: 0;
     padding-bottom: 12px;
+    white-space: nowrap;
 }
+
+/* .navigation-item {
+    border: green 2px solid;
+} */
+
 
 .navigation-item a{
     text-decoration: none;
     color:white;
     font-size: large;
+    white-space: nowrap;
 }
 
 .navigation-item a:hover{
-    text-decoration: underline;
     color:#ED7027;
 }
 /* ======== SIDEBAR ======== */
 
 aside{
-    border: green solid 3px;
+    /* border: green solid 3px; */
     grid-area: sb;
     z-index: 2;
 }
@@ -100,16 +115,14 @@ aside{
 
 .sidebar{
     background-color: var(--color-default);
-    width: 100%;
-    height: 100%;
-    border-radius: 1.5rem;
+    position: fixed; /* Make the sidebar fixed on the side */
+    top: 1rem; /* Align it to the top of the viewport */
+    left: 1rem; /* Align it to the left of the viewport */
+    width: calc(100% / 14 * 2); /* Adjust width according to your grid layout */
+    height: 96.5vh; /* Full height to cover the entire viewport */
+    border-radius: var(--border-radius-small);
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
-    overflow-y: hidden;
-    /*
-        - 0px horizontal offset (shadow directly underneath the element)
-        - 4px vertical offset (shadow extends 4px downward)
-        - 8px blur radius (softens the shadow edges)
-        - rgba(0, 0, 0, 0.2) color (semi-transparent black shadow) */
+    overflow-y: hidden; /* Enable scrolling inside the sidebar if content overflows */
 }
 
 .sb-header{
@@ -136,6 +149,7 @@ aside{
     width: 100%;
     height: 72%;
     padding: 12px;
+    justify-content: center;
     display: flex;
     flex-direction: column; /* Aligns nav links vertically */
 }
@@ -151,13 +165,13 @@ aside{
 .sb-body .nav-link {
     /* border: red solid 2px; */
     border-radius: 0.5rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.9rem;
     padding: 2px;
-    padding-left: 1.2rem;
+    padding-left: 2rem;
     display: flex;
     align-items: center;
     justify-content: start;
-    gap: 1rem;
+    gap: 1.5rem;
     width: 100%;
 }
 
@@ -167,13 +181,14 @@ aside{
 
 .sb-body .icon{
     /* border: var(--color-sidebar) solid 2px; */
-    font-size: 28px;
+    font-size: 30px;
     color: var(--color-sidebar)
 }
 
 .sb-body .description{
     /* border: var(--color-sidebar) solid 2px; */
-    font-size: 17px;
+    font-size: 19px;
+    font-weight: 500;
     color: var(--color-sidebar)
 }
 
@@ -191,24 +206,104 @@ aside{
 /* ======== MAIN ======== */
 
 main{
-    border: purple 3px solid;;
+    /* border: purple 3px solid; */
     grid-area: mn;
     z-index: 2;
     color: #ED7027;
 }
 
+.mn-content-area{
+    /* border: red solid 2px; */
+    width: 100%;
+    height: 100%;
+}
+
+.surveillance-box{
+    background-color: var(--color-default);
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius-small);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.surveillance-info{
+    /* border: blue solid 3px; */
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns of equal width */
+    grid-template-rows: auto auto; /* Two rows that adjust to the content */
+    grid-template-areas:
+    "bl dt"
+    "lc tm";
+    gap: 10px;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.surveillance-date{
+    grid-area: dt;
+}
+.surveillance-time{
+    grid-area: tm;
+}
+
+.surveillance-date,
+.surveillance-time{
+    display: flex;
+    justify-content: end;
+    padding-right: 2rem;
+}
+
+.surveillance-loc{
+    grid-area: lc;
+    display: flex;
+    justify-content: start;
+    padding-left: 2rem;
+}
+
+.surveillance-body{
+    /* border: var(--color-primary) solid 3px; */
+    width: 100%;
+    padding:2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    overflow-x: auto;
+    color: var(--color-primary);
+}
+
+.surveillance-feed{
+    border: var(--color-secondary) solid 3px;
+    width: 1000px;
+    height: 500px;
+    border-radius: var(--border-radius-medium);
+    align-content: center;
+}
+
+
+
+
 
 /* ======== Media Queries for Responsive Design ======== */
 
 /* Sidebar adjustments for smaller screens */
-@media (max-width: 1600px) {
-    body{
+@media (max-width: 1400px) {
+    body {
+        grid-template-columns: 85px 1fr; /* Sidebar is 80px, rest of the space is for the main content */
         grid-template-areas:
         "sb hd hd hd hd hd hd hd hd hd hd hd hd hd"
         "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
     }
     .sidebar {
         width: 80px;
+        left: 0.5rem;
         border-radius: 1rem;
     }
     .sb-header img {
@@ -237,6 +332,29 @@ main{
     }
 
 }
+
+/* Main-Surveillance adjustments for smaller screens */
+@media (max-width: 920px) {
+    .surveillance-info{
+        grid-template-columns: 1fr; /* Two columns of equal width */
+        grid-template-rows: auto auto auto; /* Two rows that adjust to the content */
+        grid-template-areas:
+        "dt"
+        "tm"
+        "lc";
+    }
+    .surveillance-date,
+    .surveillance-time,
+    .surveillance-loc{
+        justify-content: center;
+        padding: 0;
+    }
+
+    .header-content {
+        align-items: center;
+    }
+}
+
 /* ======== Divider Styles ======== */
 .top-divider {
     position: fixed;

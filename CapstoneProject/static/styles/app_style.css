@@ -15,6 +15,12 @@
     --tran-03: all 0.3s ease;
     --tran-04: all 0.4s ease;
     --tran-05: all 0.5s ease;
+
+     /* ======== Border Radius ======== */
+     --border-radius-small: 1.5rem;
+     --border-radius-medium: 2rem;
+     --border-radius-large: 2.5rem;
+
 }
 
 /* ======== Global Styles ======== */
@@ -46,12 +52,14 @@ main{
 /* ======== HEADER ======== */
 
 header {
-    border: burlywood 3px solid;
+    /* border: burlywood 3px solid; */
     grid-area: hd;
     z-index: 2;
     padding-left: 30px;
     padding-right: 50px;
     color: #ffffff;
+    white-space: nowrap; /* Prevent the content from wrapping */
+    overflow: hidden; /* Hide any overflow content */
 }
 
 .header-content {
@@ -65,27 +73,34 @@ header {
 }
 
 .navigation-list {
+    /* border: white 2px solid; */
     list-style: none;
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
     margin: 0;
     padding-bottom: 12px;
+    white-space: nowrap;
 }
+
+/* .navigation-item {
+    border: green 2px solid;
+} */
+
 
 .navigation-item a{
     text-decoration: none;
     color:white;
     font-size: large;
+    white-space: nowrap;
 }
 
 .navigation-item a:hover{
-    text-decoration: underline;
     color:#ED7027;
 }
 /* ======== SIDEBAR ======== */
 
 aside{
-    border: green solid 3px;
+    /* border: green solid 3px; */
     grid-area: sb;
     z-index: 2;
 }
@@ -102,7 +117,7 @@ aside{
     background-color: var(--color-default);
     width: 100%;
     height: 100%;
-    border-radius: 1.5rem;
+    border-radius: var(--border-radius-small);
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
     overflow-y: hidden;
     /*
@@ -151,7 +166,7 @@ aside{
 .sb-body .nav-link {
     /* border: red solid 2px; */
     border-radius: 0.5rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.9rem;
     padding: 2px;
     padding-left: 1.2rem;
     display: flex;
@@ -191,12 +206,26 @@ aside{
 /* ======== MAIN ======== */
 
 main{
-    border: purple 3px solid;;
+    /* border: purple 3px solid; */
     grid-area: mn;
     z-index: 2;
     color: #ED7027;
 }
 
+.mn-content-area{
+    /* border: red solid 2px; */
+    width: 100%;
+    height: 100%;
+}
+
+.surveillance-box{
+    background-color: var(--color-default);
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    border-radius: var(--border-radius-small);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
 
 /* ======== Media Queries for Responsive Design ======== */
 
