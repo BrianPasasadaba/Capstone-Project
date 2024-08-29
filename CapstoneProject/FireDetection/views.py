@@ -15,6 +15,9 @@ def serve_css(request):
 def login_view(request):
    return render(request, "login.html")
 
+def analytics_view(request):
+   return render(request, "analytics.html")
+
 # Create your views here.
 def home_view(request):
     return render(request, "home.html")

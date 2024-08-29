@@ -98,7 +98,7 @@ header {
 .navigation-item a:hover{
     color:#ED7027;
 }
-/* ======== SIDEBAR ======== */
+/* ================================  SIDEBAR ================================  */
 
 aside{
     /* border: green solid 3px; */
@@ -204,7 +204,7 @@ aside{
     color: var(--color-white);
 }
 
-/* ======== MAIN ======== */
+/* ================================  MAIN ================================  */
 
 main{
     /* border: purple 3px solid; */
@@ -214,7 +214,7 @@ main{
 }
 
 .mn-content-area{
-    /* border: red solid 2px; */
+    border: red solid 2px;
     width: 100%;
     height: 100%;
 }
@@ -319,13 +319,7 @@ main{
     transform: scale(1.05);
 }
 
-
-
-
-
-
-
-/* ======== Media Queries for Responsive Design ======== */
+/* ================================  Media Queries for Responsive Design ================================  */
 
 /* Sidebar adjustments for smaller screens */
 @media (max-width: 1500px) {
@@ -364,6 +358,7 @@ main{
         justify-content: center;
         align-content: center;
     }
+/* Surveillance adjustments for smaller screens */
     .surveillance-feed{
         width: 800px;
     }
