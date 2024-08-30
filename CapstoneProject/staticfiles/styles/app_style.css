@@ -10,6 +10,8 @@
     --color-default: rgb(238, 239, 243);
     --color-sidebar: rgba(65, 88, 155, 0.77);
     --color-white: #ffffff;
+    --color-shadow: rgba(0, 0, 0, 0.2);
+    --color-shadow-min: rgba(132, 139, 200, 0.18);
 
     /* ======== Transition ======== */
     --tran-02: all 0.2s ease;
@@ -18,9 +20,21 @@
     --tran-05: all 0.5s ease;
 
      /* ======== Border Radius ======== */
-     --border-radius-small: 1.5rem;
-     --border-radius-medium: 2rem;
+     --border-radius-small: 0.5rem;
+     --border-radius-sidebar: 1.5rem;
+     --border-radius-card: 2rem;
      --border-radius-button: 1rem;
+
+     /* ======== Padding ======== */
+     --card-padding: 1.8rem;
+     --padding-1: 1rem;
+     --padding-2: 2rem;
+     --padding-3: 3rem;
+     --padding-half: 0.5rem;
+
+     /* ======== Shadow ======== */
+     --box-shadow: 4px 4px 8px var(--color-shadow);
+     --box-shadow-min: 0 2rem 3rem var(--color-shadow-min);
 
 }
 
@@ -45,7 +59,7 @@ body{
 
 aside,
 main{
-    padding: 16px;
+    padding: 1rem;
     text-align: center;
 }
 
@@ -55,8 +69,8 @@ header {
     /* border: burlywood 3px solid; */
     grid-area: hd;
     z-index: 2;
-    padding-left: 30px;
-    padding-right: 50px;
+    padding-left: 2rem;
+    padding-right: 3rem;
     color: #ffffff;
     white-space: nowrap; /* Prevent the content from wrapping */
     overflow: hidden; /* Hide any overflow content */
@@ -79,7 +93,7 @@ header {
     display: flex;
     gap: 2rem;
     margin: 0;
-    padding-bottom: 12px;
+    padding-bottom: 0.5rem;
     white-space: nowrap;
 }
 
@@ -121,19 +135,19 @@ aside{
     left: 1rem; /* Align it to the left of the viewport */
     width: calc(100% / 14 * 2); /* Adjust width according to your grid layout */
     height: 96.5vh; /* Full height to cover the entire viewport */
-    border-radius: var(--border-radius-small);
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sidebar);
+    box-shadow: var(--box-shadow);
     overflow-y: hidden; /* Enable scrolling inside the sidebar if content overflows */
 }
 
 .sb-header{
     /* border: green solid 2px; */
     width: 100%;
-    padding-top: 15px;
+    padding-top: 1rem;
 }
 .sbheader-logo {
     /* border: var(--color-secondary) solid 2px; */
-    padding: 10px;
+    padding: 0.5rem;
 
 }
 .sb-header img{
@@ -142,14 +156,14 @@ aside{
 }
 
 .sbheader-text{
-    padding: 10px;
+    padding: 1rem;
 }
 
 .sb-body {
     /* border: black solid 2px; */
     width: 100%;
     height: 72%;
-    padding: 12px;
+    padding: 0.5rem;
     justify-content: center;
     display: flex;
     flex-direction: column; /* Aligns nav links vertically */
@@ -166,13 +180,13 @@ aside{
 .sb-body .nav-link {
     /* border: red solid 2px; */
     border-radius: 0.5rem;
-    margin-bottom: 0.9rem;
+    margin-bottom: 1rem;
     padding: 2px;
     padding-left: 2rem;
     display: flex;
     align-items: center;
     justify-content: start;
-    gap: 1.5rem;
+    gap: 1.2rem;
     width: 100%;
 }
 
@@ -214,16 +228,19 @@ main{
 }
 
 .mn-content-area{
-    border: red solid 2px;
+    /* border: red solid 2px; */
     width: 100%;
     height: 100%;
 }
+
+
+/* ============================== SURVEILLANCE ============================== */
 
 .surveillance-box{
     background-color: var(--color-default);
     width: 100%;
     height: 100%;
-    padding-top: 16px;
+    padding-top: 1rem;
     padding-left: 3rem;
     padding-right: 3rem;
     padding-bottom: 0;
@@ -231,15 +248,17 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: var(--border-radius-small);
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sidebar);
+    box-shadow: var(--box-shadow);
 }
 
 .surveillance-info{
-    /* border: blue solid 3px; */
+    border: var(--color-primary) solid 2px;
+    background-color: #ffffff;
     width: 100%;
     height: auto;
-    padding: 10px;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-button);
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two columns of equal width */
     grid-template-rows: auto auto; /* Two rows that adjust to the content */
@@ -292,18 +311,8 @@ main{
     background-color: #ffffff;
     width: 1000px;
     height: 500px;
-    border-radius: var(--border-radius-medium);
+    border-radius: var(--border-radius-card);
     align-content: center;
-}
-
-.create-button{
-    /* border: var(--color-secondary) solid 3px;
-    */
-    padding-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .btn-create{
@@ -311,7 +320,7 @@ main{
     border: none;
     border-radius: var(--border-radius-button);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    transition: ease-in-out 0.15s, transform 0.15s ease-in-out 0.15s;
+    transition: all 0.3s ease;
 }
 
 .btn-create:hover{
@@ -368,6 +377,8 @@ main{
 /* Main-Surveillance adjustments for smaller screens */
 @media (max-width: 920px) {
     .surveillance-info{
+        border: none;
+        background-color: var(--color-default);
         grid-template-columns: 1fr; /* Two columns of equal width */
         grid-template-rows: auto auto auto; /* Two rows that adjust to the content */
         grid-template-areas:
@@ -383,6 +394,15 @@ main{
         padding: 0;
     }
 
+    .surveillance-date,
+    .surveillance-time,
+    .surveillance-loc{
+        padding-top: 0.5rem;
+        border: var(--color-primary) 2px solid;
+        border-radius: var(--border-radius-small);
+        background-color: #ffffff;
+    }
+
     .header-content {
         align-items: center;
     }
@@ -393,6 +413,312 @@ main{
         width: 700px;
     }
 }
+
+
+/* ============================== ANALYTICS ============================== */
+
+.analyses-box {
+    display: grid;
+    margin: var(--padding-half);
+    grid-template-columns: repeat(3, 1.2fr) 1.5fr;
+    gap: 1.5rem;
+}
+
+.analyses-box > div{
+    background-color: var(--color-default);
+    /* border: #ED7027 solid 1.5px;  */
+    padding: var(--padding-half);
+    border-radius: var(--border-radius-button);
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.analyses-box > div:hover{
+    box-shadow: none;
+}
+
+.analyses-box > div .status{
+    /* border: #ED7027 solid 1.5px;  */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.analyses-box > div .stat-label{
+    /* border: #ED7027 solid 1.5px;  */
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: space-evenly;
+}
+.analyses-box > div .stat-info{
+    /* border: #ED7027 solid 1.5px;  */
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+
+.analyses-box > div .stat-progress{
+   /* border: #ED7027 solid 1.5px; */
+   margin-left: 1.5rem;
+   position: relative;
+   width: 92px;
+   height: 92px;
+   border-radius: 50%;
+}
+
+.analyses-box svg{
+    width: 7rem;
+    height: 7rem;
+}
+
+.analyses-box svg circle{
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transform: translate(5px, 5px);
+}
+
+.analyses-box .stat-progress .prog-text{
+    position: absolute;
+    top: 8px;
+    left: -1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-sidebar);
+}
+
+
+.analyses-box .detected-card svg circle{
+    stroke: var(--color-tertiary);
+    stroke-dashoffset: -30;
+    stroke-dasharray: 210;
+}
+.analyses-box .reported-card svg circle{
+    stroke: var(--color-sidebar);
+    stroke-dashoffset: -30;
+    stroke-dasharray: 210;
+}
+.analyses-box .responded-card svg circle{
+    stroke: var(--color-primary);
+    stroke-dashoffset: -30;
+    stroke-dasharray: 210;
+}
+.analyses-box .total-responded-card svg circle{
+    stroke: var(--color-secondary);
+    stroke-dashoffset: -30;
+    stroke-dasharray: 210;
+}
+
+.analyses-box h5{
+    /* border: #ED7027 solid 1.5px;  */
+    color: var(--color-primary);
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.analyses-box h6{
+    /* border: #ED7027 solid 1.5px;  */
+    color: var(--color-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+
+}
+
+.analyses-box h4{
+    color: var(--color-secondary);
+    font-weight: 600;
+    font-size: 50px;
+   /* border: #ED7027 solid 1.5px;  */
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+}
+
+.chart-detect-box{
+    /* border: green 2px solid; */
+    height: 60vh;
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 3.8fr 1.5fr;
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+.chart-card{
+    background-color: var(--color-default);
+    border: var(--color-secondary) 1px solid;
+    width: 100%;
+    height: 100%;
+    border-radius:var(--border-radius-button);
+    padding: var(--padding-1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: start;
+    align-items: center;
+}
+
+.chart-header{
+    /* border: var(--color-secondary) 1px solid; */
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    color: var(--color-primary);
+    white-space:nowrap;
+    padding-top: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.chart-graph{
+    /* border: var(--color-secondary) 1px solid; */
+    border-radius: var(--border-radius-small);
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-primary);
+    white-space:nowrap;
+}
+
+
+.detect-card{
+    background-color: var(--color-default);
+    border: var(--color-secondary) 1px solid;
+    width: 100%;
+    height: 100%;
+    border-radius:var(--border-radius-button);
+    padding: var(--padding-1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: start;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.detect-header{
+    /* border: var(--color-secondary) 1px solid; */
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    color: var(--color-primary);
+    white-space:nowrap;
+    padding-top: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.detect-body{
+    /* border: var(--color-secondary) 1px solid; */
+    border-radius: var(--border-radius-small);
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    color: var(--color-primary);
+    white-space:nowrap;
+    padding: var(--padding-1);
+    gap: 0.2rem;
+}
+
+.detect-body > div{
+    background-color: var(--color-default);
+    border: #ED7027 solid 1.5px;
+    padding: var(--padding-half);
+    border-radius: var(--border-radius-small);
+    box-shadow: var(--box-shadow-min);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    padding-bottom: 0;
+    overflow: hidden;
+    white-space:nowrap;
+}
+
+.detect-body > div .dc-info{
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+    /* border: #ED7027 solid 1.5px;  */
+}
+
+.detect-body > div .dc-header{
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+    align-items: start;
+    border-bottom: #ED7027 solid 1.5px;
+}
+
+.detect-body > div .dc-date-time{
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    /* border: #ED7027 solid 1.5px; */
+}
+
+/* ================================  Media Queries for Responsive Design ================================  */
+
+/* Analytics adjustments for smaller screens */
+@media (max-width: 1220px) {
+    .analyses-box {
+        grid-template-columns: repeat(2, 1fr);
+        
+    }
+
+    .chart-detect-box{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        height: auto;
+    }
+    .detect-card{
+        width:60%;
+    }
+
+}
+
+@media (max-width: 700px) {
+    .analyses-box {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-detect-box{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        height: auto;
+    }
+    .detect-card{
+        width:90%;
+    }
+
+}
+
+
+
 
 /* ======== Divider Styles ======== */
 .top-divider {
