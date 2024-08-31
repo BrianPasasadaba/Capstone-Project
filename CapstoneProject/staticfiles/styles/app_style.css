@@ -72,7 +72,7 @@ header {
     padding-left: 2rem;
     padding-right: 3rem;
     color: #ffffff;
-    white-space: nowrap; /* Prevent the content from wrapping */
+    white-space: nowrap;
     overflow: hidden; /* Hide any overflow content */
 }
 
@@ -557,7 +557,7 @@ main{
 
 .chart-card{
     background-color: var(--color-default);
-    border: var(--color-secondary) 1px solid;
+    border: var(--color-secondary) 0.5px solid;
     width: 100%;
     height: 100%;
     border-radius:var(--border-radius-button);
@@ -567,6 +567,7 @@ main{
     gap: 1rem;
     justify-content: start;
     align-items: center;
+    box-shadow: var(--box-shadow);
 }
 
 .chart-header{
@@ -581,6 +582,10 @@ main{
     padding-left: 0.5rem;
 }
 
+.chart-header h1{
+    font-weight: 600;
+}
+
 .chart-graph{
     /* border: var(--color-secondary) 1px solid; */
     border-radius: var(--border-radius-small);
@@ -593,12 +598,100 @@ main{
     align-items: center;
     color: var(--color-primary);
     white-space:nowrap;
+    padding: var(--padding-half);
 }
 
+.chart{
+    /* border: var(--color-secondary) 1px solid; */
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    padding: var(--padding-1);
+    padding-top: var(--padding-2);
+    justify-content: start;
+    gap:0.5rem;
+    overflow: auto;
+}
+
+.incident-count{
+    /* border: var(--color-secondary) 1px solid; */
+    width: 75px;
+    height: 350px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+
+}
+
+.incident-count span{
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.incident-bars{
+    width: 800px;
+    height: 100%;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem;
+    padding-top: 0;
+    margin: 0;
+    align-items: start;
+    justify-content: space-evenly;
+    gap: 6rem;
+}
+
+.incident-bars li{
+    /* border: green 1px solid; */
+    display: table-cell;
+    width: 100px;
+    height: 350px;
+    position: relative;
+}
+
+.incident-bars span{
+    /* border: var(--color-primary) 1px solid; */
+    width: 100%;
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    text-align: center;
+}
+
+.incident-bars .bar{
+    display: block;
+    background: orange;
+    width: 75px;
+    position: absolute;
+    margin-left: 10px;
+    bottom: 0;
+    text-align: center;
+    transition: 0.5s;
+    transition-property: background, var(--box-shadow);
+}
+
+.incident-bars .bar:hover{
+    background-color: var(--color-primary);
+    box-shadow: var(--box-shadow)
+}
+
+.incident-bars .bar:before{
+    color: var(--color-sidebar);
+    content: attr(data-percentage) '+';
+    position: relative;
+    bottom: 30px;
+}
 
 .detect-card{
     background-color: var(--color-default);
-    border: var(--color-secondary) 1px solid;
+    border: var(--color-secondary) 0.5px solid;
     width: 100%;
     height: 100%;
     border-radius:var(--border-radius-button);
@@ -608,7 +701,7 @@ main{
     gap: 1rem;
     justify-content: start;
     align-items: center;
-    overflow-y: auto;
+    box-shadow: var(--box-shadow);
 }
 
 .detect-header{
@@ -621,6 +714,10 @@ main{
     white-space:nowrap;
     padding-top: 0.5rem;
     padding-left: 0.5rem;
+}
+
+.detect-header h1{
+    font-weight: 600;
 }
 
 .detect-body{
@@ -637,6 +734,7 @@ main{
     white-space:nowrap;
     padding: var(--padding-1);
     gap: 0.2rem;
+    overflow-x: auto;
 }
 
 .detect-body > div{
@@ -648,6 +746,7 @@ main{
     cursor: pointer;
     transition: all 0.3s ease;
     width: 100%;
+    min-width: 200px;
     padding-bottom: 0;
     overflow: hidden;
     white-space:nowrap;
@@ -658,6 +757,7 @@ main{
     flex-direction: column;
     white-space: nowrap;
     /* border: #ED7027 solid 1.5px;  */
+    overflow: hidden;
 }
 
 .detect-body > div .dc-header{
@@ -683,7 +783,6 @@ main{
 @media (max-width: 1220px) {
     .analyses-box {
         grid-template-columns: repeat(2, 1fr);
-        
     }
 
     .chart-detect-box{
@@ -693,8 +792,17 @@ main{
         justify-content: start;
         height: auto;
     }
+
+    .chart{
+        justify-content: start;
+    }
+
     .detect-card{
-        width:60%;
+        width:50%;
+    }
+
+    .incident-bars{
+        gap: 1rem;
     }
 
 }
@@ -711,13 +819,16 @@ main{
         justify-content: start;
         height: auto;
     }
+
     .detect-card{
-        width:90%;
+        width:80%;
+    }
+
+    .incident-bars{
+        gap: 0;
     }
 
 }
-
-
 
 
 /* ======== Divider Styles ======== */

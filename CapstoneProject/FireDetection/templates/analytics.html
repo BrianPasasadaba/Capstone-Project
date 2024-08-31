@@ -22,8 +22,8 @@
 
 <main>
     <div class="mn-content-area">
-        {% comment %} 4 STATUS BOX {% endcomment %}
         <div class="analyses-box">
+        <!--4 ANALYSES BOX START-->
             <div class="detected-card">
                 <div class="status">
                     <div class="stat-progress">
@@ -112,24 +112,46 @@
                     </div>
                 </div>
             </div>
+<!--4 ANALYSES BOX END-->
         </div>
 
-        {% comment %} CHART AND LATEST DETECT {% endcomment %}
+{% comment %} CHART AND LATEST DETECT {% endcomment %}
 
         <div class="chart-detect-box">
             <div class="chart-card">
                 <div class="chart-header">
-                    <h1>chart-header</h1>
+                    <h1>INCIDENTS</h1>
                 </div>
                 <div class="chart-graph">
-                    <h1>chart-graph</h1>
+<!--CHART START-->
+                    <div class="chart">
+                            <ul class="incident-count">
+                                <li><span>100</span></li>
+                                <li><span>75</span></li>
+                                <li><span>50</span></li>
+                                <li><span>25</span></li>
+                                <li><span>0</span></li>
+                            </ul>
+                            <ul class="incident-bars">
+                                <li><div class="bar" data-percentage="55" style="background: #E4AE7E;"></div><span>Option 01</span></li>
+                                <li><div class="bar" data-percentage="85" style="background: #E08E44;"></div><span>Option 02</span></li>
+                                <li><div class="bar" data-percentage="75" style="background: #ED7027;"></div><span>Option 03</span></li>
+                                <li><div class="bar" data-percentage="50" style="background: #E4AE7E;"></div><span>Option 04</span></li>
+                                <li><div class="bar" data-percentage="90" style="background: #3C4273;"></div><span>Option 05</span></li>
+                                <li><div class="bar" data-percentage="75" style="background: #FE982D;"></div><span>Option 06</span></li>
+                                <li><div class="bar" data-percentage="60" style="background: #FEBF4D;"></div><span>Option 07</span></li>
+                            </ul>
+                    </div>
+<!--CHART END-->
                 </div>
             </div>
+
             <div class="detect-card">
                 <div class="detect-header">
-                    <h1>detect-header</h1>
+                    <h1>LATEST</h1>
                 </div>
                 <div class="detect-body">
+<!--LATEST DETECT START-->
                     <div class="detect-content-1">
                         <div class="dc-info">
                             <div class="dc-header">
@@ -186,44 +208,9 @@
                         </div>
                     </div>
                 </div>
+<!--LATEST DETECT END-->
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
 </main>
 
@@ -233,5 +220,8 @@
 
 {% block scripts %}
 <!-- ADD SCRIPTS HERE -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="{% static 'js/chart_analytics.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 {% endblock %}
