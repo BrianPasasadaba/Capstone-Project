@@ -62,11 +62,9 @@ def logout_view(request):
 def analytics_view(request):
    return render(request, "analytics.html")
 
-<<<<<<< HEAD
-=======
+
 def reports_view(request):
    return render(request, "reports.html")
->>>>>>> d4b3e2ed0c7ef0179fb9ecd7602a43ff8676c466
 
 # Create your views here.
 @login_required
