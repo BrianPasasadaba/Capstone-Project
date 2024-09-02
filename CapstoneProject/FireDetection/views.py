@@ -18,6 +18,9 @@ def login_view(request):
 def analytics_view(request):
    return render(request, "analytics.html")
 
+def reports_view(request):
+   return render(request, "reports.html")
+
 # Create your views here.
 def home_view(request):
     return render(request, "home.html")
