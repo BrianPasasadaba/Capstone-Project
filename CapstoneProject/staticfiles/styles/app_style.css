@@ -1048,9 +1048,28 @@ main{
 }
 
 
+.rb-table .form-check{
+    /* border: var(--color-primary) 1px solid; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.rb-table .form-check-input{
+    width: 1.5rem;
+    height: 1.5rem;
+    border: #ED7027 2px solid;
+}
 
+.rb-table .form-check-input:checked {
+    background-color: var(--color-tertiary);
+    border-color: var(--color-tertiary);
+}
 
+.rb-table .form-check-input:focus {
+    box-shadow: 0 0 5px 3px var(--color-shadow-min);
+    border-color: var(--color-tertiary);
+}
 
 
 
