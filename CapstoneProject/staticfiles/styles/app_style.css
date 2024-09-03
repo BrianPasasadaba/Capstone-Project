@@ -1020,28 +1020,32 @@ main{
     text-align: center;
 }
 
-.rb-table td:last-child {
-    /* Use flexbox for better control over centering */
+.rb-table td:last-child h6{
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.rb-table td:last-child h6{
-    min-width: 150px; /* Adjust this as necessary */
-    padding: 0.5rem;
+    width: 50%;
+    min-width: 150px;
+    min-height: 42px;
     border-radius: 2rem;
     text-align: center;
-    margin: 0 auto; /* Center the h6 within the td */
+    margin: 0 auto;
 }
 
+.rb-table tr:hover {
+    color: var(--color-tertiary);
+    background-color: rgba(238, 239, 243, 0.5); /* Adjust the last value to set the transparency */
+    cursor: pointer;
+}
 
+/* Text color based on status when hovered */
+.rb-table .status-ongoing:hover td:last-child h6 {
+    color: var(--color-sidebar); /* Assuming var(--color-primary) is defined */
+}
 
-
-
-
-
-
+.rb-table .status-resolved:hover td:last-child h6 {
+    color: #ffffff; /* White color */
+}
 
 
 
