@@ -965,6 +965,22 @@ main{
     background-color: #ED7027;
     width: 120px;
     transition: none;
+    font-weight: 500;
+}
+
+.rb-export .btn:focus{
+    background-color: #ED7027;
+    box-shadow: 1px 0.2px 5px var(--color-tertiary);
+    border: 1px var(--color-secondary) solid;
+}
+
+.rb-export .btn:hover{
+    background-color: var(--color-hover) !important;
+    box-shadow: 1px 0.2px 5px var(--color-tertiary);
+    border: 1px var(--color-tertiary) solid;
+    border: none;
+    transform: scale(1.05);
+    font-weight: 400;
 }
 
 .rb-buttons .rb-pagination{
@@ -1071,18 +1087,247 @@ main{
     border-color: var(--color-tertiary);
 }
 
+/* ============================== ACCOUNTS ============================== */
+
+
+.accounts-box{
+    background-color: var(--color-default);
+    width: 100%;
+    height: 100%;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    border-radius: var(--border-radius-sidebar);
+    box-shadow: var(--box-shadow);
+    gap: 1rem;
+}
+
+.accounts-header{
+    /* border: var(--color-secondary) 1px solid; */
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    color: var(--color-primary);
+}
+
+.accounts-body{
+    border: var(--color-secondary) 1px solid;
+    background-color: #ffffff;
+    border-radius: var(--border-radius-button);
+    width:100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-primary);
+    overflow: auto;
+}
+
+.ab-header{
+    border-bottom: var(--color-primary) 1.5px solid;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-primary);
+    white-space:nowrap;
+    padding: var(--padding-1);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    gap: 2rem;
+}
+
+.ab-header .btn{
+    background-color: var(--color-default);
+    width: 140px;
+    font-weight: 500;
+    color: var(--color-primary);
+    border: var(--border-input);
+    box-shadow: var(--box-shadow-min);
+
+}
+
+.ab-header .btn:hover{
+    background-color: #ED7027;
+    border: var(--border-input);
+    font-weight: 300;
+}
+
+.ab-header .btn:focus{
+    background-color: #ED7027;
+    box-shadow: 1px 0.2px 5px var(--color-tertiary);
+    border: var(--border-input);
+    font-weight: 300;
+}
+
+.ab-header input{
+    width: 250px;
+    height: 40px;
+    font-weight: 100;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-input);
+    border: var(--border-input);
+    box-shadow: var(--box-shadow-min);
+}
+
+.ab-header input:focus{
+    box-shadow: 0.2px 0.2px 5px var(--color-tertiary);
+}
+
+.ab-header input:focus-visible {
+    outline: none; /* Remove the default focus outline */
+    border: var(--border-input); /* Apply your custom border if needed */
+}
+
+.ab-buttons{
+    /* border: var(--color-primary) 1px solid; */
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-primary);
+    white-space:nowrap;
+    padding: var(--padding-3);
+    gap: 3rem;
+}
+
+.ab-export {
+    /* border: var(--color-primary) 1px solid; */
+    display: flex;
+}
+
+.ab-buttons .btn{
+    background-color: #ED7027;
+    width: 120px;
+    transition: none;
+    font-weight: 500;
+}
+
+.ab-export .btn:focus{
+    background-color: #ED7027;
+    box-shadow: 1px 0.2px 5px var(--color-tertiary);
+    border: 1px var(--color-secondary) solid;
+}
+
+.ab-export .btn:hover{
+    background-color: var(--color-hover) !important;
+    box-shadow: 1px 0.2px 5px var(--color-tertiary);
+    border: 1px var(--color-tertiary) solid;
+    border: none;
+    transform: scale(1.05);
+    font-weight: 400;
+}
 
 
 
+.ab-buttons .ab-pagination{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    /* border: var(--color-primary) 1px solid; */
+    padding-top: 1rem;
+}
 
 
+.ab-buttons .ab-pagination nav .page-link{
+    color: var(--color-primary);
+}
+
+.ab-buttons .ab-pagination nav .page-link:focus{
+    background-color: var(--color-tertiary);
+    box-shadow: 0 0 5px .25rem var(--color-default)
+}
+
+.ab-table{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.ab-table table{
+    width: 100%;
+    table-layout: fixed;
+    min-width: 1000px;
+}
+
+.ab-table thead th{
+    position: sticky;
+    top: 0;
+    background-color: var(--color-default);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-sidebar);
+}
+
+.ab-table th,
+.ab-table td{
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--color-placeholder);
+    word-break: break-all;
+    text-align: center;
+}
+
+.ab-table td:last-child h6{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    min-width: 150px;
+    min-height: 42px;
+    border-radius: 2rem;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.ab-table tbody tr:hover {
+    color: var(--color-tertiary);
+    background-color: rgba(238, 239, 243, 0.5); /* Adjust the last value to set the transparency */
+    cursor: pointer;
+}
+
+/* Text color based on status when hovered */
+.ab-table .status-unverified:hover td:last-child h6 {
+    color: var(--color-sidebar); /* Assuming var(--color-primary) is defined */
+}
+
+.ab-table .status-verified:hover td:last-child h6 {
+    color: #ffffff; /* White color */
+}
 
 
+.ab-table .form-check{
+    /* border: var(--color-primary) 1px solid; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.ab-table .form-check-input{
+    width: 1.5rem;
+    height: 1.5rem;
+    border: #ED7027 2px solid;
+}
 
+.ab-table .form-check-input:checked {
+    background-color: var(--color-tertiary);
+    border-color: var(--color-tertiary);
+}
 
-
-
+.ab-table .form-check-input:focus {
+    box-shadow: 0 0 5px 3px var(--color-shadow-min);
+    border-color: var(--color-tertiary);
+}
 
 
 
