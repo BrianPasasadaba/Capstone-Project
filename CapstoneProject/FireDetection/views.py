@@ -59,9 +59,11 @@ def logout_view(request):
 def analytics_view(request):
    return render(request, "analytics.html")
 
-
 def reports_view(request):
    return render(request, "reports.html")
+
+def faq_view(request):
+   return render(request, "faq.html")
 
 # Create your views here.
 # @login_required

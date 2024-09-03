@@ -246,7 +246,7 @@ main{
 }
 
 .mn-content-area{
-    /* border: red solid 2px; */
+    border: red solid 2px;
     width: 100%;
     height: 100%;
 }
