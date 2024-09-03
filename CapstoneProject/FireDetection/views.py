@@ -69,6 +69,10 @@ def faq_view(request):
 # @login_required
 def home_view(request):
     return render(request, "home.html")  # Corrected to render home.html
+def admin_home_view(request):
+    return render(request, "admin_home.html")  # Corrected to render home.html
+
+
 
 
 class ProtectedView(LoginRequiredMixin, View):

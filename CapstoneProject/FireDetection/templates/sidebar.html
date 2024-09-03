@@ -35,6 +35,12 @@
                 </div>
                 <div class="sb-body">
                     <nav class="nav">
+                        <a class="nav-link {% active_link 'admin_home' 'custom-class' %}" href="{% url 'admin_home' %}">
+                            <span class="icon">
+                                <i class="bi bi-person-fill-gear"></i>
+                            </span>
+                            <span class="description">Accounts</span>
+                        </a>
                         <a class="nav-link {% active_link 'home' 'custom-class' %}" href="{% url 'home' %}">
                             <span class="icon">
                                 <i class="bi bi-tv"></i>
