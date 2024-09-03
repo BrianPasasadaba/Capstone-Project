@@ -12,7 +12,7 @@ from django.http import FileResponse
 from django.contrib import admin
 
 def serve_css(request):
-    return FileResponse(open('static/styles/style.css', 'rb'))
+    return FileResponse(open('staticfiles/styles/style.css', 'rb'))
 
 def register_view(request):
     if request.method == 'POST':
@@ -21,13 +21,10 @@ def register_view(request):
             # Extract the cleaned data
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            
             # Create the new user
             user = User.objects.create_user(username=email, email=email, password=password)
-            
             # Log the user in after registration
             login(request, user)
-            
             # Redirect to a success page (e.g., home or dashboard)
             return redirect('home')  # Replace 'home' with your desired redirect URL name
     else:
