@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 django = "*"
+psycopg2 = "*"
+pillow = "*"
+django-active-link = "*"
 
 [dev-packages]
 

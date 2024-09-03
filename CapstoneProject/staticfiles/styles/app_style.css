@@ -227,6 +227,14 @@ aside{
     color: var(--color-white);
 }
 
+.custom-class{
+    background: var(--color-primary);
+}
+
+.custom-class .icon,
+.custom-class .description{
+    color: var(--color-white);
+}
 /* ================================  MAIN ================================  */
 
 main{

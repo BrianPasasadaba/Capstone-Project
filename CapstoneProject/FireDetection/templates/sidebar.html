@@ -1,4 +1,5 @@
 {% load static %}
+{% load active_link_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,19 +35,19 @@
                 </div>
                 <div class="sb-body">
                     <nav class="nav">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link {% active_link 'home' 'custom-class' %}" href="{% url 'home' %}">
                             <span class="icon">
                                 <i class="bi bi-tv"></i>
                             </span>
                             <span class="description">Surveillance</span>
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link {% active_link 'analytics' 'custom-class' %}" href="{% url 'analytics' %}">
                             <span class="icon">
                                 <i class="bi bi-columns-gap"></i>
                             </span>
                             <span class="description">Analytics</span>
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link {% active_link 'reports' 'custom-class' %}" href="{% url 'reports' %}">
                             <span class="icon">
                                 <i class="bi bi-clipboard2-data"></i>
                             </span>

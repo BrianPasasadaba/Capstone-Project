@@ -67,7 +67,7 @@ def reports_view(request):
    return render(request, "reports.html")
 
 # Create your views here.
-@login_required
+# @login_required
 def home_view(request):
     return render(request, "home.html")  # Corrected to render home.html
 

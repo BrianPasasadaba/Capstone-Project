@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'FireDetection',
-    'livereload',   
+    'livereload',
+    'active_link',
 ]
 
 MIDDLEWARE = [
