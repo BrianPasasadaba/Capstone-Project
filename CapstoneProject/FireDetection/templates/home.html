@@ -39,12 +39,36 @@
                     <h3>Surveillance Feed</h3>
                 </div>
                 <div class="create-button">
-                    <button type="button" class="btn-create btn-lg rounded-pill px-4 py-3">Create Report</button>
+                    <a class="btn-create btn-lg px-4 py-3" data-bs-toggle="modal" data-bs-target="#create-report-modal">Create Report</a>
                 </div>
             </div>
         </div>
     </div>
 </main>
+<!-- create-report-modal -->
+<div class="surveillance-modal">
+    <div class="modal fade" id="create-report-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Get the Latest Updates</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="modal-email" class="form-label">Your email address:</label>
+                    <input type="email" class="form-control" id="modal-email" placeholder="e.g. mario@example.com">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">CREATE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 
 
@@ -52,5 +76,6 @@
 
 {% block scripts %}
 <!-- ADD SCRIPTS HERE -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 {% endblock %}

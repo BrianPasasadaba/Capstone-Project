@@ -92,7 +92,8 @@ body{
 }
 
 .right-box .form-control:focus{
-    box-shadow: 1px 1px 10px var(--color-tertiary) !important;
+    border: var(--color-tertiary) 2px solid;
+    box-shadow: none;
 }
 
 

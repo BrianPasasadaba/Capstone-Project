@@ -46,16 +46,20 @@ ROOT_URLCONF = 'CapstoneProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
- 'DIRS': [
+        'DIRS': [
             os.path.join(BASE_DIR, 'FireDetection', 'templates'),  # Dynamic path construction
         ],
-        'APP_DIRS': True,
+        'APP_DIRS': False,  # Disable app directories
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+            ],
+            'loaders': [
+                ('django.template.loaders.filesystem.Loader', [os.path.join(BASE_DIR, 'FireDetection', 'templates')]),
+                ('django.template.loaders.app_directories.Loader', []),
             ],
         },
     },

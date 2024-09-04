@@ -21,10 +21,10 @@
     --tran-05: all 0.5s ease;
 
      /* ======== Border Radius ======== */
-     --border-radius-small: 0.5rem;
+     --border-radius-button: 0.5rem;
      --border-radius-sidebar: 1.5rem;
      --border-radius-card: 2rem;
-     --border-radius-button: 1rem;
+     --border-radius-small: 1rem;
      --border-radius-input: 0.3rem;
     /* ======== Border ======== */
      --border-input: 1px solid #ced4da;
@@ -121,7 +121,7 @@ header {
 aside{
     /* border: green solid 3px; */
     grid-area: sb;
-    z-index: 2;
+    z-index: 1000;
 }
 
 .sidebar-content{
@@ -255,26 +255,27 @@ main{
 /* ============================== SURVEILLANCE ============================== */
 
 .surveillance-box{
+    border: var(--color-primary) solid 2px;
     background-color: var(--color-default);
     width: 100%;
-    height: 100%;
-    padding-top: 1rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
+    min-height: 100%;
+    height: auto;
+    padding:3rem;
     padding-bottom: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
+    overflow: auto;
 }
 
 .surveillance-info{
     border: var(--color-primary) solid 2px;
     background-color: #ffffff;
     width: 100%;
-    height: auto;
+    min-height: auto;
     padding: 0.5rem;
     border-radius: var(--border-radius-button);
     display: grid;
@@ -284,7 +285,8 @@ main{
     "bl dt"
     "lc tm";
     gap: 10px;
-    overflow-x: hidden;
+    overflow: hidden;
+    margin-bottom: 1rem;
     white-space: nowrap;
     color: var(--color-primary);
 }
@@ -312,15 +314,19 @@ main{
 
 .surveillance-body{
     /* border: var(--color-primary) solid 3px; */
-    width: 90%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
     padding:3rem;
+    bottom: 0;
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     gap: 2rem;
-    overflow-x: auto;
+    /* overflow: auto; */
     color: var(--color-primary);
 }
 
@@ -328,22 +334,51 @@ main{
     border: var(--color-secondary) solid 3px;
     background-color: #ffffff;
     width: 1000px;
-    height: 500px;
+    min-height: 450px;
     border-radius: var(--border-radius-card);
     align-content: center;
 }
 
-.btn-create{
+.create-button{
+    /* border: var(--color-secondary) solid 3px; */
+    margin-top: 1rem;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    bottom: 0;
+}
+
+.create-button .btn-create{
     background-color: var(--color-tertiary) !important;
     border: none;
     border-radius: var(--border-radius-button);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--color-primary);
 }
 
-.btn-create:hover{
+.create-button .btn-create:hover{
     background-color: var(--color-hover) !important;
-    transform: scale(1.05);
+    transform: scale(1.05)!important;
+    color: var(--color-primary);
+    cursor: pointer;
+}
+
+/* ============================== SURVEILLANCE MODAL============================== */
+
+.surveillance-modal{
+    color: var(--color-primary);
+}
+
+.modal-footer .btn{
+    background-color: #ED7027;
+    border: #ED7027 1px solid;
 }
 
 /* ================================  Media Queries for Responsive Design ================================  */
@@ -417,7 +452,7 @@ main{
     .surveillance-loc{
         padding-top: 0.5rem;
         border: var(--color-primary) 2px solid;
-        border-radius: var(--border-radius-small);
+        border-radius: var(--border-radius-button);
         background-color: #ffffff;
     }
 
@@ -434,6 +469,7 @@ main{
 
 
 /* ============================== ANALYTICS ============================== */
+
 
 .analyses-box {
     display: grid;
@@ -606,7 +642,7 @@ main{
 
 .chart-graph{
     /* border: var(--color-secondary) 1px solid; */
-    border-radius: var(--border-radius-small);
+    border-radius: var(--border-radius-button);
     background-color: #ffffff;
     width: 100%;
     height: 100%;
@@ -740,7 +776,7 @@ main{
 
 .detect-body{
     /* border: var(--color-secondary) 1px solid; */
-    border-radius: var(--border-radius-small);
+    border-radius: var(--border-radius-button);
     background-color: #ffffff;
     width: 100%;
     height: 100%;
@@ -759,7 +795,7 @@ main{
     background-color: var(--color-default);
     border: #ED7027 solid 1.5px;
     padding: var(--padding-half);
-    border-radius: var(--border-radius-small);
+    border-radius: var(--border-radius-button);
     box-shadow: var(--box-shadow-min);
     cursor: pointer;
     transition: all 0.3s ease;
@@ -966,6 +1002,7 @@ main{
     width: 120px;
     transition: none;
     font-weight: 500;
+    border-radius: var(--border-radius-button);
 }
 
 .rb-export .btn:focus{
@@ -1331,7 +1368,21 @@ main{
 
 
 
+/* ============================== FAQ ============================== */
 
+.faq-box{
+    background-color: var(--color-default);
+    width: 100%;
+    height: 100%;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    border-radius: var(--border-radius-sidebar);
+    box-shadow: var(--box-shadow);
+    gap: 1rem;
+}
 
 
 
