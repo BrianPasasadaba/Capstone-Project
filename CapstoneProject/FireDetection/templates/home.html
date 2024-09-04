@@ -51,16 +51,90 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal-title">Get the Latest Updates</h5>
+                    <h3 class="modal-title" id="modal-title">Create Initial Report</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label for="modal-email" class="form-label">Your email address:</label>
-                    <input type="email" class="form-control" id="modal-email" placeholder="e.g. mario@example.com">
+                    <form action="">
+                        <div class="form-row">
+                            <div class="form-column">
+                                <label for="modal-loc" class="form-label">Location<i class="bi bi-asterisk"></i></label>
+                                <input type="text" class="form-control" id="modal-loc" placeholder="e.g. Barangay Caingin">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-column">
+                                <label for="modal-date" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="modal-date">
+                            </div>
+                            <div class="form-column">
+                                <label for="modal-time" class="form-label">Time of Arrival</label>
+                                <input type="time" class="form-control" id="modal-time">
+                            </div>
+                            <div class="form-column">
+                                <label for="modal-time" class="form-label">Time of Fire Out</label>
+                                <input type="time" class="form-control" id="modal-time">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-column">
+                                <label for="modal-occupancy" class="form-label">Occupancy Type<i class="bi bi-asterisk"></i></label>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected >Select the occupancy type...</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>
+                            </div>
+                            <div class="form-column">
+                                <label for="modal-name" class="form-label">Name of Owner<i class="bi bi-asterisk"></i></label>
+                                <input type="text" class="form-control" id="modal-name" placeholder="e.g. Juan Dela Cruz">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-column">
+                                <label for="modal-alarm" class="form-label">Alarm Status<i class="bi bi-asterisk"></i></label>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected >Select the alarm status...</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>
+                            </div>
+                            <div class="form-column">
+                                <label for="modal-respondents" class="form-label">No. of Respondents<i class="bi bi-asterisk"></i></label>
+                                <input type="number" class="form-control" id="modal-respondents" placeholder="e.g. 11">
+                            </div>
+                            <div class="form-column">
+                                <label for="modal-damages" class="form-label">Estimated Damages<i class="bi bi-asterisk"></i></label>
+                                <input type="text" class="form-control" id="modal-damages" placeholder="e.g. P1,000,000">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-column">
+                                <label for="modal-establish" class="form-label">No. of Establishments<i class="bi bi-asterisk"></i></label>
+                                <input type="number" class="form-control" id="modal-establish" placeholder="e.g. 11">
+                            </div>
+                            <div class="form-column">
+                                <label for="modal-casualties" class="form-label">No. of Casualties<i class="bi bi-asterisk"></i></label>
+                                <input type="number" class="form-control" id="modal-casualties" placeholder="e.g. 11">
+                            </div>
+                            <div class="form-column">
+                                <label for="modal-injured" class="form-label">No. of Injured<i class="bi bi-asterisk"></i></label>
+                                <input type="email" class="form-control" id="modal-injured" placeholder="e.g. 11">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-column">
+                                <label for="modal-proof" class="form-label">Proof<i class="bi bi-asterisk"></i></label>
+                                <input type="file" class="form-control" id="modal-proof" placeholder="e.g. mario@example.com">
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary">CREATE</button>
+                    <button class="btn btn-primary">Create</button>
                 </div>
             </div>
         </div>

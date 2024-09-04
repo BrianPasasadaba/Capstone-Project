@@ -255,7 +255,7 @@ main{
 /* ============================== SURVEILLANCE ============================== */
 
 .surveillance-box{
-    border: var(--color-primary) solid 2px;
+    /* border: var(--color-primary) solid 2px; */
     background-color: var(--color-default);
     width: 100%;
     min-height: 100%;
@@ -376,20 +376,55 @@ main{
 }
 
 .surveillance-modal .modal-dialog{
-    border: var(--color-secondary) solid 3px;
+    /* border: var(--color-secondary) solid 3px; */
     padding: 1rem;
-    max-width: 1200px;
+    max-width: 900px;
     min-width: 500px;
     width: 70%;
-    height: 800px;
-    min-height: auto;
+    height: auto;
     display: flex;
     justify-content: center;
+}
+.surveillance-modal form{
+    /* border: var(--color-secondary) solid 3px; */
+    padding-top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 1rem;
+}
+
+.modal-body .form-row{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust min width for better responsiveness */
+    gap: 1rem; /* Add some space between columns */
+}
+
+.modal-body .form-label{
+    /* border: var(--color-secondary) solid 1px; */
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.modal-body .form-column .bi{
+    font-size: 6px;
+    color: red;
 }
 
 .modal-footer .btn{
     background-color: #ED7027;
     border: #ED7027 1px solid;
+    color: var(--color-primary);
+    border-radius: var(--border-radius-button);
+    font-weight: 600;
+}
+
+.modal-footer .btn:hover{
+    background-color: var(--color-tertiary);
+    border: var(--color-tertiary) 1px solid;
 }
 
 /* ================================  Media Queries for Responsive Design ================================  */
