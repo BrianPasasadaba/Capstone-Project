@@ -131,7 +131,7 @@ header {
 }
 
 .navigation-item a:hover{
-    color:#ED7027;
+    color:var(--color-secondary);
 }
 /* ================================  SIDEBAR ================================  */
 
@@ -259,7 +259,7 @@ main{
     /* border: purple 3px solid; */
     grid-area: mn;
     z-index: 2;
-    color: #ED7027;
+    color: var(--color-secondary);
 }
 
 .mn-content-area{
@@ -883,7 +883,7 @@ main{
 
 .detect-body > div{
     background-color: var(--color-default);
-    border: #ED7027 solid 1.5px;
+    border: var(--color-secondary) solid 1.5px;
     padding: var(--padding-half);
     border-radius: var(--border-radius-button-half);
     box-shadow: var(--box-shadow-min);
@@ -909,7 +909,7 @@ main{
     flex-direction: column;
     white-space: nowrap;
     align-items: start;
-    border-bottom: #ED7027 solid 1.5px;
+    border-bottom: var(--color-secondary) solid 1.5px;
 }
 
 .detect-body > div .dc-date-time{
@@ -1037,13 +1037,13 @@ main{
 }
 
 .rb-header .btn:hover{
-    background-color: #ED7027;
+    background-color: var(--color-secondary);
     border: var(--border-input);
     font-weight: 300;
 }
 
 .rb-header .btn:focus{
-    background-color: #ED7027;
+    background-color: var(--color-secondary);
     box-shadow: 1px 0.2px 5px var(--color-tertiary);
     border: var(--border-input);
     font-weight: 300;
@@ -1066,65 +1066,6 @@ main{
 .rb-header input:focus-visible {
     outline: none; /* Remove the default focus outline */
     border: var(--border-input); /* Apply your custom border if needed */
-}
-
-.rb-buttons{
-    /* border: var(--color-primary) 1px solid; */
-    width: 100%;
-    height: 100px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--color-primary);
-    white-space:nowrap;
-    padding: var(--padding-3);
-    gap: var(--gap-3);
-}
-
-.rb-export {
-    /* border: var(--color-primary) 1px solid; */
-    display: flex;
-}
-
-.rb-buttons .btn{
-    background-color: #ED7027;
-    width: 120px;
-    transition: var(--tran-03);
-    font-weight: 500;
-    border-radius: var(--border-radius-button-half);
-}
-
-.rb-export .btn:focus{
-    background-color: #ED7027;
-    border: 1px var(--color-secondary) solid;
-}
-
-.rb-export .btn:hover{
-    background-color: var(--color-hover) !important;
-    border: 1px var(--color-tertiary) solid;
-    border: none;
-    transform: scale(1.05);
-    font-weight: 400;
-}
-
-.rb-buttons .rb-pagination{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    /* border: var(--color-primary) 1px solid; */
-    padding-top: var(--padding-1);
-}
-
-
-.rb-buttons .rb-pagination nav .page-link{
-    color: var(--color-primary);
-}
-
-.rb-buttons .rb-pagination nav .page-link:focus{
-    background-color: var(--color-tertiary);
-    box-shadow: 0 0 5px .25rem var(--color-default)
 }
 
 .rb-table{
@@ -1199,7 +1140,7 @@ main{
 .rb-table .form-check-input{
     width: 1.5rem;
     height: 1.5rem;
-    border: #ED7027 2px solid;
+    border: var(--color-secondary) 2px solid;
 }
 
 .rb-table .form-check-input:checked {
@@ -1210,6 +1151,66 @@ main{
 .rb-table .form-check-input:focus {
     box-shadow: 0 0 5px 3px var(--color-shadow-min);
     border-color: var(--color-tertiary);
+}
+
+.rb-buttons{
+    /* border: var(--color-primary) 1px solid; */
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-primary);
+    white-space:nowrap;
+    padding: var(--padding-3);
+    gap: var(--gap-3);
+}
+
+.rb-export {
+    /* border: var(--color-primary) 1px solid; */
+    display: flex;
+}
+
+.rb-buttons .btn{
+    background-color: var(--color-tertiary);
+    width: 120px;
+    transition: var(--tran-03);
+    font-weight: 500;
+    border-radius: var(--border-radius-button-half);
+}
+
+.rb-export .btn:focus{
+    background-color: var(--color-tertiary);
+    border: 1px var(--color-tertiary) solid;
+    box-shadow: var(--box-shadow);
+}
+
+.rb-export .btn:hover{
+    background-color: var(--color-hover) !important;
+    border: 1px var(--color-hover) solid;
+    border: none;
+    transform: scale(1.05);
+    font-weight: 400;
+}
+
+.rb-buttons .rb-pagination{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    /* border: var(--color-primary) 1px solid; */
+    padding-top: var(--padding-1);
+}
+
+
+.rb-buttons .rb-pagination nav .page-link{
+    color: var(--color-primary);
+}
+
+.rb-buttons .rb-pagination nav .page-link:focus{
+    background-color: var(--color-tertiary);
+    box-shadow: 0 0 5px .25rem var(--color-default)
 }
 
 /* ============================== ACCOUNTS ============================== */
@@ -1276,13 +1277,13 @@ main{
 }
 
 .ab-header .btn:hover{
-    background-color: #ED7027;
+    background-color: var(--color-secondary);
     border: var(--border-input);
     font-weight: 300;
 }
 
 .ab-header .btn:focus{
-    background-color: #ED7027;
+    background-color: var(--color-secondary);
     box-shadow: 1px 0.2px 5px var(--color-tertiary);
     border: var(--border-input);
     font-weight: 300;
@@ -1305,68 +1306,6 @@ main{
 .ab-header input:focus-visible {
     outline: none; /* Remove the default focus outline */
     border: var(--border-input); /* Apply your custom border if needed */
-}
-
-.ab-buttons{
-    /* border: var(--color-primary) 1px solid; */
-    width: 100%;
-    height: 100px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--color-primary);
-    white-space:nowrap;
-    padding: var(--padding-3);
-    gap: var(--gap-3);
-}
-
-.ab-export {
-    /* border: var(--color-primary) 1px solid; */
-    display: flex;
-}
-
-.ab-buttons .btn{
-    background-color: #ED7027;
-    width: 120px;
-    transition: none;
-    font-weight: 500;
-}
-
-.ab-export .btn:focus{
-    background-color: #ED7027;
-    box-shadow: 1px 0.2px 5px var(--color-tertiary);
-    border: 1px var(--color-secondary) solid;
-}
-
-.ab-export .btn:hover{
-    background-color: var(--color-hover) !important;
-    box-shadow: 1px 0.2px 5px var(--color-tertiary);
-    border: 1px var(--color-tertiary) solid;
-    border: none;
-    transform: scale(1.05);
-    font-weight: 400;
-}
-
-
-
-.ab-buttons .ab-pagination{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    /* border: var(--color-primary) 1px solid; */
-    padding-top: var(--padding-1);
-}
-
-
-.ab-buttons .ab-pagination nav .page-link{
-    color: var(--color-primary);
-}
-
-.ab-buttons .ab-pagination nav .page-link:focus{
-    background-color: var(--color-tertiary);
-    box-shadow: 0 0 5px .25rem var(--color-default)
 }
 
 .ab-table{
@@ -1441,7 +1380,7 @@ main{
 .ab-table .form-check-input{
     width: 1.5rem;
     height: 1.5rem;
-    border: #ED7027 2px solid;
+    border: var(--color-secondary) 2px solid;
 }
 
 .ab-table .form-check-input:checked {
@@ -1454,7 +1393,94 @@ main{
     border-color: var(--color-tertiary);
 }
 
+.ab-buttons{
+    /* border: var(--color-primary) 1px solid; */
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-primary);
+    white-space:nowrap;
+    padding: var(--padding-3);
+    gap: var(--gap-3);
+}
 
+/* .ab-add {
+    border: var(--color-primary) 1px solid;
+    display: flex;
+} */
+
+.ab-buttons .btn{
+    background-color: var(--color-tertiary);
+    width: 120px;
+    transition: var(--tran-03);
+    font-weight: 500;
+    border-radius: var(--border-radius-button-half);
+}
+
+.ab-add .btn:focus{
+    background-color: var(--color-secondary);
+    border: 1px var(--color-secondary) solid;
+    box-shadow: var(--box-shadow);
+}
+
+.ab-add .btn:hover{
+    background-color: var(--color-hover) !important;
+    border: 1px var(--color-hover) solid;
+    border: none;
+    transform: scale(1.05);
+    font-weight: 400;
+}
+
+.ab-buttons .ab-pagination{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    /* border: var(--color-primary) 1px solid; */
+    padding-top: var(--padding-1);
+}
+
+.ab-buttons .ab-pagination nav .page-link{
+    color: var(--color-primary);
+}
+
+.ab-buttons .ab-pagination nav .page-link:focus{
+    background-color: var(--color-tertiary);
+    box-shadow: 0 0 5px .25rem var(--color-default)
+}
+
+/* ============================== ACCOUNTS MODAL============================== */
+.accounts-modal{
+    color: var(--color-primary);
+}
+
+.accounts-modal .modal-dialog{
+    /* border: var(--color-secondary) solid 3px; */
+    padding: var(--padding-1);
+    max-width: 700px;
+    min-width: 500px;
+    width: 70%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.modal-header .btn-close:focus{
+    box-shadow: var(--box-shadow-min);
+}
+
+.accounts-modal form{
+    /* border: var(--color-secondary) solid 3px; */
+    padding-top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: var(--gap-1);
+}
 
 /* ============================== FAQ ============================== */
 
@@ -1538,5 +1564,5 @@ main{
 }
 
 .custom-shape-divider-bottom-1724214088 .shape-fill {
-    fill: #ED7027;
+    fill: var(--color-secondary);
 }
