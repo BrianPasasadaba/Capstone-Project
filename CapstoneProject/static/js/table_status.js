@@ -25,4 +25,3 @@ document.querySelectorAll('.ab-table td:last-child h6').forEach((element) => {
         row.classList.add('status-verified');
     }
 });
-
