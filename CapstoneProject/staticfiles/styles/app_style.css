@@ -388,11 +388,11 @@ main{
 
 /* ============================== SURVEILLANCE MODAL============================== */
 
-.surveillance-modal{
+#create-report-modal{
     color: var(--color-primary);
 }
 
-.surveillance-modal .modal-dialog{
+#create-report-modal .modal-dialog{
     /* border: var(--color-secondary) solid 3px; */
     padding: var(--padding-1);
     max-width: 900px;
@@ -407,7 +407,7 @@ main{
     box-shadow: var(--box-shadow-min);
 }
 
-.surveillance-modal form{
+#create-report-modal form{
     /* border: var(--color-secondary) solid 3px; */
     padding-top: 0;
     height: 100%;
@@ -442,8 +442,8 @@ main{
     color: red;
 }
 
-#modal-proof{
-    max-width: 350px;
+#create-report-modal #modal-proof{
+    max-width: 280px;
 }
 
 .modal-footer .mf-button{
@@ -980,6 +980,7 @@ main{
     background-color: var(--color-default);
     width: 100%;
     height: 100%;
+    min-height: 100%;
     padding: var(--padding-3);
     display: flex;
     flex-direction: column;
@@ -1211,6 +1212,11 @@ main{
 .rb-buttons .rb-pagination nav .page-link:focus{
     background-color: var(--color-tertiary);
     box-shadow: 0 0 5px .25rem var(--color-default)
+}
+
+#create-report-form input:disabled,
+#create-report-form input:disabled{
+    background-color: white;
 }
 
 /* ============================== ACCOUNTS ============================== */
@@ -1453,11 +1459,11 @@ main{
 }
 
 /* ============================== ACCOUNTS MODAL============================== */
-.accounts-modal{
+#add-account-modal{
     color: var(--color-primary);
 }
 
-.accounts-modal .modal-dialog{
+#add-account-modal .modal-dialog{
     /* border: var(--color-secondary) solid 3px; */
     padding: var(--padding-1);
     max-width: 700px;
@@ -1468,11 +1474,11 @@ main{
     justify-content: center;
 }
 
-.modal-header .btn-close:focus{
+#add-account-modal .modal-header .btn-close:focus{
     box-shadow: var(--box-shadow-min);
 }
 
-.accounts-modal form{
+#add-account-modal form{
     /* border: var(--color-secondary) solid 3px; */
     padding-top: 0;
     height: 100%;
