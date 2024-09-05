@@ -1214,11 +1214,28 @@ main{
     box-shadow: 0 0 5px .25rem var(--color-default)
 }
 
-#create-report-form input:disabled,
-#create-report-form input:disabled{
-    background-color: white;
-}
+/* ============================== REPORTS MODAL ============================== */
 
+#create-report-form input:disabled,
+#create-report-form input:disabled,
+#create-report-form select:disabled{
+    background-color: white;
+    color: var(--color-secondary);
+}
+#create-report-form .proof-image{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    padding: var(--padding-1);
+    margin: var(--margin-half);
+}
+#create-report-form .proof-image img{
+    border: var(--color-secondary) 3px solid;
+    width: 50%;
+    height: auto;
+    border-radius: var(--border-radius-button-half);
+}
 /* ============================== ACCOUNTS ============================== */
 
 
