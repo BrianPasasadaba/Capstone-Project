@@ -17,7 +17,7 @@ ALLOWED_HOSTS = []
 
 LOGIN_URL = '/login/'
 
-
+AUTH_USER_MODEL = 'FireDetection.CustomUser'
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
