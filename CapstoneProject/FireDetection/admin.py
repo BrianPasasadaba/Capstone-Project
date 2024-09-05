@@ -1,29 +1,18 @@
 from django.contrib import admin
-
-from .models import InitialReport
-admin.site.register(InitialReport)
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import InitialReport, CustomUser
 from django.utils.translation import gettext_lazy as _
 
-from .models import CustomUser
-
-class CustomUserAdmin(BaseUserAdmin):
-    ordering = ['email']
-    list_display = ['email', 'first_name', 'last_name', 'is_staff']
+class CustomUserAdmin(admin.ModelAdmin):
+    # Define fieldsets to organize fields in the admin interface
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
+        # Note: date_joined is not included here
     )
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2'),
-        }),
-    )
-    search_fields = ('email',)
+
+    # Define readonly fields if needed
+    readonly_fields = ('last_login',)
 
 admin.site.register(CustomUser, CustomUserAdmin)
-
-
+admin.site.register(InitialReport)

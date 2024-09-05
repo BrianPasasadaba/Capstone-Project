@@ -1,10 +1,7 @@
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
 from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
 class InitialReport(models.Model):
     where = models.CharField(max_length=255)
     date = models.DateField()
@@ -22,7 +19,6 @@ class InitialReport(models.Model):
 
     def __str__(self):
         return f"Report {self.id} - {self.where} on {self.date}"
-
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -51,7 +47,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=30, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(auto_now_add=True)
+    # Removed date_joined field
 
     objects = CustomUserManager()
 
@@ -60,4 +56,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
