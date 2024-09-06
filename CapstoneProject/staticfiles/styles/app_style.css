@@ -386,96 +386,6 @@ main{
     cursor: pointer;
 }
 
-/* ============================== SURVEILLANCE MODAL============================== */
-
-#create-report-modal{
-    color: var(--color-primary);
-}
-
-#create-report-modal .modal-dialog{
-    /* border: var(--color-secondary) solid 3px; */
-    padding: var(--padding-1);
-    max-width: 900px;
-    min-width: 500px;
-    width: 70%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-}
-
-.modal-header .btn-close:focus{
-    box-shadow: var(--box-shadow-min);
-}
-
-#create-report-modal form{
-    /* border: var(--color-secondary) solid 3px; */
-    padding-top: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    gap: var(--gap-1);
-}
-
-.modal-body .form-row{
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust min width for better responsiveness */
-    gap: var(--gap-1); /* Add some space between columns */
-}
-
-.modal-body .form-label{
-    /* border: var(--color-secondary) solid 1px; */
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.modal-body .form-control:focus,
-.modal-body .form-select:focus{
-    box-shadow: none;
-    border: 1.5px solid var(--color-secondary);
-}
-
-.modal-body .form-column .bi{
-    font-size: 6px;
-    color: red;
-}
-
-#create-report-modal #modal-proof{
-    max-width: 280px;
-}
-
-.modal-footer .mf-button{
-    /* border: var(--color-secondary) solid 1px; */
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-}
-
-.modal-footer .btn{
-    background-color: var(--color-tertiary);
-    border: var(--color-tertiary) 1px solid;
-    color: var(--color-primary);
-    border-radius: var(--border-radius-button-half);
-    font-weight: 500;
-    font-size: 1.2rem;
-    transition: var(--tran-03);
-    height: 80%;
-    margin-bottom: var(--margin-half);
-    box-shadow: var(--box-shadow);
-}
-
-.modal-footer .btn:hover{
-    background-color: var(--color-hover);
-    border: var(--color-hover) 1px solid;
-    transform: scale(1.05);
-}
-
 /* ================================  Media Queries for Responsive Design ================================  */
 
 /* Sidebar adjustments for smaller screens */
@@ -1214,28 +1124,7 @@ main{
     box-shadow: 0 0 5px .25rem var(--color-default)
 }
 
-/* ============================== REPORTS MODAL ============================== */
 
-#create-report-form input:disabled,
-#create-report-form input:disabled,
-#create-report-form select:disabled{
-    background-color: white;
-    color: var(--color-secondary);
-}
-#create-report-form .proof-image{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: start;
-    padding: var(--padding-1);
-    margin: var(--margin-half);
-}
-#create-report-form .proof-image img{
-    border: var(--color-secondary) 3px solid;
-    width: 50%;
-    height: auto;
-    border-radius: var(--border-radius-button-half);
-}
 /* ============================== ACCOUNTS ============================== */
 
 
@@ -1474,6 +1363,141 @@ main{
     background-color: var(--color-tertiary);
     box-shadow: 0 0 5px .25rem var(--color-default)
 }
+/* ============================== FAQ ============================== */
+
+.faq-box{
+    background-color: var(--color-default);
+    width: 100%;
+    height: 100%;
+    padding: var(--padding-3);
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    border-radius: var(--border-radius-sidebar);
+    box-shadow: var(--box-shadow);
+    gap: var(--gap-1);
+}
+
+/* ============================== SURVEILLANCE MODAL============================== */
+
+#create-report-modal,
+#report-preview-modal{
+    color: var(--color-primary);
+}
+
+#create-report-modal .modal-dialog,
+#report-preview-modal .modal-dialog{
+    /* border: var(--color-secondary) solid 3px; */
+    padding: var(--padding-1);
+    max-width: 900px;
+    min-width: 500px;
+    width: 70%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.modal-header .btn-close:focus{
+    box-shadow: var(--box-shadow-min);
+}
+
+#create-report-form,
+#report-preview-form{
+    /* border: var(--color-secondary) solid 3px; */
+    padding-top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: var(--gap-1);
+}
+
+.modal-body .form-row{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust min width for better responsiveness */
+    gap: var(--gap-1); /* Add some space between columns */
+}
+
+.modal-body .form-label{
+    /* border: var(--color-secondary) solid 1px; */
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus{
+    box-shadow: none;
+    border: 1.5px solid var(--color-secondary);
+}
+
+.modal-body .form-column .bi{
+    font-size: 6px;
+    color: red;
+}
+
+#modal-proof{
+    max-width: 280px;
+}
+
+.modal-footer .mf-button{
+    /* border: var(--color-secondary) solid 1px; */
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-footer .btn{
+    background-color: var(--color-tertiary);
+    border: var(--color-tertiary) 1px solid;
+    color: var(--color-primary);
+    border-radius: var(--border-radius-button-half);
+    font-weight: 500;
+    font-size: 1.2rem;
+    transition: var(--tran-03);
+    height: 80%;
+    margin-bottom: var(--margin-half);
+    box-shadow: var(--box-shadow);
+}
+
+.modal-footer .btn:hover{
+    background-color: var(--color-hover);
+    border: var(--color-hover) 1px solid;
+    transform: scale(1.05);
+}
+
+.modal-footer .btn:focus{
+    box-shadow: none;
+}
+
+/* ============================== REPORTS MODAL ============================== */
+
+#report-preview-form input:disabled,
+#report-preview-form input:disabled,
+#report-preview-form select:disabled{
+    background-color: white;
+    color: var(--color-secondary);
+}
+#report-preview-form .proof-image{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    padding: var(--padding-1);
+    margin: var(--margin-half);
+}
+#report-preview-form .proof-image img{
+    border: var(--color-secondary) 3px solid;
+    width: 50%;
+    height: auto;
+    border-radius: var(--border-radius-button-half);
+}
 
 /* ============================== ACCOUNTS MODAL============================== */
 #add-account-modal{
@@ -1504,27 +1528,6 @@ main{
     justify-content: start;
     gap: var(--gap-1);
 }
-
-/* ============================== FAQ ============================== */
-
-.faq-box{
-    background-color: var(--color-default);
-    width: 100%;
-    height: 100%;
-    padding: var(--padding-3);
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    border-radius: var(--border-radius-sidebar);
-    box-shadow: var(--box-shadow);
-    gap: var(--gap-1);
-}
-
-
-
-
-
 
 
 

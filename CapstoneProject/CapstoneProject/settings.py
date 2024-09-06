@@ -72,7 +72,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Bfp',
-        'USER': 'Bfp',
+        'USER': 'postgres',
         'PASSWORD': 'Bfp',
         'HOST': 'localhost',
         'PORT': '5432',

@@ -1,0 +1,44 @@
+<!-- create-account-modal -->
+<div class="modal fade" id="add-account-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Create Account</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action=""  id="add-account-form">
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="modal-name" class="form-label">Name<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" id="modal-name" placeholder="e.g. Juan Dela Cruz">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="modal-email" class="form-label">Email<i class="bi bi-asterisk"></i></label>
+                            <input type="email" class="form-control" id="modal-email" placeholder="e.g. juandc@gmail.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="modal-role" class="form-label">Role<i class="bi bi-asterisk"></i></label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected >Select the role...</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                                </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="mf-button">
+                    <button class="btn btn-lg px-4">Add Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
