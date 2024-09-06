@@ -601,7 +601,8 @@ main{
 
 .chart-detect-box{
     /* border: green 2px solid; */
-    height: 60vh;
+    min-height: 65vh;
+    height: auto;
     margin-top: var(--margin-1);
     display: grid;
     grid-template-columns: 3.8fr 1.5fr;
@@ -614,7 +615,7 @@ main{
     border: var(--color-secondary) 0.5px solid;
     width: 100%;
     height: 100%;
-    border-radius:var(--border-radius-button-half);
+    border-radius:var(--border-radius-sidebar);
     padding: var(--padding-1);
     display: flex;
     flex-direction: column;
@@ -665,7 +666,7 @@ main{
     padding-top: var(--padding-2);
     justify-content: start;
     gap:0.5rem;
-    overflow: auto;
+    overflow-x: auto;
 }
 
 .incident-count{
@@ -748,7 +749,7 @@ main{
     border: var(--color-secondary) 0.5px solid;
     width: 100%;
     height: 100%;
-    border-radius:var(--border-radius-button-half);
+    border-radius:var(--border-radius-sidebar);
     padding: var(--padding-1);
     display: flex;
     flex-direction: column;
@@ -1366,10 +1367,12 @@ main{
 /* ============================== FAQ ============================== */
 
 .faq-box{
+    /* border: var(--color-secondary) solid 3px; */
     background-color: var(--color-default);
     width: 100%;
     height: 100%;
     padding: var(--padding-3);
+    padding-bottom: var(--padding-2);
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -1377,6 +1380,55 @@ main{
     border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     gap: var(--gap-1);
+    overflow: auto;
+}
+
+.faq-header{
+    border: var(--color-secondary) solid 3px;
+    background-color: #ffffff;
+    border-radius: var(--border-radius-card-2);
+    width: 100%;
+    min-width: 500px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.faq-header img{
+    width: 25%;
+    height: auto;
+}
+
+.faq-body{
+    /* border: var(--color-secondary) solid 3px; */
+    width: 80%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-2);
+}
+
+.accordion{
+    width: 100%;
+    box-shadow: var(--box-shadow);
+    min-width: 250px;
+}
+
+/* ================================  Media Queries for Responsive Design ================================  */
+
+/* Sidebar adjustments for smaller screens */
+@media (max-width: 920px) {
+    .faq-header{
+        min-height: 250px;
+    }
+    .faq-header img{
+        width: 35%;
+    }
+
 }
 
 /* ============================== SURVEILLANCE MODAL============================== */
