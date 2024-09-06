@@ -1434,7 +1434,7 @@ main{
 .accordion-button.collapsed:focus {
     border: 1px solid var(--color-secondary);
     color: var(--color-secondary);
-    box-shadow: 0 0 0 .25rem  rgb(237, 112, 39, 0.5);;
+    box-shadow: 0 0 0 .25rem  rgb(237, 112, 39, 0.5);
 }
 
 /* Style for the accordion item when it is not collapsed */
@@ -1614,11 +1614,29 @@ main{
 
 
 
+/* ============================== TOAST ============================== */
 
+.toast{
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1111;
+    color: var(--color-primary);
+    width: 400px !important;
+    height: 120px !important;
+    box-shadow:  0 0 1rem .01rem  rgba(111, 157, 226, 0.5) !important;
+}
 
+.toast-header{
+    background-color: #ffffff !important;
+}
+.toast-header .me-auto{
+    gap: 1rem;
+    color: var(--color-secondary);
+}
 
-
-
+.toast-header .btn-close:focus{
+    box-shadow:  0 0 0 .25rem  rgb(237, 112, 39, 0.5);
+}
 
 
 
