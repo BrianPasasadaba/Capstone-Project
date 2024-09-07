@@ -33,11 +33,12 @@ def register_view(request):
     return render(request, 'login.html', {'form': form})  # Updated to render login.html directly
 
 
+
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)  # Ensure backend is set correctly
         if user is not None:
             login(request, user)
             next_url = request.POST.get('next') or request.GET.get('next') or 'home'
@@ -46,7 +47,6 @@ def login_view(request):
             error_message = "Invalid Credentials"
             return render(request, 'login.html', {'error': error_message})
     return render(request, 'login.html')
-
 
 # Logout view
 def logout_view(request):

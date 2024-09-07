@@ -111,3 +111,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Adjust path as needed
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = [
+    'FireDetection.backends.EmailBackend',  # Custom authentication backend
+    'django.contrib.auth.backends.ModelBackend',
+]

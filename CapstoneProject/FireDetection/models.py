@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 class InitialReport(models.Model):
@@ -20,39 +21,20 @@ class InitialReport(models.Model):
     def __str__(self):
         return f"Report {self.id} - {self.where} on {self.date}"
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError(_("The Email field must be set"))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
+class CustomUser(AbstractUser):
+    # Override the username field to use email as the unique identifier
+    username = None
+    email = models.EmailField(unique=True)
 
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError(_("Superuser must have is_staff=True."))
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError(_("Superuser must have is_superuser=True."))
-
-        return self.create_user(email, password, **extra_fields)
-
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True, max_length=255)
+    # Add additional fields here
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    # Removed date_joined field
-
-    objects = CustomUserManager()
+    date_of_birth = models.DateField(null=True, blank=True)
+    # Add more fields as needed
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = []  # Fields required when creating a superuser
 
     def __str__(self):
         return self.email
