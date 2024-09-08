@@ -4,23 +4,28 @@ from .models import CustomUser, InitialReport
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ('email', 'first_name', 'last_name', 'is_staff')
-    search_fields = ('email', 'first_name', 'last_name')
-    ordering = ('email',)
 
+    # Define the fields to display in the list view of the admin panel
+    list_display = ('email', 'name', 'role', 'verified', 'is_staff', 'is_active')
+    list_filter = ('role', 'verified', 'is_staff', 'is_active')
+    
+    # Fields to edit in the form view of the admin panel
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'date_of_birth')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'name', 'date_of_birth')}),
+        ('Roles & Status', {'fields': ('role', 'verified', 'is_staff', 'is_active')}),
     )
-
+    
+    # Fields for adding new users
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'date_of_birth'),
-        }),
+            'fields': ('email', 'password1', 'password2', 'name', 'role', 'verified', 'is_staff', 'is_active')}
+        ),
     )
+    
+    search_fields = ('email', 'name', 'role')
+    ordering = ('email',)
 
 class InitialReportAdmin(admin.ModelAdmin):
     list_display = (
