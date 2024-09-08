@@ -10,29 +10,38 @@ from django.contrib.auth.models import User
 from .forms import RegisterForms
 from django.http import FileResponse
 from django.contrib import admin
+from django.contrib import messages
+from .models import CustomUser  
+from django.core.validators import validate_email 
+from .models import InitialReport
 
 def serve_css(request):
     return FileResponse(open('staticfiles/styles/style.css', 'rb'))
 
 def register_view(request):
     if request.method == 'POST':
-        form = RegisterForms(request.POST)
-        if form.is_valid():
-            # Extract the cleaned data
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-            # Create the new user
-            user = User.objects.create_user(username=email, email=email, password=password)
-            # Log the user in after registration
-            login(request, user)
-            # Redirect to a success page (e.g., home or dashboard)
-            return redirect('home')  # Replace 'home' with your desired redirect URL name
-    else:
-        form = RegisterForms()
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        role = request.POST.get('role')
+        
+        if not name or not email or not role:
+            messages.error(request, 'All fields are required.')
+            return render(request, 'admin_home.html')
+
+        try:
+            new_user = CustomUser.objects.create(
+                name=name,
+                email=email,
+                role=role
+            )
+            new_user.save()
+            messages.success(request, 'Account has been added successfully.')
+            return redirect('admin_home')
+        except Exception as e:
+            messages.error(request, f'Error adding account: {str(e)}')
+            return render(request, 'admin_home.html')
     
-    return render(request, 'login.html', {'form': form})  # Updated to render login.html directly
-
-
+    return render(request, 'admin_home.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -68,16 +77,43 @@ def faq_view(request):
 # Create your views here.
 # @login_required
 def home_view(request):
-    return render(request, "home.html")  # Corrected to render home.html
-def admin_home_view(request):
-    return render(request, "admin_home.html")  # Corrected to render home.html
+    if request.method == 'POST':
+        location = request.POST.get('location')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+        time_out = request.POST.get('time_out')
+        occupancy = request.POST.get('occupancy')
+        owner = request.POST.get('owner')
+        alarm = request.POST.get('alarm')
+        respondents = request.POST.get('respondents')
+        damages = request.POST.get('damages')
+        establishment = request.POST.get('establishment')
+        casualty = request.POST.get('casualty')
+        injured = request.POST.get('injured')
+        proof = request.FILES.get('modal-proof')
 
+        # Create a new report
+        try:
+            new_report = InitialReport.objects.create(
+                where=location,
+                date=date,
+                time=f"{date} {time}",
+                time_of_fire_out=f"{date} {time_out}",  
+                occupancy_type=occupancy,
+                name_of_owner=owner,
+                alarm_status=alarm,
+                no_of_respondents=respondents,
+                estimated_damage=damages,
+                no_of_establishments=establishment,
+                no_of_casualties=casualty,
+                no_of_injured=injured,
+                proof=proof
+            )
+            new_report.save()
+            messages.success(request, 'Report has been submitted successfully.')
+            return redirect('home')  
+        except Exception as e:
+            messages.error(request, f'Error submitting report: {str(e)}')
+            return render(request, 'home.html')
 
-
-
-class ProtectedView(LoginRequiredMixin, View):
-    login_url = '/login/'
-    redirect_field_name = 'redirect_to'
-
-    def get(self, request):
-        return render(request, 'protected.html')  # Corrected to render protected.html
+    return render(request, 'home.html')

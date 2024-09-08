@@ -8,37 +8,42 @@
                 aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action=""  id="add-account-form">
+
+                <form action="{% url 'admin_home' %}" method="POST"  id="add-account-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-name" class="form-label">Name<i class="bi bi-asterisk"></i></label>
-                            <input type="text" class="form-control" id="modal-name" placeholder="e.g. Juan Dela Cruz">
+                            <input type="text" class="form-control" name="name" id="modal-name" placeholder="e.g. Juan Dela Cruz">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-email" class="form-label">Email<i class="bi bi-asterisk"></i></label>
-                            <input type="email" class="form-control" id="modal-email" placeholder="e.g. juandc@gmail.com">
+                            <input type="email" class="form-control" name="email" id="modal-email" placeholder="e.g. juandc@gmail.com">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-role" class="form-label">Role<i class="bi bi-asterisk"></i></label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected >Select the role...</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                                </select>
+                            <select class="form-select" aria-label="Default select example" name="role">
+                                <option value="">Select the role...</option>
+                                <option value="role1">One</option>
+                                <option value="role2">Two</option>
+                                <option value="role3">Three</option>
+                            </select>                            
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <div class="mf-button">
+                            <button class="btn btn-lg px-4" type="submit">Add Account</button>
+                        </div>                   
+                    </div>
                 </form>
+
             </div>
-            <div class="modal-footer">
-                <div class="mf-button">
-                    <button class="btn btn-lg px-4">Add Account</button>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
