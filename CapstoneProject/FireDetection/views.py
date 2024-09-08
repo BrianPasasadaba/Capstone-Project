@@ -59,11 +59,12 @@ def login_view(request):
 
 # Logout view
 def logout_view(request):
-    if request.method == 'POST':
-        logout(request)
-        return redirect('login')  # Redirect to login page after logout
-    else:
-        return redirect('home')
+    logout(request)
+    response = redirect('login')
+    response.set_cookie('logged_out', 'true')
+    response['Cache-Control'] = 'no-store'
+    response['Pragma'] = 'no-cache'
+    return response
 
 def analytics_view(request):
    return render(request, "analytics.html")
