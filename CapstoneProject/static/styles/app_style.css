@@ -695,7 +695,8 @@ main{
 }
 
 .incident-bars{
-    width: 800px;
+    /* border: green 1px solid; */
+    width: 870px;
     height: 100%;
     list-style: none;
     display: flex;
@@ -705,13 +706,13 @@ main{
     margin: 0;
     align-items: start;
     justify-content: space-evenly;
-    gap: 6rem;
+    gap: 2rem;
 }
 
 .incident-bars li{
     /* border: green 1px solid; */
     display: table-cell;
-    width: 100px;
+    width: 150px;
     height: 350px;
     position: relative;
 }
@@ -723,6 +724,7 @@ main{
     bottom: -30px;
     left: 0;
     text-align: center;
+    font-weight: 600;
 }
 
 .incident-bars .bar{
@@ -730,8 +732,8 @@ main{
     background: orange;
     width: 75px;
     position: absolute;
-    margin-left: 10px;
     bottom: 0;
+    margin-left: var(--margin-half);
     text-align: center;
     transition: 0.5s;
     transition-property: background, var(--box-shadow);
@@ -860,11 +862,6 @@ main{
     .detect-card{
         width:50%;
     }
-
-    .incident-bars{
-        gap: var(--gap-1);
-    }
-
 }
 
 @media (max-width: 700px) {
@@ -882,10 +879,6 @@ main{
 
     .detect-card{
         width:80%;
-    }
-
-    .incident-bars{
-        gap: 0;
     }
 
 }
