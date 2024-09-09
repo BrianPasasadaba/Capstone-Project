@@ -45,6 +45,7 @@
                     </div>
                 </div>
                 <div class="rb-table">
+            
                     <table>
                         <thead>
                             <tr>
@@ -56,42 +57,33 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for report in reports %}
                             <tr>
                                 <td>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-{{ report.id }}">
+                                        <label class="form-check-label" for="flexCheckDefault-{{ report.id }}">
                                         </label>
-                                      </div>
+                                    </div>
                                 </td>
-                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">Barangay Market Area</td>
-                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">08/09/2024</td>
-                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">12:00 PM</td>
+                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">{{ report.where }}</td>
+                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">{{ report.date|date:"m/d/Y" }}</td>
+                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">{{ report.time|date:"h:i A" }}</td>
                                 <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">
+                                    <div>
                                     <div>
                                         <h6>Resolved</h6>
                                     </div>
                                 </td>
                             </tr>
+                            {% empty %}
                             <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                        </label>
-                                      </div>
-                                </td>
-                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">Barangay Market Area</td>
-                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">07/11/2024</td>
-                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">2:35 PM</td>
-                                <td data-bs-toggle="modal" data-bs-target="#report-preview-modal">
-                                    <div>
-                                        <h6>Ongoing</h6>
-                                    </div>
-                                </td>
+                                <td colspan="5">No reports available.</td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
+
                 </div>
                 <div class="rb-buttons">
                     <div class="rb-export">
@@ -117,7 +109,7 @@
         </div>
     </div>
 </main>
-<!-- Include the modal -->
+
 {% include "modal_preview_report.html" %}
 
 {% endblock %}

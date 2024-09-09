@@ -1,12 +1,9 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-# For class-based views [CBV]
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-# Import the User class (model)
 from django.contrib.auth.models import User
-# Import the User class (model)
 from .forms import RegisterForms
 from django.http import FileResponse
 from django.contrib import admin
@@ -14,6 +11,10 @@ from django.contrib import messages
 from .models import CustomUser  
 from django.core.validators import validate_email 
 from .models import InitialReport
+from datetime import date,  timedelta
+from django.db.models.functions import TruncMonth
+from django.utils.timezone import now
+from django.db.models import Count
 
 def serve_css(request):
     return FileResponse(open('staticfiles/styles/style.css', 'rb'))
@@ -26,28 +27,29 @@ def register_view(request):
         
         if not name or not email or not role:
             messages.error(request, 'All fields are required.')
-            return render(request, 'admin_home.html')
+        else:
+            try:
+                new_user = CustomUser.objects.create(
+                    name=name,
+                    email=email,
+                    role=role
+                )
+                new_user.save()
+                messages.success(request, 'Account has been added successfully.')
+            except Exception as e:
+                messages.error(request, f'Error adding account: {str(e)}')
 
-        try:
-            new_user = CustomUser.objects.create(
-                name=name,
-                email=email,
-                role=role
-            )
-            new_user.save()
-            messages.success(request, 'Account has been added successfully.')
-            return redirect('admin_home')
-        except Exception as e:
-            messages.error(request, f'Error adding account: {str(e)}')
-            return render(request, 'admin_home.html')
-    
-    return render(request, 'admin_home.html')
+        return redirect('admin_home')
+
+    accounts = CustomUser.objects.all()
+    return render(request, 'admin_home.html', {'accounts': accounts})
+
 
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)  # Ensure backend is set correctly
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             next_url = request.POST.get('next') or request.GET.get('next') or 'home'
@@ -66,16 +68,49 @@ def logout_view(request):
     response['Pragma'] = 'no-cache'
     return response
 
+
 def analytics_view(request):
-   return render(request, "analytics.html")
+    today = date.today()
+    start_of_week = today - timedelta(days=today.weekday())
+    start_of_month = today.replace(day=1)
+    start_of_year = today.replace(month=1, day=1)
+
+    latest_reports = InitialReport.objects.order_by('-time')[:5]
+
+    detected_today = InitialReport.objects.filter(date=today).count()
+    reported_this_week = InitialReport.objects.filter(date__gte=start_of_week).count()
+    responded_this_month = InitialReport.objects.filter(date__gte=start_of_month).count()
+    responded_this_year = InitialReport.objects.filter(date__gte=start_of_year).count()
+
+    # Dynamic incident data for 2024
+    incidents_per_year = {}
+    incidents_per_year[2024] = InitialReport.objects.filter(date__year=2024).count()
+
+    context = {
+        'detected_today': detected_today,
+        'reported_this_week': reported_this_week,
+        'responded_this_month': responded_this_month,
+        'responded_this_year': responded_this_year,
+        'latest_reports': latest_reports,
+        'incidents_per_year': incidents_per_year,  # Pass the 2024 dynamic data
+    }
+
+    return render(request, "analytics.html", context)
+
+
 
 def reports_view(request):
-   return render(request, "reports.html")
+    reports = InitialReport.objects.all()  
+    context = {
+        'reports': reports,
+    }
+    return render(request, 'reports.html', context)
+
 
 def faq_view(request):
    return render(request, "faq.html")
 
-# Create your views here.
+
 # @login_required
 def home_view(request):
     if request.method == 'POST':
@@ -93,7 +128,6 @@ def home_view(request):
         injured = request.POST.get('injured')
         proof = request.FILES.get('modal-proof')
 
-        # Create a new report
         try:
             new_report = InitialReport.objects.create(
                 where=location,

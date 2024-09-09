@@ -24,72 +24,72 @@
     <div class="mn-content-area">
         <div class="analyses-box">
         <!--4 ANALYSES BOX START-->
-            <div class="detected-card">
-                <div class="status">
-                    <div class="stat-progress">
-                        <svg>
-                            <circle cx="38" cy="38"
-                            r="36"></circle>
-                        </svg>
-                        <div class="prog-text">
-                            <p>Total: 80</p>
-                        </div>
+        <div class="detected-card">
+            <div class="status">
+                <div class="stat-progress">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="prog-text">
+                        <p>Total: {{ detected_today }}</p> 
                     </div>
-                    <div class="stat-body">
-                        <div class="stat-info">
-                            <h4>12</h4>
-                        </div>
-                        <div class="stat-label">
-                            <h6>Detected</h6>
-                            <h5>THIS DAY</h5>
-                        </div>
+                </div>
+                <div class="stat-body">
+                    <div class="stat-info">
+                        <h4>{{ detected_today }}</h4>
+                    </div>
+                    <div class="stat-label">
+                        <h6>Detected</h6>
+                        <h5>THIS DAY</h5>
                     </div>
                 </div>
             </div>
-            <div class="reported-card">
-                <div class="status">
-                    <div class="stat-progress">
-                        <svg>
-                            <circle cx="38" cy="38"
-                            r="36"></circle>
-                        </svg>
-                        <div class="prog-text">
-                            <p>Total: 80</p>
-                        </div>
+        </div>        
+
+        <div class="reported-card">
+            <div class="status">
+                <div class="stat-progress">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="prog-text">
+                        <p>Total: {{ reported_this_week }}</p>
                     </div>
-                    <div class="stat-body">
-                        <div class="stat-info">
-                            <h4>12</h4>
-                        </div>
-                        <div class="stat-label">
-                            <h6>Reported</h6>
-                            <h5>THIS WEEK</h5>
-                        </div>
+                </div>
+                <div class="stat-body">
+                    <div class="stat-info">
+                        <h4>{{ reported_this_week }}</h4>
+                    </div>
+                    <div class="stat-label">
+                        <h6>Reported</h6>
+                        <h5>THIS WEEK</h5>
                     </div>
                 </div>
             </div>
-            <div class="responded-card">
-                <div class="status">
-                    <div class="stat-progress">
-                        <svg>
-                            <circle cx="38" cy="38"
-                            r="36"></circle>
-                        </svg>
-                        <div class="prog-text">
-                            <p>Total: 80</p>
-                        </div>
+        </div>
+
+        <div class="responded-card">
+            <div class="status">
+                <div class="stat-progress">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="prog-text">
+                        <p>Total: {{ responded_this_month }}</p>
                     </div>
-                    <div class="stat-body">
-                        <div class="stat-info">
-                            <h4>12</h4>
-                        </div>
-                        <div class="stat-label">
-                            <h6>Responded</h6>
-                            <h5>THIS MONTH</h5>
-                        </div>
+                </div>
+                <div class="stat-body">
+                    <div class="stat-info">
+                        <h4>{{ responded_this_month }}</h4>
+                    </div>
+                    <div class="stat-label">
+                        <h6>Responded</h6>
+                        <h5>THIS MONTH</h5>
                     </div>
                 </div>
             </div>
+        </div>        
+
             <div class="total-responded-card">
                 <div class="status">
                     <div class="stat-progress">
@@ -98,12 +98,12 @@
                             r="36"></circle>
                         </svg>
                         <div class="prog-text">
-                            <p>Total: 80</p>
+                            <p>Total: {{ responded_this_year }}</p>
                         </div>
                     </div>
                     <div class="stat-body">
                         <div class="stat-info">
-                            <h4>12</h4>
+                            <h4>{{ responded_this_year }}</h4>
                         </div>
                         <div class="stat-label">
                             <h6>Responded</h6>
@@ -112,7 +112,6 @@
                     </div>
                 </div>
             </div>
-<!--4 ANALYSES BOX END-->
         </div>
 
 {% comment %} CHART AND LATEST DETECT {% endcomment %}
@@ -133,85 +132,59 @@
                                 <li><span>0</span></li>
                             </ul>
                             <ul class="incident-bars">
-                                <li><div class="bar" data-percentage="55" style="background: #E4AE7E;"></div><span>Option 01</span></li>
-                                <li><div class="bar" data-percentage="85" style="background: #E08E44;"></div><span>Option 02</span></li>
-                                <li><div class="bar" data-percentage="75" style="background: #ED7027;"></div><span>Option 03</span></li>
-                                <li><div class="bar" data-percentage="50" style="background: #E4AE7E;"></div><span>Option 04</span></li>
-                                <li><div class="bar" data-percentage="90" style="background: #3C4273;"></div><span>Option 05</span></li>
-                                <li><div class="bar" data-percentage="75" style="background: #FE982D;"></div><span>Option 06</span></li>
-                                <li><div class="bar" data-percentage="60" style="background: #FEBF4D;"></div><span>Option 07</span></li>
+                                <li><div class="bar" data-percentage="55" style="background: #E4AE7E;"></div><span>2018</span></li>
+                                <li><div class="bar" data-percentage="85" style="background: #E08E44;"></div><span>2019</span></li>
+                                <li><div class="bar" data-percentage="75" style="background: #ED7027;"></div><span>2020</span></li>
+                                <li><div class="bar" data-percentage="50" style="background: #E4AE7E;"></div><span>2021</span></li>
+                                <li><div class="bar" data-percentage="45" style="background: #3C4273;"></div><span>2022</span></li>
+                                <li><div class="bar" data-percentage="60" style="background: #FE982D;"></div><span>2023</span></li>
+                                <li>
+                                    <div class="bar" data-percentage="{{ incidents_per_year.2024 }}" 
+                                         style="background: #3C4273; height: {{ incidents_per_year.2024 }}%;"></div>
+                                    <span>2024</span>
+                                </li>                        
                             </ul>
                     </div>
 <!--CHART END-->
                 </div>
             </div>
 
+            
             <div class="detect-card">
                 <div class="detect-header">
                     <h1>LATEST</h1>
                 </div>
                 <div class="detect-body">
-<!--LATEST DETECT START-->
-                    <div class="detect-content-1">
-                        <div class="dc-info">
-                            <div class="dc-header">
-                                <h6>dc-header</h6>
+                    {% if latest_reports %}
+                        {% for report in latest_reports %}
+                            <div class="detect-content-{{ forloop.counter }}">
+                                <div class="dc-info">
+                                    <div class="dc-header">
+                                        <h6>{{ report.where|default:"No report available" }}</h6>
+                                    </div>
+                                    <div class="dc-date-time">
+                                        <h6>{{ report.date|date:"M d, Y"|default:"N/A" }}</h6>
+                                        <h6>{{ report.time|date:"H:i"|default:"N/A" }}</h6>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="dc-date-time">
-                                <h6>dc-date</h6>
-                                <h6>dc-time</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="detect-content-2">
-                        <div class="dc-info">
-                            <div class="dc-header">
-                                <h6>dc-header</h6>
-                            </div>
-                            <div class="dc-date-time">
-                                <h6>dc-date</h6>
-                                <h6>dc-time</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="detect-content-3">
-                        <div class="dc-info">
-                            <div class="dc-header">
-                                <h6>dc-header</h6>
-                            </div>
-                            <div class="dc-date-time">
-                                <h6>dc-date</h6>
-                                <h6>dc-time</h6>
+                        {% endfor %}
+                    {% else %}
+                        <div class="detect-content">
+                            <div class="dc-info">
+                                <div class="dc-header">
+                                    <h6>No reports available</h6>
+                                </div>
+                                <div class="dc-date-time">
+                                    <h6>N/A</h6>
+                                    <h6>N/A</h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="detect-content-4">
-                        <div class="dc-info">
-                            <div class="dc-header">
-                                <h6>dc-header</h6>
-                            </div>
-                            <div class="dc-date-time">
-                                <h6>dc-date</h6>
-                                <h6>dc-time</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="detect-content-5">
-                        <div class="dc-info">
-                            <div class="dc-header">
-                                <h6>dc-header</h6>
-                            </div>
-                            <div class="dc-date-time">
-                                <h6>dc-date</h6>
-                                <h6>dc-time</h6>
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
-<!--LATEST DETECT END-->
             </div>
-        </div>
-    </div>
+            
 </main>
 
 
