@@ -90,6 +90,7 @@ header {
     color: var(--color-white);
     white-space: nowrap;
     overflow: hidden; /* Hide any overflow content */
+    background-color: var(--color-primary);
 }
 
 .header-content {
@@ -606,7 +607,7 @@ main{
 
 .chart-detect-box{
     /* border: green 2px solid; */
-    min-height: 65vh;
+    min-height: 60vh;
     height: auto;
     margin-top: var(--margin-1);
     display: grid;
@@ -1606,7 +1607,7 @@ main{
     justify-content: start;
     gap: var(--gap-1);
 }
-/* ============================== ACCOUNTS MODAL============================== */
+/* ============================== POP UP MODAL============================== */
 #pop-up-modal{
     text-align: center;
 }
@@ -1627,6 +1628,11 @@ main{
     align-items: center;
 }
 #pop-up-modal .modal-title{
+    /* border: 2px solid var(--color-primary); */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     font-weight: 600;
 }
 
