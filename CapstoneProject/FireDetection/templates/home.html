@@ -1,6 +1,14 @@
 {% extends "sidebar.html" %}
 {% load static %}
 {% block title %} True the Fire {% endblock %}
+{% block mycss %}
+<style>
+    #videoStream, #canvas {
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <header>
@@ -36,8 +44,14 @@
             </div>
             <div class="surveillance-body">
                 <div class="surveillance-feed">
-                    <h3>Surveillance Feed</h3>
+                    <!-- <video id="videoStream" width="640" height="480" autoplay></video> -->
+                    <img id="videoStream" width="640" height="480" style="display: none;" />
+                    <canvas id="canvas" width="640" height="480"></canvas>
                 </div>
+                <!-- 
+                <button onclick="playVid()" class="btn-create btn-lg px-4 py-3">Play Video</button>
+                <button onclick="pauseVid()" class="btn-create btn-lg px-4 py-3">Pause Video</button>
+                --> 
                 <div class="create-button">
                     <a class="btn-create btn-lg px-4 py-3" data-bs-toggle="modal" data-bs-target="#create-report-modal">Create Report</a>
                 </div>
@@ -54,4 +68,66 @@
 <!-- ADD SCRIPTS HERE -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!--
+<script>
+    const video = document.getElementById('videoStream');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            console.error('Error: ', err);
+        });
+
+    function playVid() { 
+        video.play(); 
+        } 
+        
+        function pauseVid() { 
+        video.pause(); 
+        } 
+</script>
+-->
+
+<!-- WebSocket connection -->
+<script>
+    const video = document.getElementById('videoStream');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+
+    // Open WebSocket connection
+    const socket = new WebSocket('ws://' + window.location.host + '/ws/detect/');
+
+    // When receiving data from the WebSocket
+    socket.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        const image = data['image'];
+        const boxes = data['boxes'];
+
+        // Here you can draw boxes on the video using canvas or any other method
+        // For example: drawing using canvas
+
+        // Update the image element's source
+        video.src = 'data:image/jpeg;base64,' + image;
+        video.onload = function() {
+            // Draw on canvas
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Draw bounding boxes
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'red';
+            ctx.fillStyle = 'red';
+            boxes.forEach(box => {
+                ctx.strokeRect(box.xmin, box.ymin, box.xmax - box.xmin, box.ymax - box.ymin);
+                ctx.fillText(box.label, box.xmin, box.ymin > 10 ? box.ymin - 5 : 10);
+            });
+        };
+    };
+
+    socket.onclose = function(e) {
+        console.error('WebSocket closed unexpectedly');
+    };
+</script>
 {% endblock %}

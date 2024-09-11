@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'FireDetection',
     'livereload',
     'active_link',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'CapstoneProject.wsgi.application'
+ASGI_APPLICATION = 'CapstoneProject.asgi.application'
+
+# WebSocket URL patterns
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 # Database
 DATABASES = {
