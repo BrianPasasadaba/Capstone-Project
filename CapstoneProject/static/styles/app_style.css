@@ -206,16 +206,26 @@ aside{
     flex-direction: column; /* Stacks nav links in a column */
 }
 
-.sb-body .nav-link {
+.sb-body .nav-con {
     /* border: red solid 2px; */
-    border-radius: var(--border-radius-button-half);
-    margin-bottom: var(--margin-1);
-    padding: 2px;
-    padding-left: var(--padding-2);
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: start;
-    gap: 1.2rem;
+    width: 65%;
+    gap: var(--gap-1);
+}
+
+.sb-body .nav-link {
+    /* border: orange solid 2px; */
+    border-radius: var(--border-radius-button-half);
+    margin-bottom: var(--margin-half);
+    padding: 2px;
+    /* padding-left: var(--padding-2); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-1);
     width: 100%;
 }
 
@@ -426,6 +436,9 @@ main{
         padding-bottom: 10px;
         justify-content: center;
         align-content: center;
+    }
+    .sb-body  .nav-con {
+        justify-content: center;
     }
 }
 
@@ -671,7 +684,7 @@ main{
     padding: var(--padding-1);
     padding-top: var(--padding-2);
     justify-content: start;
-    gap:0.5rem;
+    gap:var(--gap-half);
     overflow-x: auto;
 }
 
@@ -707,7 +720,7 @@ main{
     margin: 0;
     align-items: start;
     justify-content: space-evenly;
-    gap: 2rem;
+    gap: var(--gap-2);
 }
 
 .incident-bars li{
@@ -843,7 +856,7 @@ main{
 /* ================================  Media Queries for Responsive Design ================================  */
 
 /* Analytics adjustments for smaller screens */
-@media (max-width: 1220px) {
+@media (max-width: 1620px) {
     .analyses-box {
         grid-template-columns: repeat(2, 1fr);
     }
