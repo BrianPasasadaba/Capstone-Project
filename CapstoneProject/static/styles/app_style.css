@@ -161,6 +161,8 @@ aside{
     border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     overflow-y: hidden; /* Enable scrolling inside the sidebar if content overflows */
+    display: flex; /* Enable flexbox on the sidebar */
+    flex-direction: column; /* Align children in a column */
 }
 
 .sb-header{
@@ -191,11 +193,10 @@ aside{
 .sb-body {
     /* border: black solid 2px; */
     width: 100%;
-    height: 72%;
-    padding:var(--padding-half);
-    justify-content: center;
+    padding: var(--padding-half);
     display: flex;
     flex-direction: column; /* Aligns nav links vertically */
+    flex-grow: 1; /* Allows sb-body to fill remaining space */
 }
 
 .sb-body nav {
