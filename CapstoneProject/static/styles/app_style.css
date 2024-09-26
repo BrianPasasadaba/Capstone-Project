@@ -161,6 +161,8 @@ aside{
     border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     overflow-y: hidden; /* Enable scrolling inside the sidebar if content overflows */
+    display: flex; /* Enable flexbox on the sidebar */
+    flex-direction: column; /* Align children in a column */
 }
 
 .sb-header{
@@ -191,11 +193,10 @@ aside{
 .sb-body {
     /* border: black solid 2px; */
     width: 100%;
-    height: 72%;
-    padding:var(--padding-half);
-    justify-content: center;
+    padding: var(--padding-half);
     display: flex;
     flex-direction: column; /* Aligns nav links vertically */
+    flex-grow: 1; /* Allows sb-body to fill remaining space */
 }
 
 .sb-body nav {
@@ -369,34 +370,7 @@ main{
     align-content: center;
 }
 
-.create-button{
-    /* border: var(--color-secondary) solid 3px; */
-    margin-bottom: var(--margin-2);
-    display: flex;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    bottom: 0;
-}
 
-.create-button .btn-create{
-    background-color: var(--color-tertiary) !important;
-    border: none;
-    border-radius: var(--border-radius-button-half);
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    transition: var(--tran-03);
-    text-decoration: none;
-    color: var(--color-primary);
-}
-
-.create-button .btn-create:hover{
-    background-color: var(--color-hover) !important;
-    transform: scale(1.05)!important;
-    color: var(--color-primary);
-    cursor: pointer;
-}
 
 /* ================================  Media Queries for Responsive Design ================================  */
 
@@ -935,6 +909,7 @@ main{
 }
 
 .rb-header{
+    border: var(--color-secondary) 1px solid;
     border-bottom: var(--color-primary) 1.5px solid;
     width: 100%;
     height: 100px;
@@ -973,8 +948,17 @@ main{
     font-weight: 300;
 }
 
+.rbh-left{
+    /* border: var(--color-secondary) 1px solid; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-1);
+}
+
 .rb-header input{
-    width: 250px;
+    width: 275px;
     height: 40px;
     font-weight: 100;
     padding:var(--padding-half);
@@ -990,6 +974,39 @@ main{
 .rb-header input:focus-visible {
     outline: none; /* Remove the default focus outline */
     border: var(--border-input); /* Apply your custom border if needed */
+}
+
+.rbh-left .create-button{
+    /* border: var(--color-secondary) solid 3px; */
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.rbh-left .create-button .btn-create{
+    background-color: var(--color-tertiary) !important;
+    border: none;
+    border-radius: var(--border-radius-button-half);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: var(--tran-03);
+    text-decoration: none;
+    color: var(--color-primary);
+    font-weight: 500;
+    font-size: 1rem;
+    width: 160px;
+    padding: var(--padding-half);
+    padding-left: 0;
+
+}
+
+.rbh-left .create-button .btn-create:hover{
+    background-color: var(--color-hover) !important;
+    transform: scale(1.05)!important;
+    color: var(--color-primary);
+    cursor: pointer;
 }
 
 .rb-table{

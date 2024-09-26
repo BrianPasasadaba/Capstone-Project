@@ -28,24 +28,35 @@
             </div>
             <div class="reports-body">
                 <div class="rb-header">
-                    <div class="rbh-search">
-                        <input class="search-report" placeholder="Search">
+                    <div class="rbh-left">
+                        <div class="rbh-search">
+                            <input class="search-report" placeholder="Search">
+                        </div>
+                        <div class="create-button">
+                            <a class="btn-create btn-md btn" data-bs-toggle="modal" data-bs-target="#create-report-modal"><i class="bi bi-plus-circle px-1"></i>Create Report</a>
+                        </div>
                     </div>
-                    <div class="rbh-filter">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                              Filter
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                              <li><a class="dropdown-item" href="#">Action</a></li>
-                              <li><a class="dropdown-item" href="#">Another action</a></li>
-                              <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                          </div>
+                    <div class="rbh-right">
+                        <div class="rbh-filter">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Filter
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
+<<<<<<< HEAD
 
                 <div class="rb-table">   
+=======
+                <div class="rb-table">
+>>>>>>> f5519f79eed676575d99a4631128e490a15da1a6
                     <table>
                         <thead>
                             <tr>
@@ -125,6 +136,7 @@
         </div>
     </div>
 </main>
+<<<<<<< HEAD
 
 <script>
     
@@ -171,6 +183,10 @@ document.getElementById('modal-proof-image').src = `proofs/${proof}`;
 </script>
 
 
+=======
+<!-- Include the modal -->
+{% include "modal_create_report.html" %}
+>>>>>>> f5519f79eed676575d99a4631128e490a15da1a6
 {% include "modal_preview_report.html" %}
 
 {% endblock %}
