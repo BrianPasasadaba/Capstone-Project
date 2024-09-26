@@ -205,6 +205,7 @@ aside{
     height: 100%;
     display: flex;
     flex-direction: column; /* Stacks nav links in a column */
+    padding-bottom: var(--padding-1);
 }
 
 .sb-body .nav-con {
