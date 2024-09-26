@@ -18,7 +18,6 @@ ALLOWED_HOSTS = []
 LOGIN_URL = '/login/'
 
 AUTH_USER_MODEL = 'FireDetection.CustomUser'
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,15 +47,16 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'FireDetection', 'templates'),  # Dynamic path construction
+            os.path.join(BASE_DIR, 'FireDetection', 'templates'),  
         ],
-        'APP_DIRS': False,  # Disable app directories
+        'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
             'loaders': [
                 ('django.template.loaders.filesystem.Loader', [os.path.join(BASE_DIR, 'FireDetection', 'templates')]),
@@ -76,7 +76,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -88,7 +87,7 @@ DATABASES = {
     }
 }
 
-# Password validation
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -104,24 +103,24 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Adjust path as needed
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
-    'FireDetection.backends.EmailBackend',  # Custom authentication backend
+    'FireDetection.backends.EmailBackend',  
     'django.contrib.auth.backends.ModelBackend',
 ]
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
+

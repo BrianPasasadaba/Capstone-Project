@@ -14,82 +14,85 @@
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-loc" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="modal-loc" value=" Barangay Caingin">
+                            <input type="text" class="form-control" id="modal-loc" >
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="modal-date"  value="2024-09-05">
+                            <input type="date" class="form-control" id="modal-date"  >
                         </div>
                         <div class="form-column">
                             <label for="modal-time" class="form-label">Time of Arrival</label>
-                            <input type="time" class="form-control" id="modal-time" value="12:00">
+                            <input type="time" class="form-control" id="modal-time" >
                         </div>
                         <div class="form-column">
                             <label for="modal-time" class="form-label">Time of Fire Out</label>
-                            <input type="time" class="form-control" id="modal-time" value="14:00">
+                            <input type="time" class="form-control" id="modal-time-out">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="modal-occupancy" class="form-label">Occupancy Type</label>
-                            <select class="form-select" aria-label="Default select example" >
-                                <option value="" >Select the occupancy type...</option>
-                                <option value="1" selected>Residential</option>
-                                <option value="2">Industrial</option>
-                                <option value="3">Business</option>
-                                </select>
+                            <label for="modal-occupancy" class="form-label">Occupancy Type<i class="bi bi-asterisk"></i></label>
+                            <select class="form-select" aria-label="Default select example" name="occupancy">
+                                <option value="">Select the occupancy type...</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
                         </div>
                         <div class="form-column">
-                            <label for="modal-name" class="form-label">Name of Owner</label>
-                            <input type="text" class="form-control" id="modal-name" value="Juan Dela Cruz">
+                            <label for="modal-name" class="form-label">Name of Owner<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="owner" id="modal-name" placeholder="e.g. Juan Dela Cruz">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="modal-alarm" class="form-label">Alarm Status</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <label for="modal-alarm" class="form-label">Alarm Status<i class="bi bi-asterisk"></i></label>
+                            <select class="form-select" aria-label="Default select example" name="alarm">
                                 <option value="">Select the alarm status...</option>
                                 <option value="1">One</option>
-                                <option value="2" selected>Two</option>
+                                <option value="2">Two</option>
                                 <option value="3">Three</option>
-                                <option value="4">Four</option>
-                                <option value="5">Five</option>
-                                </select>
+                            </select>
                         </div>
                         <div class="form-column">
-                            <label for="modal-respondents" class="form-label">No. of Respondents</label>
-                            <input type="number" class="form-control" id="modal-respondents" value="11">
+                            <label for="modal-respondents" class="form-label">No. of Respondents<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="modal-respondents" placeholder="e.g. 11" name="respondents">
                         </div>
                         <div class="form-column">
-                            <label for="modal-damages" class="form-label">Estimated Damages</label>
-                            <input type="text" class="form-control" id="modal-damages" value="P1,000,000">
+                            <label for="modal-damages" class="form-label">Estimated Damages<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="damages" id="modal-damages" placeholder="e.g. P1,000,000">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="modal-establish" class="form-label">No. of Establishments</label>
-                            <input type="number" class="form-control" id="modal-establish" value="11">
+                            <label for="modal-establish" class="form-label">No. of Establishments<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="modal-establish" placeholder="e.g. 11" name="establishment">
                         </div>
                         <div class="form-column">
-                            <label for="modal-casualties" class="form-label">No. of Casualties</label>
-                            <input type="number" class="form-control" id="modal-casualties" value="11">
+                            <label for="modal-casualties" class="form-label">No. of Casualties<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="modal-casualties" placeholder="e.g. 11" name="casualty">
                         </div>
+
                         <div class="form-column">
-                            <label for="modal-injured" class="form-label">No. of Injured</label>
-                            <input type="number" class="form-control" id="modal-injured" value="11">
+                            <label for="modal-injured" class="form-label">No. of Injured<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="modal-injured" placeholder="e.g. 11" name="injured">
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-column">
-                            <label for="modal-proof" class="form-label">Proof</label>
-                            <div class="proof-image">
-                                <img src="{% static 'images/fire-proof.png' %}" alt="">
-                            </div>
-                            <input type="file" class="form-control" id="modal-proof" value="mario@example.com">
-                        </div>
+
+                    <div class="form-column">
+                        <label for="modal-proof" class="form-label">Proof<i class="bi bi-asterisk"></i></label>
+                        <!-- Hidden input for form submission, if needed -->
+                        <input type="hidden" id="modal-proof" name="proof">
+                    
+                        <!-- Image tag to display the image -->
+                        <img id="modal-proof-image" src="" alt="Proof Image" class="img-fluid" style="max-width: 100%;">
                     </div>
+                    
+                    
+      
+                      
                 </form>
             </div>
             <div class="modal-footer">

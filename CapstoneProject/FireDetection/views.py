@@ -46,17 +46,24 @@ def register_view(request):
 
 
 def login_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
+
+        user = authenticate(request, username=email, password=password)
+
         if user is not None:
             login(request, user)
-            next_url = request.POST.get('next') or request.GET.get('next') or 'home'
-            return redirect(next_url)
+
+            if user.is_staff:
+                return redirect('admin_home')  
+            elif user.is_active:
+                return redirect('home')
+            else:
+                messages.error(request, "Your account is not active.")
         else:
-            error_message = "Invalid Credentials"
-            return render(request, 'login.html', {'error': error_message})
+            messages.error(request, "Invalid email or password.")
+
     return render(request, 'login.html')
 
 # Logout view
@@ -100,7 +107,7 @@ def analytics_view(request):
 
 
 def reports_view(request):
-    reports = InitialReport.objects.all()  
+    reports = InitialReport.objects.all() 
     context = {
         'reports': reports,
     }

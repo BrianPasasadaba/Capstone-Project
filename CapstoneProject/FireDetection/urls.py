@@ -3,6 +3,8 @@ from . import views
 from .views import serve_css
 from .views import login_view
 from .views import logout_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.login_view, name='login'),
@@ -14,3 +16,4 @@ urlpatterns = [
     path('admin_home/', views.register_view, name='admin_home'),
      path('logout/', logout_view, name='logout'),
 ]
+urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

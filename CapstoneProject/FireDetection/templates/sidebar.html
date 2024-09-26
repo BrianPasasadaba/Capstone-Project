@@ -71,9 +71,13 @@
                         <h2>BFP</h2>
                     </div>
                 </div>
+
                 <div class="sb-body">
                     <nav class="nav">
+
+                        {% if request.user.is_authenticated and request.user.is_active and request.user.is_staff %}
                         <a class="nav-link {% active_link 'admin_home' 'custom-class' %}" href="{% url 'admin_home' %}">
+                            
                             <div class="nav-con">
                                 <span class="icon">
                                     <i class="bi bi-person-fill-gear"></i>
@@ -81,6 +85,8 @@
                                 <span class="description">Accounts</span>
                             </div>
                         </a>
+                        {% endif %}
+
                         <!-- <a class="nav-link {% active_link 'home' 'custom-class' %}" href="{% url 'home' %}">
                             <span class="icon">
                                 <i class="bi bi-tv"></i>
