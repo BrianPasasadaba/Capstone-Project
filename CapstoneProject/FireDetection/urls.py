@@ -15,5 +15,7 @@ urlpatterns = [
     path('test-css/', serve_css, name='test-css'),
     path('admin_home/', views.register_view, name='admin_home'),
      path('logout/', logout_view, name='logout'),
+    path('toggle_verified/<int:account_id>/', views.toggle_verified, name='toggle_verified'),
+    path('toggle_resolved/<int:report_id>/', views.toggle_resolved, name='toggle_resolved'),
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

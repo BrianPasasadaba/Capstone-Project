@@ -29,7 +29,7 @@
             <div class="accounts-body">
                 <div class="ab-header">
                     <div class="abh-search">
-                        <input class="search-report" placeholder="Search">
+                        <input type="text" id="accountSearchInput" class="search-report" placeholder="Search Name, Role, or Email">
                     </div>
                     <div class="abh-filter">
                         <div class="dropdown">
@@ -56,7 +56,7 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody  id="accountTable">
                             {% for account in accounts %}
                             <tr>
                                 <td>
@@ -71,8 +71,13 @@
                                 <td>{{ account.email }}</td>
                                 <td>
                                     <div>
-                                        <h6>{{ account.verified|yesno:"Verified,Unverified" }}</h6>
+                                        <h6>
+                                            <a href="{% url 'toggle_verified' account.id %}">
+                                                {{ account.verified|yesno:"Verified,Unverified" }}
+                                            </a>
+                                        </h6>
                                     </div>
+                                    
                                 </td>
                             </tr>
                             {% empty %}
@@ -122,6 +127,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+<script>
+    document.getElementById('accountSearchInput').addEventListener('keyup', function() {
+    var searchValue = this.value.toLowerCase();
+    var tableRows = document.querySelectorAll('#accountTable tr');
+
+    tableRows.forEach(function(row) {
+        var name = row.cells[1].textContent.toLowerCase();
+        var role = row.cells[2].textContent.toLowerCase();
+        var email = row.cells[3].textContent.toLowerCase();
+
+        if (name.includes(searchValue) || role.includes(searchValue) || email.includes(searchValue)) {
+            row.style.display = '';  
+        } else {
+            row.style.display = 'none';  
+        }
+    });
+});
+
+
+
+</script>
 
 
 {% endblock %}

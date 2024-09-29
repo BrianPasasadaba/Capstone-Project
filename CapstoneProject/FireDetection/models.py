@@ -16,8 +16,8 @@ class InitialReport(models.Model):
     no_of_establishments = models.IntegerField()
     no_of_casualties = models.IntegerField()
     no_of_injured = models.IntegerField()
-    proof = models.ImageField(upload_to='proofs/', blank=True, null=True)  # ImageField will handle images
-
+    proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
+    resolved = models.BooleanField(default=False)  # New field
     def __str__(self):
         return f"Report {self.id} - {self.where} on {self.date}"
     

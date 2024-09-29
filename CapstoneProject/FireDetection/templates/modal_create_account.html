@@ -12,29 +12,33 @@
                 <form action="{% url 'admin_home' %}" method="POST"  id="add-account-form">
                     {% csrf_token %}
                     {{ form.as_p }}
+
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-name" class="form-label">Name<i class="bi bi-asterisk"></i></label>
-                            <input type="text" class="form-control" name="name" id="modal-name" placeholder="e.g. Juan Dela Cruz">
+                            <input type="text" class="form-control" name="name" id="modal-name" placeholder="e.g. Juan Dela Cruz" 
+                                   maxlength="60" pattern="[A-Za-z\s]+" title="Only letters are allowed" required>
                         </div>
                     </div>
+                    
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-email" class="form-label">Email<i class="bi bi-asterisk"></i></label>
-                            <input type="email" class="form-control" name="email" id="modal-email" placeholder="e.g. juandc@gmail.com">
+                            <input type="email" class="form-control" name="email" id="modal-email" placeholder="e.g. juandc@gmail.com" maxlength="100" required>
                         </div>
-                    </div>
+                    </div>                    
+
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-role" class="form-label">Role<i class="bi bi-asterisk"></i></label>
                             <select class="form-select" aria-label="Default select example" name="role">
-                                <option value="">Select the role...</option>
                                 <option value="role1">One</option>
                                 <option value="role2">Two</option>
                                 <option value="role3">Three</option>
                             </select>                            
                         </div>
                     </div>
+
                     <div class="modal-footer">
                         <div class="mf-button">
                             <button class="btn btn-lg px-4" type="submit">Add Account</button>
@@ -47,3 +51,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('modal-name').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('modal-email').addEventListener('input', function() {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(this.value)) {
+        this.setCustomValidity("Please enter a valid email address.");
+    } else {
+        this.setCustomValidity("");
+    }
+});
+
+</script>

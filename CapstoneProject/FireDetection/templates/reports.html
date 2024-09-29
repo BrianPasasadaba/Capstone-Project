@@ -27,15 +27,18 @@
                 <h1>List of Reports</h1>
             </div>
             <div class="reports-body">
+
                 <div class="rb-header">
                     <div class="rbh-left">
                         <div class="rbh-search">
-                            <input class="search-report" placeholder="Search">
+                            <input type="text" id="searchInput" class="search-report" placeholder="Search Location, Date, or Time">
                         </div>
+                        
                         <div class="create-button">
                             <a class="btn-create btn-lg btn" data-bs-toggle="modal" data-bs-target="#create-report-modal"><i class="bi bi-plus-circle px-1"></i>Create Report</a>
                         </div>
                     </div>
+                    
                     <div class="rbh-right">
                         <div class="rbh-filter">
                             <div class="dropdown">
@@ -63,7 +66,8 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        
+                        <tbody id="reportTable">
                             {% for report in reports %}
                             <tr 
                                 data-location="{{ report.where }}" 
@@ -81,7 +85,7 @@
                                 data-proof="{{ report.proof }}"
                                 data-bs-toggle="modal" 
                                 data-bs-target="#report-preview-modal">
-                                <!-- Only display these columns in the table -->
+                                
                                 <td>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-{{ report.id }}">
@@ -90,9 +94,7 @@
                                 </td>
                                 <td>{{ report.where }}</td>
                                 <td>{{ report.date|date:"m/d/Y" }}</td>
-                                <td>{{ report.time|date:"h:i A" }}</td>
-                                
-                                
+                                <td>{{ report.time|date:"h:i A" }}</td>                           
                                 <td>
                                     <h6>Resolved</h6>
                                 </td>
@@ -162,30 +164,46 @@ reportRows.forEach(row => {
         const establishments = row.getAttribute('data-establishments');
         const casualties = row.getAttribute('data-casualties');
         const injured = row.getAttribute('data-injured');
-        const proof = document.querySelector('[data-proof]').getAttribute('data-proof');
+        const proof = row.getAttribute('data-proof');
+        
+        document.getElementById('loc').value = location;
+        document.getElementById('date').value = date;
+        document.getElementById('time').value = timeArrival;
+        document.getElementById('time-out').value = timeFireOut; 
+        document.querySelector("select[name='occupant']").value = occupancy;
+        document.getElementById('name').value = owner;
+        document.querySelector("select[name='alarms']").value = alarm;
+        document.getElementById('respondents').value = respondents;
+        document.getElementById('damages').value = damages;
+        document.getElementById('establish').value = establishments;
+        document.getElementById('casualties').value = casualties;
+        document.getElementById('injured').value = injured;
+        document.getElementById('proof').value = proof;
+ 
+});
+
+    });
 
 
-        // Set modal inputs
-        document.getElementById('modal-loc').value = location;
-        document.getElementById('modal-date').value = date;
-        document.getElementById('modal-time').value = timeArrival;
-        document.getElementById('modal-time-out').value = timeFireOut; 
-        document.querySelector("select[name='occupancy']").value = occupancy;
-        document.getElementById('modal-name').value = owner;
-        document.querySelector("select[name='alarm']").value = alarm;
-        document.getElementById('modal-respondents').value = respondents;
-        document.getElementById('modal-damages').value = damages;
-        document.getElementById('modal-establish').value = establishments;
-        document.getElementById('modal-casualties').value = casualties;
-        document.getElementById('modal-injured').value = injured;
-        document.getElementById('modal-proof').value = proof;
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+    var searchValue = this.value.toLowerCase();
+    var tableRows = document.querySelectorAll('#reportTable tr');
 
-// Set the image src to display the image
-document.getElementById('modal-proof-image').src = `proofs/${proof}`;
+    tableRows.forEach(function(row) {
+        var location = row.cells[1].textContent.toLowerCase();
+        var date = row.cells[2].textContent.toLowerCase();
+        var time = row.cells[3].textContent.toLowerCase();
 
+        if (location.includes(searchValue) || date.includes(searchValue) || time.includes(searchValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
     });
 });
 
 </script>
+
+
 
 {% endblock %}

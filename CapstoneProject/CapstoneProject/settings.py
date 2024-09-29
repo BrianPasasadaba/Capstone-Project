@@ -15,7 +15,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/'
+
 
 AUTH_USER_MODEL = 'FireDetection.CustomUser'
 INSTALLED_APPS = [

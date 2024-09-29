@@ -15,10 +15,27 @@ from datetime import date,  timedelta
 from django.db.models.functions import TruncMonth
 from django.utils.timezone import now
 from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect
+
+def toggle_resolved(request, report_id):
+    report = get_object_or_404(InitialReport, id=report_id)
+    report.resolved = not report.resolved
+    report.save()
+
+    messages.success(request, f'Report status updated to {"Resolved" if report.resolved else "Unresolved"}.')
+    return redirect('reports')
+
+def toggle_verified(request, account_id):
+    account = get_object_or_404(CustomUser, id=account_id)
+    account.verified = not account.verified
+    account.save()
+    messages.success(request, f'Account verification status updated to {"Verified" if account.verified else "Unverified"}.')
+    return redirect('admin_home')
 
 def serve_css(request):
     return FileResponse(open('staticfiles/styles/style.css', 'rb'))
 
+@login_required
 def register_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -45,6 +62,7 @@ def register_view(request):
     return render(request, 'admin_home.html', {'accounts': accounts})
 
 
+
 def login_view(request):
     if request.method == "POST":
         email = request.POST.get('email')
@@ -53,6 +71,10 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
+            if not user.verified:
+                messages.error(request, "Your account is not verified.")
+                return redirect('login')
+            
             login(request, user)
 
             if user.is_staff:
@@ -63,10 +85,9 @@ def login_view(request):
                 messages.error(request, "Your account is not active.")
         else:
             messages.error(request, "Invalid email or password.")
-
     return render(request, 'login.html')
 
-# Logout view
+@login_required
 def logout_view(request):
     logout(request)
     response = redirect('login')
@@ -75,7 +96,7 @@ def logout_view(request):
     response['Pragma'] = 'no-cache'
     return response
 
-
+@login_required
 def analytics_view(request):
     today = date.today()
     start_of_week = today - timedelta(days=today.weekday())
@@ -99,13 +120,13 @@ def analytics_view(request):
         'responded_this_month': responded_this_month,
         'responded_this_year': responded_this_year,
         'latest_reports': latest_reports,
-        'incidents_per_year': incidents_per_year,  # Pass the 2024 dynamic data
+        'incidents_per_year': incidents_per_year,
     }
 
     return render(request, "analytics.html", context)
 
 
-
+@login_required
 def reports_view(request):
     reports = InitialReport.objects.all() 
     context = {
@@ -113,12 +134,11 @@ def reports_view(request):
     }
     return render(request, 'reports.html', context)
 
-
+@login_required
 def faq_view(request):
    return render(request, "faq.html")
 
-
-# @login_required
+@login_required
 def home_view(request):
     if request.method == 'POST':
         location = request.POST.get('location')
@@ -153,9 +173,9 @@ def home_view(request):
             )
             new_report.save()
             messages.success(request, 'Report has been submitted successfully.')
-            return redirect('home')  
+            return redirect('reports')  
         except Exception as e:
             messages.error(request, f'Error submitting report: {str(e)}')
-            return render(request, 'home.html')
+            return render(request, 'reports.html')
 
     return render(request, 'home.html')

@@ -13,31 +13,36 @@
 
                 <form action="{% url 'home' %}" method="POST" enctype="multipart/form-data" id="create-report-form">
                     {% csrf_token %}
+                
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-loc" class="form-label">Location<i class="bi bi-asterisk"></i></label>
-                            <input type="text" name="location" class="form-control" id="modal-loc" placeholder="e.g. Barangay Caingin">
+                            <input type="text" name="location" class="form-control" id="modal-loc" placeholder="e.g. Barangay Caingin" maxlength="100" required>
                         </div>
                     </div>
+                    
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-date" class="form-label">Date<i class="bi bi-asterisk"></i></label>
-                            <input type="date" name="date" class="form-control" id="modal-date">
+                            <input type="date" name="date" class="form-control" id="modal-date" required> 
                         </div>
+                
                         <div class="form-column">
                             <label for="modal-time" class="form-label">Time of Arrival<i class="bi bi-asterisk"></i></label>
-                            <input type="time" class="form-control" id="modal-time" name="time">
+                            <input type="time" class="form-control" id="modal-time" name="time" required>
                         </div>
+                        
                         <div class="form-column">
                             <label for="modal-time-out" class="form-label">Time of Fire Out<i class="bi bi-asterisk"></i></label>
-                            <input type="time" class="form-control" name="time_out" id="modal-time-out">
+                            <input type="time" class="form-control" name="time_out" id="modal-time-out" required>
                         </div>
                     </div>
+                    
+                
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-occupancy" class="form-label">Occupancy Type<i class="bi bi-asterisk"></i></label>
-                            <select class="form-select" aria-label="Default select example" name="occupancy">
-                                <option value="">Select the occupancy type...</option>
+                            <select class="form-select" aria-label="Default select example" name="occupancy" required>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
@@ -45,48 +50,50 @@
                         </div>
                         <div class="form-column">
                             <label for="modal-name" class="form-label">Name of Owner<i class="bi bi-asterisk"></i></label>
-                            <input type="text" class="form-control" name="owner" id="modal-name" placeholder="e.g. Juan Dela Cruz">
+                            <input type="text" class="form-control" name="owner" id="modal-name" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-alarm" class="form-label">Alarm Status<i class="bi bi-asterisk"></i></label>
-                            <select class="form-select" aria-label="Default select example" name="alarm">
-                                <option value="">Select the alarm status...</option>
+                            <select class="form-select" aria-label="Default select example" name="alarm" required>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
                             </select>
                         </div>
+                
                         <div class="form-column">
                             <label for="modal-respondents" class="form-label">No. of Respondents<i class="bi bi-asterisk"></i></label>
-                            <input type="number" class="form-control" id="modal-respondents" placeholder="e.g. 11" name="respondents">
+                            <input type="text" class="form-control" id="modal-respondents" placeholder="e.g. 11" name="respondents" maxlength="12" required>
                         </div>
                         <div class="form-column">
                             <label for="modal-damages" class="form-label">Estimated Damages<i class="bi bi-asterisk"></i></label>
-                            <input type="text" class="form-control" name="damages" id="modal-damages" placeholder="e.g. P1,000,000">
+                            <input type="text" class="form-control" name="damages" id="modal-damages" placeholder="e.g. P1,000,000" maxlength="12" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-establish" class="form-label">No. of Establishments<i class="bi bi-asterisk"></i></label>
-                            <input type="number" class="form-control" id="modal-establish" placeholder="e.g. 11" name="establishment">
+                            <input type="text" class="form-control" id="modal-establish" placeholder="e.g. 11" name="establishment" maxlength="12" required>
                         </div>
                         <div class="form-column">
                             <label for="modal-casualties" class="form-label">No. of Casualties<i class="bi bi-asterisk"></i></label>
-                            <input type="number" class="form-control" id="modal-casualties" placeholder="e.g. 11" name="casualty">
+                            <input type="text" class="form-control" id="modal-casualties" placeholder="e.g. 11" name="casualty" maxlength="12" required>
                         </div>
                         <div class="form-column">
                             <label for="modal-injured" class="form-label">No. of Injured<i class="bi bi-asterisk"></i></label>
-                            <input type="number" class="form-control" id="modal-injured" placeholder="e.g. 11" name="injured">
+                            <input type="text" class="form-control" id="modal-injured" placeholder="e.g. 11" name="injured" maxlength="12" required>
                         </div>
                     </div>
+                
                     <div class="form-row">
                         <div class="form-column">
                             <label for="modal-proof" class="form-label">Proof<i class="bi bi-asterisk"></i></label>
-                            <input type="file" class="form-control" id="modal-proof" name="modal-proof">
+                            <input type="file" class="form-control" id="modal-proof" name="modal-proof" accept="image/jpeg, image/jpg, image/png, image/gif" required>
                         </div>
                     </div>
+                
                     <div class="modal-footer">
                         <div class="mf-button">
                             <button class="btn btn-lg px-4" type="submit">Submit</button>
@@ -99,3 +106,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('modal-loc').addEventListener('input', function() {
+    this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '');
+});
+
+    document.getElementById('modal-name').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    const fields = ['modal-respondents', 'modal-damages', 'modal-establish', 'modal-casualties', 'modal-injured'];
+
+    fields.forEach(id => {
+        document.getElementById(id).addEventListener('input', function () {
+
+            this.value = this.value.replace(/[^0-9,]/g, '');  
+            
+            if (/^,+$/.test(this.value)) {
+                this.value = '';  
+            }
+        });
+    });
+</script>
+
