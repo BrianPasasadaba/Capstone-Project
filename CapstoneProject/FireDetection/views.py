@@ -94,20 +94,23 @@ def login_view(request):
 
         if user is not None:
             if not user.verified:
-                messages.error(request, "Your account is not verified.")
-                return redirect('login')
-            
+                user.verified = True
+                user.save()
+                messages.success(request, "Your account has been verified.")
+
             login(request, user)
 
             if user.is_staff:
-                return redirect('admin_home')  
+                return redirect('admin_home')
             elif user.is_active:
                 return redirect('home')
             else:
                 messages.error(request, "Your account is not active.")
         else:
             messages.error(request, "Invalid email or password.")
+    
     return render(request, 'login.html')
+
 
 @login_required
 def logout_view(request):

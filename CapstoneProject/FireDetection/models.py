@@ -63,9 +63,8 @@ class CustomUser(AbstractUser):
     verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []  # Add any other required fields here
+    REQUIRED_FIELDS = []  
 
-    objects = CustomUserManager()  # Use the custom manager
-
+    objects = CustomUserManager()  
     def __str__(self):
         return self.email

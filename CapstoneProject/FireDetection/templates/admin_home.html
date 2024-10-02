@@ -56,14 +56,13 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody  id="accountTable">
+                        <tbody id="accountTable">
                             {% for account in accounts %}
                             <tr>
                                 <td>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-{{ account.id }}">
-                                        <label class="form-check-label" for="flexCheckDefault-{{ account.id }}">
-                                        </label>
+                                        <label class="form-check-label" for="flexCheckDefault-{{ account.id }}"></label>
                                     </div>
                                 </td>
                                 <td>{{ account.name }}</td>
@@ -72,12 +71,13 @@
                                 <td>
                                     <div>
                                         <h6>
-                                            <a href="{% url 'toggle_verified' account.id %}">
-                                                {{ account.verified|yesno:"Verified,Unverified" }}
-                                            </a>
+                                            {% if account.verified %}
+                                                <span>Verified</span>
+                                            {% else %}
+                                                <span>Unverified</span>
+                                            {% endif %}
                                         </h6>
                                     </div>
-                                    
                                 </td>
                             </tr>
                             {% empty %}
@@ -86,7 +86,7 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-                    </table>          
+                    </table>                    
 
                 </div>
                 <div class="ab-buttons">
