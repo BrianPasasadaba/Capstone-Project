@@ -125,3 +125,13 @@ AUTHENTICATION_BACKENDS = [
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # For example, if using Gmail
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'rejusocute101@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'ecae dvfi mhpi aozw'  # Replace with your email password
+DEFAULT_FROM_EMAIL = 'ronilorejuso21@gmail.com'
+
+

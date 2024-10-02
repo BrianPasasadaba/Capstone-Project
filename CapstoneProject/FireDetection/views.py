@@ -16,6 +16,55 @@ from django.db.models.functions import TruncMonth
 from django.utils.timezone import now
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
+import random
+import string
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+def generate_random_password(length=10):
+    """Generates a random password."""
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for i in range(length))
+
+@login_required
+def register_view(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        role = request.POST.get('role')
+        
+        if not name or not email or not role:
+            messages.error(request, 'All fields are required.')
+        else:
+            try:
+                generated_password = generate_random_password()
+
+                new_user = CustomUser.objects.create_user(
+                    name=name,
+                    email=email,
+                    role=role,
+                    password=generated_password  
+                )
+                
+                send_mail(
+                    'Your Account Password',
+                    f'Hello {name},\n\nYour account has been created. Your password is: {generated_password}\nYou can change your password after logging in.',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [email],
+                    fail_silently=False,
+                )
+
+                messages.success(request, 'Account has been added successfully, and the password has been sent to the user\'s email.')
+            except Exception as e:
+                messages.error(request, f'Error adding account: {str(e)}')
+
+        return redirect('admin_home')
+
+    accounts = CustomUser.objects.all()
+    return render(request, 'admin_home.html', {'accounts': accounts})
+
+
 
 def toggle_resolved(request, report_id):
     report = get_object_or_404(InitialReport, id=report_id)
@@ -34,33 +83,6 @@ def toggle_verified(request, account_id):
 
 def serve_css(request):
     return FileResponse(open('staticfiles/styles/style.css', 'rb'))
-
-@login_required
-def register_view(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        role = request.POST.get('role')
-        
-        if not name or not email or not role:
-            messages.error(request, 'All fields are required.')
-        else:
-            try:
-                new_user = CustomUser.objects.create(
-                    name=name,
-                    email=email,
-                    role=role
-                )
-                new_user.save()
-                messages.success(request, 'Account has been added successfully.')
-            except Exception as e:
-                messages.error(request, f'Error adding account: {str(e)}')
-
-        return redirect('admin_home')
-
-    accounts = CustomUser.objects.all()
-    return render(request, 'admin_home.html', {'accounts': accounts})
-
 
 
 def login_view(request):
