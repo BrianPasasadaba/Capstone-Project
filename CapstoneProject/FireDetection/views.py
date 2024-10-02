@@ -74,13 +74,6 @@ def toggle_resolved(request, report_id):
     messages.success(request, f'Report status updated to {"Resolved" if report.resolved else "Unresolved"}.')
     return redirect('reports')
 
-def toggle_verified(request, account_id):
-    account = get_object_or_404(CustomUser, id=account_id)
-    account.verified = not account.verified
-    account.save()
-    messages.success(request, f'Account verification status updated to {"Verified" if account.verified else "Unverified"}.')
-    return redirect('admin_home')
-
 def serve_css(request):
     return FileResponse(open('staticfiles/styles/style.css', 'rb'))
 
@@ -110,6 +103,7 @@ def login_view(request):
             messages.error(request, "Invalid email or password.")
     
     return render(request, 'login.html')
+
 
 
 @login_required
