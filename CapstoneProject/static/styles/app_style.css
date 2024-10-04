@@ -651,7 +651,7 @@ main{
 }
 
 .chart{
-    border: var(--color-secondary) 1px solid;
+    /* border: var(--color-secondary) 1px solid; */
     display: flex;
     flex-direction: row;
     width: 100%;
