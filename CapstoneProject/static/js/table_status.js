@@ -6,7 +6,7 @@ document.querySelectorAll('.rb-table td:last-child h6').forEach((element) => {
     if (statusText === 'ongoing') {
         element.style.border = '3px solid #ED7027';
         row.classList.add('status-ongoing');
-    } else if (statusText === 'resolved') {
+    } else if (statusText === 'case closed') {
         element.style.backgroundColor = '#ED7027';
         row.classList.add('status-resolved');
     }

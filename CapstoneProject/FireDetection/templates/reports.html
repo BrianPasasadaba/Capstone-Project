@@ -31,7 +31,7 @@
                 <div class="rb-header">
                     <div class="rbh-left">
                         <div class="rbh-search">
-                            <input type="text" id="searchInput" class="search-report" placeholder="Search Location, Date, or Time">
+                            <input type="text" id="searchInput" class="search-report" placeholder="Search">
                         </div>
                         
                         <div class="create-button">
@@ -96,7 +96,7 @@
                                 <td>{{ report.date|date:"m/d/Y" }}</td>
                                 <td>{{ report.time|date:"h:i A" }}</td>                           
                                 <td>
-                                    <h6>Resolved</h6>
+                                    <h6>Ongoing</h6>
                                 </td>
                             </tr>
                             {% empty %}
