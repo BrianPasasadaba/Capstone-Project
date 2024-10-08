@@ -36,13 +36,23 @@
                 </div>
                 <form action="{% url 'login' %}" method="POST">
                     {% csrf_token %}
-                    <div class="input-group mb-4">
-                        <input type="email" id="email" name="email" class="form-control form-control-lg bg-light fs-5" placeholder="Email address" required>
+                    <div class="input-area">
+                        <div class="input-section">
+                            <div class="input-field">
+                                <input type="email" id="email-field" name="email" class="user-input" placeholder="">
+                                <div id="email-label" class="input-label">Email</div>
+                            </div>
+                            <span id="email-error" class="error-msg"></span>
+                        </div>
+                        <div class="input-section">
+                            <div class="input-field">
+                                <input type="password" id="password-field" name="password" class="user-input" placeholder="">
+                                <div id="password-label" class="input-label">Password</div>
+                            </div>
+                            <span id="password-error" class="error-msg"></span>
+                        </div>
                     </div>
-                    <div class="input-group mb-2">
-                        <input type="password" name="password" class="form-control form-control-lg bg-light fs-5" placeholder="Password" required>
-                    </div>
-                    <div class="input-group mb-5 d-flex justify-content-around" style="margin-top: 20px;">
+                    <div class="input-group mb-5 d-flex justify-content-around" style="margin-top: 1.3rem;">
                         <div class="forgot w-100 d-flex justify-content-end">
                             <small><a href="#" style="color: #ED7027;">Forgot Password?</a></small>
                         </div>
@@ -65,7 +75,6 @@
 <script>
     window.onload = function() {
         if (document.cookie.includes('logged_out=true')) {
-            
             document.cookie = 'logged_out=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
             window.location.href = '{% url "login" %}';  
         }

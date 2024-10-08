@@ -6,9 +6,14 @@
     --color-primary: rgb(14, 30, 75);
     --color-secondary: rgb(237, 112, 39);
     --color-tertiary: rgb(254, 152, 45);
+    --color-hover: rgb(254, 191, 77);
     --color-default: rgb(238, 239, 243);
     --color-sidebar: rgba(65, 88, 155, 0.77);
     --color-white: #ffffff;
+    --color-danger:  rgba(109, 1, 15);
+    --color-placeholder: #A7A8AF;
+    --color-shadow: rgba(0, 0, 0, 0.2);
+    --color-shadow-min: rgba(132, 139, 200, 0.18);
 
     /* ======== Transition ======== */
     --tran-02: all 0.2s ease;
@@ -88,7 +93,13 @@ body{
 
 /* ======== Right Box Styles ======== */
 .right-box {
+    /* border: #ED7027 1px solid; */
     padding: 40px 30px 40px 40px;
+}
+
+.right-box .row{
+    /* border: #ED7027 1px solid; */
+    width: 80%;
 }
 
 .right-box .form-control:focus{
@@ -122,6 +133,76 @@ body{
 
 .rounded-5 {
     border-radius: 30px;
+}
+
+.input-area{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 1rem;
+}
+
+.input-field{
+    /* border: #ED7027 1px solid; */
+    position: relative;
+    width: 100%;
+    height: 45px;
+    line-height: 40px;
+}
+
+.input-section{
+    /* border: #ED7027 1px solid; */
+    position: relative;
+    width: 100%;
+}
+
+input{
+    position: absolute;
+    width: 100%;
+    outline: none;
+    font-size: 2.2em;
+    padding: 0 10px;
+    line-height: 40px;
+    border-radius: 5px;
+    border: 1px solid var(--color-primary);
+    background: transparent;
+    transition: 0.1s ease;
+    z-index: 1111;
+}
+
+.input-label{
+    position: absolute;
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    padding: 0 10px;
+    margin: 0 5px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    transition: 0.2s ease;
+}
+
+input:focus,
+input:not(:placeholder-shown) {
+    color: var(--color-primary);
+    border: 2px solid #ED7027;
+}
+
+input:focus + .input-label,
+input:not(:placeholder-shown) + .input-label {
+    color: #ED7027;
+    height: 30px;
+    line-height: 30px;
+    transform: translate(-5px, -16px) scale(0.88);
+    z-index: 1111;
+}
+
+.error-msg{
+    color: red;
+    padding: 0;
+    font-size:0.7rem ;
 }
 
 /* ======== Media Queries for Responsive Design ======== */
