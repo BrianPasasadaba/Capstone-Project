@@ -21,47 +21,6 @@
     --tran-04: all 0.4s ease;
     --tran-05: all 0.5s ease;
 }
-
-/* ======== Global Styles ======== */
-body{
-    position: relative;
-}
-
-*{
-    font-family: 'Poppins', 'Roboto', 'Montserrat';
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* ======== Container Styles ======== */
-.container {
-    position: relative;
-    z-index: 5;
-}
-
-.box-area {
-    width: 1200px;
-    height: 650px;
-    position: relative;
-    z-index: 7; /* Ensures the login container is on top */
-}
-.forgot-area {
-    width: 800px;
-    height: 650px;
-    position: relative;
-    z-index: 7; /* Ensures the login container is on top */
-}
-
-/* #forgot-header{
-    border: #ED7027 1px solid;
-} */
-
-#forgot-icon{
-    color: #ED7027;
-    font-size: 5rem;
-}
-
 /* ======== Divider Styles ======== */
 .top-divider {
     position: fixed;
@@ -106,6 +65,46 @@ body{
     fill: #ED7027;
 }
 
+/* ======== Global Styles ======== */
+body{
+    position: relative;
+}
+
+*{
+    font-family: 'Poppins', 'Roboto', 'Montserrat';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ======== Container Styles ======== */
+.container {
+    position: relative;
+    z-index: 5;
+}
+
+.box-area {
+    width: 1200px;
+    height: 650px;
+    position: relative;
+    z-index: 7; /* Ensures the login container is on top */
+}
+.forgot-area {
+    width: 750px;
+    min-height: 650px;
+    height: auto;
+    position: relative;
+    z-index: 7; /* Ensures the login container is on top */
+}
+
+/* #forgot-header{
+    border: #ED7027 1px solid;
+} */
+
+#forgot-icon{
+    color: #ED7027;
+    font-size: 5rem;
+}
 /* ======== Right Box Styles ======== */
 .right-box {
     /* border: #ED7027 1px solid; */
@@ -161,6 +160,8 @@ body{
     border-radius: 30px;
 }
 
+/* ======== FORMS/INPUT ======== */
+
 .input-area{
     /* border: #ED7027 1px solid; */
     display: flex;
@@ -215,6 +216,16 @@ input{
     transition: 0.2s ease;
 }
 
+.input-field i{
+    right: 18px;
+    top: 54%;
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    position: absolute;
+    transform: translateY(-50%);
+}
+
 input:focus,
 input:not(:placeholder-shown) {
     color: var(--color-primary);
@@ -233,7 +244,8 @@ input:not(:placeholder-shown) + .input-label {
 .error-msg{
     color: red;
     padding: 0;
-    font-size:0.7rem ;
+    padding-top: 0.5rem;
+    font-size:0.8rem ;
 }
 
 .back-button{
@@ -261,6 +273,40 @@ input:not(:placeholder-shown) + .input-label {
 .back-button:hover {
     transform: scale(1.1); /* Enlarges the button by 10% */
 }
+
+.password-policy{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    font-weight: 400;
+    font-size: 0.9rem;
+    gap: 0.5rem;
+}
+
+.password-policy .pp-header{
+    color: var(--color-primary);
+    font-weight: 500;
+}
+.password-policy ul{
+    margin: 0;
+    /* border: #ED7027 1px solid; */
+    text-decoration: none;
+    list-style: none;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: start;
+    font-weight: 400;
+    font-size: 0.9rem;
+    padding-left: 0;
+}
+.password-policy i{
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+
 
 /* ======== Media Queries for Responsive Design ======== */
 

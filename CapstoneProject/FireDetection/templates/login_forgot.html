@@ -29,13 +29,44 @@
                             <div class="input-field">
                                 <input type="password" id="new-password-field" name="password" class="user-input" placeholder="">
                                 <div id="new-password-label" class="input-label">New Password</div>
+                                <i class="bi bi-eye"></i>
                             </div>
-                            <span id="password-error" class="error-msg"></span>
+                            <div class="password-policy p-0 pt-2 ps-2">
+                                <span class="pp-header">Password must Contain</span>
+                                <ul class="requirement-list p-0">
+                                    <li>
+                                        <i class="fa-solid fa-circle">
+                                            <span>At least 1 number (0...9)</span>
+                                        </i>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-circle">
+                                            <span>At least 8 characters length</span>
+                                        </i>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-circle">
+                                            <span>At least 1 lowercase letter (a...z)</span>
+                                        </i>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-circle">
+                                            <span>At least 1 special symbol</span>
+                                        </i>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-circle">
+                                            <span>At least 1 uppercase letter (A...Z)</span>
+                                        </i>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="input-section">
                             <div class="input-field">
                                 <input type="password" id="con-password-field" name="password" class="user-input" placeholder="">
                                 <div id="con-password-label" class="input-label">Confirm Password</div>
+                                <i class="bi bi-eye"></i>
                             </div>
                             <span id="password-error" class="error-msg"></span>
                         </div>
