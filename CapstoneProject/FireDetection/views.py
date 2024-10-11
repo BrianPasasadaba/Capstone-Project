@@ -27,6 +27,9 @@ def generate_random_password(length=10):
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(random.choice(characters) for i in range(length))
 
+def forgot_password_view(request):
+   return render(request, "login_forgot.html")
+
 @login_required
 def register_view(request):
     if request.method == 'POST':

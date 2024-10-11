@@ -46,6 +46,21 @@ body{
     position: relative;
     z-index: 7; /* Ensures the login container is on top */
 }
+.forgot-area {
+    width: 800px;
+    height: 650px;
+    position: relative;
+    z-index: 7; /* Ensures the login container is on top */
+}
+
+/* #forgot-header{
+    border: #ED7027 1px solid;
+} */
+
+#forgot-icon{
+    color: #ED7027;
+    font-size: 5rem;
+}
 
 /* ======== Divider Styles ======== */
 .top-divider {
@@ -115,7 +130,18 @@ body{
     transition: ease-in-out 0.1s, transform 0.1s ease-in-out 0.1s;
 }
 
+.right-box .btn-submit {
+    font-weight: 400;
+    background-color: var(--color-primary);
+    color: white !important;
+    transition: ease-in-out 0.1s, transform 0.1s ease-in-out 0.1s;
+}
 .btn-login:hover {
+    background-color: var(--color-sidebar); /* Change the background color on hover */
+    transform: scale(1.01); /* Slightly increase the size on hover */
+    color: white;
+}
+.btn-submit:hover {
     background-color: var(--color-sidebar); /* Change the background color on hover */
     transform: scale(1.01); /* Slightly increase the size on hover */
     color: white;
@@ -150,7 +176,7 @@ body{
     position: relative;
     width: 100%;
     height: 45px;
-    line-height: 40px;
+    line-height: 45px;
 }
 
 .input-section{
@@ -160,12 +186,17 @@ body{
 }
 
 input{
+    padding: 2rem;
+}
+
+input{
     position: absolute;
     width: 100%;
     outline: none;
     font-size: 2.2em;
     padding: 0 10px;
-    line-height: 40px;
+    line-height: 45px;
+    height: 45px;
     border-radius: 5px;
     border: 1px solid var(--color-primary);
     background: transparent;
@@ -203,6 +234,32 @@ input:not(:placeholder-shown) + .input-label {
     color: red;
     padding: 0;
     font-size:0.7rem ;
+}
+
+.back-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding-top: 0.5em;
+    /* border: #ED7027 1px solid; */
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+}
+
+#icon-back{
+    font-size: 2.5rem;
+    color: #ED7027;
+}
+
+#icon-back:hover{
+    color: var(--color-tertiary);
+}
+
+.back-button:hover {
+    transform: scale(1.1); /* Enlarges the button by 10% */
 }
 
 /* ======== Media Queries for Responsive Design ======== */
