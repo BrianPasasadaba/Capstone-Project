@@ -93,7 +93,6 @@
                                         <label class="form-check-label" for="flexCheckDefault-{{ report.id }}"></label>
                                     </div>
                                 </td>
-                                <td>{{ report.id }}</td>
                                 <td>{{ report.where }}</td>
                                 <td>{{ report.date|date:"m/d/Y" }}</td>
                                 <td>{{ report.time|date:"h:i A" }}</td>                           
@@ -107,9 +106,7 @@
                                 <td colspan="5">No reports available.</td>
                             </tr>
                             {% endfor %}
-                        </tbody>
-                        
-                        
+                        </tbody>                       
                     </table>
 
                 </div>
@@ -117,21 +114,22 @@
                     <div class="rb-export">
                         <button type="button" class="btn btn-lg btn">Export</button>
                     </div>
+
                     <div class="rb-pagination">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-end">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
+                                <li class="page-item prev disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item next">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
                             </ul>
                         </nav>
-                    </div>
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -148,12 +146,123 @@
 <script src="{% static 'js/table_status.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
+
+
 
 
 <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+function exportTableToExcel(tableId, filename = 'report_data.xlsx') {
+    var table = document.getElementById(tableId);
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Report Data"});
+
+    var ws = wb.Sheets["Report Data"];
+
+    XLSX.utils.sheet_add_aoa(ws, [[ "Location", "Date", "Time", "Status"]], {origin: "A1"});
+
+    const headerRange = XLSX.utils.decode_range(ws['!ref']);
+    for (let C = headerRange.s.c; C <= headerRange.e.c; C++) {
+        let cellAddress = XLSX.utils.encode_cell({r: 0, c: C});
+        if (!ws[cellAddress]) continue;
+        ws[cellAddress].s = {
+            font: {bold: true, color: {rgb: "FFFFFF"}},
+            fill: {
+                fgColor: {rgb: "FFA500"}
+            },
+            alignment: {horizontal: "center", vertical: "center"}
+        };
+    }
+    ws['!cols'] = [
+
+        {wch: 20},
+        {wch: 15}, 
+        {wch: 15},
+        {wch: 15}, 
+    ];
+
+    XLSX.writeFile(wb, filename);
+}
+
+document.querySelector('.rb-export button').addEventListener('click', function() {
+    exportTableToExcel('reportTable', 'report_data.xlsx');
+});
+});
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const rowsPerPage = 10;
+    let currentPage = 1;
+    const tableBody = document.getElementById('reportTable');
+    const rows = tableBody.querySelectorAll('tr');
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+    function displayRowsForPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        rows.forEach((row, index) => {
+            if (index >= start && index < end) {
+                row.style.display = ''; 
+            } else {
+                row.style.display = 'none'; 
+            }
+        });
+
+        document.querySelector('.pagination .current-page').textContent = page;
+        updatePaginationControls();
+    }
+
+    function updatePaginationControls() {
+        const prevButton = document.querySelector('.pagination .prev');
+        const nextButton = document.querySelector('.pagination .next');
+
+        if (currentPage === 1) {
+            prevButton.classList.add('disabled');
+        } else {
+            prevButton.classList.remove('disabled');
+        }
+
+        if (currentPage === totalPages) {
+            nextButton.classList.add('disabled');
+        } else {
+            nextButton.classList.remove('disabled');
+        }
+    }
+
+    document.querySelector('.pagination .prev').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentPage > 1) {
+            currentPage--;
+            displayRowsForPage(currentPage);
+        }
+    });
+
+    document.querySelector('.pagination .next').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayRowsForPage(currentPage);
+        }
+    });
+
+    document.querySelectorAll('.pagination .page-item').forEach((pageButton, index) => {
+        pageButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentPage = index + 1; 
+            displayRowsForPage(currentPage);
+        });
+    });
+
+    displayRowsForPage(currentPage);
+});
+
     
-
-
     const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
 
     reportRows.forEach(row => {
