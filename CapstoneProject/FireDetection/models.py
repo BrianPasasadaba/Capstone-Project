@@ -17,7 +17,7 @@ class InitialReport(models.Model):
     no_of_casualties = models.IntegerField()
     no_of_injured = models.IntegerField()
     proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
-    resolved = models.BooleanField(default=False)  # New field
+    status = models.CharField(max_length=20, choices=[('Ongoing', 'Ongoing'), ('Case Closed', 'Case Closed')], default='Ongoing')
     def __str__(self):
         return f"Report {self.id} - {self.where} on {self.date}"
     
@@ -52,7 +52,7 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     username = None
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, max_length=100)
 
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)

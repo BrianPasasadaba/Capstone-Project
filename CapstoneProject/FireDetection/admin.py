@@ -27,15 +27,18 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email', 'name', 'role')
     ordering = ('email',)
 
+
 class InitialReportAdmin(admin.ModelAdmin):
     list_display = (
         'where', 'date', 'time', 'time_of_fire_out', 'occupancy_type',
         'name_of_owner', 'alarm_status', 'no_of_respondents', 'estimated_damage',
-        'no_of_establishments', 'no_of_casualties', 'no_of_injured', 'proof'
+        'no_of_establishments', 'no_of_casualties', 'no_of_injured', 'proof', 'status'
     )
     search_fields = ('where', 'occupancy_type', 'name_of_owner', 'alarm_status')
     list_filter = ('date', 'time_of_fire_out', 'alarm_status')
     readonly_fields = ('proof',)
+    list_editable = ('status',)
+
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(InitialReport, InitialReportAdmin)

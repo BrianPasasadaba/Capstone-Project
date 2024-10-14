@@ -20,6 +20,7 @@ import random
 import string
 from django.core.mail import send_mail
 from django.conf import settings
+from django.http import JsonResponse
 
 
 def generate_random_password(length=10):
@@ -66,13 +67,24 @@ def register_view(request):
 
 
 
-def toggle_resolved(request, report_id):
-    report = get_object_or_404(InitialReport, id=report_id)
-    report.resolved = not report.resolved
-    report.save()
 
-    messages.success(request, f'Report status updated to {"Resolved" if report.resolved else "Unresolved"}.')
-    return redirect('reports')
+def toggle_status(request, report_id):
+    if request.method == 'POST':
+        report = get_object_or_404(InitialReport, id=report_id)
+        
+        # Toggle the status
+        if report.status == 'Ongoing':
+            report.status = 'Case Closed'
+        else:
+            report.status = 'Ongoing'
+        report.save()
+
+        # Return JSON response with new status
+        return JsonResponse({'status': report.status, 'message': 'Status updated successfully.'})
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+
 
 def serve_css(request):
     return FileResponse(open('staticfiles/styles/style.css', 'rb'))

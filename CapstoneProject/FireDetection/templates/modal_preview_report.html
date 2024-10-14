@@ -1,5 +1,7 @@
 
 {% load static %}
+{% for report in reports %}
+{% csrf_token %}
 
 <div class="modal fade" id="report-preview-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
     <div class="modal-dialog">
@@ -10,7 +12,8 @@
                 aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" id="report-preview-form">
+                <form  action="" method="post" id="report-preview-form">
+                    {% csrf_token %}
                     <div class="form-row">
                         <div class="form-column">
                             <label for="loc" class="form-label">Location</label>
@@ -80,26 +83,29 @@
                         </div>
                     </div>
 
-                    <div class="form-column" data-proof="{{ report.proof.url }}" id="proof">
-                        {% if report.proof %}
-                        <img src="{{ report.proof.url }}" alt="Proof Image" class="img-fluid" style="max-width: 100px;">
-                    {% else %}
-                        No Proof Image
-                    {% endif %}
-                    
-                    </div>           
-
+                    <div class="form-column">
+                        <img id="proof" class="img-fluid" style="max-width: 100px;" alt="Proof Image">
+                    </div>         
+                    <div class="modal-footer">
+                        <div class="mf-button">
+                            <button  type="button" class="btn btn-lg px-4 resolve-button"  data-report-id="{{ report.id }}" data-status="{{ report.status }}">
+                                Resolve
+                            </button>
+                        </div>
+                    </div>
                 </form>
                 
             </div>
 
-            <div class="modal-footer">
-                <div class="mf-button">
-                    <button class="btn btn-lg px-4" id="resolve-button" data-report-id="{{ report.id }}">Resolve</button>
-                </div>
-            </div>
+
+            
+            
 
         </div>
     </div>
 </div>
+{% endfor %}
+
+
+
 
