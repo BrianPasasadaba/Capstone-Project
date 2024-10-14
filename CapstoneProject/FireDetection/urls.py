@@ -9,6 +9,7 @@ from .views import toggle_status
 
 urlpatterns = [
     path('', views.login_view, name='login'),
+    path('forgot_password', views.forgot_password_view, name='forgot_password'),
     path('home/', views.home_view, name='home'),
     path('analytics/', views.analytics_view, name='analytics'),
     path('reports/', views.reports_view, name='reports'),
@@ -16,7 +17,11 @@ urlpatterns = [
     path('test-css/', serve_css, name='test-css'),
     path('admin_home/', views.register_view, name='admin_home'),
     path('logout/', logout_view, name='logout'),
+<<<<<<< HEAD
     path('toggle-status/<int:report_id>/', views.toggle_status, name='toggle_status'),
 
+=======
+    path('toggle_resolved/<int:report_id>/', views.toggle_resolved, name='toggle_resolved'),
+>>>>>>> ac8938f9b64a9e159b5c8aeaa84963a588c04218
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

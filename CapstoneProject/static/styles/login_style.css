@@ -6,9 +6,14 @@
     --color-primary: rgb(14, 30, 75);
     --color-secondary: rgb(237, 112, 39);
     --color-tertiary: rgb(254, 152, 45);
+    --color-hover: rgb(254, 191, 77);
     --color-default: rgb(238, 239, 243);
     --color-sidebar: rgba(65, 88, 155, 0.77);
     --color-white: #ffffff;
+    --color-danger:  rgba(109, 1, 15);
+    --color-placeholder: #A7A8AF;
+    --color-shadow: rgba(0, 0, 0, 0.2);
+    --color-shadow-min: rgba(132, 139, 200, 0.18);
 
     /* ======== Transition ======== */
     --tran-02: all 0.2s ease;
@@ -16,32 +21,6 @@
     --tran-04: all 0.4s ease;
     --tran-05: all 0.5s ease;
 }
-
-/* ======== Global Styles ======== */
-body{
-    position: relative;
-}
-
-*{
-    font-family: 'Poppins', 'Roboto', 'Montserrat';
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* ======== Container Styles ======== */
-.container {
-    position: relative;
-    z-index: 5;
-}
-
-.box-area {
-    width: 1200px;
-    height: 650px;
-    position: relative;
-    z-index: 7; /* Ensures the login container is on top */
-}
-
 /* ======== Divider Styles ======== */
 .top-divider {
     position: fixed;
@@ -86,9 +65,55 @@ body{
     fill: #ED7027;
 }
 
+/* ======== Global Styles ======== */
+body{
+    position: relative;
+}
+
+*{
+    font-family: 'Poppins', 'Roboto', 'Montserrat';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ======== Container Styles ======== */
+.container {
+    position: relative;
+    z-index: 5;
+}
+
+.box-area {
+    width: 1200px;
+    height: 650px;
+    position: relative;
+    z-index: 7; /* Ensures the login container is on top */
+}
+.forgot-area {
+    width: 750px;
+    min-height: 650px;
+    height: auto;
+    position: relative;
+    z-index: 7; /* Ensures the login container is on top */
+}
+
+/* #forgot-header{
+    border: #ED7027 1px solid;
+} */
+
+#forgot-icon{
+    color: #ED7027;
+    font-size: 5rem;
+}
 /* ======== Right Box Styles ======== */
 .right-box {
+    /* border: #ED7027 1px solid; */
     padding: 40px 30px 40px 40px;
+}
+
+.right-box .row{
+    /* border: #ED7027 1px solid; */
+    width: 80%;
 }
 
 .right-box .form-control:focus{
@@ -104,7 +129,18 @@ body{
     transition: ease-in-out 0.1s, transform 0.1s ease-in-out 0.1s;
 }
 
+.right-box .btn-submit {
+    font-weight: 400;
+    background-color: var(--color-primary);
+    color: white !important;
+    transition: ease-in-out 0.1s, transform 0.1s ease-in-out 0.1s;
+}
 .btn-login:hover {
+    background-color: var(--color-sidebar); /* Change the background color on hover */
+    transform: scale(1.01); /* Slightly increase the size on hover */
+    color: white;
+}
+.btn-submit:hover {
     background-color: var(--color-sidebar); /* Change the background color on hover */
     transform: scale(1.01); /* Slightly increase the size on hover */
     color: white;
@@ -122,6 +158,168 @@ body{
 
 .rounded-5 {
     border-radius: 30px;
+}
+
+/* ======== FORMS/INPUT ======== */
+
+.input-area{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 1rem;
+}
+
+.input-field{
+    /* border: #ED7027 1px solid; */
+    position: relative;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+}
+.pass-field{
+    /* border: #ED7027 1px solid; */
+    position: relative;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+}
+
+.input-section{
+    /* border: #ED7027 1px solid; */
+    position: relative;
+    width: 100%;
+}
+
+input{
+    padding: 2rem;
+}
+
+input{
+    position: absolute;
+    width: 100%;
+    outline: none;
+    font-size: 2.2em;
+    padding: 0 10px;
+    line-height: 45px;
+    height: 45px;
+    border-radius: 5px;
+    border: 1px solid var(--color-primary);
+    background: transparent;
+    transition: 0.1s ease;
+    z-index: 1111;
+}
+
+.input-label{
+    position: absolute;
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    padding: 0 10px;
+    margin: 0 5px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    transition: 0.2s ease;
+}
+
+.pass-field i{
+    right: 18px;
+    top: 54%;
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    position: absolute;
+    transform: translateY(-50%);
+}
+
+input:focus,
+input:not(:placeholder-shown) {
+    color: var(--color-primary);
+    border: 2px solid #ED7027;
+}
+
+input:focus + .input-label,
+input:not(:placeholder-shown) + .input-label {
+    color: #ED7027;
+    height: 30px;
+    line-height: 30px;
+    transform: translate(-5px, -16px) scale(0.88);
+    z-index: 1111;
+}
+
+.error-msg{
+    color: red;
+    padding: 0;
+    padding-top: 0.7rem;
+    font-size:0.7rem ;
+}
+
+.back-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding-top: 0.5em;
+    /* border: #ED7027 1px solid; */
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+}
+
+#icon-back{
+    font-size: 2.5rem;
+    color: #ED7027;
+}
+
+#icon-back:hover{
+    color: var(--color-tertiary);
+}
+
+.back-button:hover {
+    transform: scale(1.1); /* Enlarges the button by 10% */
+}
+
+.password-policy{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    font-weight: 400;
+    font-size: 0.8rem;
+    gap: 0.5rem;
+}
+
+.password-policy .pp-header {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.password-policy ul {
+    margin: 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: start;
+    font-weight: 400;
+    font-size: 0.7rem;
+    gap: 0.5rem;
+    padding-left: 0;
+    color: RED;
+}
+
+.password-policy i {
+    font-weight: 400;
+    font-size: 0.7rem;
+    padding-right: 0.5rem;
+    color: RED;
+}
+
+.requirement-list li.valid i,
+.requirement-list li.valid span  {
+    color: green;
 }
 
 /* ======== Media Queries for Responsive Design ======== */

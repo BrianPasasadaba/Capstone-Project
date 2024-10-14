@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+{% load active_link_tags %}
+{% block title %}True the Fire{% endblock %}
+
+{% block content %}
+<!-- Main Container -->
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100" style="z-index: 5;">
+    <!-- Login Container -->
+    <div class="row border rounded-5 p-3 pt-0 bg-white shadow forgot-area">
+        <div class="rounded-4 d-flex justify-content-center align-items-center flex-column right-box">
+            <div class="row align-items-center">
+                <div id="forgot-header" class="header-text text-center p-1">
+                    <i class="bi bi-exclamation-circle" id="forgot-icon"></i>
+                    <h1>Forgot Password</h1>
+                </div>
+                <form action="{% url 'login' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input-area mt-2 mb-0">
+                        <div class="input-section">
+                            <div class="input-field">
+                                <input type="email" id="email" name="email" class="user-input" placeholder="">
+                                <div id="email-label" class="input-label">Email</div>
+                            </div>
+                            <span id="result" class="error-msg"></span> <!-- Updated to display results here -->
+                        </div>
+                        <div class="input-section">
+                            <div class="pass-field">
+                                <input type="password" id="new-password-field" name="password" class="user-input" placeholder="">
+                                <div id="new-password-label" class="input-label">New Password</div>
+                                <i class="bi bi-eye"></i>
+                            </div>
+                            <div class="password-policy p-0 pt-2 ps-2">
+                                <span class="pp-header">Password must contain</span>
+                                <ul class="requirement-list p-0">
+                                    <li>
+                                        <i class="bi bi-circle"></i>
+                                        <span>At least 1 number (0...9)</span>
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-circle"></i>
+                                        <span>At least 8 characters length</span>
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-circle"></i>
+                                        <span>At least 1 lowercase letter (a...z)</span>
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-circle"></i>
+                                        <span>At least 1 uppercase letter (A...Z)</span>
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-circle"></i>
+                                        <span>At least 1 special symbol</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="input-section">
+                            <div class="pass-field">
+                                <input type="password" id="con-password-field" name="password" class="user-input" placeholder="">
+                                <div id="con-password-label" class="input-label">Confirm Password</div>
+                                <i class="bi bi-eye"></i>
+                            </div>
+                            <span id="password-error" class="error-msg"></span> 
+                        </div>
+                    </div>
+                    <div class="input-group p-5 pb-2">
+                        <button type="submit" class="btn btn-lg w-100 fs-5 btn-submit">Reset Password</button>
+                    </div>
+                </form>
+                <div class="back-button">
+                    <a class="back-link {% active_link 'login' %}" href="{% url 'login' %}">
+                        <div class="back-con">
+                                <i id="icon-back" class="bi bi-arrow-left"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- ADD SCRIPTS HERE -->
+<script src="{% static 'js/password_policy.js' %}"></script>
+<script src="https://kit.fontawesome.com/462b05b88b.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'js/email_validation.js' %}"></script>
+<script>
+
+window.onload = function() {
+    if (document.cookie.includes('logged_out=true')) {
+        document.cookie = 'logged_out=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        window.location.href = '{% url "login" %}';  
+    }
+};
+</script>
+
+{% endblock %}
+
