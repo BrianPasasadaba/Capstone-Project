@@ -93,6 +93,21 @@
 <script src="{% static 'js/email_validation.js' %}"></script>
 <script src="{% static 'js/password_toggle.js' %}"></script>
 <script>
+// Function to prevent spaces in input fields
+function preventSpaces(event) {
+    if (event.key === ' ') {
+        event.preventDefault();
+    }
+}
+
+// Attaching the event listener to input fields
+document.addEventListener('DOMContentLoaded', function () {
+    var inputs = document.querySelectorAll('#email, #new-password-field, #con-password-field');
+    inputs.forEach(function(input) {
+        input.addEventListener('keydown', preventSpaces);
+    });
+});
+
 
 window.onload = function() {
     if (document.cookie.includes('logged_out=true')) {
