@@ -223,7 +223,13 @@ input{
     transition: 0.2s ease;
 }
 
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
 .pass-field i{
+    /* border: 2px solid #ED7027; */
     right: 18px;
     top: 54%;
     font-size: 1.2rem;
@@ -231,6 +237,7 @@ input{
     cursor: pointer;
     position: absolute;
     transform: translateY(-50%);
+    z-index: 1120;
 }
 
 input:focus,
@@ -265,20 +272,26 @@ input:not(:placeholder-shown) + .input-label {
     /* border: #ED7027 1px solid; */
     width: 100%;
     height: auto;
+}
+
+.back-con{
+    padding-left: 0.5rem ;
+    padding-right: 0.5rem ;
     transition: transform 0.3s ease; /* Smooth transition for scaling */
+    /* border: #ED7027 1px solid; */
+    background-color: transparent; /* Initial background */
+    border-radius: 30%; /* Circle shape */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+}
+
+.back-con:hover {
+    transform: scale(1.05); /* Enlarges the button by 10% */
+    background-color: rgba(235, 235, 235, 0.6); /* Background turns light gray on hover */
 }
 
 #icon-back{
     font-size: 2.5rem;
     color: #ED7027;
-}
-
-#icon-back:hover{
-    color: var(--color-tertiary);
-}
-
-.back-button:hover {
-    transform: scale(1.1); /* Enlarges the button by 10% */
 }
 
 .password-policy{
@@ -322,6 +335,67 @@ input:not(:placeholder-shown) + .input-label {
     color: green;
 }
 
+#forgot-success-modal .modal-header,
+#forgot-success-modal .modal-footer{
+    border-bottom: none;
+    border-top: none;
+}
+
+#forgot-success-modal .modal-dialog{
+    margin-top: 0;
+    margin-bottom: 0;
+    /* border: #ED7027 1px solid; */
+    padding: var(--padding-1);
+    max-width: 600px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#forgot-success-modal .modal-content{
+    height: auto;
+}
+
+.success-logo{
+    display: flex;
+    /* border: #ED7027 1px solid; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+.success-logo i{
+    font-size: 150px;
+    color: green;
+    display: block;
+    margin: 0 auto;
+    padding: 0; 
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    line-height: 1; /* Adjust line-height to minimize spacing */
+}
+
+.success-logo h3{
+    text-align: center; /* Centers the text horizontally */
+    margin: 0; /* Optional: to remove default margins */
+    padding: 0; /* Optional: to remove any padding */
+    padding-bottom: 0.5rem;
+}
+
+#forgot-success-modal .modal-footer{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+
+#forgot-success-modal .modal-footer button{
+    background-color: var(--color-primary);
+    color: white;
+}
 /* ======== Media Queries for Responsive Design ======== */
 
 /* Small screens */

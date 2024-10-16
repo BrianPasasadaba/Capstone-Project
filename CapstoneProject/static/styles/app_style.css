@@ -463,7 +463,10 @@ main{
 
 
 /* ============================== ANALYTICS ============================== */
-
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
 
 .analyses-box {
     display: grid;
@@ -474,7 +477,7 @@ main{
 
 .analyses-box > div{
     background-color: var(--color-default);
-    border: #ED7027 solid 1.5px; 
+    border: #ED7027 solid 1.5px;
     padding: var(--padding-half);
     border-radius: var(--border-radius-button-half);
     box-shadow: var(--box-shadow);
