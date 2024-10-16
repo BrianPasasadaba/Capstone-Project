@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="input-group p-5 pb-2">
-                        <button type="submit" class="btn btn-lg w-100 fs-5 btn-submit">Reset Password</button>
+                        <button type="button" class="btn btn-lg w-100 fs-5 btn-submit"  data-bs-toggle="modal" data-bs-target="#forgot-success-modal">Reset Password</button>
                     </div>
                 </form>
                 <div class="back-button">
@@ -81,6 +81,7 @@
         </div>
     </div>
 </div>
+{% include "modal_forgot_success.html" %}
 {% endblock %}
 
 {% block scripts %}
