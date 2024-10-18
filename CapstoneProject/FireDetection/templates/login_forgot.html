@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="input-group p-5 pb-2">
-                        <button type="button" class="btn btn-lg w-100 fs-5 btn-submit"  data-bs-toggle="modal" data-bs-target="#forgot-success-modal">Reset Password</button>
+                        <button type="button" id="reset-button" class="btn btn-lg w-100 fs-5 btn-submit" data-bs-toggle="modal" data-bs-target="#forgot-success-modal" disabled>Reset Password</button>
                     </div>
                 </form>
                 <div class="back-button">
@@ -93,6 +93,35 @@
 <script src="{% static 'js/email_validation.js' %}"></script>
 <script src="{% static 'js/password_toggle.js' %}"></script>
 <script>
+
+$(document).ready(function() {
+    // Initially disable the reset button
+    $('.btn-submit').prop('disabled', true);
+
+    // Function to check overall form validity and update button state
+    function updateButtonState() {
+        const emailValid = validateEmail($('#email').val()); // Existing email validation logic
+        const password = $('#new-password-field').val();
+        const confirmPassword = $('#con-password-field').val();
+    
+        // Check if both passwords match and the email is valid
+        let passwordsMatch = password === confirmPassword && passwordValid;
+        $('#reset-button').prop('disabled', !emailValid || !passwordsMatch);
+    }
+
+    // Bind the validate function to the input event of email input field
+    $(document).ready(function() {
+        $('#email, #new-password-field, #con-password-field').on('input', function() {
+            updateButtonState(); // Call this function whenever any of the inputs change
+        });
+    });
+    
+
+    // Existing password validation functions (from your separate password_policy.js)
+    document.getElementById("new-password-field").addEventListener("input", validatePassword);
+    document.getElementById("con-password-field").addEventListener("input", validateConfirmPassword);
+});
+
 // Function to prevent spaces in input fields
 function preventSpaces(event) {
     if (event.key === ' ') {
@@ -112,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 window.onload = function() {
     if (document.cookie.includes('logged_out=true')) {
         document.cookie = 'logged_out=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-        window.location.href = '{% url "login" %}';  
+        window.location.href = '{% url "login" %}';
     }
 };
 </script>

@@ -50,7 +50,7 @@ function validateConfirmPassword() {
 
   // If passwords match, show success message
   if (password === confirmPassword) {
-      errorMsg.innerHTML = '<i <i class="bi bi-check-circle" style="color: green;"></i> Password match!';
+      errorMsg.innerHTML = '<i class="bi bi-check-circle" style="color: green;"></i> Password match!';
       errorMsg.style.color = "green";
   } else {
       // If passwords do not match, show error message
