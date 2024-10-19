@@ -83,14 +83,23 @@ main{
 
 header {
     /* border: burlywood 3px solid; */
-    grid-area: hd;
-    z-index: 2;
+    position: fixed;
+    top: 0;
+    left: calc(100% / 13 * 2);
+    right: 0;
+    height: 90px;
+    z-index: 101;
     padding-left: var(--padding-1);
     padding-right: var(--padding-3);
     color: var(--color-white);
-    white-space: nowrap;
-    overflow: hidden; /* Hide any overflow content */
-    background-color: var(--color-primary);
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header, .container, .container-fluid, .btn-group {
+    overflow: visible;
 }
 
 .header-content {
@@ -102,11 +111,12 @@ header {
     justify-content: space-evenly; /* Distribute space between the title and links */
     align-items: end;
     height: 100%;
+    width: 100%;
     gap: var(--gap-1);
 }
 
 .navigation-list {
-    /* border: white 2px solid; */
+    /* border: green 2px solid; */
     list-style: none;
     display: flex;
     width: 100%;
@@ -114,17 +124,54 @@ header {
     flex-direction: row;
     align-items: end;
     justify-content: end;
-    gap: var(--gap-2);
+    gap: var(--gap-half);
     margin: 0;
     padding-bottom: var(--padding-half);
-    white-space: nowrap;
+    white-space: nowrap; /* Keeps navigation items in a single line */
+    flex-wrap: nowrap; /* Prevents wrapping into multiple lines */
 }
 
-/* .navigation-title {
-    border: green 2px solid;
-}
- */
+@media (max-width: 530px) {
+    .navigation-list{
+        justify-content: start;
+        align-items: end;
+    }
 
+}
+
+.btn-hotline,
+.btn-profile{
+    color: white;
+    font-size: 19px;
+    background: transparent;
+    border: none;
+    padding-left: var(--padding-half);
+    padding-right: var(--padding-half);
+    transition: color 0.3s ease;
+}
+
+.btn-hotline:hover,
+.btn-profile:hover{
+    color: #ED7027;
+}
+
+.drop-hotline .dropdown-item {
+    pointer-events: none;  /* Disables all interaction */
+    color: inherit; /* Ensure the text color looks like a normal text */
+    background-color: transparent; /* Remove any background on hover */
+}
+
+/* Background color when hovered, clicked (active), or focused */
+.drop-profile .dropdown-item:focus {
+    background-color: #ED7027; /* Your custom background color */
+    color: white; /* Change text color for better contrast */
+}
+
+.navigation-title{
+    width: 100%;
+    white-space: nowrap; /* Keeps navigation items in a single line */
+    flex-wrap: nowrap; /* Prevents wrapping into multiple lines */
+}
 .navigation-item a{
     text-decoration: none;
     color:white;
@@ -382,6 +429,11 @@ main{
         grid-template-areas:
         "sb hd hd hd hd hd hd hd hd hd hd hd hd hd"
         "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
+    }
+    header {
+        left: calc(80px + 0.5rem); /* Adjust the left property of the header to match the new sidebar width plus its left margin */
+        right: 0; /* Ensure header extends to the right edge of the viewport */
+        width: auto; /* Ensure width automatically adjusts to fill the available space */
     }
     .sidebar {
         width: 80px;

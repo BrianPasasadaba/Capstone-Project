@@ -4,20 +4,34 @@
 
 {% block content %}
 <header>
-    <div class="header-content">
-        <span class="navigation-title">
-            <h1>Frequently Asked Question</h1>
-        </span>
-        <ul class="navigation-list">
-            <li class="navigation-item"><a href="#">Hotline</a></li>
-            <li class="navigation-item"><a href="#">
-                <span class="icon">
-                    <i class="bi bi-person-circle"></i>
-                </span>
-                Hannah Grace Santos
-            </a></li>
-        </ul>
-    </div>
+  <div class="header-content">
+      <span class="navigation-title">
+          <h1>Frequently Ask Questions</h1>
+      </span>
+      <ul class="navigation-list">
+          <div class="dropdown">
+              <button class="btn-hotline dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                  Hotline
+              </button>
+              <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
+                  <li class="dropdown-item">(610) 888-1111</li>
+                  <li class="dropdown-item">(610) 888-1111</li>
+                  <li class="dropdown-item">(610) 888-1111</li>
+              </ul>
+          </div>
+          <div class="dropdown">
+              <button class="btn-profile dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="icon">
+                      <i class="bi bi-person-circle"></i>
+                  </span>
+                  Hannah Grace Santos
+              </button>
+              <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
+                <li><button class="dropdown-item" type="button">Change Password</button></li>
+              </ul>
+          </div>
+      </ul>
+  </div>
 </header>
 
 <main>
