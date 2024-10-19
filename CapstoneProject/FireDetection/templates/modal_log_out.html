@@ -1,0 +1,23 @@
+<!-- create-account-modal -->
+{% load active_link_tags %}
+<div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="out-logo">
+                    <i class="bi bi-box-arrow-in-left"></i>
+                    <h3>Are you sure you want to 
+                        leave this site?</h3>
+                </div>
+                <div class="modal-footer">
+                    <div class="mf-button">
+                        <button class="btn btn-lg px-4 btn-cancel"  type="button" class="btn-close" data-bs-dismiss="modal">Cancel</button>
+                        <a href="{% url 'logout' %}"><button class="btn btn-lg px-4 btn-confirm" type="submit">Confirm</button></a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

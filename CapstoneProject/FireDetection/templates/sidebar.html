@@ -120,22 +120,29 @@
                             </div>
                             
                         </a>
-                        <a class="nav-link" href="{% url 'logout' %}">
+                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#logout-modal">
                             <div class="nav-con">
                                 <span class="icon">
                                     <i class="bi bi-box-arrow-left"></i>
                                 </span>
                                 <span class="description">Logout</span>
                             </div>
-                            
                         </a>
+                        <!-- <a class="nav-link" href="{% url 'logout' %}">
+                            <div class="nav-con">
+                                <span class="icon">
+                                    <i class="bi bi-box-arrow-left"></i>
+                                </span>
+                                <span class="description">Logout</span>
+                            </div>
+                        </a> -->
                     </nav>
                 </div>
             </div>
         </div>
 
     </aside>
-
+    {% include "modal_log_out.html" %}
     <!-- SVG Background -->
     <div class="top-divider">
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 308" fill="none">
