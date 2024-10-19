@@ -2,22 +2,26 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 class InitialReport(models.Model):
     where = models.CharField(max_length=255)
     date = models.DateField()
-    time = models.DateTimeField()  # You can use DateTimeField for better control of date and time
+    time = models.DateTimeField()  
     time_of_fire_out = models.DateTimeField()
     occupancy_type = models.CharField(max_length=255)
     name_of_owner = models.CharField(max_length=255)
     alarm_status = models.CharField(max_length=255)
     no_of_respondents = models.IntegerField()
-    estimated_damage = models.CharField(max_length=255)  # Consider using DecimalField for monetary values
+    estimated_damage = models.CharField(max_length=255)
     no_of_establishments = models.IntegerField()
     no_of_casualties = models.IntegerField()
     no_of_injured = models.IntegerField()
     proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
     status = models.CharField(max_length=20, choices=[('Ongoing', 'Ongoing'), ('Case Closed', 'Case Closed')], default='Ongoing')
+    
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+
     def __str__(self):
         return f"Report {self.id} - {self.where} on {self.date}"
     

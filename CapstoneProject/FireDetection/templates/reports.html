@@ -135,13 +135,13 @@
                                 <li class="page-item prev disabled">
                                     <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
                                 </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item" data-page="1"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item" id="button2" data-page="2"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item" id="button3" data-page="3"><a class="page-link" href="#">3</a></li>
                                 <li class="page-item next">
                                     <a class="page-link" href="#">Next</a>
                                 </li>
-                            </ul>
+                            </ul>                            
                         </nav>
                     </div>                    
                 </div>
@@ -207,9 +207,7 @@ document.querySelector('.rb-export button').addEventListener('click', function()
 });
 
 
-
-
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const rowsPerPage = 10;
     let currentPage = 1;
     const tableBody = document.getElementById('reportTable');
@@ -228,25 +226,27 @@ document.querySelector('.rb-export button').addEventListener('click', function()
             }
         });
 
-        document.querySelector('.pagination .current-page').textContent = page;
         updatePaginationControls();
     }
 
     function updatePaginationControls() {
         const prevButton = document.querySelector('.pagination .prev');
         const nextButton = document.querySelector('.pagination .next');
+        const page2Button = document.getElementById('button2');
+        const page3Button = document.getElementById('button3');
 
-        if (currentPage === 1) {
-            prevButton.classList.add('disabled');
-        } else {
-            prevButton.classList.remove('disabled');
-        }
+        prevButton.classList.toggle('disabled', currentPage === 1);
 
-        if (currentPage === totalPages) {
-            nextButton.classList.add('disabled');
-        } else {
-            nextButton.classList.remove('disabled');
-        }
+        nextButton.classList.toggle('disabled', currentPage === totalPages);
+
+        page2Button.classList.toggle('disabled', rows.length < rowsPerPage); 
+        
+        page3Button.classList.toggle('disabled', rows.length < (rowsPerPage * 2)); 
+
+        document.querySelectorAll('.pagination .page-item').forEach((pageButton) => {
+            pageButton.classList.remove('active');
+        });
+        document.querySelector(`.pagination .page-item[data-page="${currentPage}"]`).classList.add('active');
     }
 
     document.querySelector('.pagination .prev').addEventListener('click', function(e) {
@@ -265,16 +265,19 @@ document.querySelector('.rb-export button').addEventListener('click', function()
         }
     });
 
-    document.querySelectorAll('.pagination .page-item').forEach((pageButton, index) => {
+    document.querySelectorAll('.pagination .page-item[data-page]').forEach((pageButton) => {
         pageButton.addEventListener('click', function(e) {
             e.preventDefault();
-            currentPage = index + 1; 
-            displayRowsForPage(currentPage);
+            if (!this.classList.contains('disabled')) {
+                currentPage = parseInt(this.getAttribute('data-page')); 
+                displayRowsForPage(currentPage);
+            }
         });
     });
 
     displayRowsForPage(currentPage);
 });
+
 
     
     const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
@@ -338,6 +341,13 @@ document.querySelector('.rb-export button').addEventListener('click', function()
 
             resolveButton.setAttribute('data-report-id', reportId);
             resolveButton.setAttribute('data-status', status);
+            if (status === 'Case Closed') {
+                resolveButton.disabled = true;
+                resolveButton.textContent = 'Status Closed';
+            } else {
+                resolveButton.disabled = false;
+                resolveButton.textContent = 'Resolve'; 
+            }
         });
     });
 
@@ -368,6 +378,10 @@ document.querySelector('.rb-export button').addEventListener('click', function()
                 }
 
                 this.setAttribute('data-status', data.status);
+                if (data.status === 'Case Closed') {
+                    this.disabled = true;
+                    this.textContent = 'Status Closed';
+                }
             }
 
             if (data.message) {

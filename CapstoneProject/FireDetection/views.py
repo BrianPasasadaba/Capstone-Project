@@ -21,6 +21,9 @@ import string
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
+from django.contrib.auth.hashers import make_password
+from django.contrib import messages
+
 
 
 def generate_random_password(length=10):
@@ -28,8 +31,39 @@ def generate_random_password(length=10):
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(random.choice(characters) for i in range(length))
 
+
 def forgot_password_view(request):
-   return render(request, "login_forgot.html")
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        new_password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if new_password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('forgot_password')
+
+        try:
+            user = CustomUser.objects.get(email=email)
+
+            user.set_password(new_password)
+            user.save()
+
+            send_mail(
+            'Password Reset Successful',
+            f'Hello {user.name},\n\nYour password has been successfully reset to: {new_password}\n\nPlease keep it safe and secure.',
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+        )
+
+            messages.success(request, 'Password reset successful! A confirmation email has been sent.')
+            return redirect('login')
+
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'No account with that email found.')
+
+        return redirect('forgot_password')
+    return render(request, 'forgot_password.html')
 
 @login_required
 def register_view(request):
@@ -69,20 +103,16 @@ def register_view(request):
     return render(request, 'admin_home.html', {'accounts': accounts})
 
 
-
-
 def toggle_status(request, report_id):
     if request.method == 'POST':
         report = get_object_or_404(InitialReport, id=report_id)
         
-        # Toggle the status
         if report.status == 'Ongoing':
             report.status = 'Case Closed'
         else:
             report.status = 'Ongoing'
         report.save()
 
-        # Return JSON response with new status
         return JsonResponse({'status': report.status, 'message': 'Status updated successfully.'})
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
@@ -203,7 +233,8 @@ def home_view(request):
                 no_of_establishments=establishment,
                 no_of_casualties=casualty,
                 no_of_injured=injured,
-                proof=proof
+                proof=proof,
+                created_by=request.user
             )
             new_report.save()
             messages.success(request, 'Report has been submitted successfully.')
