@@ -7,7 +7,7 @@ const validateEmail = (email) => {
 
 // Validation function to be called on input event
 const validate = () => {
-    const $result = $('#result');
+    const $result = $('#email-result');
     const email = $('#email').val();
     $result.text(''); // Clear previous results immediately on input
 
