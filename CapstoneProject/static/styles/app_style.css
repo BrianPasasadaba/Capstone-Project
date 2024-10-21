@@ -1790,7 +1790,7 @@ input[type="password"]::-ms-clear {
 
 }
 
-/* ============================== SURVEILLANCE MODAL============================== */
+/* ============================== CREATE REPORT MODAL============================== */
 
 #create-report-modal,
 #report-preview-modal,
@@ -1888,7 +1888,34 @@ input[type="password"]::-ms-clear {
     box-shadow: none;
 }
 
-/* ============================== REPORTS MODAL ============================== */
+/* ============================== REPORTS PREVIEW MODAL ============================== */
+
+#change-pass-modal .modal-header .btn-close,
+#add-account-modal .modal-header .btn-close,
+#create-report-modal .modal-header .btn-close,
+#logout-modal .modal-header .btn-close,
+#report-preview-modal .modal-header .btn-close{
+    margin-right: var(--margin-half);
+}
+
+#report-preview-modal .modal-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    padding-right: var(--padding-half);
+}
+
+#report-preview-modal .edit-form i{
+    color: var(--color-secondary);
+    font-size: 25px;
+    padding: var(--padding-half);
+    margin-left: var(--margin-half);
+    cursor: pointer;
+}
+
 
 #report-preview-form input:disabled,
 #report-preview-form input:disabled,
