@@ -1442,7 +1442,6 @@ input[type="password"]::-ms-clear {
     padding-top: var(--padding-1);
 }
 
-
 .rb-buttons .rb-pagination nav .page-link{
     color: var(--color-primary);
 }
@@ -1450,6 +1449,12 @@ input[type="password"]::-ms-clear {
 .rb-buttons .rb-pagination nav .page-link:focus{
     background-color: var(--color-tertiary);
     box-shadow: 0 0 5px .25rem var(--color-default)
+}
+
+.page-item.active .page-link {
+    background-color: var(--color-secondary)!important;
+    color: white!important;
+    border-color: var(--color-secondary)!important;
 }
 
 
