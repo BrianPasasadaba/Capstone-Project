@@ -23,7 +23,38 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
+def change_password(request):
+    if request.method == 'POST':
+        new_password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        # Check if the new password and confirmation match
+        if new_password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return redirect(request.META.get('HTTP_REFERER', 'analytics'))
+
+        user = request.user
+
+        user.set_password(new_password)
+        user.save()
+
+        update_session_auth_hash(request, user)
+
+        send_mail(
+            'Password Reset Successful',
+            f'Hello {user.get_full_name() or user.name},\n\nYour password has been successfully changed.\n\nPlease keep it safe and secure.',
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+        
+        messages.success(request, 'Password reset successful! A confirmation email has been sent.')
+
+        return redirect(request.META.get('HTTP_REFERER', 'analytics'))
+
+    return render(request, 'analytics.html')
 
 
 def generate_random_password(length=10):
@@ -50,7 +81,7 @@ def forgot_password_view(request):
 
             send_mail(
             'Password Reset Successful',
-            f'Hello {user.name},\n\nYour password has been successfully reset to: {new_password}\n\nPlease keep it safe and secure.',
+            f'Hello {user.name},\n\nYour password has been successfully changed.\n\nPlease keep it safe and secure.',
             settings.DEFAULT_FROM_EMAIL,
             [email],
             fail_silently=False,

@@ -108,19 +108,20 @@
                     <div class="ab-add">
                         <button type="button" class="btn btn-lg btn" data-bs-toggle="modal" data-bs-target="#add-account-modal">Add</button>
                     </div>
-                    <div class="ab-pagination">
+
+                    <div class="rb-pagination">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-end">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                            </ul>
+                                <li class="page-item prev disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                </li>
+                                <li class="page-item" data-page="1"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item" id="button2" data-page="2"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item" id="button3" data-page="3"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item next">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>                            
                         </nav>
                     </div>
                 </div>
@@ -139,9 +140,12 @@
 
 {% block scripts %}
 <!-- ADD SCRIPTS HERE -->
+<script src="{% static 'js/form_controls.js' %}"></script>
 <script src="{% static 'js/table_status.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="{% static 'js/filter.js' %}"></script>
+
 
 <script>
     document.getElementById('accountSearchInput').addEventListener('keyup', function() {
@@ -161,6 +165,76 @@
     });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    const rowsPerPage = 10;
+    let currentPage = 1;
+    const tableBody = document.getElementById('reportTable');
+    const rows = tableBody.querySelectorAll('tr');
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+    function displayRowsForPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        rows.forEach((row, index) => {
+            if (index >= start && index < end) {
+                row.style.display = ''; 
+            } else {
+                row.style.display = 'none'; 
+            }
+        });
+
+        updatePaginationControls();
+    }
+
+    function updatePaginationControls() {
+        const prevButton = document.querySelector('.pagination .prev');
+        const nextButton = document.querySelector('.pagination .next');
+        const page2Button = document.getElementById('button2');
+        const page3Button = document.getElementById('button3');
+
+        prevButton.classList.toggle('disabled', currentPage === 1);
+
+        nextButton.classList.toggle('disabled', currentPage === totalPages);
+
+        page2Button.classList.toggle('disabled', rows.length < rowsPerPage); 
+        
+        page3Button.classList.toggle('disabled', rows.length < (rowsPerPage * 2)); 
+
+        document.querySelectorAll('.pagination .page-item').forEach((pageButton) => {
+            pageButton.classList.remove('active');
+        });
+        document.querySelector(`.pagination .page-item[data-page="${currentPage}"]`).classList.add('active');
+    }
+
+    document.querySelector('.pagination .prev').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentPage > 1) {
+            currentPage--;
+            displayRowsForPage(currentPage);
+        }
+    });
+
+    document.querySelector('.pagination .next').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayRowsForPage(currentPage);
+        }
+    });
+
+    document.querySelectorAll('.pagination .page-item[data-page]').forEach((pageButton) => {
+        pageButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!this.classList.contains('disabled')) {
+                currentPage = parseInt(this.getAttribute('data-page')); 
+                displayRowsForPage(currentPage);
+            }
+        });
+    });
+
+    displayRowsForPage(currentPage);
+});
 
 
 </script>
