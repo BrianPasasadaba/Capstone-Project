@@ -8,12 +8,7 @@ django = "*"
 psycopg2 = "*"
 pillow = "*"
 django-active-link = "*"
-channels = "*"
-ultralytics = "*"
-opencv-python = "*"
-daphne = "*"
 python-dotenv = "*"
-django-environ = "*"
 
 [dev-packages]
 

@@ -172,7 +172,7 @@ def login_view(request):
             if user.is_staff:
                 return redirect('admin_home')
             elif user.is_active:
-                return redirect('home')
+                return redirect('analytics')
             else:
                 messages.error(request, "Your account is not active.")
         else:

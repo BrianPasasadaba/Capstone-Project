@@ -10,7 +10,6 @@ from .views import toggle_status
 urlpatterns = [
     path('', views.login_view, name='login'),
     path('forgot_password', views.forgot_password_view, name='forgot_password'),
-    path('home/', views.home_view, name='home'),
     path('analytics/', views.analytics_view, name='analytics'),
     path('reports/', views.reports_view, name='reports'),
     path('faq/', views.faq_view, name='faq'),

@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'FireDetection',
     'active_link',
-    'channels',
 ]
 
 MIDDLEWARE = [
@@ -71,14 +70,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'CapstoneProject.wsgi.application'
-ASGI_APPLICATION = 'CapstoneProject.asgi.application'
 
-# WebSocket URL patterns
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    },
-}
+
 
 DATABASES = {
     'default': {
