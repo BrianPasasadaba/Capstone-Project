@@ -12,6 +12,8 @@ channels = "*"
 ultralytics = "*"
 opencv-python = "*"
 daphne = "*"
+python-dotenv = "*"
+django-environ = "*"
 
 [dev-packages]
 

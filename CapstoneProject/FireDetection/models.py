@@ -4,6 +4,13 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
+class tempReports(models.Model):
+    where = models.CharField(max_length=255)
+    date = models.DateField()
+    time_detected = models.DateTimeField()
+    proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
+    status = models.CharField(max_length=20, choices=[('Filed', 'Filed'), ('Dismissed', 'Dismissed')], null=True)
+
 class InitialReport(models.Model):
     where = models.CharField(max_length=255)
     date = models.DateField()
