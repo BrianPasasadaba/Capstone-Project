@@ -1,18 +1,17 @@
 
-{% load active_link_tags %}
-<div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="dismiss-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <div class="out-logo">
-                    <i class="bi bi-box-arrow-in-left"></i>
+                <div class="dismiss-logo">
+                    <i class="bi bi-exclamation-diamond"></i>
                     <h3>Are you sure you want to 
-                        leave this site?</h3>
+                        <span>DISMISS</span> this alert?</h3>
                 </div>
                 <div class="modal-footer">
                     <div class="mf-button">
                         <button class="btn btn-lg px-4 btn-cancel"  type="button" class="btn-close" data-bs-dismiss="modal">Cancel</button>
-                        <a href="{% url 'logout' %}"><button class="btn btn-lg px-4 btn-confirm" type="submit">Confirm</button></a>
+                        <button class="btn btn-lg px-4 btn-confirm" type="button">Confirm</button></a>
                     </div>
                 </div>
 

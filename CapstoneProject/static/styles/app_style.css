@@ -571,97 +571,6 @@ main{
     height: 100%;
 }
 
-
-/* ============================== SURVEILLANCE ============================== */
-
-.surveillance-box{
-    /* border: var(--color-primary) solid 2px; */
-    background-color: var(--color-default);
-    width: 100%;
-    min-height: 100%;
-    height: auto;
-    padding: var(--padding-3);
-    padding-top: var(--padding-1);
-    padding-bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    border-radius: var(--border-radius-sidebar);
-    box-shadow: var(--box-shadow);
-    overflow: auto;
-}
-
-.surveillance-info{
-    border: var(--color-primary) solid 2px;
-    background-color: var(--color-white);
-    width: 100%;
-    min-height: auto;
-    padding:var(--padding-half);
-    border-radius: var(--border-radius-button-half);
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns of equal width */
-    grid-template-rows: auto auto; /* Two rows that adjust to the content */
-    grid-template-areas:
-    "bl dt"
-    "lc tm";
-    gap: 10px;
-    overflow: hidden;
-    margin-bottom: var(--margin-1);
-    white-space: nowrap;
-    color: var(--color-primary);
-}
-
-.surveillance-date{
-    grid-area: dt;
-}
-.surveillance-time{
-    grid-area: tm;
-}
-
-.surveillance-date,
-.surveillance-time{
-    display: flex;
-    justify-content: end;
-    padding-right: var(--padding-2);
-}
-
-.surveillance-loc{
-    grid-area: lc;
-    display: flex;
-    justify-content: start;
-    padding-left: var(--padding-2);
-}
-
-.surveillance-body{
-    /* border: var(--color-primary) solid 3px; */
-    min-width: 100%;
-    max-height:650px;
-    width: auto;
-    height: 100%;
-    padding-top: var(--padding-1);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--gap-2);
-    /* overflow: auto; */
-    color: var(--color-primary);
-}
-
-.surveillance-feed{
-    border: var(--color-secondary) solid 3px;
-    background-color: var(--color-white);
-    width: 80%;
-    max-width: 1000px;
-    min-height: 500px;
-    min-width: 700px;
-    border-radius: var(--border-radius-card-2);
-    align-content: center;
-}
-
-
-
 /* ================================  Media Queries for Responsive Design ================================  */
 
 /* Sidebar adjustments for smaller screens */
@@ -1162,6 +1071,93 @@ input[type="password"]::-ms-clear {
     border: none;
 }
 
+/* ============================== DISMISS ALERT MODAL ============================== */
+#dismiss-modal .modal-header,
+#dismiss-modal .modal-footer{
+    border-bottom: none;
+    border-top: none;
+}
+
+#dismiss-modal .modal-dialog{
+    margin-top: 0;
+    margin-bottom: 0;
+    /* border: #ED7027 1px solid; */
+    padding: var(--padding-1);
+    max-width: 600px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#dismiss-modal .modal-content{
+    height: auto;
+}
+
+.dismiss-logo{
+    display: flex;
+    /* border: #ED7027 1px solid; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+.dismiss-logo i{
+    /* border: #ED7027 1px solid; */
+    font-size: 150px;
+    color: var(--color-secondary);
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    padding-top: var(--padding-1);
+    padding-bottom: var(--padding-half);
+    line-height: 1; /* Adjust line-height to minimize spacing */
+}
+
+.dismiss-logo h3{
+    text-align: center; /* Centers the text horizontally */
+    margin: 0; /* Optional: to remove default margins */
+    margin-top: var(--margin-half);
+    padding-bottom: var(--padding-half);
+    padding-left: var(--padding-3);
+    padding-right: var(--padding-3);
+}
+
+.dismiss-logo span{
+    color: red;
+    font-weight: 600;
+}
+
+#dismiss-modal .modal-footer{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--margin-1);
+    padding: var(--padding-1);
+}
+#dismiss-modal .modal-footer .mf-button{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-2);
+}
+
+#dismiss-modal .modal-footer .btn-confirm{
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+#dismiss-modal .modal-footer .btn-cancel{
+    background-color: var(--color-default);
+    color: var(--color-primary);
+    font-weight: 600;
+    border: none;
+}
 
 /* ============================== ANALYTICS GRAPH ============================== */
 
