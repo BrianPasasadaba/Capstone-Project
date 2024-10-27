@@ -11,7 +11,7 @@
             <div class="modal-body">
 
 
-                <form action="{% url 'home' %}" method="POST" enctype="multipart/form-data" id="create-report-form">
+                <form action="{% url 'reports' %}" method="POST" enctype="multipart/form-data" id="create-report-form">
                     {% csrf_token %}
                 
                     <div class="form-row">
