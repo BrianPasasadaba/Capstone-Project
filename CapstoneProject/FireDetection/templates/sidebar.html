@@ -63,12 +63,12 @@
         <div class="modal-footer">
             <div class="mf-button">
                 <button type="button" class="btn" id="btn-dismiss" data-bs-dismiss="modal" aria-label="Close">Dismiss</button>
-                <button type="button" class="btn" id="btn-report" data-bs-dismiss="modal" aria-label="Close">Report</button>
+                <button type="button" class="btn" id="btn-popreport" data-bs-dismiss="modal" >Report</button>
             </div>
         </div>
       </div>
     </div>
-  </div>
+</div>
 <!--POP UP ALERT-->
 <!--TOAST START-->
     <!-- <div class="toast position-fixed" role="alert" aria-live="assertive" aria-atomic="true">
@@ -161,6 +161,8 @@
         </div>
 
     </aside>
+
+    {% include "modal_dismiss_confirm.html" %}
     {% include "modal_log_out.html" %}
     <!-- SVG Background -->
     <div class="top-divider">
@@ -177,6 +179,27 @@
     </div>
 
     <!-- FOR SCRIPTS THAT NEED TO BE ADDED ON EVERY PAGE USING BASE, ADD CODE ABOVE THE SCRIPT BLOCK -->
+    <script>
+        $(document).ready(function() {
+            $('#btn-dismiss').click(function() {
+                $('#pop-up-modal').modal('hide'); // Hide the initial modal
+                $('#dismiss-modal').modal('show'); // Show the confirmation modal
+            });
+
+            // Handler for the Cancel button in the confirm dismiss modal
+            $('.btn-discancel').click(function() {
+                $('#dismiss-modal').modal('hide'); // Hide the confirmation modal
+                $('#pop-up-modal').modal('show'); // Re-show the initial modal
+            });
+
+            // Handler for the Confirm button in the confirm dismiss modal
+            $('.btn-disconfirm').click(function() {
+                $('#dismiss-modal').modal('hide'); // Close the confirmation modal
+                // Optionally, you can perform additional actions here if needed when confirmation is complete
+            });
+        });
+        </script>
+
     {%block scripts%}
     <!-- DO NOT ADD SCRIPTS HERE -->
     {%endblock%}

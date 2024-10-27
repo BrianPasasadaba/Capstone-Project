@@ -1061,7 +1061,7 @@ input[type="password"]::-ms-clear {
     width: 120px;
 }
 
-#pop-up-modal .modal-footer #btn-report{
+#pop-up-modal .modal-footer #btn-popreport{
     color: white;
 }
 
@@ -1146,13 +1146,13 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-2);
 }
 
-#dismiss-modal .modal-footer .btn-confirm{
+#dismiss-modal .modal-footer .btn-disconfirm{
     background-color: var(--color-primary);
     color: white;
     font-weight: 600;
     border: none;
 }
-#dismiss-modal .modal-footer .btn-cancel{
+#dismiss-modal .modal-footer .btn-discancel{
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 600;
