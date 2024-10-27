@@ -35,6 +35,7 @@
                 <div class="header-text text-center mb-4 p-2">
                     <h1><i class="bi bi-stars p-1" style="color: #ED7027;"></i>Hello!</h1>
                 </div>
+
                 <form action="{% url 'login' %}" method="POST">
                     {% csrf_token %}
                     <div class="input-area">
@@ -62,7 +63,15 @@
                     <div class="input-group mb-3">
                         <button type="submit" class="btn btn-lg w-100 fs-5 btn-login">Login</button>
                     </div>
+                    <div id="login-error-message" style="display:none;">
+                        {% for message in messages %}
+                            {% if message.tags == "error" %}
+                                {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -76,6 +85,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="{% static 'js/email_validation.js' %}"></script>
 <script src="{% static 'js/password_toggle.js' %}"></script>
+<script src="{% static 'js/error_handling.js' %}"></script>
 <script>
 // Function to prevent spaces in input fields
 function preventSpaces(event) {

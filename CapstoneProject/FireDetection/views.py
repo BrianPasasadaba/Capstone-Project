@@ -80,21 +80,22 @@ def forgot_password_view(request):
             user.save()
 
             send_mail(
-            'Password Reset Successful',
-            f'Hello {user.name},\n\nYour password has been successfully changed.\n\nPlease keep it safe and secure.',
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
-        )
+                'Password Reset Successful',
+                f'Hello {user.name},\n\nYour password has been successfully changed.\n\nPlease keep it safe and secure.',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
 
             messages.success(request, 'Password reset successful! A confirmation email has been sent.')
             return redirect('login')
 
         except CustomUser.DoesNotExist:
-            messages.error(request, 'No account with that email found.')
+            messages.error(request, 'Email address not found.')
+            return redirect('forgot_password')
 
-        return redirect('forgot_password')
     return render(request, 'forgot_password.html')
+
 
 @login_required
 def register_view(request):
@@ -176,8 +177,7 @@ def login_view(request):
             else:
                 messages.error(request, "Your account is not active.")
         else:
-            messages.error(request, "Invalid email or password.")
-    
+            messages.error(request, "Invalid email or incorrect password. Try again")
     return render(request, 'login.html')
 
 
