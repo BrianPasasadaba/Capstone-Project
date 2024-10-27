@@ -922,14 +922,56 @@ input[type="password"]::-ms-clear {
     display: flex;
     flex-direction: row;
     justify-content: start;
+    align-items: center;
     color: var(--color-primary);
     white-space:nowrap;
     padding-top:var(--padding-half);
     padding-left:var(--padding-half);
+    gap: var(--gap-1);
 }
 
 .chart-header h1{
     font-weight: 600;
+}
+
+.ch-options{
+    /* border: var(--color-secondary) 1px solid; */
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-primary);
+    white-space:nowrap;
+    margin-bottom: var(--margin-half);
+}
+
+.ch-options i{
+    color: var(--color-secondary);
+    font-size: 1.5rem;
+}
+
+.btn-prev-summary{
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.2s ease; /* Smooth transition */
+}
+
+.btn-prev-summary:hover {
+    transform: scale(1.05); /* Enlarges the button by 10% */
+    background-color: var(--box-shadow); /* Background turns light gray on hover */
+}
+
+.btn-graph-filter{
+    border: 1px var(--color-tertiary) solid;
+    padding: var(--padding-3);
+    width: 115px;
+    margin-right: var(--margin-1);
+    gap: var(--gap-1);
+}
+
+.ch-options .dropdown-item:focus{
+   background-color: #ED7027;
 }
 
 .chart-graph{
@@ -1032,7 +1074,7 @@ input[type="password"]::-ms-clear {
 
 .incident-bars .bar:before{
     color: var(--color-sidebar);
-    content: attr(data-percentage) '+';
+    content: attr(data-percentage);
     position: relative;
     bottom: 30px;
 }
@@ -1142,7 +1184,7 @@ input[type="password"]::-ms-clear {
     }
 
     .chart{
-        justify-content: center;
+        justify-content: start;
     }
 
     .detect-card{
