@@ -1061,6 +1061,90 @@ input[type="password"]::-ms-clear {
 #print-button{
     width: 100px;
 }
+
+/* ============================== POP UP ALERT MODAL============================== */
+#pop-up-modal{
+    text-align: center;
+}
+#pop-up-modal .modal-dialog{
+    padding: var(--padding-1);
+    max-width: 600px;
+    min-width: 400px;
+    width: 90%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+}
+
+#pop-up-modal .modal-header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#pop-up-modal .modal-title{
+    /* border: 2px solid var(--color-primary); */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+#pop-up-modal .modal-title .bi{
+    font-size: 40px;
+}
+
+#pop-up-modal .modal-body h4{
+    color: var(--color-danger);
+    font-weight: 600;
+}
+
+.group-report{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+.indiv-detail{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--padding-half);
+}
+
+.indiv-detail span{
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--color-secondary);
+}
+.indiv-detail div{
+    color: var(--color-primary);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+#pop-up-modal .modal-footer .mf-button{
+    gap: var(--gap-2);
+}
+
+#pop-up-modal .modal-footer .btn{
+    width: 120px;
+}
+
+#pop-up-modal .modal-footer #btn-report{
+    color: white;
+}
+
+#pop-up-modal .modal-footer #btn-dismiss{
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+}
+
+
 /* ============================== ANALYTICS GRAPH ============================== */
 
 .chart-graph{
@@ -2098,47 +2182,6 @@ input[type="password"]::-ms-clear {
     flex-direction: column;
     justify-content: start;
     gap: var(--gap-1);
-}
-/* ============================== POP UP MODAL============================== */
-#pop-up-modal{
-    text-align: center;
-}
-#pop-up-modal .modal-dialog{
-    padding: var(--padding-1);
-    max-width: 600px;
-    min-width: 400px;
-    width: 80%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-}
-
-#pop-up-modal .modal-header{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-#pop-up-modal .modal-title{
-    /* border: 2px solid var(--color-primary); */
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-}
-
-#pop-up-modal .modal-title .bi{
-    font-size: 40px;
-}
-
-#pop-up-modal .modal-body h4{
-    color: var(--color-danger);
-    font-weight: 600;
-}
-
-#pop-up-modal .modal-footer .btn{
-    width: 100px;
 }
 
 /* ============================== TOAST ============================== */
