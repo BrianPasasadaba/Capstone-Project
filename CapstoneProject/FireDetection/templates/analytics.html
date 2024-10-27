@@ -114,15 +114,16 @@
                 <div class="chart-header">
                     <h1>INCIDENTS</h1>
                     <div class="ch-options">
-                        <button class="btn-prev-summary"><i class="bi bi-file-earmark-break"></i></button>
+                        <button class="btn-prev-summary" data-bs-toggle="modal" data-bs-target="#preview-incident-summary"><i class="bi bi-file-earmark-break"></i></button>
                         <div class="btn-group">
                             <button class="btn-graph-filter btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                               Yearly
                             </button>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Yearly</a></li>
                                 <li><a class="dropdown-item" href="#">Monthly</a></li>
                             </ul>
-                          </div>
+                        </div>
                     </div>
                 </div>
                 <div class="chart-graph">
@@ -194,6 +195,7 @@
 </main>
 {% include "modal_change_password.html" %}
 {% include "modal_forgot_success.html" %}
+{% include "modal_preview_summary.html" %}
 {% endblock %}
 
 {% block scripts %}
