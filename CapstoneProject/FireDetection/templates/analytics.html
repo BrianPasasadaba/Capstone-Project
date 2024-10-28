@@ -160,21 +160,23 @@
             
             <div class="detect-card">
                 <div class="detect-header">
-                    <h1>LATEST</h1>
+                    <h1>LATEST DETECTION</h1>
                 </div>
                 <div class="detect-body">
                     {% if latest_reports %}
                         {% for report in latest_reports %}
                             <div class="detect-content-{{ forloop.counter }}">
-                                <div class="dc-info">
-                                    <div class="dc-header">
-                                        <h6>{{ report.where|default:"No report available" }}</h6>
+                                <a class="latest-preview" data-bs-toggle="modal" data-bs-target="#latest-detection">
+                                    <div class="dc-info">
+                                        <div class="dc-header">
+                                            <h6>{{ report.where|default:"No report available" }}</h6>
+                                        </div>
+                                        <div class="dc-date-time">
+                                            <h6>{{ report.date|date:"M d, Y"|default:"N/A" }}</h6>
+                                            <h6>{{ report.time|date:"H:i"|default:"N/A" }}</h6>
+                                        </div>
                                     </div>
-                                    <div class="dc-date-time">
-                                        <h6>{{ report.date|date:"M d, Y"|default:"N/A" }}</h6>
-                                        <h6>{{ report.time|date:"H:i"|default:"N/A" }}</h6>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
                         {% endfor %}
                     {% else %}
@@ -196,6 +198,7 @@
 {% include "modal_change_password.html" %}
 {% include "modal_forgot_success.html" %}
 {% include "modal_preview_summary.html" %}
+{% include "modal_latest_detection.html" %}
 {% endblock %}
 
 {% block scripts %}
