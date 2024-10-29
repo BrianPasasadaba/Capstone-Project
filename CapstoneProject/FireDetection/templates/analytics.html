@@ -114,15 +114,14 @@
                 <div class="chart-header">
                     <h1>INCIDENTS</h1>
                     <div class="ch-options">
-                        <button class="btn-prev-summary" data-bs-toggle="modal" data-bs-target="#preview-incident-summary"><i class="bi bi-file-earmark-break"></i></button>
-                        <div class="btn-group">
-                            <button class="btn-graph-filter btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Yearly
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Yearly</a></li>
-                                <li><a class="dropdown-item" href="#">Monthly</a></li>
-                            </ul>
+                        <button class="btn-prev-summary" data-bs-toggle="modal" data-bs-target="#preview-incident-summary">
+                            <i class="bi bi-file-earmark-break"></i>
+                        </button>
+                        <div class="select-filter">
+                            <select class="form-select" aria-label="Default select example">
+                                <option value="1" selected>Yearly</option>
+                                <option value="2">Monthly</option>
+                              </select>
                         </div>
                     </div>
                 </div>
@@ -156,8 +155,6 @@
 <!--CHART END-->
                 </div>
             </div>
-
-            
             <div class="detect-card">
                 <div class="detect-header">
                     <h1>LATEST DETECTION</h1>
@@ -203,7 +200,6 @@
 
 {% block scripts %}
 <!-- ADD SCRIPTS HERE -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{% static 'js/chart_analytics.js' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
