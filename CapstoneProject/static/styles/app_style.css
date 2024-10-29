@@ -871,12 +871,21 @@ input[type="password"]::-ms-clear {
     background-color: var(--box-shadow); /* Background turns light gray on hover */
 }
 
-.btn-graph-filter{
-    border: 1px var(--color-tertiary) solid;
-    padding: var(--padding-3);
-    width: 115px;
+.select-filter{
+    /* border: 1px var(--color-tertiary) solid; */
     margin-right: var(--margin-1);
     gap: var(--gap-1);
+    color: var(--color-primary);
+}
+
+.select-filter .form-select{
+    border: var(--color-primary) 1px solid;
+    color: var(--color-secondary);
+}
+
+.select-filter .form-select:focus{
+    box-shadow: var(--color-shadow-min);
+    border: var(--color-secondary) 1px solid;
 }
 
 .ch-options .dropdown-item:focus{
@@ -914,7 +923,7 @@ input[type="password"]::-ms-clear {
     color: var(--color-primary);
     white-space:nowrap;
     margin-left: var(--margin-1);
-    gap: var(--gap-1);
+    gap: var(--gap-half);
 }
 
 #preview-incident-summary .modal-content{
@@ -923,22 +932,6 @@ input[type="password"]::-ms-clear {
 
 #preview-incident-summary .modal-header .btn-close{
     margin-right: var(--margin-half)!important;
-}
-
-.btn-summary-filter{
-    border: 1px var(--color-tertiary) solid;
-    gap: var(--gap-1);
-    width: 90px
-}
-
-.btn-summary-specific{
-    border: 1px var(--color-tertiary) solid;
-    gap: var(--gap-half);
-    width: 120px
-}
-
-.summary-option .dropdown-item:focus{
-    background-color: #ED7027 !important;
 }
 
 .group-summary{
@@ -1737,7 +1730,7 @@ input[type="password"]::-ms-clear {
     border-color: var(--color-tertiary);
 }
 
-.rb-buttons{
+.rb-footer{
     /* border: var(--color-primary) 1px solid; */
     width: 100%;
     height: 100px;
@@ -1748,15 +1741,26 @@ input[type="password"]::-ms-clear {
     color: var(--color-primary);
     white-space:nowrap;
     padding: var(--padding-3);
+}
+
+.rb-group{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
     gap: var(--gap-3);
 }
 
-.rb-export {
+.rb-footer .rb-export {
+    min-width: 200px;
     /* border: var(--color-primary) 1px solid; */
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: var(--padding-1);
 }
 
-.rb-buttons .btn{
+.rb-footer .btn{
     background-color: var(--color-tertiary);
     width: 120px;
     transition: var(--tran-03);
@@ -1778,7 +1782,25 @@ input[type="password"]::-ms-clear {
     font-weight: 400;
 }
 
-.rb-buttons .rb-pagination{
+.rb-export .form-select{
+    border: var(--color-primary) 1px solid;
+}
+
+.rb-export .input-group-text{
+    border: var(--color-secondary) 1px solid;
+    background-color: var(--color-secondary);
+}
+
+.rb-export .input-group-text i{
+    color: white;
+    font-weight: 700;
+}
+
+.rb-export .form-select:focus{
+    box-shadow: var(--box-shadow);
+    border: var(--color-secondary) 1px solid;
+}
+.rb-footer .rb-pagination{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -1787,11 +1809,11 @@ input[type="password"]::-ms-clear {
     padding-top: var(--padding-1);
 }
 
-.rb-buttons .rb-pagination nav .page-link{
+.rb-footer .rb-pagination nav .page-link{
     color: var(--color-primary);
 }
 
-.rb-buttons .rb-pagination nav .page-link:focus{
+.rb-footer .rb-pagination nav .page-link:focus{
     background-color: var(--color-tertiary);
     box-shadow: 0 0 5px .25rem var(--color-default)
 }
