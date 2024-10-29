@@ -1584,6 +1584,11 @@ input[type="password"]::-ms-clear {
     font-weight: 300;
 }
 
+.rbh-filter .dropdown-item:focus {
+    background-color: #ED7027; /* Your custom background color */
+    color: white; /* Change text color for better contrast */
+}
+
 .rbh-left{
     /* border: var(--color-secondary) 1px solid; */
     display: flex;
@@ -1899,6 +1904,11 @@ input[type="password"]::-ms-clear {
     box-shadow: 1px 0.2px 5px var(--color-tertiary);
     border: var(--border-input);
     font-weight: 300;
+}
+
+.abh-filter .dropdown-item:focus {
+    background-color: #ED7027; /* Your custom background color */
+    color: white; /* Change text color for better contrast */
 }
 
 .ab-header input{
