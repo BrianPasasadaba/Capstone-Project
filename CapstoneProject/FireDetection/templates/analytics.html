@@ -118,10 +118,10 @@
                             <i class="bi bi-file-earmark-break"></i>
                         </button>
                         <div class="select-filter">
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="1" selected>Yearly</option>
-                                <option value="2">Monthly</option>
-                              </select>
+                            <select class="form-select" aria-label="Default select example" onchange="updateChart(this.value)">
+                                <option value="yearly" selected>Yearly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
                             </ul>
                             <ul class="incident-bars">
 
-                                <li><div class="bar" data-percentage="55" style="background: #E4AE7E;"></div><span>2018</span></li>
+                                {% comment %} <li><div class="bar" data-percentage="55" style="background: #E4AE7E;"></div><span>2018</span></li>
                                 <li><div class="bar" data-percentage="85" style="background: #E08E44;"></div><span>2019</span></li>
                                 <li><div class="bar" data-percentage="75" style="background: #ED7027;"></div><span>2020</span></li>
                                 <li><div class="bar" data-percentage="50" style="background: #E4AE7E;"></div><span>2021</span></li>
@@ -149,7 +149,7 @@
                                          style="background: #3C4273; height: {{ incidents_per_year.2024 }}%;"></div>
                                     <span>2024</span>
                                     
-                                </li>                     
+                                </li>                      {% endcomment %}
                             </ul>
                     </div>
 <!--CHART END-->
@@ -200,6 +200,7 @@
 
 {% block scripts %}
 <!-- ADD SCRIPTS HERE -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{% static 'js/chart_analytics.js' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
