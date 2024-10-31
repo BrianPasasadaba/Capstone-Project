@@ -210,22 +210,21 @@
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRFToken': csrfToken  // Include CSRF token in headers
+                    'X-CSRFToken': csrfToken  
                 },
             }).then(response => {
                 if (response.ok) {
-                    alert('Form submitted successfully');
-                    window.location.href = '/reports';  // Redirect if submission succeeds
+                    window.location.href = '/reports';  
                 } else {
-                    alert('There was an error submitting the form. Please try again.');
+                    console.error('There was an error submitting the form.');
                 }
             }).catch(error => {
                 console.error('Error:', error);
-                alert('An unexpected error occurred. Please try again.');
             });
         });
     });
 </script>
+
 
 
 
