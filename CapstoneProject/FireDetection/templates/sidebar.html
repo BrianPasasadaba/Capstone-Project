@@ -23,7 +23,7 @@
 <body>
 <!--POP UP ALERT-->
     <!-- Modal -->
-<!-- <div class="modal fade" id="pop-up-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="pop-up-modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -32,17 +32,43 @@
           </svg>Alert!</h3>
         </div>
         <div class="modal-body">
-          <h4>Immediate Action Required</h4>
-          The fire has reached a level that necessitates the attendance of firemen. Please see the surveillance to confirm and report the incident.
+            <h4>The System Detected a Fire!</i></h4>
+            <div class="group-report">
+                <div class="indiv-detail">
+                    <div>Proof</div>
+                    <span class="proof-image">
+                        <img id="detect-proof" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
+                    </span>
+                </div>
+                <div class="indiv-detail">
+                    <div class="label-detail">
+                        <div>Date</div>
+                        <div>Location</div>
+                    </div>
+                    <div class="info-detail">
+                        <span>October 22, 2024</span>
+                        <span>Barangay Caingin</span>
+                    </div>
+                </div>
+                <div class="indiv-detail">
+                    <div class="label-detail">
+                        <div>Time</div>
+                    </div>
+                    <div class="info-detail">
+                        <span>1:11 PM</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             <div class="mf-button">
-                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">View</button>
+                <button type="button" class="btn" id="btn-dismiss" data-bs-dismiss="modal" aria-label="Close">Dismiss</button>
+                <button type="button" class="btn" id="btn-popreport" data-bs-dismiss="modal" >Report</button>
             </div>
         </div>
       </div>
     </div>
-  </div> -->
+</div>
 <!--POP UP ALERT-->
 <!--TOAST START-->
     <!-- <div class="toast position-fixed" role="alert" aria-live="assertive" aria-atomic="true">
@@ -135,6 +161,8 @@
         </div>
 
     </aside>
+
+    {% include "modal_dismiss_confirm.html" %}
     {% include "modal_log_out.html" %}
     <!-- SVG Background -->
     <div class="top-divider">
@@ -151,6 +179,27 @@
     </div>
 
     <!-- FOR SCRIPTS THAT NEED TO BE ADDED ON EVERY PAGE USING BASE, ADD CODE ABOVE THE SCRIPT BLOCK -->
+    <script>
+        $(document).ready(function() {
+            $('#btn-dismiss').click(function() {
+                $('#pop-up-modal').modal('hide'); // Hide the initial modal
+                $('#dismiss-modal').modal('show'); // Show the confirmation modal
+            });
+
+            // Handler for the Cancel button in the confirm dismiss modal
+            $('.btn-discancel').click(function() {
+                $('#dismiss-modal').modal('hide'); // Hide the confirmation modal
+                $('#pop-up-modal').modal('show'); // Re-show the initial modal
+            });
+
+            // Handler for the Confirm button in the confirm dismiss modal
+            $('.btn-disconfirm').click(function() {
+                $('#dismiss-modal').modal('hide'); // Close the confirmation modal
+                // Optionally, you can perform additional actions here if needed when confirmation is complete
+            });
+        });
+        </script>
+
     {%block scripts%}
     <!-- DO NOT ADD SCRIPTS HERE -->
     {%endblock%}
