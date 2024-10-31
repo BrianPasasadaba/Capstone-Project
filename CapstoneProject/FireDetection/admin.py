@@ -36,8 +36,18 @@ class InitialReportAdmin(admin.ModelAdmin):
     )
     search_fields = ('where', 'occupancy_type', 'name_of_owner', 'alarm_status')
     list_filter = ('date', 'time_of_fire_out', 'alarm_status')
-    readonly_fields = ('proof',)
-    list_editable = ('status',)
+    # Remove readonly_fields to allow editing of the proof field
+    # readonly_fields = ('proof',)
+    
+    # Set list_display_links to a different field
+    list_display_links = ('name_of_owner',)  # Choose a field that should be clickable
+
+    # Make the fields editable in the list view
+    list_editable = (
+        'where', 'date', 'time', 'time_of_fire_out', 'occupancy_type',
+        'alarm_status', 'no_of_respondents', 'estimated_damage',
+        'no_of_establishments', 'no_of_casualties', 'no_of_injured', 'status'
+    )
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

@@ -24,6 +24,9 @@ from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
+from django.utils import timezone
+from datetime import datetime
+from datetime import  date
 
 def change_password(request):
     if request.method == 'POST':
@@ -275,3 +278,62 @@ def home_view(request):
             return render(request, 'reports.html')
 
     return render(request, 'home.html')
+
+
+def update_report(request, report_id):
+    if request.method == 'POST':
+        location = request.POST.get('where')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+        time_out = request.POST.get('time_of_fire_out')
+        occupancy = request.POST.get('occupancy_type')
+        owner = request.POST.get('name_of_owner')
+        alarm = request.POST.get('alarm_status')
+        respondents = request.POST.get('no_of_respondents')
+        damages = request.POST.get('estimated_damage', '0')
+        establishment = request.POST.get('no_of_establishments', '1')
+        casualty = request.POST.get('no_of_casualties', '0')
+        injured = request.POST.get('no_of_injured', '0')
+        proof = request.FILES.get('proof')
+
+        report = get_object_or_404(InitialReport, id=report_id)
+
+        try:
+            # Check if date and times are provided
+            if not date:
+                raise ValueError("Date is required.")
+            if not time:
+                raise ValueError("Time Detected is required.")
+            if not time_out:
+                raise ValueError("Time of Fire Out is required.")
+
+            # Format datetime fields
+            datetime_of_detection = f"{date} {time}"
+            datetime_of_fire_out = f"{date} {time_out}"
+
+            # Update the report fields
+            report.where = location
+            report.date = date
+            report.time = datetime_of_detection
+            report.time_of_fire_out = datetime_of_fire_out
+            report.occupancy_type = occupancy
+            report.name_of_owner = owner
+            report.alarm_status = alarm
+            report.no_of_respondents = respondents
+            report.estimated_damage = damages
+            report.no_of_establishments = establishment
+            report.no_of_casualties = casualty
+            report.no_of_injured = injured
+            if proof:
+                report.proof = proof  # Only update proof if a new file is uploaded
+
+            report.save()  # Save changes to the database
+            messages.success(request, 'Report has been updated successfully.')
+            return redirect('reports')
+
+        except ValueError as e:
+            messages.error(request, str(e))
+            return render(request, 'reports.html')
+        except Exception as e:
+            messages.error(request, f'Error updating report: {str(e)}')
+            return render(request, 'reports.html')

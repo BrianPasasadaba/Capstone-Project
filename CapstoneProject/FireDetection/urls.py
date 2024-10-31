@@ -5,7 +5,7 @@ from .views import login_view
 from .views import logout_view,change_password
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import toggle_status
+from .views import toggle_status, update_report
 
 urlpatterns = [
     path('', views.login_view, name='login'),
@@ -18,6 +18,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('toggle-status/<int:report_id>/', views.toggle_status, name='toggle_status'),
     path('change_password/', change_password, name='change_password'),
+    path('update-report/<int:report_id>/', views.update_report, name='update_report'),
 
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

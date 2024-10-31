@@ -14,36 +14,37 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form  action="" method="post" id="report-preview-form">
+                <form  action="{% url 'update_report' report.id  %}" enctype="multipart/form-data" method="post" id="report-preview-form">
                     {% csrf_token %}
+
                     <div class="form-row">
                         <div class="form-column">
                             <label for="loc" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="loc">
+                            <input type="text" name="where"  class="form-control" id="loc">
                         </div>
                         <div class="form-column">
                             <label for="date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date">
+                            <input type="date" name="date" class="form-control" id="date">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="time-detect" class="form-label">Time Detected</label>
-                            <input type="time" class="form-control" id="time-detect">
+                            <input type="time" name="time_detect" class="form-control" id="time-detect">
                         </div>
                         <div class="form-column">
                             <label for="time" class="form-label">Time of Arrival</label>
-                            <input type="time" class="form-control" id="time">
+                            <input type="time" name="time" class="form-control" id="time">
                         </div>
                         <div class="form-column">
                             <label for="time-out" class="form-label">Time of Fire Out</label>
-                            <input type="time" class="form-control" id="time-out">
+                            <input type="time" name="time_of_fire_out" class="form-control" id="time-out">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="occupancy" class="form-label">Occupancy Type</label>
-                            <select class="form-select" name="occupant" >
+                            <select class="form-select" name="occupancy_type" id="occupancy_type">
                                 <option value="">Select the occupancy type...</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
@@ -52,13 +53,13 @@
                         </div>
                         <div class="form-column">
                             <label for="name" class="form-label">Name of Owner</label>
-                            <input type="text" class="form-control" id="name" placeholder="e.g. Juan Dela Cruz">
+                            <input type="text" class="form-control" id="name" name="name_of_owner" placeholder="e.g. Juan Dela Cruz">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="alarm" class="form-label">Alarm Status</label>
-                            <select class="form-select" name="alarms">
+                            <select class="form-select" name="alarm_status" id="alarms">
                                 <option value="">Select the alarm status...</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
@@ -67,37 +68,37 @@
                         </div>
                         <div class="form-column">
                             <label for="respondents" class="form-label">No. of Respondents</label>
-                            <input type="number" class="form-control" id="respondents" placeholder="e.g. 11">
+                            <input type="text" class="form-control" name="no_of_respondents" id="respondents" placeholder="e.g. 11">
                         </div>
                         <div class="form-column">
                             <label for="damages" class="form-label">Estimated Damages</label>
-                            <input type="text" class="form-control" id="damages" placeholder="e.g. P1,000,000">
+                            <input type="text" class="form-control" name="estimated_damage" id="damages" placeholder="e.g. P1,000,000">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-column">
                             <label for="establish" class="form-label">No. of Establishments</label>
-                            <input type="number" class="form-control" id="establish" placeholder="e.g. 11">
+                            <input type="text" class="form-control" name="no_of_establishments" id="establish" placeholder="e.g. 11">
                         </div>
                         <div class="form-column">
                             <label for="casualties" class="form-label">No. of Casualties</label>
-                            <input type="number" class="form-control" id="casualties" placeholder="e.g. 11">
+                            <input type="text" class="form-control" name="no_of_casualties" id="casualties" placeholder="e.g. 11">
                         </div>
                         <div class="form-column">
                             <label for="injured" class="form-label">No. of Injured</label>
-                            <input type="number" class="form-control" id="injured" placeholder="e.g. 11">
+                            <input type="text" class="form-control" name="no_of_injured" id="injured" placeholder="e.g. 11">
                         </div>
                     </div>
 
                     <div class="form-column">
                         <div class="proof-image">
                             <label for="proof" class="form-label">Proof of Fire Incident</label>
-                            <img id="proof" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
+                            <img id="proof"  name="proof" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
                         </div>
                     </div>         
                     <div class="modal-footer">
                         <div class="mf-button">
-                            <button  type="button" class="btn btn-lg px-4 resolve-button"  data-report-id="{{ report.id }}" data-status="{{ report.status }}">
+                            <button  type="submit" class="btn btn-lg px-4 resolve-button"  >
                                 Resolve
                             </button>
                         </div>

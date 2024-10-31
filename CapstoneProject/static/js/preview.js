@@ -135,9 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('date').value = date;
             document.getElementById('time').value = timeArrival;
             document.getElementById('time-out').value = timeFireOut;
-            document.querySelector("select[name='occupant']").value = occupancy;
+            document.querySelector("select[name='occupancy_type']").value = occupancy;
             document.getElementById('name').value = owner;
-            document.querySelector("select[name='alarms']").value = alarm;
+            document.querySelector("select[name='alarm_status']").value = alarm;
             document.getElementById('respondents').value = respondents;
             document.getElementById('damages').value = damages;
             document.getElementById('establish').value = establishments;

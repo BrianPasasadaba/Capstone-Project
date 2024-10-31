@@ -89,7 +89,7 @@
                             <tr 
                             data-report-id="{{ report.id }}"
                                 data-location="{{ report.where }}" 
-                                data-date="{{ report.date|date:'Y-m-d' }}" 
+                                data-date="{{ report.date|date:'Y-m-d' }}"
                                 data-time="{{ report.time|time:'H:i' }}"
                                 data-fireout="{{ report.time_of_fire_out|time:'H:i' }}"
                                 data-occupancy="{{ report.occupancy_type }}"
@@ -170,10 +170,52 @@
 <script src="{% static 'js/preview.js' %}"></script>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editIcon = document.querySelector('.edit-form i');
+        const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
+        const resolveButton = document.querySelector('.resolve-button');
+        const form = document.getElementById('report-preview-form');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+        formInputs.forEach(input => {
+            input.disabled = true;
+            input.readOnly = true;
+        });
 
+        editIcon.addEventListener('click', function() {
+            formInputs.forEach(input => {
+                input.disabled = !input.disabled;
+                input.readOnly = !input.readOnly;
+            });
+            editIcon.style.color = formInputs[0].disabled ? '' : 'blue';  
+        });
 
+        resolveButton.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            const formData = new FormData(form);
+            formData.append('csrfmiddlewaretoken', csrfToken);
 
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken  // Include CSRF token in headers
+                },
+            }).then(response => {
+                if (response.ok) {
+                    alert('Form submitted successfully');
+                    window.location.href = '/reports';  // Redirect if submission succeeds
+                } else {
+                    alert('There was an error submitting the form. Please try again.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('An unexpected error occurred. Please try again.');
+            });
+        });
+    });
+</script>
 
 
 
