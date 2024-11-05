@@ -233,6 +233,10 @@ def reports_view(request):
     return render(request, 'reports.html', context)
 
 @login_required
+def create_report_view(request):
+   return render(request, "create_reports.html")
+
+@login_required
 def faq_view(request):
    return render(request, "faq.html")
 

@@ -23,79 +23,149 @@
                             <input type="text" name="where"  class="form-control" id="loc">
                         </div>
                         <div class="form-column">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" name="date" class="form-control" id="date">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-column">
-                            <label for="time-detect" class="form-label">Time Detected</label>
-                            <input type="time" name="time_detect" class="form-control" id="time-detect">
-                        </div>
-                        <div class="form-column">
-                            <label for="time" class="form-label">Time of Arrival</label>
-                            <input type="time" name="time" class="form-control" id="time">
-                        </div>
-                        <div class="form-column">
-                            <label for="time-out" class="form-label">Time of Fire Out</label>
-                            <input type="time" name="time_of_fire_out" class="form-control" id="time-out">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-column">
-                            <label for="occupancy" class="form-label">Occupancy Type</label>
-                            <select class="form-select" name="occupancy_type" id="occupancy_type">
-                                <option value="">Select the occupancy type...</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <label for="team" class="form-label">Responding Team<i class="bi bi-asterisk"></i></label>
+                            <select class="form-select" aria-label="Default select example" name="team" required>
+                                <option value="1">Shift A</option>
+                                <option value="2">Shift B</option>
                             </select>
                         </div>
                         <div class="form-column">
-                            <label for="name" class="form-label">Name of Owner</label>
-                            <input type="text" class="form-control" id="name" name="name_of_owner" placeholder="e.g. Juan Dela Cruz">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-column">
-                            <label for="alarm" class="form-label">Alarm Status</label>
-                            <select class="form-select" name="alarm_status" id="alarms">
-                                <option value="">Select the alarm status...</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="form-column">
-                            <label for="respondents" class="form-label">No. of Respondents</label>
-                            <input type="text" class="form-control" name="no_of_respondents" id="respondents" placeholder="e.g. 11">
-                        </div>
-                        <div class="form-column">
-                            <label for="damages" class="form-label">Estimated Damages</label>
-                            <input type="text" class="form-control" name="estimated_damage" id="damages" placeholder="e.g. P1,000,000">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-column">
-                            <label for="establish" class="form-label">No. of Establishments</label>
-                            <input type="text" class="form-control" name="no_of_establishments" id="establish" placeholder="e.g. 11">
-                        </div>
-                        <div class="form-column">
-                            <label for="casualties" class="form-label">No. of Casualties</label>
-                            <input type="text" class="form-control" name="no_of_casualties" id="casualties" placeholder="e.g. 11">
-                        </div>
-                        <div class="form-column">
-                            <label for="injured" class="form-label">No. of Injured</label>
-                            <input type="text" class="form-control" name="no_of_injured" id="injured" placeholder="e.g. 11">
+                            <label for="detect" class="form-label">Time Reported<i class="bi bi-asterisk"></i></label>
+                            <input type="time" name="detect" class="form-control" id="detect" required> 
                         </div>
                     </div>
 
-                    <div class="form-column">
-                        <div class="proof-image">
-                            <label for="proof" class="form-label">Proof of Fire Incident</label>
-                            <img id="proof"  name="proof" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" name="date" class="form-control" id="date">
                         </div>
-                    </div>         
+                        <div class="form-column">
+                            <label for="involved" class="form-label">Involved<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="involved" id="involved" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="owner" class="form-label">Name of Owner<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="owner" id="owner" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="alarm" class="form-label">Alarm Status<i class="bi bi-asterisk"></i></label>
+                            <select class="form-select" aria-label="Default select example" name="alarm" required>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                        <div class="form-column">
+                            <label for="alarm-dec" class="form-label">Alarm Status Declared by<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="alarm-dec" id="alarm-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="time-arrive" class="form-label">Time of Arrival<i class="bi bi-asterisk"></i></label>
+                            <input type="time" class="form-control" id="time-arrive" name="time-arrive" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="time-under" class="form-label">Time of Fire Under Control<i class="bi bi-asterisk"></i></label>
+                            <input type="time" class="form-control" name="time-under" id="time-under" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="date-under" class="form-label">Date of Fire Under Control<i class="bi bi-asterisk"></i></label>
+                            <input type="date" name="date-under" class="form-control" id="date-under" required> 
+                        </div>
+                        <div class="form-column">
+                            <label for="funder-dec" class="form-label">Fire Under Control Declared by<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="funder-dec" id="funder-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="time-out" class="form-label">Time of Fire Out<i class="bi bi-asterisk"></i></label>
+                            <input type="time" class="form-control" name="time-out" id="time-out" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="date-out" class="form-label">Date of Fire Out<i class="bi bi-asterisk"></i></label>
+                            <input type="date" name="date-out" class="form-control" id="date-out" required> 
+                        </div>
+                        <div class="form-column">
+                            <label for="fout-dec" class="form-label">Fire Out Declared by<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="fout-dec" id="fout-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="damages" class="form-label">Estimated Damages<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="damages" id="damages" placeholder="e.g. P1,000,000" maxlength="12" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="fatality" class="form-label">No. of Fatality<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="fatality" placeholder="e.g. 11" name="fatality" maxlength="12" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="injured" class="form-label">No. of Injured<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="injured" placeholder="e.g. 11" name="injured" maxlength="12" required>
+                        </div>
+                    </div>
+                
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="affected" class="form-label">No. of Families Affected<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="affected" placeholder="e.g. 11" name="affected" maxlength="12" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="establishment" class="form-label">No. of Establishment<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="establishment" placeholder="e.g. 11" name="establishment" maxlength="12" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="truck" class="form-label">No. of Fire Trucks Responded<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="truck" placeholder="e.g. 11" name="truck" maxlength="12" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="ground" class="form-label">Ground Commander<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="ground" id="ground" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="ground-num" class="form-label">Ground Commander Contact No.<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="ground-num" id="ground-num" placeholder="e.g. 09227807570" maxlength="60" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="safety" class="form-label">Safety Officer<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="safety" id="safety" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="safety-num" class="form-label">Safety Officer Contact No.<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="safety-num" id="safety-num" placeholder="e.g. 09227807570" maxlength="60" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="sender" class="form-label">Name of Sender<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="sender" id="sender" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="sender-num" class="form-label">Name of Sender Contact No.<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="sender-num" id="sender-num" placeholder="e.g. 09227807570" maxlength="60" required>
+                        </div>
+                    </div>
+                    <div class="form-row"></div>
+                        <div class="form-column">
+                            <div class="proof-image">
+                                <label for="proof" class="form-label">Proof of Fire Incident</label>
+                                <img id="proof"  name="proof" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal-footer">
                         <div class="mf-button">
                             <button  type="submit" class="btn btn-lg px-4 resolve-button"  >

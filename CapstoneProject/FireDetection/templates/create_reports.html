@@ -1,0 +1,220 @@
+{% extends "sidebar.html" %}
+{% load static %}
+{% block title %} True the Fire {% endblock %}
+
+{% block content %}
+<header>
+    <div class="header-content">
+        <span class="navigation-title">
+            <h1>Reports</h1>
+        </span>
+        <ul class="navigation-list">
+            <div class="dropdown">
+                <button class="btn-hotline dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                    Hotline
+                </button>
+                <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
+                    <li class="dropdown-item">(610) 888-1111</li>
+                    <li class="dropdown-item">(610) 888-1111</li>
+                    <li class="dropdown-item">(610) 888-1111</li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <button class="btn-profile dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="icon">
+                        <i class="bi bi-person-circle"></i>
+                    </span>
+                    {{ user.name }}
+                </button>
+
+                <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
+                    <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
+                </ul>
+                
+            </div>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="mn-content-area">
+        <div class="creports-box">
+            <div class="creports-header">
+                <h1>Create a Report</h1>
+            </div>
+            <div class="creports-body">
+                <form action="{% url 'reports' %}" method="POST" enctype="multipart/form-data" id="create-report-form">
+                    {% csrf_token %}
+                
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="crloc" class="form-label">Location<i class="bi bi-asterisk"></i></label>
+                            <input type="text" name="crlocation" class="form-control" id="crloc" placeholder="e.g. Barangay Caingin" maxlength="100" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crteam" class="form-label">Responding Team<i class="bi bi-asterisk"></i></label>
+                            <select class="form-select" aria-label="Default select example" name="crteam" required>
+                                <option value="1">Shift A</option>
+                                <option value="2">Shift B</option>
+                            </select>
+                        </div>
+                        <div class="form-column">
+                            <label for="crdetect" class="form-label">Time Reported<i class="bi bi-asterisk"></i></label>
+                            <input type="time" name="crdetect" class="form-control" id="crdetect" required> 
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="crdate" class="form-label">Date Reported<i class="bi bi-asterisk"></i></label>
+                            <input type="date" name="crdate" class="form-control" id="crdate" required> 
+                        </div>
+                        <div class="form-column">
+                            <label for="crinvolved" class="form-label">Involved<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crinvolved" id="crinvolved" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crowner" class="form-label">Name of Owner<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crowner" id="crowner" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="cralarm" class="form-label">Alarm Status<i class="bi bi-asterisk"></i></label>
+                            <select class="form-select" aria-label="Default select example" name="cralarm" required>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                        <div class="form-column">
+                            <label for="cralarm-dec" class="form-label">Alarm Status Declared by<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="cralarm-dec" id="cralarm-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crtime-arrive" class="form-label">Time of Arrival<i class="bi bi-asterisk"></i></label>
+                            <input type="time" class="form-control" id="crtime-arrive" name="crtime-arrive" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="crtime-under" class="form-label">Time of Fire Under Control<i class="bi bi-asterisk"></i></label>
+                            <input type="time" class="form-control" name="crtime-under" id="crtime-under" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crdate-under" class="form-label">Date of Fire Under Control<i class="bi bi-asterisk"></i></label>
+                            <input type="date" name="crdate-under" class="form-control" id="crdate-under" required> 
+                        </div>
+                        <div class="form-column">
+                            <label for="crfunder-dec" class="form-label">Fire Under Control Declared by<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crfunder-dec" id="crfunder-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="crtime-out" class="form-label">Time of Fire Out<i class="bi bi-asterisk"></i></label>
+                            <input type="time" class="form-control" name="crtime-out" id="crtime-out" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crdate-out" class="form-label">Date of Fire Out<i class="bi bi-asterisk"></i></label>
+                            <input type="date" name="crdate-out" class="form-control" id="crdate-out" required> 
+                        </div>
+                        <div class="form-column">
+                            <label for="crfout-dec" class="form-label">Fire Out Declared by<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crfout-dec" id="crfout-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="crdamages" class="form-label">Estimated Damages<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crdamages" id="crdamages" placeholder="e.g. P1,000,000" maxlength="12" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crfatality" class="form-label">No. of Fatality<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="crfatality" placeholder="e.g. 11" name="crfatality" maxlength="12" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crinjured" class="form-label">No. of Injured<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="crinjured" placeholder="e.g. 11" name="crinjured" maxlength="12" required>
+                        </div>
+                    </div>
+                
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="craffected" class="form-label">No. of Families Affected<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="craffected" placeholder="e.g. 11" name="craffected" maxlength="12" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crestablishment" class="form-label">No. of Establishment<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="crestablishment" placeholder="e.g. 11" name="crestablishment" maxlength="12" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crtruck" class="form-label">No. of Fire Trucks Responded<i class="bi bi-asterisk"></i></label>
+                            <input type="number" class="form-control" id="crtruck" placeholder="e.g. 11" name="crtruck" maxlength="12" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="crground" class="form-label">Ground Commander<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crground" id="crground" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crground-num" class="form-label">Ground Commander Contact No.<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crground-num" id="crground-num" placeholder="e.g. 09227807570" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crsafety" class="form-label">Safety Officer<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crsafety" id="crsafety" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crsafety-num" class="form-label">Safety Officer Contact No.<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crsafety-num" id="crsafety-num" placeholder="e.g. 09227807570" maxlength="60" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="crsender" class="form-label">Name of Sender<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crsender" id="crsender" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="crsender-num" class="form-label">Name of Sender Contact No.<i class="bi bi-asterisk"></i></label>
+                            <input type="text" class="form-control" name="crsender-num" id="crsender-num" placeholder="e.g. 09227807570" maxlength="60" required>
+                        </div>
+                        <div class="form-column">
+                            <label for="proof" class="form-label">Proof<i class="bi bi-asterisk"></i></label>
+                            <input type="file" class="form-control" id="proof" name="proof" accept="image/jpeg, image/jpg, image/png, image/gif" required>
+                        </div>
+                    </div>
+                
+                    <div class="footer">
+                        <div class="mf-button">
+                            <button class="btn btn-lg px-4" type="submit">Copy & Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include "modal_change_password.html" %}
+{% include "modal_forgot_success.html" %}
+{% endblock %}
+
+{% block scripts %}
+<!--ADD SCRIPTS HERE-->
+<script src="{% static 'js/form_controls.js' %}"></script>
+<script src="{% static 'js/table_status.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
+<script src="{% static 'js/filter.js' %}"></script>
+<script src="{% static 'js/preview.js' %}"></script>
+
+
+{% endblock %}
