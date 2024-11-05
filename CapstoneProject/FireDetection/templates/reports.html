@@ -141,6 +141,7 @@
                             <!-- <button type="button" class="btn btn-lg btn">Export</button> -->
                         </div>
     
+                        <div id="noDataMessage" style="display: none; text-align: center; color: red;">No data available</div>
                         <div class="rb-pagination">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
@@ -155,6 +156,7 @@
                                     </li>
                                 </ul>                            
                             </nav>
+                        </div>
                         </div>   
                     </div>
                 </div>
@@ -178,6 +180,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/preview.js' %}"></script>
+<script src="{% static 'js/pagination.js' %}"></script>
 
 
 <script>

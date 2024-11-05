@@ -1,78 +1,51 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-
-function exportTableToExcel(tableId, filename = 'report_data.xlsx') {
-    var table = document.getElementById(tableId);
-    var wb = XLSX.utils.table_to_book(table, {sheet: "Report Data"});
-
-    var ws = wb.Sheets["Report Data"];
-
-    XLSX.utils.sheet_add_aoa(ws, [[ "Location", "Date", "Time", "Status"]], {origin: "A1"});
-
-    const headerRange = XLSX.utils.decode_range(ws['!ref']);
-    for (let C = headerRange.s.c; C <= headerRange.e.c; C++) {
-        let cellAddress = XLSX.utils.encode_cell({r: 0, c: C});
-        if (!ws[cellAddress]) continue;
-        ws[cellAddress].s = {
-            font: {bold: true, color: {rgb: "FFFFFF"}},
-            fill: {
-                fgColor: {rgb: "FFA500"}
-            },
-            alignment: {horizontal: "center", vertical: "center"}
-        };
-    }
-    ws['!cols'] = [
-
-        {wch: 20},
-        {wch: 15}, 
-        {wch: 15},
-        {wch: 15}, 
-    ];
-
-    XLSX.writeFile(wb, filename);
-}
-
-document.querySelector('.rb-export button').addEventListener('click', function() {
-    exportTableToExcel('reportTable', 'report_data.xlsx');
-});
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
     const rowsPerPage = 10;
     let currentPage = 1;
     const tableBody = document.getElementById('reportTable');
     const rows = tableBody.querySelectorAll('tr');
     const totalPages = Math.ceil(rows.length / rowsPerPage);
+    const noDataMessage = document.getElementById('noDataMessage');
+    const page2Button = document.getElementById('button2');
+    const page3Button = document.getElementById('button3');
+
+    if (rows.length === 0) {
+        noDataMessage.style.display = 'block';  
+        page2Button.classList.add('disabled');
+        page3Button.classList.add('disabled');
+        document.querySelector('.pagination .prev').classList.add('disabled');
+        document.querySelector('.pagination .next').classList.add('disabled');
+        return;
+    }
 
     function displayRowsForPage(page) {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
+        let rowsDisplayed = false;
 
         rows.forEach((row, index) => {
             if (index >= start && index < end) {
-                row.style.display = ''; 
+                row.style.display = '';
+                rowsDisplayed = true;
             } else {
-                row.style.display = 'none'; 
+                row.style.display = 'none';
             }
         });
 
+        noDataMessage.style.display = rowsDisplayed ? 'none' : 'block';
         updatePaginationControls();
     }
 
     function updatePaginationControls() {
         const prevButton = document.querySelector('.pagination .prev');
         const nextButton = document.querySelector('.pagination .next');
-        const page2Button = document.getElementById('button2');
-        const page3Button = document.getElementById('button3');
 
         prevButton.classList.toggle('disabled', currentPage === 1);
-
         nextButton.classList.toggle('disabled', currentPage === totalPages);
 
-        page2Button.classList.toggle('disabled', rows.length < rowsPerPage); 
-        
-        page3Button.classList.toggle('disabled', rows.length < (rowsPerPage * 2)); 
+        // Disable page buttons based on available data
+        page2Button.classList.toggle('disabled', rows.length <= rowsPerPage);
+        page3Button.classList.toggle('disabled', rows.length <= rowsPerPage * 2);
 
         document.querySelectorAll('.pagination .page-item').forEach((pageButton) => {
             pageButton.classList.remove('active');
