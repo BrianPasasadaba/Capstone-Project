@@ -1933,6 +1933,18 @@ input[type="password"]::-ms-clear {
     box-shadow: none;
 }
 
+#crinvolved-options .dropdown-item {
+    cursor: pointer;
+    padding: 8px;
+    transition: background-color 0.3s;
+}
+
+/* Change background color when an item is hovered */
+#crinvolved-options .dropdown-item:hover {
+    background-color: #767676; /* Light gray on hover */
+    color: white;
+}
+
 /* ============================== ACCOUNTS ============================== */
 
 
