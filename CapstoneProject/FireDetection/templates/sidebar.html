@@ -199,6 +199,36 @@
             });
         });
         </script>
+    
+        <script>
+            class DesktopUpdates {
+                constructor() {
+                    this.eventSource = new EventSource('{% url "event-stream" %}');
+                    
+                    this.eventSource.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+                        this.handleUpdate(data);
+                    };
+                    
+                    this.eventSource.onerror = (error) => {
+                        console.error('EventSource failed:', error);
+                        // Implement reconnection logic if needed
+                    };
+                }
+            
+                handleUpdate(data) {
+                    // Handle the update in your UI
+                    console.log('New update:', data);
+                    // Example: Update a table or list
+                    if (data.type === 'new_record') {
+                        // Update your UI accordingly
+                    }
+                }
+            }
+            
+            // Initialize the connection
+            const desktopUpdates = new DesktopUpdates();
+            </script>
 
     {%block scripts%}
     <!-- DO NOT ADD SCRIPTS HERE -->

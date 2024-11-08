@@ -20,6 +20,8 @@ urlpatterns = [
     path('toggle-status/<int:report_id>/', views.toggle_status, name='toggle_status'),
     path('change_password/', change_password, name='change_password'),
     path('update-report/<int:report_id>/', views.update_report, name='update_report'),
+    path('api/desktop-notification/', views.desktop_notification, name='desktop-notification'),
+    path('api/events/', views.event_stream, name='event-stream'),
 
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

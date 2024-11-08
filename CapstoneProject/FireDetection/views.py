@@ -3,12 +3,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .forms import RegisterForms
-from django.http import FileResponse
+from django.http import FileResponse, StreamingHttpResponse
 from django.contrib import admin
 from django.contrib import messages
-from .models import CustomUser  
+from .models import CustomUser
+from django.core.cache import cache
 from django.core.validators import validate_email 
 from .models import InitialReport
 from datetime import date,  timedelta
@@ -27,6 +29,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.utils import timezone
 from datetime import datetime
 from datetime import  date
+import json
+import time
 
 def change_password(request):
     if request.method == 'POST':
@@ -341,3 +345,38 @@ def update_report(request, report_id):
         except Exception as e:
             messages.error(request, f'Error updating report: {str(e)}')
             return render(request, 'reports.html')
+        
+@csrf_exempt  # Only if your desktop app doesn't support CSRF
+def desktop_notification(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            # Store the update in cache
+            cache.set('latest_update', data, timeout=None)
+            # Store timestamp to track new updates
+            cache.set('last_update_time', time.time(), timeout=None)
+            return JsonResponse({"status": "success"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+def event_stream(request):
+    """SSE endpoint that clients connect to for updates"""
+    def event_generator():
+        last_check = time.time()
+        
+        while True:
+            # Check if there's a new update
+            current_time = cache.get('last_update_time')
+            if current_time and current_time > last_check:
+                data = cache.get('latest_update')
+                if data:
+                    # Send the update to the client
+                    yield f"data: {json.dumps(data)}\n\n"
+                    last_check = current_time
+            
+            time.sleep(1)  # Poll every second
+
+    response = StreamingHttpResponse(event_generator(), content_type='text/event-stream')
+    response['Cache-Control'] = 'no-cache'
+    response['Connection'] = 'keep-alive'
+    return response
