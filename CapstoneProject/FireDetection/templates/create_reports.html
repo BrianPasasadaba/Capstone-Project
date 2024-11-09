@@ -54,8 +54,8 @@
                         <div class="form-column">
                             <label for="crteam" class="form-label">Responding Team<i class="bi bi-asterisk"></i></label>
                             <select class="form-select" aria-label="Default select example" name="crteam" id="crteam" required>
-                                <option value="1">Shift A</option>
-                                <option value="2">Shift B</option>
+                                <option value="Shift A">Shift A</option>
+                                <option value="Shift B">Shift B</option>
                             </select>
                         </div>
                         <div class="form-column">
@@ -70,7 +70,7 @@
                             <input type="date" name="crdate" class="form-control" id="crdate" required> 
                         </div>
                         <div class="form-column" style="position: relative;">
-                            <label for="crinvolved-search" class="form-label">Involved<i class="bi bi-asterisk"></i></label>
+                            <label for="crinvolved" class="form-label">Involved<i class="bi bi-asterisk"></i></label>
                             <input type="text" class="form-control" id="crinvolved-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" required>
                             <input type="hidden" name="crinvolved" id="crinvolved" required>
                             <ul class="dropdown-menu" id="crinvolved-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
@@ -86,12 +86,12 @@
                     <div class="form-row">
                         <div class="form-column">
                             <label for="cralarm" class="form-label">Alarm Status<i class="bi bi-asterisk"></i></label>
-                            <select class="form-select" aria-label="Default select example" name="cralarm" required>
-                                <option value="1">1st Alarm</option>
-                                <option value="2">2nd Alarm</option>
-                                <option value="3">3rd Alarm</option>
-                                <option value="4">4th Alarm</option>
-                                <option value="5">5th Alarm</option>
+                            <select class="form-select" aria-label="Default select example" name="cralarm" id="cralarm" required>
+                                <option value="1st Alarm">1st Alarm</option>
+                                <option value="2nd Alarm">2nd Alarm</option>
+                                <option value="3rd Alarm">3rd Alarm</option>
+                                <option value="4th Alarm">4th Alarm</option>
+                                <option value="5th Alarm">5th Alarm</option>
                             </select>
                         </div>
                         <div class="form-column">
@@ -169,7 +169,7 @@
                             <input type="text" class="form-control" name="crground" id="crground" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
                         </div>
                         <div class="form-column">
-                            <label for="crground-num" class="form-label">Ground Commander Contact No.<i class="bi bi-asterisk"></i></label>
+                            <label for="crground-num" class="form-label">/ Contact No.<i class="bi bi-asterisk"></i></label>
                             <input type="text" class="form-control" name="crground-num" id="crground-num" placeholder="e.g. 09227807570" maxlength="60" required>
                         </div>
                         <div class="form-column">
@@ -177,7 +177,7 @@
                             <input type="text" class="form-control" name="crsafety" id="crsafety" placeholder="e.g. Juan Dela Cruz" maxlength="60" required>
                         </div>
                         <div class="form-column">
-                            <label for="crsafety-num" class="form-label">Safety Officer Contact No.<i class="bi bi-asterisk"></i></label>
+                            <label for="crsafety-num" class="form-label">/ Contact No.<i class="bi bi-asterisk"></i></label>
                             <input type="text" class="form-control" name="crsafety-num" id="crsafety-num" placeholder="e.g. 09227807570" maxlength="60" required>
                         </div>
                     </div>
@@ -197,8 +197,9 @@
                     </div>
                 
                     <div class="footer">
-                        <div class="mf-button">
-                            <button class="btn btn-lg px-4" type="submit">Copy & Save</button>
+                        <div class="mf-button" id="cr-buttons">
+                            <button class="btn btn-lg px-4" type="button" onclick="copyModalContent()">Copy</button>
+                            <button class="btn btn-lg px-4" type="submit">Save</button>
                         </div>
                     </div>
                 </form>
@@ -209,6 +210,7 @@
 
 {% include "modal_change_password.html" %}
 {% include "modal_forgot_success.html" %}
+{% include "modal_copied_success.html" %}
 {% endblock %}
 
 {% block scripts %}
@@ -221,4 +223,45 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/preview.js' %}"></script>
+
+<script>
+function customAlert(message) {
+    document.getElementById('customAlertMessage').innerText = message;
+    var myModal = new bootstrap.Modal(document.getElementById('customAlertModal'));
+    myModal.show();
+}
+
+function copyModalContent() {
+    const form = document.getElementById('create-report-form');
+    let contentToCopy = "";
+
+    Array.from(form.elements).forEach(element => {
+        // Exclude CSRF token, buttons, and the 'proof' field
+        if (
+            element.name && 
+            element.name !== "csrfmiddlewaretoken" && 
+            element.type !== "submit" && 
+            element.type !== "button" && 
+            element.name !== "proof" // Exclude the 'proof' field
+        ) {
+            const label = document.querySelector(`label[for="${element.id}"]`);
+            const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
+            const value = element.value.trim();
+            if (value) {
+                contentToCopy += `${labelText}: ${value}\n`;
+            }
+        }
+    });
+
+    navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
+        customAlert("Content copied to clipboard!");
+    }).catch((err) => {
+        console.error("Could not copy text: ", err);
+        customAlert("Failed to copy content.");
+    });
+}
+
+
+</script>
+    
 {% endblock %}
