@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, InitialReport
 
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
 
@@ -28,27 +29,26 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
+def mark_case_closed(modeladmin, request, queryset):
+    updated_count = queryset.update(status='Case Closed')
+    modeladmin.message_user(request, f'{updated_count} report(s) have been marked as Case Closed.')
+mark_case_closed.short_description = "Mark selected reports as Case Closed"
+
+# Define the action for changing the status to "Ongoing"
+def mark_ongoing(modeladmin, request, queryset):
+    updated_count = queryset.update(status='Ongoing')
+    modeladmin.message_user(request, f'{updated_count} report(s) have been marked as Ongoing.')
+mark_ongoing.short_description = "Mark selected reports as Ongoing"
+
 class InitialReportAdmin(admin.ModelAdmin):
     list_display = (
-        'where', 'date', 'time', 'time_of_fire_out', 'occupancy_type',
-        'name_of_owner', 'alarm_status', 'no_of_respondents', 'estimated_damage',
-        'no_of_establishments', 'no_of_casualties', 'no_of_injured', 'proof', 'status'
+        'id', 'team', 'date_reported', 'time_reported', 'name_of_owner', 'status', 'alarm_status', 'estimated_damages'
     )
-    search_fields = ('where', 'occupancy_type', 'name_of_owner', 'alarm_status')
-    list_filter = ('date', 'time_of_fire_out', 'alarm_status')
-    # Remove readonly_fields to allow editing of the proof field
-    # readonly_fields = ('proof',)
-    
-    # Set list_display_links to a different field
-    list_display_links = ('name_of_owner',)  # Choose a field that should be clickable
+    list_filter = ('status',)
 
-    # Make the fields editable in the list view
-    list_editable = (
-        'where', 'date', 'time', 'time_of_fire_out', 'occupancy_type',
-        'alarm_status', 'no_of_respondents', 'estimated_damage',
-        'no_of_establishments', 'no_of_casualties', 'no_of_injured', 'status'
-    )
+    # Add the custom actions to the admin interface
+    actions = [mark_case_closed, mark_ongoing]
 
-
-admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(InitialReport, InitialReportAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
+

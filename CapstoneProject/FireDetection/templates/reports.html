@@ -86,23 +86,41 @@
                             </tr>
                         </thead>
                         
-                        <tbody id="reportTable" data-report-id="{{ report.id }}">
+                        <tbody id="reportTable">
                             {% for report in reports %}
                             <tr 
-                            data-report-id="{{ report.id }}"
+                                data-report-id="{{ report.id }}"
                                 data-location="{{ report.where }}" 
-                                data-date="{{ report.date|date:'Y-m-d' }}"
-                                data-time="{{ report.time|time:'H:i' }}"
+                                data-date="{{ report.date_reported|date:'Y-m-d' }}"
+                                data-time="{{ report.time_reported|time:'H:i' }}"
                                 data-fireout="{{ report.time_of_fire_out|time:'H:i' }}"
                                 data-occupancy="{{ report.occupancy_type }}"
                                 data-owner="{{ report.name_of_owner }}"
                                 data-alarm="{{ report.alarm_status }}"
                                 data-respondents="{{ report.no_of_respondents }}"
-                                data-damages="{{ report.estimated_damage }}"
+                                data-damages="{{ report.estimated_damages }}"
                                 data-establishments="{{ report.no_of_establishments }}"
-                                data-casualties="{{ report.no_of_casualties }}"
+                                data-casualties="{{ report.no_of_fatality }}" 
                                 data-injured="{{ report.no_of_injured }}"
                                 data-proof="{{ report.proof }}"
+                                data-involved="{{ report.involved }}"
+                                data-alarm-declared-by="{{ report.alarm_declared_by }}"
+                                data-time-arrival="{{ report.time_of_arrival|time:'H:i' }}"
+                                data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i' }}"
+                                data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d' }}"
+                                data-fire-under-declared-by="{{ report.fire_under_control_declared_by }}"
+                                data-time-fire-out="{{ report.time_of_fire_out|time:'H:i' }}"
+                                data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d' }}"
+                                data-fire-out-declared-by="{{ report.fire_out_declared_by }}"
+                                data-families-affected="{{ report.no_of_families_affected }}"
+                                data-trucks="{{ report.no_of_fire_trucks }}"
+                                data-ground-commander="{{ report.ground_commander }}"
+                                data-ground-commander-contact="{{ report.commander_contact_number }}"
+                                data-safety-officer="{{ report.safety_officer }}"
+                                data-safety-officer-contact="{{ report.officer_contact_number }}"
+                                data-sender="{{ report.name_of_sender }}"
+                                data-sender-contact="{{ report.sender_contact_number }}"
+                                
                                 data-bs-toggle="modal" 
                                 data-bs-target="#report-preview-modal">
                                 
@@ -113,19 +131,21 @@
                                     </div>
                                 </td>
                                 <td>{{ report.where }}</td>
-                                <td>{{ report.date|date:"m/d/Y" }}</td>
-                                <td>{{ report.time|date:"h:i A" }}</td>                           
+                                <td>{{ report.date_reported|date:"m/d/Y" }}</td>
+                                <td>{{ report.time_reported|time:"h:i A" }}</td>
+                                
                                 <td>
                                     <h6 id="status-text-{{ report.id }}">{{ report.status }}</h6>
-                                </td>                                                             
-
+                                </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="5">No reports available.</td>
+                                <td colspan="12">No reports available.</td>
                             </tr>
                             {% endfor %}
-                        </tbody>                       
+                        </tbody>
+                        
+                                    
                     </table>
 
                 </div>
@@ -187,50 +207,60 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const editIcon = document.querySelector('.edit-form i');
-        const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
-        const resolveButton = document.querySelector('.resolve-button');
-        const form = document.getElementById('report-preview-form');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const editIcon = document.querySelector('.edit-form i');
+    const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
+    const resolveButton = document.querySelector('.resolve-button');
+    const form = document.getElementById('report-preview-form');
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+    formInputs.forEach(input => {
+        input.disabled = true;
+        input.readOnly = true;
+    });
+
+    editIcon.addEventListener('click', function() {
         formInputs.forEach(input => {
-            input.disabled = true;
-            input.readOnly = true;
+            input.disabled = !input.disabled;
+            input.readOnly = !input.readOnly;
         });
+        editIcon.style.color = formInputs[0].disabled ? '' : 'blue';  
 
-        editIcon.addEventListener('click', function() {
-            formInputs.forEach(input => {
-                input.disabled = !input.disabled;
-                input.readOnly = !input.readOnly;
-            });
-            editIcon.style.color = formInputs[0].disabled ? '' : 'blue';  
-        });
+        // Change the button text to "Save" when editing
+        if (!formInputs[0].disabled) {
+            resolveButton.textContent = 'Save';
+        } else {
+            resolveButton.textContent = 'Resolve';
+        }
+    });
 
-        resolveButton.addEventListener('click', function(event) {
-            event.preventDefault(); 
-            const formData = new FormData(form);
-            formData.append('csrfmiddlewaretoken', csrfToken);
+    resolveButton.addEventListener('click', function(event) {
+        event.preventDefault(); 
 
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': csrfToken  
-                },
-            }).then(response => {
-                if (response.ok) {
-                    window.location.href = '/reports';  
-                } else {
-                    console.error('There was an error submitting the form.');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-            });
+        const formData = new FormData(form);
+        formData.append('csrfmiddlewaretoken', csrfToken);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert(data.message); // Show success message
+            } else {
+                alert(data.message); // Show error message
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
     });
+});
+
 </script>
-
-
 
 
 {% endblock %}

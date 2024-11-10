@@ -31,6 +31,11 @@ from datetime import datetime
 from datetime import  date
 import json
 import time
+from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_date
+from django.core.validators import validate_integer
+import time
+
 
 def change_password(request):
     if request.method == 'POST':
@@ -200,33 +205,8 @@ def logout_view(request):
 
 @login_required
 def analytics_view(request):
-    today = date.today()
-    start_of_week = today - timedelta(days=today.weekday())
-    start_of_month = today.replace(day=1)
-    start_of_year = today.replace(month=1, day=1)
-
-    latest_reports = InitialReport.objects.order_by('-time')[:5]
-
-    detected_today = InitialReport.objects.filter(date=today).count()
-    reported_this_week = InitialReport.objects.filter(date__gte=start_of_week).count()
-    responded_this_month = InitialReport.objects.filter(date__gte=start_of_month).count()
-    responded_this_year = InitialReport.objects.filter(date__gte=start_of_year).count()
-
-    # Dynamic incident data for 2024
-    incidents_per_year = {}
-    incidents_per_year[2024] = InitialReport.objects.filter(date__year=2024).count()
-
-    context = {
-        'detected_today': detected_today,
-        'reported_this_week': reported_this_week,
-        'responded_this_month': responded_this_month,
-        'responded_this_year': responded_this_year,
-        'latest_reports': latest_reports,
-        'incidents_per_year': incidents_per_year,
-    }
-
+    context = {}  # Make sure context is defined
     return render(request, "analytics.html", context)
-
 
 @login_required
 def reports_view(request):
@@ -236,115 +216,227 @@ def reports_view(request):
     }
     return render(request, 'reports.html', context)
 
+
 @login_required
 def create_report_view(request):
-   return render(request, "create_reports.html")
-
-@login_required
-def faq_view(request):
-   return render(request, "faq.html")
-
-@login_required
-def home_view(request):
     if request.method == 'POST':
-        location = request.POST.get('location')
-        date = request.POST.get('date')
-        time = request.POST.get('time')
-        time_out = request.POST.get('time_out')
-        occupancy = request.POST.get('occupancy')
-        owner = request.POST.get('owner')
-        alarm = request.POST.get('alarm')
-        respondents = request.POST.get('respondents')
-        damages = request.POST.get('damages')
-        establishment = request.POST.get('establishment')
-        casualty = request.POST.get('casualty')
-        injured = request.POST.get('injured')
+        location = request.POST.get('crlocation')
+        team = request.POST.get('crteam')
+        time_reported = request.POST.get('crdetect')
+        date_reported = request.POST.get('crdate')
+        involved = request.POST.get('crinvolved')
+        owner = request.POST.get('crowner')
+        alarm_status = request.POST.get('cralarm')
+        alarm_declared_by = request.POST.get('cralarm-dec')
+        time_of_arrival = request.POST.get('crtime-arrive')
+        time_under_control = request.POST.get('crtime-under')
+        date_under_control = request.POST.get('crdate-under')
+        under_control_declared_by = request.POST.get('crfunder-dec')
+        time_out = request.POST.get('crtime-out')
+        date_out = request.POST.get('crdate-out')
+        out_declared_by = request.POST.get('crfout-dec')
+        damages = request.POST.get('crdamages')
+        fatality = request.POST.get('crfatality')  # Fatality input
+        injured = request.POST.get('crinjured')
+        families_affected = request.POST.get('craffected')
+        establishments = request.POST.get('crestablishment')
+        fire_trucks = request.POST.get('crtruck')
+        ground_commander = request.POST.get('crground')
+        ground_contact = request.POST.get('crground-num')
+        safety_officer = request.POST.get('crsafety')
+        safety_contact = request.POST.get('crsafety-num')
+        sender = request.POST.get('crsender')
+        sender_contact = request.POST.get('crsender-num')
         proof = request.FILES.get('modal-proof')
 
+        def validate_date(date_str):
+            if date_str:
+                try:
+                    return parse_date(date_str)
+                except ValueError:
+                    return None
+            return None
+        
+        def validate_numeric(value):
+            if value == '':
+                return 0
+            try:
+                return int(value)
+            except ValueError:
+                raise ValidationError(f"Invalid number format for field '{value}'. It must be a valid number.")
+
         try:
+            date_reported_valid = validate_date(date_reported)
+            date_under_control_valid = validate_date(date_under_control)
+            date_out_valid = validate_date(date_out)
+
+            if not date_reported_valid:
+                raise ValidationError("Invalid date format for 'Date Reported'. It must be in YYYY-MM-DD format.")
+            if date_under_control and not date_under_control_valid:
+                raise ValidationError("Invalid date format for 'Date Under Control'. It must be in YYYY-MM-DD format.")
+            if date_out and not date_out_valid:
+                raise ValidationError("Invalid date format for 'Date Out'. It must be in YYYY-MM-DD format.")
+
+            fatality_valid = validate_numeric(fatality)
+            injured_valid = validate_numeric(injured)
+            families_affected_valid = validate_numeric(families_affected)
+            establishments_valid = validate_numeric(establishments)
+            fire_trucks_valid = validate_numeric(fire_trucks)
+
+            try:
+                time_reported_combined = datetime.strptime(f"{date_reported} {time_reported}", "%Y-%m-%d %H:%M")
+            except ValueError:
+                time_reported_combined = None  
+
+            try:
+                time_of_arrival_combined = datetime.strptime(f"{date_reported} {time_of_arrival}", "%Y-%m-%d %H:%M")
+            except ValueError:
+                time_of_arrival_combined = None
+
+            try:
+                time_under_control_combined = datetime.strptime(f"{date_under_control} {time_under_control}", "%Y-%m-%d %H:%M")
+            except ValueError:
+                time_under_control_combined = None
+
+            try:
+                time_out_combined = datetime.strptime(f"{date_out} {time_out}", "%Y-%m-%d %H:%M")
+            except ValueError:
+                time_out_combined = None
+
             new_report = InitialReport.objects.create(
                 where=location,
-                date=date,
-                time=f"{date} {time}",
-                time_of_fire_out=f"{date} {time_out}",  
-                occupancy_type=occupancy,
+                team=team,
+                time_reported=time_reported_combined,
+                date_reported=date_reported_valid,
+                involved=involved,
                 name_of_owner=owner,
-                alarm_status=alarm,
-                no_of_respondents=respondents,
-                estimated_damage=damages,
-                no_of_establishments=establishment,
-                no_of_casualties=casualty,
-                no_of_injured=injured,
+                alarm_status=alarm_status,
+                alarm_declared_by=alarm_declared_by,
+                time_of_arrival=time_of_arrival_combined,
+                time_of_fire_under_control=time_under_control_combined,
+                date_of_fire_under_control=date_under_control_valid,
+                fire_under_control_declared_by=under_control_declared_by,
+                time_of_fire_out=time_out_combined,
+                date_of_fire_out=date_out_valid,
+                fire_out_declared_by=out_declared_by,
+                estimated_damages=damages,
+                no_of_fatality=fatality_valid,
+                no_of_injured=injured_valid,
+                no_of_families_affected=families_affected_valid,
+                no_of_establishments=establishments_valid,
+                no_of_fire_trucks=fire_trucks_valid,
+                ground_commander=ground_commander,
+                commander_contact_number=ground_contact,
+                safety_officer=safety_officer,
+                officer_contact_number=safety_contact,
+                name_of_sender=sender,
+                sender_contact_number=sender_contact,
                 proof=proof,
                 created_by=request.user
             )
             new_report.save()
             messages.success(request, 'Report has been submitted successfully.')
-            return redirect('reports')  
+            return redirect('reports')
+
+        except ValidationError as e:
+            messages.error(request, f"Error submitting report: {e.message}")
+            return render(request, 'create_reports.html')
+
         except Exception as e:
-            messages.error(request, f'Error submitting report: {str(e)}')
-            return render(request, 'reports.html')
+            messages.error(request, f"Error submitting report: {str(e)}")
+            return render(request, 'create_reports.html')
 
-    return render(request, 'home.html')
+    return render(request, "create_reports.html")
 
+        
+@login_required
+def faq_view(request):
+   return render(request, "faq.html")
 
 def update_report(request, report_id):
     if request.method == 'POST':
+        # Gather data from POST request, allowing fields to be optional
         location = request.POST.get('where')
-        date = request.POST.get('date')
-        time = request.POST.get('time')
-        time_out = request.POST.get('time_of_fire_out')
-        occupancy = request.POST.get('occupancy_type')
-        owner = request.POST.get('name_of_owner')
-        alarm = request.POST.get('alarm_status')
-        respondents = request.POST.get('no_of_respondents')
-        damages = request.POST.get('estimated_damage', '0')
-        establishment = request.POST.get('no_of_establishments', '1')
-        casualty = request.POST.get('no_of_casualties', '0')
-        injured = request.POST.get('no_of_injured', '0')
-        proof = request.FILES.get('proof')
+        team = request.POST.get('team')
+        date_reported = request.POST.get('date') or None
+        time_reported = request.POST.get('detect') or None
+        involved = request.POST.get('involved')
+        owner = request.POST.get('owner')
+        alarm = request.POST.get('alarm')
+        alarm_declared_by = request.POST.get('alarm-dec')
+        time_of_arrival = request.POST.get('time-arrive') or None
+        time_of_fire_under_control = request.POST.get('time-under') or None
+        date_of_fire_under_control = request.POST.get('date-under') or None
+        fire_under_control_declared_by = request.POST.get('funder-dec')
+        time_of_fire_out = request.POST.get('time-out') or None
+        date_of_fire_out = request.POST.get('date-out') or None
+        fire_out_declared_by = request.POST.get('fout-dec')
+        estimated_damages = request.POST.get('damage', '0')
+        no_of_fatality = request.POST.get('fatality', 0)
+        no_of_injured = request.POST.get('injured', 0)
+        no_of_families_affected = request.POST.get('affected', 0)
+        no_of_establishments = request.POST.get('establishment', 1)
+        no_of_fire_trucks = request.POST.get('truck', 0)
+        ground_commander = request.POST.get('ground')
+        commander_contact_number = request.POST.get('ground-num')
+        safety_officer = request.POST.get('safety')
+        officer_contact_number = request.POST.get('safety-num')
+        name_of_sender = request.POST.get('sender')
+        sender_contact_number = request.POST.get('sender-num')
+        proof = request.FILES.get('proof')  
 
+        # Fetch the report to be updated
         report = get_object_or_404(InitialReport, id=report_id)
 
-        try:
-            # Check if date and times are provided
-            if not date:
-                raise ValueError("Date is required.")
-            if not time:
-                raise ValueError("Time Detected is required.")
-            if not time_out:
-                raise ValueError("Time of Fire Out is required.")
+        # Format datetime fields only if both date and time are provided
+        datetime_of_report = f"{date_reported} {time_reported}" if date_reported and time_reported else None
+        datetime_of_arrival = f"{date_reported} {time_of_arrival}" if date_reported and time_of_arrival else None
+        datetime_of_fire_under_control = f"{date_reported} {time_of_fire_under_control}" if date_reported and time_of_fire_under_control else None
+        datetime_of_fire_out = f"{date_of_fire_out} {time_of_fire_out}" if date_of_fire_out and time_of_fire_out else None
 
-            # Format datetime fields
-            datetime_of_detection = f"{date} {time}"
-            datetime_of_fire_out = f"{date} {time_out}"
+        # Update the report fields
+        report.where = location
+        report.team = team
+        report.date_reported = date_reported
+        report.time_reported = datetime_of_report
+        report.involved = involved
+        report.name_of_owner = owner
+        report.alarm_status = alarm
+        report.alarm_declared_by = alarm_declared_by
+        report.time_of_arrival = datetime_of_arrival
+        report.time_of_fire_under_control = datetime_of_fire_under_control
+        report.date_of_fire_under_control = date_of_fire_under_control
+        report.fire_under_control_declared_by = fire_under_control_declared_by
+        report.time_of_fire_out = datetime_of_fire_out
+        report.date_of_fire_out = date_of_fire_out
+        report.fire_out_declared_by = fire_out_declared_by
+        report.estimated_damages = estimated_damages
+        report.no_of_fatality = no_of_fatality
+        report.no_of_injured = no_of_injured
+        report.no_of_families_affected = no_of_families_affected
+        report.no_of_establishments = no_of_establishments
+        report.no_of_fire_trucks = no_of_fire_trucks
+        report.ground_commander = ground_commander
+        report.commander_contact_number = commander_contact_number
+        report.safety_officer = safety_officer
+        report.officer_contact_number = officer_contact_number
+        report.name_of_sender = name_of_sender
+        report.sender_contact_number = sender_contact_number
 
-            # Update the report fields
-            report.where = location
-            report.date = date
-            report.time = datetime_of_detection
-            report.time_of_fire_out = datetime_of_fire_out
-            report.occupancy_type = occupancy
-            report.name_of_owner = owner
-            report.alarm_status = alarm
-            report.no_of_respondents = respondents
-            report.estimated_damage = damages
-            report.no_of_establishments = establishment
-            report.no_of_casualties = casualty
-            report.no_of_injured = injured
-            if proof:
-                report.proof = proof  # Only update proof if a new file is uploaded
+        if proof:
+            report.proof = proof  # Update proof if a new file is uploaded
 
-            report.save()  # Save changes to the database
-            messages.success(request, 'Report has been updated successfully.')
-            return redirect('reports')
+        # Save the updated report to the database
+        report.save()
 
-        except ValueError as e:
-            messages.error(request, str(e))
-            return render(request, 'reports.html')
-        except Exception as e:
-            messages.error(request, f'Error updating report: {str(e)}')
-            return render(request, 'reports.html')
+        # Add success message and introduce a 2-second delay
+        messages.success(request, 'Report has been updated successfully.')
+        time.sleep(2)
+
+        return redirect('reports')  # Redirect to reports page
+
+    # If not a POST request, render the report editing page
+    return render(request, 'reports.html')
         
 @csrf_exempt  # Only if your desktop app doesn't support CSRF
 def desktop_notification(request):

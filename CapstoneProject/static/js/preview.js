@@ -84,56 +84,98 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     
-    const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
+const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
 
-    reportRows.forEach(row => {
-        row.addEventListener('click', function () {
-            const reportId = row.getAttribute('data-report-id');
-            const location = row.getAttribute('data-location');
-            const date = row.getAttribute('data-date');
-            const timeArrival = row.getAttribute('data-time');
-            const timeFireOut = row.getAttribute('data-fireout');
-            const occupancy = row.getAttribute('data-occupancy');
-            const owner = row.getAttribute('data-owner');
-            const alarm = row.getAttribute('data-alarm');
-            const respondents = row.getAttribute('data-respondents');
-            const damages = row.getAttribute('data-damages');
-            const establishments = row.getAttribute('data-establishments');
-            const casualties = row.getAttribute('data-casualties');
-            const injured = row.getAttribute('data-injured');
-            const proof = row.getAttribute('data-proof'); 
-            
+reportRows.forEach(row => {
+    row.addEventListener('click', function () {
+        const reportId = row.getAttribute('data-report-id');
+        const location = row.getAttribute('data-location');
+        const dateReported = row.getAttribute('data-date');
+        const timeReported = row.getAttribute('data-time');
+        const timeFireOut = row.getAttribute('data-fireout');
+        const occupancy = row.getAttribute('data-occupancy');
+        const owner = row.getAttribute('data-owner');
+        const alarm = row.getAttribute('data-alarm');
+        const respondents = row.getAttribute('data-respondents');
+        const damages = row.getAttribute('data-damages');
+        const establishments = row.getAttribute('data-establishments');
+        const casualties = row.getAttribute('data-casualties');
+        const injured = row.getAttribute('data-injured');
+        const proof = row.getAttribute('data-proof');
 
-            document.getElementById('loc').value = location;
-            document.getElementById('date').value = date;
-            document.getElementById('time').value = timeArrival;
-            document.getElementById('time-out').value = timeFireOut;
+        const involved = row.getAttribute('data-involved');
+        const alarmDec = row.getAttribute('data-alarm-declared-by');
+        const timeArrive = row.getAttribute('data-time-arrival');
+        const timeUnder = row.getAttribute('data-time-under-control');
+        const dateUnder = row.getAttribute('data-date-under-control');
+        const funderDec = row.getAttribute('data-fire-under-declared-by');
+        const timeOut = row.getAttribute('data-time-fire-out');
+        const dateOut = row.getAttribute('data-date-fire-out');
+        const foutDec = row.getAttribute('data-fire-out-declared-by');
+        const affected = row.getAttribute('data-families-affected');
+        const trucks = row.getAttribute('data-trucks');
+        const groundCommander = row.getAttribute('data-ground-commander');
+        const groundCommanderContact = row.getAttribute('data-ground-commander-contact');
+        const safetyOfficer = row.getAttribute('data-safety-officer');
+        const safetyOfficerContact = row.getAttribute('data-safety-officer-contact');
+        const sender = row.getAttribute('data-sender');
+        const senderContact = row.getAttribute('data-sender-contact');
+
+        // Populate the form fields in the modal
+        document.getElementById('loc').value = location;
+        document.getElementById('date').value = dateReported;
+        document.getElementById('detect').value = timeReported;
+        document.getElementById('time-out').value = timeOut;
+        document.getElementById('involved').value = involved;
+        document.getElementById('owner').value = owner;
+        document.getElementById('alarm').value = alarm; 
+        document.getElementById('alarm-dec').value = alarmDec;
+        document.getElementById('time-arrive').value = timeArrive;
+        document.getElementById('time-under').value = timeUnder;
+        document.getElementById('date-under').value = dateUnder;
+        document.getElementById('funder-dec').value = funderDec;
+        document.getElementById('time-out').value = timeFireOut;
+        document.getElementById('date-out').value = dateOut;
+        document.getElementById('fout-dec').value = foutDec;
+        document.getElementById('damage').value = damages;
+        document.getElementById('fatality').value = casualties;
+        document.getElementById('injured').value = injured;
+        document.getElementById('affected').value = affected;
+        document.getElementById('establishment').value = establishments;
+        document.getElementById('truck').value = trucks;
+        document.getElementById('ground').value = groundCommander;
+        document.getElementById('ground-num').value = groundCommanderContact;
+        document.getElementById('safety').value = safetyOfficer;
+        document.getElementById('safety-num').value = safetyOfficerContact;
+        document.getElementById('sender').value = sender;
+        document.getElementById('sender-num').value = senderContact;
+
+        if (respondents) {
+            document.querySelector("select[name='team']").value = respondents;
+        }
+        if (occupancy) {
             document.querySelector("select[name='occupancy_type']").value = occupancy;
-            document.getElementById('name').value = owner;
-            document.querySelector("select[name='alarm_status']").value = alarm;
-            document.getElementById('respondents').value = respondents;
-            document.getElementById('damages').value = damages;
-            document.getElementById('establish').value = establishments;
-            document.getElementById('casualties').value = casualties;
-            document.getElementById('injured').value = injured;
-            
-            const proofImg = document.getElementById('proof');
-            if (proof) {
-                proofImg.src = `/media/${proof}`;
-                proofImg.style.display = 'block';
-            } else {
-                proofImg.style.display = 'none';
-            }
+        }
 
-            const modalResolveButton = document.querySelector(`#resolve-button-${reportId}`);
-            if (modalResolveButton) {
-                modalResolveButton.addEventListener('click', function() {
+        // Handle proof image
+        const proofImg = document.getElementById('proof');
+        if (proof) {
+            proofImg.src = `/media/${proof}`;
+            proofImg.style.display = 'block';
+        } else {
+            proofImg.style.display = 'none';
+        }
 
-                    modalResolveButton.click();
-                });
-            }
-        });
+        // Resolve button handling
+        const modalResolveButton = document.querySelector(`#resolve-button-${reportId}`);
+        if (modalResolveButton) {
+            modalResolveButton.addEventListener('click', function() {
+                modalResolveButton.click();
+            });
+        }
     });
+});
+
 
     document.addEventListener('DOMContentLoaded', function() {
     const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");

@@ -107,7 +107,6 @@
             </div>
         </div>
 
-{% comment %} CHART AND LATEST DETECT {% endcomment %}
 
         <div class="chart-detect-box">
             <div class="chart-card">
@@ -160,8 +159,7 @@
                     <h1>LATEST DETECTION</h1>
                 </div>
                 <div class="detect-body">
-                    {% if latest_reports %}
-                        {% for report in latest_reports %}
+
                             <div class="detect-content-{{ forloop.counter }}">
                                 <a class="latest-preview" data-bs-toggle="modal" data-bs-target="#latest-detection">
                                     <div class="dc-info">
@@ -175,8 +173,7 @@
                                     </div>
                                 </a>
                             </div>
-                        {% endfor %}
-                    {% else %}
+                        
                         <div class="detect-content">
                             <div class="dc-info">
                                 <div class="dc-header">
@@ -188,7 +185,7 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
+
                 </div>
             </div>
 </main>

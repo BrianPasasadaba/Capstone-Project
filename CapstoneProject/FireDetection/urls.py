@@ -5,7 +5,7 @@ from .views import login_view
 from .views import logout_view,change_password
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import toggle_status, update_report
+from .views import toggle_status, update_report, create_report_view
 
 urlpatterns = [
     path('', views.login_view, name='login'),

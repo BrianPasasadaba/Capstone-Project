@@ -12,25 +12,40 @@ class tempReports(models.Model):
     status = models.CharField(max_length=20, choices=[('Filed', 'Filed'), ('Dismissed', 'Dismissed')], null=True)
 
 class InitialReport(models.Model):
-    where = models.CharField(max_length=255)
-    date = models.DateField()
-    time = models.DateTimeField()  
-    time_of_fire_out = models.DateTimeField()
-    occupancy_type = models.CharField(max_length=255)
-    name_of_owner = models.CharField(max_length=255)
-    alarm_status = models.CharField(max_length=255)
-    no_of_respondents = models.IntegerField()
-    estimated_damage = models.CharField(max_length=255)
-    no_of_establishments = models.IntegerField()
-    no_of_casualties = models.IntegerField()
-    no_of_injured = models.IntegerField()
+    where = models.CharField(max_length=255, blank=True, null=True)
+    team = models.CharField(max_length=255, blank=True, null=True)
+    time_reported = models.DateTimeField(blank=True, null=True)
+    date_reported = models.DateField(blank=True, null=True)
+    involved = models.CharField(max_length=255, blank=True, null=True)
+    name_of_owner = models.CharField(max_length=255, blank=True, null=True)
+    alarm_status = models.CharField(max_length=255, blank=True, null=True)
+    alarm_declared_by = models.CharField(max_length=255, blank=True, null=True)
+    time_of_arrival = models.DateTimeField(blank=True, null=True)
+    time_of_fire_under_control = models.DateTimeField(blank=True, null=True)
+    date_of_fire_under_control = models.DateField(blank=True, null=True)
+    fire_under_control_declared_by = models.CharField(max_length=255, blank=True, null=True)
+    time_of_fire_out = models.DateTimeField(blank=True, null=True)
+    date_of_fire_out = models.DateField(blank=True, null=True)
+    fire_out_declared_by = models.CharField(max_length=255, blank=True, null=True)
+    estimated_damages = models.CharField(max_length=255, blank=True, null=True)
+    no_of_fatality = models.IntegerField(blank=True, null=True)
+    no_of_injured = models.IntegerField(blank=True, null=True)
+    no_of_families_affected = models.IntegerField(blank=True, null=True)
+    no_of_establishments = models.IntegerField(blank=True, null=True)
+    no_of_fire_trucks = models.IntegerField(blank=True, null=True)
+    ground_commander = models.CharField(max_length=255, blank=True, null=True)
+    commander_contact_number = models.CharField(max_length=15, blank=True, null=True)
+    safety_officer = models.CharField(max_length=255, blank=True, null=True)
+    officer_contact_number = models.CharField(max_length=15, blank=True, null=True)
+    name_of_sender = models.CharField(max_length=255, blank=True, null=True)
+    sender_contact_number = models.CharField(max_length=15, blank=True, null=True)
     proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
     status = models.CharField(max_length=20, choices=[('Ongoing', 'Ongoing'), ('Case Closed', 'Case Closed')], default='Ongoing')
-    
+
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f"Report {self.id} - {self.where} on {self.date}"
+        return f"Report {self.id} - {self.where} on {self.date_reported}"
     
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -69,7 +84,11 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=30, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     
-    role = models.CharField(max_length=30, choices=[('role1', 'Role 1'), ('role2', 'Role 2'), ('role3', 'Role 3')], default='role1')
+    role = models.CharField(
+        max_length=30,
+        choices=[('Admin', 'Admin'), ('Radio Operator', 'Radio Operator'), ('Responder', 'Responder')],
+        default='Responder'  # Default role
+    )
     name = models.CharField(max_length=100, blank=True)
     verified = models.BooleanField(default=False)
 
