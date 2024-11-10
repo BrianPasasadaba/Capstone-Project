@@ -66,29 +66,36 @@ body{
      margin: 0;
     display: grid;
     min-height: 100vh;
-    grid-template-columns: 250px 1fr; /* Adjust to account for the fixed sidebar */
-    grid-template-rows: 90px 1fr;
+    grid-template-columns: calc(100% / 13 * 2) 1fr; /* Adjust to account for the fixed sidebar */
+    grid-template-rows: 90px auto;
     grid-template-areas:
-    "hd hd"
-    "sb mn";
+    "sb hd hd hd hd hd hd hd hd hd hd hd hd hd"
+    "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
 }
 
 aside,
 main{
-    /* padding: var(--padding-1); */
+    padding: var(--padding-1);
     text-align: center;
 }
 
 /* ======== HEADER ======== */
 
 header {
-    /* border: burlywood 3px solid;  */
-    position:sticky;
+    /* border: burlywood 3px solid; */
+    /* position: fixed; */
     top: 0;
-    z-index: 1001;
-    grid-area: hd;
+    left: calc(100% / 13 * 2);
+    right: 0;
+    height: 90px;
+    z-index: 101;
+    padding-left: var(--padding-1);
+    padding-right: var(--padding-3);
     color: var(--color-white);
     background-color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 header, .container, .container-fluid, .btn-group {
@@ -96,40 +103,17 @@ header, .container, .container-fluid, .btn-group {
 }
 
 .header-content {
-    /* border: green 3px solid; */
+    /* border: burlywood 3px solid; */
     margin: 0;
     padding: 0;
-    height: 100%;
-    display: grid; /* Ensure grid layout is applied */
-    grid-template-columns: 250px 1fr; /* Adjust to account for the fixed sidebar */
-    grid-template-rows: 1fr;
-    grid-template-areas:
-        "hs hn"; /* Different areas for the elements */
-}
-
-.header-sb {
-    /* border: red 3px solid; */
-    grid-area: hs; /* Assigned to the 'hs' area */
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.header-nav {
-    grid-area: hn; /* Assigned to the 'hn' area */
-    display: flex;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
+    justify-content: space-evenly; /* Distribute space between the title and links */
     align-items: end;
-    white-space: nowrap; 
-    flex-wrap: nowrap; 
-    padding-left: var(--padding-half);
-    padding-right: var(--padding-half);
+    height: 100%;
+    width: 100%;
+    gap: var(--gap-1);
 }
-
-
 
 .navigation-list {
     /* border: green 2px solid; */
@@ -145,6 +129,14 @@ header, .container, .container-fluid, .btn-group {
     padding-bottom: var(--padding-half);
     white-space: nowrap; /* Keeps navigation items in a single line */
     flex-wrap: nowrap; /* Prevents wrapping into multiple lines */
+}
+
+@media (max-width: 530px) {
+    .navigation-list{
+        justify-content: start;
+        align-items: end;
+    }
+
 }
 
 .btn-hotline,
@@ -350,20 +342,11 @@ input[type="password"]::-ms-clear {
 }
 
 /* ================================  SIDEBAR ================================  */
-#sidebar-toggle{
-    display: none;
-}
 
 aside{
-    height: calc(100vh - 90px);
-    top: 90px;
-    position: sticky;
-    align-self: start;
     /* border: green solid 3px; */
     grid-area: sb;
-    z-index: 1001;
-    padding: var(--padding-1);
-    padding-top: 0;
+    z-index: 1000;
 }
 
 .sidebar-content{
@@ -376,11 +359,12 @@ aside{
 
 .sidebar{
     background-color: var(--color-default);
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    border-radius: var(--border-radius-1);
+    position: fixed; /* Make the sidebar fixed on the side */
+    top: 1rem; /* Align it to the top of the viewport */
+    left: 1rem; /* Align it to the left of the viewport */
+    width: calc(100% / 14 * 2); /* Adjust width according to your grid layout */
+    height: 96.5vh; /* Full height to cover the entire viewport */
+    border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     overflow-y: hidden; /* Enable scrolling inside the sidebar if content overflows */
     display: flex; /* Enable flexbox on the sidebar */
@@ -436,8 +420,7 @@ aside{
     flex-direction: row;
     align-items: center;
     justify-content: start;
-    width: 100%;
-    padding-left: var(--padding-1);
+    width: 65%;
     gap: var(--gap-1);
 }
 
@@ -577,8 +560,6 @@ aside{
 
 main{
     /* border: purple 3px solid; */
-    width: calc(100vw - 250px);
-    padding: var(--padding-half);
     grid-area: mn;
     z-index: 2;
     color: var(--color-secondary);
@@ -590,8 +571,98 @@ main{
     height: 100%;
 }
 
+/* ================================  Media Queries for Responsive Design ================================  */
 
+/* Sidebar adjustments for smaller screens */
+@media (max-width: 1500px) {
+    body {
+        grid-template-columns: 85px 1fr; /* Sidebar is 80px, rest of the space is for the main content */
+        grid-template-areas:
+        "sb hd hd hd hd hd hd hd hd hd hd hd hd hd"
+        "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
+    }
+    header {
+        left: calc(80px + 0.5rem); /* Adjust the left property of the header to match the new sidebar width plus its left margin */
+        right: 0; /* Ensure header extends to the right edge of the viewport */
+        width: auto; /* Ensure width automatically adjusts to fill the available space */
+    }
+    .sidebar {
+        width: 80px;
+        left: 0.5rem;
+        border-radius: b;
+    }
+    .sb-header img {
+        width: 60px;
+        height: 60px;
+    }
+    .sb-header .sbheader-logo {
+        margin-bottom: var(--margin-1);
+    }
+    .sb-body .description,
+    .sb-header .sbheader-text {
+        display: none;
+    }
+    .sb-body {
+        height:80%
+    }
+    .sb-body  .nav-link {
+        /* border: var(--color-sidebar) solid 2px; */
+        padding: 0;
+        margin: 0;
+        margin-top: 2px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        justify-content: center;
+        align-content: center;
+    }
+    .sb-body  .nav-con {
+        justify-content: center;
+    }
+}
 
+/* Main-Surveillance adjustments for smaller screens */
+@media (max-width: 920px) {
+    .surveillance-info{
+        border: none;
+        background-color: var(--color-default);
+        grid-template-columns: 1fr; /* Two columns of equal width */
+        grid-template-rows: auto auto auto; /* Two rows that adjust to the content */
+        grid-template-areas:
+        "dt"
+        "tm"
+        "lc";
+    }
+    .surveillance-box,
+    .surveillance-date,
+    .surveillance-time,
+    .surveillance-loc{
+        justify-content: center;
+        padding: 0;
+    }
+
+    .surveillance-date,
+    .surveillance-time,
+    .surveillance-loc{
+        padding-top:var(--padding-half);
+        border: var(--color-primary) 2px solid;
+        border-radius: var(--border-radius-button-half);
+        background-color: var(--color-white);
+    }
+
+    .header-content {
+        align-items: center;
+    }
+    .surveillance-body{
+        padding: 0;
+    }
+    .surveillance-feed{
+        min-width: 500px;
+    }
+
+    .navigation-list{
+        align-items: center;
+    }
+}
 
 
 /* ============================== ANALYTICS ============================== */
@@ -1394,7 +1465,49 @@ input[type="password"]::-ms-clear {
     border: none;
 }
 
+/* ================================  Media Queries for Responsive Design ================================  */
 
+/* Analytics adjustments for smaller screens */
+@media (max-width: 1620px) {
+    .analyses-box {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chart-detect-box{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        height: auto;
+    }
+
+    .chart{
+        justify-content: start;
+    }
+
+    .detect-card{
+        width:50%;
+    }
+}
+
+@media (max-width: 700px) {
+    .analyses-box {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-detect-box{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        height: auto;
+    }
+
+    .detect-card{
+        width:80%;
+    }
+
+}
 
 /* ============================== REPORTS ============================== */
 
@@ -1408,7 +1521,7 @@ input[type="password"]::-ms-clear {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    border-radius: var(--border-radius-1);
+    border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     gap: var(--gap-1);
 }
@@ -1862,7 +1975,7 @@ input[type="password"]::-ms-clear {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    border-radius: var(--border-radius-1);
+    border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     gap: var(--gap-1);
 }
@@ -2106,7 +2219,7 @@ input[type="password"]::-ms-clear {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    border-radius: var(--border-radius-1);
+    border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     gap: var(--gap-1);
     overflow: auto;
@@ -2174,7 +2287,18 @@ input[type="password"]::-ms-clear {
     box-shadow: 0 0 .25rem .05rem  var(--color-secondary);
 }
 
+/* ================================  Media Queries for Responsive Design ================================  */
 
+/* Sidebar adjustments for smaller screens */
+@media (max-width: 920px) {
+    .faq-header{
+        min-height: 250px;
+    }
+    .faq-header img{
+        width: 35%;
+    }
+
+}
 
 /* ============================== CREATE REPORT MODAL============================== */
 
@@ -2387,12 +2511,24 @@ input[type="password"]::-ms-clear {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 /* ======== Divider Styles ======== */
 .top-divider {
     position: fixed;
     top: 0;
     right: 0;
-    width: 110%;
+    width: 100%;
     height: auto; /* Ensures the height adjusts automatically */
     overflow: hidden; /* Hide overflow to avoid white line */
     z-index: 1; /* Divider is below content */
@@ -2427,263 +2563,4 @@ input[type="password"]::-ms-clear {
 
 .custom-shape-divider-bottom-1724214088 .shape-fill {
     fill: var(--color-secondary);
-}
-
-
-/* <600, 601, 768, 1000, 1200 */
-
-/* ================================  Media Queries for ANALYTICS Design ================================  */
-
-/* Analytics adjustments for smaller screens */
-@media only screen and (max-width: 1620px) {
-    .analyses-box {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .chart-detect-box{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: start;
-        height: auto;
-    }
-
-    .chart{
-        justify-content: start;
-    }
-
-    .detect-card{
-        width:50%;
-    }
-}
-
-
-
-/* ================================  Media Queries for SIDEBAR Design ================================  */
-
-/* Sidebar adjustments for smaller screens */
-/* @media only screen and (max-width: 1500px) {
-    body {
-        grid-template-columns: 85px 1fr;
-        grid-template-areas:
-        "hd hd hd hd hd hd hd hd hd hd hd hd hd hd"
-        "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
-    }
-
-    aside {
-        padding: 0;
-    }
-    .sb-header img {
-        width: 60px;
-        height: 60px;
-    }
-    .sb-header .sbheader-logo {
-        margin-bottom: var(--margin-1);
-    }
-    .sb-body .description,
-    .sb-header .sbheader-text {
-        display: none;
-    }
-    .sb-body {
-        height:80%
-    }
-    .sb-body  .nav-link {
-        border: var(--color-sidebar) solid 2px;
-        padding: 0;
-        margin: 0;
-        margin-top: 2px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        justify-content: center;
-        align-content: center;
-    }
-    .sb-body  .nav-con {
-        justify-content: center;
-    }
-} */
-
-/* ================================  Media Queries for FAQ Design ================================  */
-
-/* Sidebar adjustments for smaller screens */
-@media only screen and (max-width: 920px) {
-    .faq-header{
-        min-height: 250px;
-    }
-    .faq-header img{
-        width: 35%;
-    }
-
-}
-
-/* ================================  Media Queries for BODY Design ================================  */
-
-@media only screen and (min-width: 701px) and (max-width: 1000px) {
-    .header-nav{
-        width: calc(100vw - 80px);
-    }
-    .header-nav h1{
-        font-size: 2rem;
-    }
-    .header-nav button{
-        font-size: 1.2rem;
-    }
-    .navigation-list{
-        flex-direction: column;
-        justify-content: end;
-        align-items: end;
-        padding-right: var(--padding-2);
-    }
-    .top-divider svg {
-        display: none;
-    }
-    body,
-    .header-content{
-        grid-template-columns: 80px 1fr;
-    }
-    .header-content{
-        grid-template-rows: 1fr;
-    }
-    main{
-        /* border: purple 3px solid; */
-        width: calc(100vw - 80px);
-        padding: var(--padding-half);
-    }
-    
-    aside{
-        position: fixed;
-        width: 80px;
-        padding: 0;
-    }
-    .sidebar{
-        border-radius: var(--border-radius-button-half);
-    }
-    .sb-header img {
-        width: 60px;
-        height: 60px;
-    }
-    .sb-header .sbheader-logo {
-        margin-bottom: var(--margin-1);
-    }
-    .sb-body .description,
-    .sb-header .sbheader-text {
-        display: none;
-    }
-    .sb-body {
-        height:80%
-    }
-    .sb-body  .nav-link {
-        /* border: var(--color-sidebar) solid 2px; */
-        padding: 0;
-        margin: 0;
-        margin-top: 2px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        justify-content: center;
-        align-content: center;
-    }
-    .sb-body  .nav-con {
-        padding: 0;
-        justify-content: center;
-    }
-
-}
-
-
-@media only screen and (max-width: 700px) {
-    .header-nav{
-        width: calc(100vw - 90px);
-        justify-content: center;
-        align-items: center;
-
-    }
-    .header-nav h1{
-        font-size: 1.5rem;
-    }
-    .header-nav button{
-        font-size: 1rem;
-    }
-    .navigation-list{
-        flex-direction: column;
-        justify-content: start;
-        align-items: end;
-    }
-    .top-divider svg {
-        display: none;
-    }
-    #sidebar-toggle{
-        display: block;
-    }
-    #sidebar-toggle img{
-        width: 40px;
-        height: 40px;
-    }
-    .header-content{
-        grid-template-columns: 80px 1fr;
-    }
-    body{
-        grid-template-columns: 1fr;
-    }
-    main{
-        /* border: purple 3px solid; */
-        width: 100vw;
-        padding: 0;
-    }
-    aside{
-        position: fixed;
-        width: 80px;
-        padding: 0;
-        display: none;
-    }
-    .show{
-        display: block;
-    }
-    .sidebar{
-        border-radius: var(--border-radius-button-half);
-    }
-    .sb-header img {
-        width: 60px;
-        height: 60px;
-    }
-    .sb-header .sbheader-logo {
-        display: none;
-        margin-bottom: var(--margin-1);
-    }
-    .sb-body .description,
-    .sb-header .sbheader-text {
-        display: none;
-    }
-    .sb-body {
-        height:80%
-    }
-    .sb-body  .nav-link {
-        /* border: var(--color-sidebar) solid 2px; */
-        padding: 0;
-        margin: 0;
-        margin-top: 2px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        justify-content: center;
-        align-content: center;
-    }
-    .sb-body  .nav-con {
-        padding: 0;
-        justify-content: center;
-    }
-    .analyses-box {
-        grid-template-columns: 1fr;
-    }
-
-    .chart-detect-box{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: start;
-        height: auto;
-    }
-
-    .detect-card{
-        width:80%;
-    }
-    
-
 }
