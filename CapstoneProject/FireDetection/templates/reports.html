@@ -1,38 +1,45 @@
-{% extends "sidebar.html" %}
+{% extends "res_sidebar.html" %}
 {% load static %}
 {% block title %} True the Fire {% endblock %}
 
 {% block content %}
 <header>
     <div class="header-content">
-        <span class="navigation-title">
-            <h1>Reports</h1>
-        </span>
-        <ul class="navigation-list">
-            <div class="dropdown">
-                <button class="btn-hotline dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                    Hotline
-                </button>
-                <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
-                    <li class="dropdown-item">(610) 888-1111</li>
-                    <li class="dropdown-item">(610) 888-1111</li>
-                    <li class="dropdown-item">(610) 888-1111</li>
-                </ul>
-            </div>
-            <div class="dropdown">
-                <button class="btn-profile dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="icon">
-                        <i class="bi bi-person-circle"></i>
-                    </span>
-                    {{ user.name }}
-                </button>
-
-                <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
-                    <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
-                </ul>
-                
-            </div>
-        </ul>
+        <div class="header-sb">
+            <button type="button" id="sidebar-toggle" class="btn btn-light" onclick="toggleSidebar()">
+                <div class="btn-sb">
+                    <img src="{% static 'images/sidebar-logo.png' %}" alt="bfp-logo">
+                </div>
+            </button>
+        </div>
+        <div class="header-nav">
+            <span class="navigation-title">
+                <h1>Reports</h1>
+            </span>
+            <ul class="navigation-list">
+                <div class="dropdown">
+                    <button class="btn-hotline dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        Hotline
+                    </button>
+                    <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
+                        <li class="dropdown-item">(610) 888-1111</li>
+                        <li class="dropdown-item">(610) 888-1111</li>
+                        <li class="dropdown-item">(610) 888-1111</li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn-profile dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">
+                            <i class="bi bi-person-circle"></i>
+                        </span>
+                        {{ user.name }}
+                    </button>
+                    <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
+                    </ul>
+                </div>
+            </ul>
+        </div>
     </div>
 </header>
 
@@ -160,11 +167,7 @@
                                     <option value="2">Export to PDF</option>
                                   </select>
                             </div>
-                            <!-- <button type="button" class="btn btn-lg btn">Export</button> -->
-                        </div>
-    
-                        <div id="noDataMessage" style="display: none; text-align: center; color: red;">No data available</div>
-                        <div class="rb-pagination">
+                            <div id="noDataMessage" style="display: none; text-align: center; color: red;">No data available</div>
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item prev disabled">
@@ -176,10 +179,11 @@
                                     <li class="page-item next">
                                         <a class="page-link" href="#">Next</a>
                                     </li>
-                                </ul>                            
+                                </ul>
                             </nav>
                         </div>
-                        </div>   
+                            <!-- <button type="button" class="btn btn-lg btn">Export</button> -->
+                        </div>
                     </div>
                 </div>
             </div>

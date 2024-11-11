@@ -66,29 +66,36 @@ body{
      margin: 0;
     display: grid;
     min-height: 100vh;
-    grid-template-columns: 250px 1fr; /* Adjust to account for the fixed sidebar */
-    grid-template-rows: 90px 1fr;
+    grid-template-columns: calc(100% / 13 * 2) 1fr; /* Adjust to account for the fixed sidebar */
+    grid-template-rows: 90px auto;
     grid-template-areas:
-    "sb hd"
-    "sb mn";
+    "sb hd hd hd hd hd hd hd hd hd hd hd hd hd"
+    "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
 }
 
 aside,
 main{
-    /* padding: var(--padding-1); */
+    padding: var(--padding-1);
     text-align: center;
 }
 
 /* ======== HEADER ======== */
 
 header {
-    /* border: burlywood 3px solid;  */
-    position:sticky;
+    /* border: burlywood 3px solid; */
+    /* position: fixed; */
     top: 0;
-    z-index: 1001;
-    grid-area: hd;
+    left: calc(100% / 13 * 2);
+    right: 0;
+    height: 90px;
+    z-index: 101;
+    padding-left: var(--padding-1);
+    padding-right: var(--padding-3);
     color: var(--color-white);
     background-color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 header, .container, .container-fluid, .btn-group {
@@ -96,40 +103,17 @@ header, .container, .container-fluid, .btn-group {
 }
 
 .header-content {
-    /* border: green 3px solid; */
+    /* border: burlywood 3px solid; */
     margin: 0;
     padding: 0;
-    height: 100%;
-    display: grid; /* Ensure grid layout is applied */
-    grid-template-columns: 1fr; /* Adjust to account for the fixed sidebar */
-    grid-template-rows: 1fr;
-    grid-template-areas:
-        "hn"; /* Different areas for the elements */
-}
-
-.header-sb {
-    /* border: red 3px solid; */
-    grid-area: hs; /* Assigned to the 'hs' area */
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.header-nav {
-    grid-area: hn; /* Assigned to the 'hn' area */
-    display: flex;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
+    justify-content: space-evenly; /* Distribute space between the title and links */
     align-items: end;
-    white-space: nowrap; 
-    flex-wrap: nowrap; 
-    padding-left: var(--padding-1);
-    padding-right: var(--padding-3);
+    height: 100%;
+    width: 100%;
+    gap: var(--gap-1);
 }
-
-
 
 .navigation-list {
     /* border: green 2px solid; */
@@ -145,6 +129,14 @@ header, .container, .container-fluid, .btn-group {
     padding-bottom: var(--padding-half);
     white-space: nowrap; /* Keeps navigation items in a single line */
     flex-wrap: nowrap; /* Prevents wrapping into multiple lines */
+}
+
+@media (max-width: 530px) {
+    .navigation-list{
+        justify-content: start;
+        align-items: end;
+    }
+
 }
 
 .btn-hotline,
@@ -350,18 +342,11 @@ input[type="password"]::-ms-clear {
 }
 
 /* ================================  SIDEBAR ================================  */
-#sidebar-toggle{
-    display: none;
-}
 
 aside{
-    height: 100vh;
-    position:sticky;
-    top: 0;
     /* border: green solid 3px; */
     grid-area: sb;
-    z-index: 1001;
-    padding: var(--padding-1);
+    z-index: 1000;
 }
 
 .sidebar-content{
@@ -374,11 +359,12 @@ aside{
 
 .sidebar{
     background-color: var(--color-default);
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    border-radius: var(--border-radius-1);
+    position: fixed; /* Make the sidebar fixed on the side */
+    top: 1rem; /* Align it to the top of the viewport */
+    left: 1rem; /* Align it to the left of the viewport */
+    width: calc(100% / 14 * 2); /* Adjust width according to your grid layout */
+    height: 96.5vh; /* Full height to cover the entire viewport */
+    border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     overflow-y: hidden; /* Enable scrolling inside the sidebar if content overflows */
     display: flex; /* Enable flexbox on the sidebar */
@@ -434,8 +420,7 @@ aside{
     flex-direction: row;
     align-items: center;
     justify-content: start;
-    width: 100%;
-    padding-left: var(--padding-1);
+    width: 65%;
     gap: var(--gap-1);
 }
 
@@ -575,8 +560,6 @@ aside{
 
 main{
     /* border: purple 3px solid; */
-    width: calc(100vw - 250px);
-    padding: var(--padding-half);
     grid-area: mn;
     z-index: 2;
     color: var(--color-secondary);
@@ -588,8 +571,98 @@ main{
     height: 100%;
 }
 
+/* ================================  Media Queries for Responsive Design ================================  */
 
+/* Sidebar adjustments for smaller screens */
+@media (max-width: 1500px) {
+    body {
+        grid-template-columns: 85px 1fr; /* Sidebar is 80px, rest of the space is for the main content */
+        grid-template-areas:
+        "sb hd hd hd hd hd hd hd hd hd hd hd hd hd"
+        "sb mn mn mn mn mn mn mn mn mn mn mn mn mn";
+    }
+    header {
+        left: calc(80px + 0.5rem); /* Adjust the left property of the header to match the new sidebar width plus its left margin */
+        right: 0; /* Ensure header extends to the right edge of the viewport */
+        width: auto; /* Ensure width automatically adjusts to fill the available space */
+    }
+    .sidebar {
+        width: 80px;
+        left: 0.5rem;
+        border-radius: b;
+    }
+    .sb-header img {
+        width: 60px;
+        height: 60px;
+    }
+    .sb-header .sbheader-logo {
+        margin-bottom: var(--margin-1);
+    }
+    .sb-body .description,
+    .sb-header .sbheader-text {
+        display: none;
+    }
+    .sb-body {
+        height:80%
+    }
+    .sb-body  .nav-link {
+        /* border: var(--color-sidebar) solid 2px; */
+        padding: 0;
+        margin: 0;
+        margin-top: 2px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        justify-content: center;
+        align-content: center;
+    }
+    .sb-body  .nav-con {
+        justify-content: center;
+    }
+}
 
+/* Main-Surveillance adjustments for smaller screens */
+@media (max-width: 920px) {
+    .surveillance-info{
+        border: none;
+        background-color: var(--color-default);
+        grid-template-columns: 1fr; /* Two columns of equal width */
+        grid-template-rows: auto auto auto; /* Two rows that adjust to the content */
+        grid-template-areas:
+        "dt"
+        "tm"
+        "lc";
+    }
+    .surveillance-box,
+    .surveillance-date,
+    .surveillance-time,
+    .surveillance-loc{
+        justify-content: center;
+        padding: 0;
+    }
+
+    .surveillance-date,
+    .surveillance-time,
+    .surveillance-loc{
+        padding-top:var(--padding-half);
+        border: var(--color-primary) 2px solid;
+        border-radius: var(--border-radius-button-half);
+        background-color: var(--color-white);
+    }
+
+    .header-content {
+        align-items: center;
+    }
+    .surveillance-body{
+        padding: 0;
+    }
+    .surveillance-feed{
+        min-width: 500px;
+    }
+
+    .navigation-list{
+        align-items: center;
+    }
+}
 
 
 /* ============================== ANALYTICS ============================== */
@@ -898,8 +971,8 @@ input[type="password"]::-ms-clear {
 #pop-up-modal .modal-dialog{
     padding: var(--padding-1);
     max-width: 600px;
-    min-width: 200px;
-    width: auto;
+    min-width: 400px;
+    width: 90%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -1392,7 +1465,49 @@ input[type="password"]::-ms-clear {
     border: none;
 }
 
+/* ================================  Media Queries for Responsive Design ================================  */
 
+/* Analytics adjustments for smaller screens */
+@media (max-width: 1620px) {
+    .analyses-box {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chart-detect-box{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        height: auto;
+    }
+
+    .chart{
+        justify-content: start;
+    }
+
+    .detect-card{
+        width:50%;
+    }
+}
+
+@media (max-width: 700px) {
+    .analyses-box {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-detect-box{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        height: auto;
+    }
+
+    .detect-card{
+        width:80%;
+    }
+
+}
 
 /* ============================== REPORTS ============================== */
 
@@ -1401,12 +1516,12 @@ input[type="password"]::-ms-clear {
     width: 100%;
     height: 100%;
     min-height: 100%;
-    padding: var(--padding-2);
+    padding: var(--padding-3);
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    border-radius: var(--border-radius-1);
+    border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     gap: var(--gap-1);
 }
@@ -1432,7 +1547,7 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-header{
-    /* border: var(--color-secondary) 1px solid; */
+    border: var(--color-secondary) 1px solid;
     border-bottom: var(--color-primary) 1.5px solid;
     width: 100%;
     height: 100px;
@@ -1551,6 +1666,7 @@ input[type="password"]::-ms-clear {
 .rb-table table{
     width: 100%;
     table-layout: fixed;
+    min-width: 1000px;
 }
 
 .rb-table thead th{
@@ -1564,11 +1680,9 @@ input[type="password"]::-ms-clear {
 
 .rb-table th,
 .rb-table td{
-    padding: 10px 5px;
+    padding: 10px 20px;
     border-bottom: 1px solid var(--color-placeholder);
-    word-wrap: break-word;
-    white-space: normal;
-    word-break: break-word;
+    word-break: break-all;
     text-align: center;
 }
 
@@ -1576,17 +1690,13 @@ input[type="password"]::-ms-clear {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 85%;
+    width: 50%;
+    min-width: 150px;
+    min-height: 42px;
     border-radius: var(--border-radius-card-2);
     text-align: center;
     margin: 0 auto;
-    padding: var(--padding-half);
-    word-wrap: break-word;
-    white-space: normal;
-    word-break: break-word;
-
 }
-
 
 .rb-table tr:hover {
     color: var(--color-tertiary);
@@ -1649,18 +1759,34 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-footer .rb-export {
-    width: 100%;
+    min-width: 200px;
     /* border: var(--color-primary) 1px solid; */
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
     padding-top: var(--padding-1);
-    gap: var(--gap-half);
 }
 
-.rb-footer .rb-export .input-group{
-    width: 250px;
+.rb-footer .btn{
+    background-color: var(--color-tertiary);
+    width: 120px;
+    transition: var(--tran-03);
+    font-weight: 500;
+    border-radius: var(--border-radius-button-half);
+}
+
+.rb-export .btn:focus{
+    background-color: var(--color-tertiary);
+    border: 1px var(--color-tertiary) solid;
+    box-shadow: var(--box-shadow);
+}
+
+.rb-export .btn:hover{
+    background-color: var(--color-hover) !important;
+    border: 1px var(--color-hover) solid;
+    border: none;
+    transform: scale(1.05);
+    font-weight: 400;
 }
 
 .rb-export .input-group-text{
@@ -1844,12 +1970,12 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-default);
     width: 100%;
     height: 100%;
-    padding: var(--padding-2);
+    padding: var(--padding-3);
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    border-radius: var(--border-radius-1);
+    border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     gap: var(--gap-1);
 }
@@ -1919,7 +2045,6 @@ input[type="password"]::-ms-clear {
 }
 
 .ab-header input{
-    border: var(--color-secondary) 1px solid;
     width: 250px;
     height: 40px;
     font-weight: 100;
@@ -1950,9 +2075,9 @@ input[type="password"]::-ms-clear {
 }
 
 .ab-table table{
-    border: var(--color-secondary) 1px solid; 
     width: 100%;
     table-layout: fixed;
+    min-width: 1000px;
 }
 
 .ab-table thead th{
@@ -1966,8 +2091,7 @@ input[type="password"]::-ms-clear {
 
 .ab-table th,
 .ab-table td{
-    
-    padding: 10px 8px;
+    padding: 10px 20px;
     border-bottom: 1px solid var(--color-placeholder);
     word-break: break-all;
     text-align: center;
@@ -1977,24 +2101,12 @@ input[type="password"]::-ms-clear {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 85%;
+    width: 50%;
+    min-width: 150px;
+    min-height: 42px;
     border-radius: var(--border-radius-card-2);
     text-align: center;
     margin: 0 auto;
-    padding: var(--padding-half);
-    word-wrap: break-word;
-    white-space: normal;
-    word-break: break-word;
-}
-
-.ab-table td:last-child h6{
-    font-size: 0.89rem;
-}
-
-.ab-table tbody td{
-    word-wrap: break-word;
-    white-space: normal;
-    word-break: break-word;
 }
 
 .ab-table tbody tr:hover {
@@ -2050,6 +2162,11 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-3);
 }
 
+/* .ab-add {
+    border: var(--color-primary) 1px solid;
+    display: flex;
+} */
+
 .ab-buttons .btn{
     background-color: var(--color-tertiary);
     width: 120px;
@@ -2102,7 +2219,7 @@ input[type="password"]::-ms-clear {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    border-radius: var(--border-radius-1);
+    border-radius: var(--border-radius-sidebar);
     box-shadow: var(--box-shadow);
     gap: var(--gap-1);
     overflow: auto;
@@ -2170,7 +2287,18 @@ input[type="password"]::-ms-clear {
     box-shadow: 0 0 .25rem .05rem  var(--color-secondary);
 }
 
+/* ================================  Media Queries for Responsive Design ================================  */
 
+/* Sidebar adjustments for smaller screens */
+@media (max-width: 920px) {
+    .faq-header{
+        min-height: 250px;
+    }
+    .faq-header img{
+        width: 35%;
+    }
+
+}
 
 /* ============================== CREATE REPORT MODAL============================== */
 
@@ -2185,8 +2313,8 @@ input[type="password"]::-ms-clear {
     /* border: var(--color-secondary) solid 3px; */
     padding: var(--padding-1);
     max-width: 900px;
-    min-width: 300px;
-    width: auto;
+    min-width: 500px;
+    width: 70%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -2353,13 +2481,54 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-1);
 }
 
+/* ============================== TOAST ============================== */
+
+.toast{
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1111;
+    color: var(--color-primary);
+    width: 400px !important;
+    height: 120px !important;
+    box-shadow:  0 0 0.5rem 0.025rem  rgba(111, 157, 226, 0.5) !important;
+}
+
+.toast-header{
+    background-color: var(--color-white) !important;
+    border-bottom: 1px var(--color-secondary) solid !important;
+}
+.toast-header .me-auto{
+    gap: 1rem;
+    color: var(--color-secondary);
+}
+
+.toast-header .btn-close:focus{
+    box-shadow:  0 0 0 .25rem  rgb(237, 112, 39, 0.5);
+}
+
+.toast-body{
+    font-weight: 500;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ======== Divider Styles ======== */
 .top-divider {
     position: fixed;
     top: 0;
     right: 0;
-    width: 110%;
+    width: 100%;
     height: auto; /* Ensures the height adjusts automatically */
     overflow: hidden; /* Hide overflow to avoid white line */
     z-index: 1; /* Divider is below content */
@@ -2394,449 +2563,4 @@ input[type="password"]::-ms-clear {
 
 .custom-shape-divider-bottom-1724214088 .shape-fill {
     fill: var(--color-secondary);
-}
-
-
-/* <600, 601, 768, 1000, 1200 */
-
-/* ================================  Media Queries for ANALYTICS Design ================================  */
-
-/* Analytics adjustments for smaller screens */
-@media only screen and (max-width: 1620px) {
-    .analyses-box {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .chart-detect-box{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: start;
-        height: auto;
-    }
-
-    .chart{
-        justify-content: start;
-    }
-
-    .detect-card{
-        width:50%;
-    }
-}
-
-
-/* ================================  Media Queries for FAQ Design ================================  */
-
-/* Sidebar adjustments for smaller screens */
-@media only screen and (max-width: 920px) {
-    .faq-header{
-        min-height: 250px;
-    }
-    .faq-header img{
-        width: 35%;
-    }
-
-}
-
-/* ================================  701 - 1000 ================================  */
-
-@media only screen and (min-width: 701px) and (max-width: 1000px) {
-    .header-content {
-        padding-top: var(--padding-1);
-        padding-right: var(--padding-1);
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
-        grid-template-areas:
-            "hn"; /* Different areas for the elements */
-    }
-    .header-nav{
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        padding-left: var(--padding-1);
-        padding-right: var(--padding-1);
-    }
-    .header-nav h1{
-        font-size: 2rem;
-    }
-    .navigation-list{
-        justify-content: end;
-        align-items: center;
-    }
-    .header-nav button{
-        font-size: 1.2rem;
-    }
-    .top-divider svg {
-        display: none;
-    }
-    body{
-        grid-template-columns: 80px 1fr;
-    }
-    main{
-        /* border: purple 3px solid; */
-        width: calc(100vw - 80px);
-        padding: var(--padding-half);
-    }
-
-    /* ================================  Media Queries for SIDEBAR Design ================================  */
-
-    aside{
-        position: fixed;
-        width: 80px;
-        padding: 0;
-    }
-    .sidebar{
-        border-radius: var(--border-radius-button-half);
-    }
-    .sb-header img {
-        width: 60px;
-        height: 60px;
-    }
-    .sb-header .sbheader-logo {
-        margin-bottom: var(--margin-1);
-    }
-    .sb-body .description,
-    .sb-header .sbheader-text {
-        display: none;
-    }
-    .sb-body {
-        height:80%
-    }
-    .sb-body  .nav-link {
-        /* border: var(--color-sidebar) solid 2px; */
-        padding: 0;
-        margin: 0;
-        margin-top: 2px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        justify-content: center;
-        align-content: center;
-    }
-    .sb-body  .nav-con{
-        padding: 0;
-        justify-content: center;
-    }
-
-    .ab-table thead th,
-    .rb-table thead th{
-        font-size: 1rem;
-        font-weight: 500;
-    }
-    .ab-table tbody td,
-    .rb-table tbody td{
-        font-size: 0.8rem;
-        font-weight: 500;
-        word-wrap: break-word;
-        white-space: normal;
-        word-break: break-word;
-    }
-    .ab-table td:last-child h6,
-    .rb-table td:last-child h6{
-        width: 100%;
-        padding: 0;
-        font-size: 0.8rem;
-        border-radius: var(--border-radius-button-half);
-        padding-top: var(--padding-1);
-        padding-bottom: var(--padding-1);
-    }
-
-    .rbh-left{
-        /* border: var(--color-secondary) 1px solid; */
-        flex-direction: row;
-        align-items: start;
-        justify-content: start;
-        gap: var(--gap-half);
-    }
-    
-    .rb-header input{
-        width: 220px;
-        height: 35px;
-    }
-    .rbh-left .create-button{
-        /* border: var(--color-secondary) solid 3px; */
-        align-items: start;
-        justify-content: center;
-    }
-    
-    .rbh-left .create-button .btn-create{
-        background-color: var(--color-tertiary) !important;
-        border: none;
-        border-radius: var(--border-radius-input);
-        font-weight: 500;
-        font-size: 0.8rem;
-        width: 120px;
-    }
-    .rb-header .btn{
-        width: 100px;
-    }
-
-}
-
-
-/* ================================  <700  ================================  */
-
-@media only screen and (max-width: 700px) {
-    .top-divider svg {
-        display: none;
-    }
-    body{
-        grid-template-columns: 1fr;
-    }
-/* ================================  <700-HEADER ================================  */
-   .header-content {
-        grid-template-columns: 80px 1fr; /* Adjust to account for the fixed sidebar */
-        grid-template-rows: 1fr;
-        grid-template-areas:
-            "hs hn"; /* Different areas for the elements */
-}
-    .header-nav{
-        width: calc(100vw - 90px);
-        justify-content: center;
-        align-items: center;
-        padding-right: var(--padding-half);
-    }
-    .header-nav h1{
-        font-size: 1.5rem;
-    }
-    .header-nav button{
-        font-size: 1rem;
-    }
-    .navigation-list{
-        flex-direction: column;
-        justify-content: start;
-        align-items: end;
-    }
-    main{
-        /* border: purple 3px solid; */
-        width: 100vw;
-        padding: 0;
-    }
-/* ================================  <700-SIDEBAR ================================  */
-    #sidebar-toggle{
-        display: block;
-    }
-    #sidebar-toggle img{
-        width: 40px;
-        height: 40px;
-    }
-    aside{
-        height: calc(100vh - 90px);
-        top: 90px;
-        position: fixed;
-        width: 80px;
-        padding: 0;
-        display: none;
-    }
-    .show{
-        display: block;
-    }
-    .sidebar{
-        border-radius: 0;
-        background-color: var(--color-primary);
-    }
-    .sb-header img {
-        width: 60px;
-        height: 60px;
-    }
-    .sb-header .sbheader-logo {
-        display: none;
-        margin-bottom: var(--margin-1);
-    }
-    .sb-body .description,
-    .sb-header .sbheader-text {
-        display: none;
-    }
-    .sb-body {
-        height:80%
-    }
-    .sb-body  .nav-link {
-        /* border: var(--color-sidebar) solid 2px; */
-        padding: 0;
-        margin: 0;
-        margin-top: 2px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        justify-content: center;
-        align-content: center;
-    }
-    
-    .sidebar .nav-link:hover {
-        background: var(--color-sidebar);
-        cursor: pointer;
-    }
-
-    .sb-body .icon{
-        color: var(--color-white)
-    }
-    
-    .sb-body  .nav-con {
-        padding: 0;
-        justify-content: center;
-    }
-
-/* ================================  <700-ANALYTICS ================================  */
-    .analyses-box {
-        grid-template-columns: 1fr;
-    }
-
-    .chart-detect-box{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: start;
-        height: auto;
-    }
-
-    .detect-card{
-        width:80%;
-    }
-/* ================================  <700-ACCOUNTS ================================  */
-
-    .accounts-box,
-    .reports-box,
-    .creports-box{
-        padding: var(--padding-half);
-        gap: var(--gap-half);
-    }
-    
-    .accounts-header,
-    .reports-header,
-    .creports-header{
-        padding-top: var(--padding-half);
-        align-items: center;
-        justify-content: center;
-        color: var(--color-secondary);
-    }
-    
-    .ab-header .btn,
-    .ab-header input{
-        width: 100%;
-    }
-    .ab-table thead th{
-        font-size: 1rem;
-        font-weight: 500;
-    }
-    .rb-table thead th{
-        font-size: 0.8rem;
-        font-weight: 500;
-    }
-    .ab-table tbody td,
-    .rb-table tbody td{
-        font-size: 0.7rem;
-        font-weight: 500;
-        word-wrap: break-word;
-        white-space: normal;
-        word-break: break-word;
-    }
-    .ab-table td:last-child h6,
-    .rb-table td:last-child h6{
-        width: 100%;
-        padding: 0;
-        font-size: 0.7rem;
-        border-radius: var(--border-radius-button-half);
-        padding-top: var(--padding-1);
-        padding-bottom: var(--padding-1);
-    }
-
-    .ab-buttons{
-        height: auto;
-        flex-direction: column;
-        align-items: center;
-        padding: 0;
-        padding-left: var(--padding-1);
-        gap: var(--gap-1);
-    }
-    
-    .ab-buttons .btn{
-        background-color: var(--color-tertiary);
-        width: 100%;
-        transition: var(--tran-03);
-        font-weight: 500;
-        font-size: 15px;
-        border-radius: var(--border-radius-button-half);
-    }
-
-    /* ================================  <700-REPORTS ================================  */
-
-    .rb-header{
-        border: var(--color-secondary) 1px solid;
-        height: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        justify-content: space-between;
-        gap: var(--gap-half);
-        padding-left: var(--padding-1);
-    }
-
-    .rbh-left{
-        /* border: var(--color-secondary) 1px solid; */
-        flex-direction: column;
-        align-items: start;
-        justify-content: start;
-        gap: var(--gap-half);
-    }
-    
-    .rb-header input{
-        width: 220px;
-        height: 35px;
-    }
-    .rbh-left .create-button{
-        /* border: var(--color-secondary) solid 3px; */
-        align-items: start;
-        justify-content: center;
-    }
-    
-    .rbh-left .create-button .btn-create{
-        background-color: var(--color-tertiary) !important;
-        border: none;
-        border-radius: var(--border-radius-input);
-        font-weight: 500;
-        font-size: 0.8rem;
-        width: 120px;
-    }
-    .rb-header .btn{
-        width: 100%;
-        font-size: 0.8rem;
-    }
-    .rb-footer{
-        padding: var(--padding-half);
-    }
-    
-    .rb-group{
-        /* border: var(--color-secondary) solid 3px; */
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: auto;
-        align-items: center;
-        gap: 0;
-    }
-    
-    .rb-footer .rb-export {
-        /* border: var(--color-secondary) solid 3px; */
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        justify-content: end;
-        width: 100%;
-        padding: 0;
-        gap: 0;
-        padding-top: var(--padding-half);
-    }
-    .rb-footer .rb-export .input-group{
-        width: 70%;
-    }
-    .rb-footer .pagination,
-    .rb-footer .form-select{
-        font-size: 0.9rem;
-    }
-    /* ================================  <700-POPALERT ================================  */
-    .indiv-detail span{
-        font-size: 0.9rem;
-        font-weight: 400;
-    }
-    .indiv-detail div{
-        font-size: 1rem;
-    }
 }
