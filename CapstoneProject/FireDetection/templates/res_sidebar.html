@@ -24,6 +24,7 @@
 <body>
 <!--POP UP ALERT-->
     <!-- Modal -->
+    {% if request.user.role == "Radio Operator" %}
 <div class="modal fade" id="pop-up-modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -71,6 +72,16 @@
       </div>
     </div>
 </div>
+{% endif %}
+
+{% if user_role == "Radio Operator" %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('pop-up-modal'));
+        myModal.show();
+    });
+</script>
+{% endif %}
 
 <!--POP UP ALERT-->
 

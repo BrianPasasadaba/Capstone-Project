@@ -349,6 +349,32 @@ input[type="password"]::-ms-clear {
     border-top: none;
 }
 
+#forgot-success-modal .md-state{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#forgot-success-modal .success-logo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+#forgot-success-modal .success-logo i{
+    font-size: 100px;
+    color: green;
+}
+#forgot-success-modal .modal-footer{
+    border: none;
+}
+
 /* ================================  SIDEBAR ================================  */
 #sidebar-toggle{
     display: none;
@@ -827,7 +853,6 @@ input[type="password"]::-ms-clear {
     /* border: #ED7027 1px solid; */
     padding: var(--padding-1);
     max-width: 700px;
-    min-width: 600px;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -838,6 +863,14 @@ input[type="password"]::-ms-clear {
 #preview-incident-summary {
     font-weight: 600;
     color: var(--color-secondary);
+}
+
+#preview-incident-summary .mh-left,
+#latest-detection .mh-left{
+    /* border: var(--color-secondary) 1px solid; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .summary-option{
@@ -1132,7 +1165,7 @@ input[type="password"]::-ms-clear {
 
 .incident-bars{
     /* border: green 1px solid; */
-    width: 870px;
+    width: 900px;
     height: 100%;
     list-style: none;
     display: flex;
@@ -1288,8 +1321,8 @@ input[type="password"]::-ms-clear {
 #latest-detection .modal-dialog{
     padding: var(--padding-1);
     max-width: 600px;
-    min-width: 400px;
-    width: 90%;
+    min-width: 200px;
+    width: 100%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -2420,7 +2453,7 @@ input[type="password"]::-ms-clear {
     }
 
     .detect-card{
-        width:50%;
+        width:80%;
     }
 }
 
@@ -2570,6 +2603,13 @@ input[type="password"]::-ms-clear {
         width: 100px;
     }
 
+    .incident-bars li{
+        width: 70px;
+    }
+    .incident-bars{
+        gap: var(--gap-1);
+    }
+
 }
 
 
@@ -2596,10 +2636,10 @@ input[type="password"]::-ms-clear {
         padding-right: var(--padding-half);
     }
     .header-nav h1{
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
     .header-nav button{
-        font-size: 1rem;
+        font-size: 0.7rem;
     }
     .navigation-list{
         flex-direction: column;
@@ -2616,8 +2656,8 @@ input[type="password"]::-ms-clear {
         display: block;
     }
     #sidebar-toggle img{
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
     }
     aside{
         height: calc(100vh - 90px);
@@ -2832,11 +2872,41 @@ input[type="password"]::-ms-clear {
         font-size: 0.9rem;
     }
     /* ================================  <700-POPALERT ================================  */
-    .indiv-detail span{
+    .indiv-detail span,
+    .indiv-summary span{
         font-size: 0.9rem;
         font-weight: 400;
     }
-    .indiv-detail div{
+    .indiv-detail div,
+    .indiv-summary div{
         font-size: 1rem;
+    }
+    
+    #preview-incident-summary .mh-left,
+    #latest-detection .mh-left{
+        /* border: var(--color-secondary) 1px solid; */
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        gap: var(--gap-half);
+    }
+    .summary-option{
+        margin-left: 0;
+        gap: var(--gap-half);
+    }
+    .indiv-summary{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        gap: var(--gap-half);
+        padding: var(--padding-half);
+    }
+    .incident-bars li{
+        width: 50px;
+    }
+    .incident-bars{
+        gap: var(--gap-1);
     }
 }

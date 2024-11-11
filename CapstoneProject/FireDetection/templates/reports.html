@@ -85,7 +85,6 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Select</th>
                                 <th>Location</th>
                                 <th>Date</th>
                                 <th>Time</th>
@@ -131,12 +130,6 @@
                                 data-bs-toggle="modal" 
                                 data-bs-target="#report-preview-modal">
                                 
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-{{ report.id }}">
-                                        <label class="form-check-label" for="flexCheckDefault-{{ report.id }}"></label>
-                                    </div>
-                                </td>
                                 <td>{{ report.where }}</td>
                                 <td>{{ report.date_reported|date:"m/d/Y" }}</td>
                                 <td>{{ report.time_reported|time:"h:i A" }}</td>
