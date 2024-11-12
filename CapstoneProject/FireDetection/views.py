@@ -35,6 +35,110 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from django.core.validators import validate_integer
 import time
+import openpyxl
+from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
+
+
+def export_initial_report(request):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Initial Report Data"
+
+    headers = [
+        "No.", "Station", "Exact Location/ Address of Fire Incident", "Team", "Time Reported", "Date Reported", "Type Of", "Name of Owner",
+        "Alarm Status", "Alarm Declared By", "Time of Arrival At Scene", "Time of Fire Under Control", 
+        "Date of Fire Under Control", "Fire Under Control Declared By", "Time of Fire Out", 
+        "Date of Fire Out", "Fire Out Declared By", "Estimated Damages", "No. of Fatalities",
+        "No. of Injured", "No. of Families Affected", "No. of Establishments", 
+        "No. of Fire Trucks", "Ground Commander", "Commander Contact Number", 
+        "Safety Officer", "Officer Contact Number", "Name of Sender", "Sender Contact Number", 
+        "Remarks"
+    ]
+
+    fields = [
+        'where', 'team', 'time_reported', 'date_reported', 'involved', 'name_of_owner',
+        'alarm_status', 'alarm_declared_by', 'time_of_arrival', 'time_of_fire_under_control',
+        'date_of_fire_under_control', 'fire_under_control_declared_by', 'time_of_fire_out',
+        'date_of_fire_out', 'fire_out_declared_by', 'estimated_damages', 'no_of_fatality',
+        'no_of_injured', 'no_of_families_affected', 'no_of_establishments', 'no_of_fire_trucks',
+        'ground_commander', 'commander_contact_number', 'safety_officer', 'officer_contact_number',
+        'name_of_sender', 'sender_contact_number', 'status'
+    ]
+
+    header_font = Font(bold=True, color="000000")
+
+    data_fill = PatternFill(start_color="DF4B40", end_color="DF4B40", fill_type="solid")
+ 
+    center_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+    thick_border = Border(
+        left=Side(border_style="thin", color="000000"),
+        right=Side(border_style="thin", color="000000"),
+        top=Side(border_style="thin", color="000000"),
+        bottom=Side(border_style="thin", color="000000")
+    )
+
+    for col_num, header_item in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.value = header_item
+        cell.font = header_font
+        cell.alignment = center_alignment
+        cell.border = thick_border
+
+    ws.row_dimensions[1].height = 30
+
+    sy_text = ws.cell(row=2, column=1, value="S/Y 2024")
+    sy_text.font = Font(bold=True)
+    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=len(headers))
+    sy_text.alignment = center_alignment  
+    sy_text.border = thick_border
+
+    yellow_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
+    for col_num in range(1, len(headers) + 1):
+        cell = ws.cell(row=3, column=col_num)
+        cell.fill = yellow_fill
+        cell.alignment = center_alignment
+        cell.border = thick_border
+
+    reports = InitialReport.objects.filter(status='Case Closed').values(*fields)
+
+    for row_num, report in enumerate(reports, 4):
+
+        no_value = row_num - 3  
+        
+        station_value = "Santa Rosa City"
+        
+        no_cell = ws.cell(row=row_num, column=1, value=no_value)
+        no_cell.fill = data_fill
+        no_cell.alignment = center_alignment
+        no_cell.border = thick_border  
+        
+        station_cell = ws.cell(row=row_num, column=2, value=station_value)  
+        station_cell.fill = data_fill
+        station_cell.alignment = center_alignment  
+        station_cell.border = thick_border
+        
+        for col_num, field in enumerate(fields, 3):
+            value = report[field]
+
+            if isinstance(value, datetime):
+                value = value.replace(tzinfo=None)  
+            
+            cell = ws.cell(row=row_num, column=col_num, value=value)
+            cell.fill = data_fill
+            cell.alignment = center_alignment
+            cell.border = thick_border
+
+    for col in range(2, len(headers) + 1):
+        ws.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 20
+
+    ws.column_dimensions['A'].width = 5  
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="initial_report_data.xlsx"'
+    wb.save(response)
+    return response
+
 
 
 def change_password(request):
@@ -42,7 +146,6 @@ def change_password(request):
         new_password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-        # Check if the new password and confirmation match
         if new_password != confirm_password:
             messages.error(request, 'Passwords do not match.')
             return redirect(request.META.get('HTTP_REFERER', 'analytics'))
