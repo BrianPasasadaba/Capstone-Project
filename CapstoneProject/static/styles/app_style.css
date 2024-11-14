@@ -384,6 +384,94 @@ input[type="password"]::-ms-clear {
     border: none;
 }
 
+
+/* ============================== TOAST ============================== */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10050;
+  }
+  .toast{
+    position: relative;
+    padding: 10px;
+    color: #fff;
+    margin-bottom: 10px;
+    width: 400px;
+    border-radius: 10px;
+    --color: #0abf30;
+    background-image: 
+        linear-gradient(
+            to right, #0e1f6b, #043461, #c0620f 100%
+        );
+    opacity: 100%;
+    animation: show 0.3s ease 1 forwards  
+}
+
+.tb-btn{
+    color: white !important;
+    text-decoration: underline !important;
+    font-weight:500 !important;
+    font-size: 0.9rem !important;
+}
+
+.tb-btn:focus {
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8)!important;
+}
+
+
+@property --angle{
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.toast::after, .toast::before{
+    content: '';
+    position: absolute;
+    border-radius: 10px;
+    height: 109%;
+    width: 103%;
+    background-image: conic-gradient(from var(--angle), transparent 40%, rgb(255, 0, 0));
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    z-index: -1;
+    animation: 3s spin linear infinite;
+}
+
+@keyframes spin{
+    from{
+        --angle: 0deg
+    }
+    to{
+        --angle: 360deg
+    }
+}
+
+.toast::before {
+    opacity: 0.5;
+    filter: blur(20px); /* Apply the blur filter */
+    z-index: -2; /* Ensure the ::before element is behind the toast */
+}
+
+.toast-header{
+    background-color: var(--color-white) !important;
+    border-bottom: 1px var(--color-secondary) solid !important;
+}
+.toast-header .me-auto{
+    gap: 1rem;
+    color: var(--color-secondary);
+}
+
+.toast-header .btn-close:focus{
+    box-shadow:  0 0 0 .25rem  rgb(237, 112, 39, 0.5);
+}
+
+.toast-body{
+    font-weight: 500;
+}
+
 /* ================================  SIDEBAR ================================  */
 #sidebar-toggle{
     display: none;
