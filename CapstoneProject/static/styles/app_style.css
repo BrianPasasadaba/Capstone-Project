@@ -147,6 +147,15 @@ header, .container, .container-fluid, .btn-group {
     flex-wrap: nowrap; /* Prevents wrapping into multiple lines */
 }
 
+.btn-profile {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-half);
+}
+
 .btn-hotline,
 .btn-profile{
     color: white;
@@ -1692,6 +1701,14 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-half);
 }
 
+.rb-footer .btn-excel{
+    border: var(--border-input);
+}
+
+.rb-footer .btn-excel:focus{
+    box-shadow: var(--box-shadow);
+}
+
 .rb-footer .rb-export .input-group{
     width: 250px;
 }
@@ -2636,20 +2653,27 @@ input[type="password"]::-ms-clear {
         padding-right: var(--padding-half);
     }
     .header-nav h1{
+        padding-top: var(--padding-1);
         font-size: 1.3rem;
     }
     .header-nav button{
-        font-size: 0.7rem;
+        padding-top: var(--padding-1);
+        font-size: 0.9rem;
     }
     .navigation-list{
-        flex-direction: column;
-        justify-content: start;
-        align-items: end;
+        justify-content: center;
+        align-items: center;
     }
     main{
         /* border: purple 3px solid; */
         width: 100vw;
         padding: 0;
+    }
+    .drop-user{
+        display: none;
+    }
+    .btn-profile{
+        gap: 0;
     }
 /* ================================  <700-SIDEBAR ================================  */
     #sidebar-toggle{
@@ -2865,11 +2889,11 @@ input[type="password"]::-ms-clear {
         padding-top: var(--padding-half);
     }
     .rb-footer .rb-export .input-group{
-        width: 70%;
+        width: 50%;
     }
     .rb-footer .pagination,
-    .rb-footer .form-select{
-        font-size: 0.9rem;
+    .rb-footer .btn-excel{
+        font-size: 0.8rem;
     }
     /* ================================  <700-POPALERT ================================  */
     .indiv-detail span,
@@ -2881,7 +2905,7 @@ input[type="password"]::-ms-clear {
     .indiv-summary div{
         font-size: 1rem;
     }
-    
+    /* ================================  <700-INCIDENT-SUMMARY ================================  */
     #preview-incident-summary .mh-left,
     #latest-detection .mh-left{
         /* border: var(--color-secondary) 1px solid; */

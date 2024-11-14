@@ -32,7 +32,7 @@
                         <span class="icon">
                             <i class="bi bi-person-circle"></i>
                         </span>
-                        {{ user.name }}
+                        <div class="drop-user">{{ user.name }}</div>
                     </button>
                     <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
                         <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
@@ -150,12 +150,17 @@
                 <div class="rb-footer">
                     <div class="rb-group">
                         <div class="rb-export">
-                            <div class="input-group mb-3">
+                            <!-- <div class="input-group mb-3">
                                 <span class="input-group-text" id="export-icon" onclick="handleExport()"><i class="bi bi-file-earmark-arrow-down"></i></span>
                                 <select class="form-select" id="exportSelect" aria-label="Default select example">
                                     <option value="1">Export to Excel</option>
                                   </select>
-                            </div>
+                            </div> -->
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="export-icon"><i class="bi bi-file-earmark-arrow-down"></i>
+                                </span>
+                                <button class="btn btn-excel" id="exportButton"  onclick="handleExport()">Export to Excel</button>
+                            </div>          
                             <div id="noDataMessage" style="display: none; text-align: center; color: red;">No data available</div>
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
@@ -202,11 +207,8 @@
 
 <script>
     function handleExport() {
-    const selectedOption = document.getElementById("exportSelect").value;
-    
-    if (selectedOption === "1") {
-        window.location.href = '/export-initial-report/';  // Change to the URL of your Django view
-    }
+    // Redirect to the export URL directly since there's only one option
+    window.location.href = '/export-initial-report/';  // Change to the URL of your Django view
 }
 
     document.addEventListener('DOMContentLoaded', function() {

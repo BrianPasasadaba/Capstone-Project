@@ -9,6 +9,7 @@ psycopg2 = "*"
 pillow = "*"
 django-active-link = "*"
 python-dotenv = "*"
+openpyxl = "*"
 
 [dev-packages]
 
