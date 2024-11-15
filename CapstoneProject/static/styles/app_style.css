@@ -390,7 +390,7 @@ input[type="password"]::-ms-clear {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 10050;
+    z-index: 3;
   }
   .toast{
     position: relative;
