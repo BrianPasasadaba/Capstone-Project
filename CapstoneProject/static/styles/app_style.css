@@ -2436,12 +2436,34 @@ input[type="password"]::-ms-clear {
     padding-right: var(--padding-half);
 }
 
-#report-preview-modal .edit-form i{
-    color: var(--color-secondary);
-    font-size: 25px;
-    padding: var(--padding-half);
+#report-preview-modal .btn-edit{
+    border-radius: var(--border-radius-input);
+    width: 85px;
+    background-color: var(--color-secondary);
     margin-left: var(--margin-half);
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--color-white);
+    border: var(--border-input);
+    transition: var(--tran-03);
+}
+
+#report-preview-modal .btn-edit:hover{
+    box-shadow: var(--box-shadow);
+    background-color: var(--color-tertiary);
+    
+}
+
+#report-preview-modal .btn-edit:focus{
+    box-shadow: var(--box-shadow-min);
+    
+}
+
+#report-preview-modal .edit-form i{
+    color: var(--color-white);
+    font-size: 15px;
     cursor: pointer;
+    margin-right: var(--margin-half);
 }
 
 
@@ -2993,6 +3015,11 @@ input[type="password"]::-ms-clear {
     #icon-back{
         font-size: 2rem;
         color: #ED7027;
+    }
+
+    #report-preview-modal .btn-edit{
+        width: 75px;
+        font-size: 0.8rem;
     }
     /* ================================  <700-POPALERT ================================  */
     .indiv-detail span,
