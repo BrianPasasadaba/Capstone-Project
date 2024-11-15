@@ -1863,12 +1863,18 @@ input[type="password"]::-ms-clear {
     width:100%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     color: var(--color-secondary);
 }
 
 .creports-header h1{
     font-weight: 500;
+}
+
+#icon-back{
+    font-size: 2.5rem;
+    color: #ED7027;
 }
 
 .creports-body{
@@ -2853,8 +2859,7 @@ input[type="password"]::-ms-clear {
     }
     
     .accounts-header,
-    .reports-header,
-    .creports-header{
+    .reports-header{
         padding-top: var(--padding-half);
         align-items: center;
         justify-content: center;
@@ -2983,6 +2988,11 @@ input[type="password"]::-ms-clear {
     .rb-footer .pagination,
     .rb-footer .btn-excel{
         font-size: 0.8rem;
+    }
+
+    #icon-back{
+        font-size: 2rem;
+        color: #ED7027;
     }
     /* ================================  <700-POPALERT ================================  */
     .indiv-detail span,

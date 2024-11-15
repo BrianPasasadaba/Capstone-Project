@@ -1,5 +1,6 @@
 {% extends "res_sidebar.html" %}
 {% load static %}
+{% load active_link_tags %}
 {% block title %} True the Fire {% endblock %}
 
 {% block content %}
@@ -47,7 +48,15 @@
     <div class="mn-content-area">
         <div class="creports-box">
             <div class="creports-header">
+                <div class="cback-btn">
+                    <a class="back-link {% active_link 'reports' %}" href="{% url 'reports' %}">
+                        <div class="back-con">
+                                <i id="icon-back" class="bi bi-arrow-left"></i>
+                        </div>
+                    </a>
+                </div>
                 <h1>Create a Report</h1>
+                <div></div>
             </div>
             <div class="creports-body">
                 <form action="{% url 'create_reports' %}" method="POST" enctype="multipart/form-data" id="create-report-form">
