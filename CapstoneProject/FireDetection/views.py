@@ -40,6 +40,10 @@ from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 
 
 def export_initial_report(request):
+    button_value = request.GET.get('value', None)
+
+    print("Button value:", button_value)
+
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Initial Report Data"
