@@ -222,18 +222,24 @@ def register_view(request):
         name = request.POST.get('name')
         email = request.POST.get('email')
         role = request.POST.get('role')
-        
-        if not name or not email or not role:
+        contact_number = request.POST.get('contact_number')  
+
+        if not all([name, email, role, contact_number]):
             messages.error(request, 'All fields are required.')
         else:
             try:
+                # Validate the contact number format (optional)
+                if not contact_number.isdigit() or len(contact_number) not in [10, 11]:
+                    raise ValidationError("Contact number must be 10-11 digits.")
+
                 generated_password = generate_random_password()
 
                 new_user = CustomUser.objects.create_user(
                     name=name,
                     email=email,
                     role=role,
-                    password=generated_password  
+                    contact_number=contact_number,
+                    password=generated_password
                 )
                 
                 send_mail(
@@ -245,6 +251,8 @@ def register_view(request):
                 )
 
                 messages.success(request, 'Account has been added successfully, and the password has been sent to the user\'s email.')
+            except ValidationError as e:
+                messages.error(request, f'Validation error: {e.message}')
             except Exception as e:
                 messages.error(request, f'Error adding account: {str(e)}')
 

@@ -83,7 +83,7 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    
+
     role = models.CharField(
         max_length=30,
         choices=[('Admin', 'Admin'), ('Radio Operator', 'Radio Operator'), ('Responder', 'Responder')],
@@ -92,9 +92,12 @@ class CustomUser(AbstractUser):
     name = models.CharField(max_length=100, blank=True)
     verified = models.BooleanField(default=False)
 
+    contact_number = models.CharField(max_length=15, null=True, blank=True)  
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []  
 
     objects = CustomUserManager()  
+
     def __str__(self):
         return self.email
