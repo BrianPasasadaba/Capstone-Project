@@ -1,12 +1,3 @@
-// Input validation for alphabetic characters only
-document.getElementById('crinvolved-search').addEventListener('input', function(e) {
-    const regex = /^[a-zA-Z\s]*$/;
-    if (!regex.test(e.target.value)) {
-        e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
-    }
-});
-
-// Dropdown search functionality
 document.addEventListener('DOMContentLoaded', function() {
     const options = [
         "Assembly", "Educational", "Day Care", "Health Care", "Residential Board and Care",
@@ -20,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const hiddenInput = document.getElementById('crinvolved');
     const suggestionsBox = document.getElementById('crinvolved-options');
 
+    // Show suggestions while typing
     searchInput.addEventListener('input', function() {
         const query = searchInput.value.toLowerCase();
         suggestionsBox.innerHTML = ''; // Clear previous results
@@ -36,17 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Handle click to select the item
                     item.addEventListener('click', () => {
-                        // Remove 'selected' class from previous selection
-                        document.querySelectorAll('.dropdown-item').forEach(el => el.classList.remove('selected'));
+                        searchInput.value = option; // Set input to selected suggestion
+                        hiddenInput.value = option; // Update hidden input
                         
-                        // Add 'selected' class to the clicked item
-                        item.classList.add('selected');
-                        
-                        // Set the selected value in the input fields
-                        searchInput.value = option;
-                        hiddenInput.value = option;
-                        
-                        // Clear dropdown after selection
+                        // Hide dropdown after selection
                         suggestionsBox.innerHTML = '';
                         suggestionsBox.style.display = 'none';
                     });
@@ -58,6 +43,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             suggestionsBox.style.display = 'none'; // Hide if query is empty
         }
+    });
+
+    // Update hidden input on blur (use current text if no selection is made)
+    searchInput.addEventListener('blur', function() {
+        setTimeout(() => {
+            hiddenInput.value = searchInput.value.trim();
+            suggestionsBox.style.display = 'none'; // Hide dropdown
+        }, 200); // Timeout ensures click on suggestion works before blur
     });
 
     // Close dropdown if clicked outside
