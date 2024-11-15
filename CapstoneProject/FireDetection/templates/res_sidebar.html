@@ -87,29 +87,37 @@
 
 <!--TOAST START-->
    <!-- Toast container -->
-   <div class="toast-container">
-    <!-- Toast 1 -->
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <strong class="me-auto">A Fire has been Detected!</strong>
-        <small class="text-muted">just now</small>
+<div class="toast-container">
+    <div class="toast" id="toast-1" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto">A Fire has been Detected!</strong>
+          <small class="text-muted">just now</small>
+        </div>
+        <div class="toast-body">
+          <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#pop-up-modal" data-bs-dismiss="toast" aria-label="Close">View Details <i class="bi bi-arrow-right-circle"></i></button>
+        </div>
       </div>
-      <div class="toast-body">
-        <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#pop-up-modal" data-bs-dismiss="toast" aria-label="Close">View Details <i class="bi bi-arrow-right-circle"></i></button>
+      
+      <div class="toast" id="toast-2" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto">A Fire has been Detected!</strong>
+          <small class="text-muted">2 seconds ago</small>
+        </div>
+        <div class="toast-body">
+          <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#pop-up-modal" data-bs-dismiss="toast" aria-label="Close">View Details <i class="bi bi-arrow-right-circle"></i></button>
+        </div>
       </div>
-    </div>
-
-    <!-- Toast 2 -->
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <strong class="me-auto">A Fire has been Detected!</strong>
-        <small class="text-muted">2 seconds ago</small>
+      
+      <div class="toast" id="toast-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto">A Fire has been Detected!</strong>
+          <small class="text-muted">3 seconds ago</small>
+        </div>
+        <div class="toast-body">
+          <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#pop-up-modal" data-bs-dismiss="toast" aria-label="Close">View Details <i class="bi bi-arrow-right-circle"></i></button>
+        </div>
       </div>
-      <div class="toast-body">
-        <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#pop-up-modal" data-bs-dismiss="toast" aria-label="Close">View Details <i class="bi bi-arrow-right-circle"></i></button>
-      </div>
-    </div>
-  </div>
+</div>
 
 
 <!--TOAST END-->
@@ -214,6 +222,7 @@
     </div>
 
     <!-- FOR SCRIPTS THAT NEED TO BE ADDED ON EVERY PAGE USING BASE, ADD CODE ABOVE THE SCRIPT BLOCK -->
+<!-- MODAL -->
     <script>
         $(document).ready(function() {
             $('#btn-dismiss').click(function() {
@@ -234,21 +243,21 @@
             });
         });
         </script>
+<!-- TOAST -->
         <script>
             // If you want to ensure the toast does not auto-dismiss, use this JavaScript to handle it explicitly.
-            document.addEventListener('DOMContentLoaded', function() {
-                var toastElements = document.querySelectorAll('.toast');
-                toastElements.forEach(function(toastElement) {
-                    var toast = new bootstrap.Toast(toastElement, {
-                        autohide: false  // Disable auto-hide
+            document.addEventListener('DOMContentLoaded', function () {
+                const toastElements = Array.from(document.querySelectorAll('.toast'));
+                toastElements.forEach(toastElement => {
+                    const toastInstance = new bootstrap.Toast(toastElement, {
+                        autohide: false // Disable auto-hide
                     });
-                    toast.show();  // Show toast
+                    toastInstance.show();
                 });
             });
-
-          </script>
+        </script>
+<!-- DESKTOP UPDATE -->
         <script>
-
             class DesktopUpdates {
                 constructor() {
                     this.eventSource = new EventSource('{% url "event-stream" %}');
