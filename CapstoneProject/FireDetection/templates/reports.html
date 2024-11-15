@@ -85,6 +85,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <th>Report</th>
                                 <th>Location</th>
                                 <th>Date</th>
                                 <th>Time</th>
@@ -94,7 +95,7 @@
                         
                         <tbody id="reportTable">
                             {% for report in reports %}
-                            <tr 
+                            <tr
                                 data-report-id="{{ report.id }}"
                                 data-location="{{ report.where }}" 
                                 data-date="{{ report.date_reported|date:'Y-m-d' }}"
@@ -127,7 +128,7 @@
                                 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#report-preview-modal">
-                                
+                                <td id="report-case">FIR-0001</td>
                                 <td>{{ report.where }}</td>
                                 <td>{{ report.date_reported|date:"m/d/Y" }}</td>
                                 <td>{{ report.time_reported|time:"h:i A" }}</td>
