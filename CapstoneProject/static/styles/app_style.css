@@ -612,13 +612,19 @@ aside{
     color: var(--color-white);
 }
 
+/* ================================  LOGOUT ================================  */
+
+
 #logout-modal .modal-header,
-#logout-modal .modal-footer{
+#logout-modal .modal-footer,
+#unsaved-warning-modal  .modal-header,
+#unsaved-warning-modal .modal-footer{
     border-bottom: none;
     border-top: none;
 }
 
-#logout-modal .modal-dialog{
+#logout-modal .modal-dialog,
+#unsaved-warning-modal .modal-dialog{
     margin-top: 0;
     margin-bottom: 0;
     /* border: #ED7027 1px solid; */
@@ -630,7 +636,8 @@ aside{
     align-items: center;
 }
 
-#logout-modal .modal-content{
+#logout-modal .modal-content,
+#unsaved-warning-modal .modal-content{
     height: auto;
 }
 
@@ -2475,6 +2482,78 @@ input[type="password"]::-ms-clear {
     width: 100%;
     height: auto;
     border-radius: var(--border-radius-button-half);
+}
+
+/* ================================  MODAL UNSAVED ================================  */
+
+#unsaved-warning-modal .warn-logo{
+    display: flex;
+    /* border: #ED7027 1px solid; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+#unsaved-warning-modal .warn-logo i{
+    /* border: #ED7027 1px solid; */
+    font-size: 120px;
+    color: var(--color-secondary);
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    padding-top: var(--padding-1);
+    padding-bottom: var(--padding-half);
+    line-height: 1; /* Adjust line-height to minimize spacing */
+}
+
+#unsaved-warning-modal .warn-logo h3{
+    text-align: center; /* Centers the text horizontally */
+    margin: 0; /* Optional: to remove default margins */
+    margin-top: var(--margin-half);
+    color: var(--color-primary);
+}
+
+#unsaved-warning-modal .warn-logo h3 span{
+    color: red;
+    font-weight: 600;
+}
+
+#unsaved-warning-modal .warn-logo h5{
+    margin-top: var(--margin-half);
+    color: var(--color-tertiary);
+    font-size: 1rem;
+    text-align: center;
+}
+
+#unsaved-warning-modal.modal-footer{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--margin-1);
+    padding: var(--padding-1);
+}
+#unsaved-warning-modal .modal-footer .mf-button{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-2);
+}
+
+#unsaved-warning-modal .modal-footer .btn-leave{
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+#unsaved-warning-modal .modal-footer .btn-stay{
+    background-color: var(--color-default);
+    color: var(--color-primary);
+    font-weight: 600;
+    border: none;
 }
 
 /* ============================== ACCOUNTS MODAL============================== */
