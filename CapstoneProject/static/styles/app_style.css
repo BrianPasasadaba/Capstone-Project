@@ -1809,8 +1809,8 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-export .input-group-text{
-    border: var(--color-secondary) 1px solid;
-    background-color: var(--color-secondary);
+    border: var(--color-primary) 1px solid;
+    background-color: var(--color-primary);
 }
 
 .rb-export .input-group-text i{
@@ -1941,11 +1941,10 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-tertiary);
     border: var(--color-tertiary) 1px solid;
     color: var(--color-primary);
-    border-radius: var(--border-radius-button-half);
+    border-radius: var(--border-radius-input);
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: var(--tran-03);
-    height: 90%;
     margin-bottom: var(--margin-half);
     box-shadow: var(--box-shadow);
 }
@@ -2538,6 +2537,22 @@ input[type="password"]::-ms-clear {
     height: auto;
     padding-right: var(--padding-half);
 }
+
+#report-preview-modal .mf-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: var(--padding-half);
+}
+
+#report-preview-modal .mf-button .btn{
+    width: auto;
+    font-size: 1.05rem;
+    border-radius: var(--border-radius-input);
+    padding: 5px 5px;
+}
+
 
 #report-preview-modal .btn-edit{
     border-radius: var(--border-radius-input);
