@@ -38,6 +38,22 @@ import time
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 
+def remove_accounts(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        emails = data.get('emails', [])
+        
+        if not emails:
+            return JsonResponse({'success': False, 'message': 'No accounts selected.'}, status=400)
+
+        deleted_count, _ = CustomUser.objects.filter(email__in=emails).delete()
+
+        if deleted_count > 0:
+            return JsonResponse({'success': True, 'message': 'Selected accounts have been removed successfully.'})
+        else:
+            return JsonResponse({'success': False, 'message': 'No accounts were found to remove.'}, status=404)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
 
 def export_initial_report(request):
     button_value = request.GET.get('value', None)
@@ -228,7 +244,6 @@ def register_view(request):
             messages.error(request, 'All fields are required.')
         else:
             try:
-                # Validate the contact number format (optional)
                 if not contact_number.isdigit() or len(contact_number) not in [10, 11]:
                     raise ValidationError("Contact number must be 10-11 digits.")
 
@@ -320,7 +335,7 @@ def logout_view(request):
 
 @login_required
 def analytics_view(request):
-    context = {}  # Make sure context is defined
+    context = {}  
     return render(request, "analytics.html", context)
 
 @login_required
@@ -470,7 +485,6 @@ def faq_view(request):
 
 def update_report(request, report_id):
     if request.method == 'POST':
-        # Gather data from POST request, allowing fields to be optional
         location = request.POST.get('where')
         team = request.POST.get('team')
         date_reported = request.POST.get('date') or None
@@ -500,16 +514,13 @@ def update_report(request, report_id):
         sender_contact_number = request.POST.get('sender-num')
         proof = request.FILES.get('proof')  
 
-        # Fetch the report to be updated
         report = get_object_or_404(InitialReport, id=report_id)
 
-        # Format datetime fields only if both date and time are provided
         datetime_of_report = f"{date_reported} {time_reported}" if date_reported and time_reported else None
         datetime_of_arrival = f"{date_reported} {time_of_arrival}" if date_reported and time_of_arrival else None
         datetime_of_fire_under_control = f"{date_reported} {time_of_fire_under_control}" if date_reported and time_of_fire_under_control else None
         datetime_of_fire_out = f"{date_of_fire_out} {time_of_fire_out}" if date_of_fire_out and time_of_fire_out else None
 
-        # Update the report fields
         report.where = location
         report.team = team
         report.date_reported = date_reported
@@ -539,28 +550,23 @@ def update_report(request, report_id):
         report.sender_contact_number = sender_contact_number
 
         if proof:
-            report.proof = proof  # Update proof if a new file is uploaded
+            report.proof = proof
 
-        # Save the updated report to the database
         report.save()
 
-        # Add success message and introduce a 2-second delay
         messages.success(request, 'Report has been updated successfully.')
         time.sleep(2)
 
-        return redirect('reports')  # Redirect to reports page
+        return redirect('reports')  
 
-    # If not a POST request, render the report editing page
     return render(request, 'reports.html')
         
-@csrf_exempt  # Only if your desktop app doesn't support CSRF
+@csrf_exempt
 def desktop_notification(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            # Store the update in cache
             cache.set('latest_update', data, timeout=None)
-            # Store timestamp to track new updates
             cache.set('last_update_time', time.time(), timeout=None)
             return JsonResponse({"status": "success"})
         except Exception as e:
@@ -572,16 +578,14 @@ def event_stream(request):
         last_check = time.time()
         
         while True:
-            # Check if there's a new update
             current_time = cache.get('last_update_time')
             if current_time and current_time > last_check:
                 data = cache.get('latest_update')
                 if data:
-                    # Send the update to the client
                     yield f"data: {json.dumps(data)}\n\n"
                     last_check = current_time
             
-            time.sleep(1)  # Poll every second
+            time.sleep(1)
 
     response = StreamingHttpResponse(event_generator(), content_type='text/event-stream')
     response['Cache-Control'] = 'no-cache'

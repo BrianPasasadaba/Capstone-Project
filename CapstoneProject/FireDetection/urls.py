@@ -22,7 +22,8 @@ urlpatterns = [
     path('update-report/<int:report_id>/', views.update_report, name='update_report'),
     path('api/desktop-notification/', views.desktop_notification, name='desktop-notification'),
     path('api/events/', views.event_stream, name='event-stream'),
-     path('export-initial-report/', export_initial_report, name='export_initial_report'),
+    path('export-initial-report/', export_initial_report, name='export_initial_report'),
+    path('remove-accounts/', views.remove_accounts, name='remove_accounts'),
 
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

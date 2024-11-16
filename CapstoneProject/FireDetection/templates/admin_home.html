@@ -89,7 +89,7 @@
                             <tr>
                                 <td>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-{{ account.id }}">
+                                        <input class="form-check-input" type="checkbox" value="{{ account.email }}" id="flexCheckDefault-{{ account.id }}">
                                         <label class="form-check-label" for="flexCheckDefault-{{ account.id }}"></label>
                                     </div>
                                 </td>
@@ -120,7 +120,7 @@
                 <div class="ab-buttons">
                     <div class="ab-add">
                         <button type="button" class="btn btn-lg btn" data-bs-toggle="modal" data-bs-target="#add-account-modal">Add</button>
-                        <button type="button" class="btn btn-lg btn" data-bs-toggle="modal" data-bs-target="#remove-account-modal">Remove</button>
+                        <button type="button" class="btn btn-lg btn" data-bs-toggle="modal" data-bs-target="#remove-account-modal" id="remveButton">Remove</button>
                     </div>
 
                     <div class="ab-pagination">
@@ -164,6 +164,71 @@
 <script src="{% static 'js/pagination.js' %}"></script>
 
 
+<script>
+    let selectedEmails = []; 
+    document.getElementById('remveButton').addEventListener('click', function () {
+    selectedEmails = []; 
+    document.querySelectorAll('#accountTable .form-check-input:checked').forEach((checkbox) => {
+        selectedEmails.push(checkbox.value);
+    });
+
+    if (selectedEmails.length === 0) {
+        alert('Please select at least one account to remove.');
+        return;
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('remove-account-modal'));
+    modal.show();
+});
+
+document.getElementById('confirmRemoveButton').addEventListener('click', function () {
+    if (selectedEmails.length === 0) {
+        return;
+    }
+
+    fetch('/remove-accounts/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken()
+        },
+        body: JSON.stringify({ emails: selectedEmails })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
+                modal.hide();
+                selectedEmails.forEach(email => {
+                    const row = [...document.querySelectorAll('#accountTable tr')].find(tr =>
+                        tr.querySelector('td:nth-child(4)')?.textContent.trim() === email
+                    );
+                    if (row) row.remove();
+                });
+
+                window.location.href = '/admin_home/'; 
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while removing accounts.');
+        });
+});
+
+function getCsrfToken() {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'csrftoken') {
+            return value;
+        }
+    }
+    return null;
+}
+
+</script>
 
 
 
