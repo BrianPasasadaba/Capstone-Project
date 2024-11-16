@@ -2454,18 +2454,6 @@ input[type="password"]::-ms-clear {
     
 }
 
-#report-preview-modal .btn-edit:focus{
-    box-shadow: var(--box-shadow-min);
-    
-}
-
-#report-preview-modal .edit-form i{
-    color: var(--color-white);
-    font-size: 15px;
-    cursor: pointer;
-    margin-right: var(--margin-half);
-}
-
 
 #report-preview-form input:disabled,
 #report-preview-form input:disabled,
