@@ -185,11 +185,20 @@
             </div>
         </div>
     </div>
+
+
+      <!-- Modal -->
+      
+      <!-- Script to Control Modal -->
+
+
 </main>
 {% include "modal_create_report.html" %}
 {% include "modal_preview_report.html" %}
 {% include "modal_change_password.html" %}
 {% include "modal_forgot_success.html" %}
+{% include "modal_unsaved_warning.html" %}
+{% include "modal_remove_account.html" %}
 {% endblock %}
 
 {% block scripts %}
@@ -202,89 +211,144 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/preview.js' %}"></script>
 <script src="{% static 'js/pagination.js' %}"></script>
+<script src="{% static 'js/editing.js' %}"></script>
 
 
 <script>
 
-    
-    function handleExport() {
-    // Redirect to the export URL directly since there's only one option
-    window.location.href = '/export-initial-report/';  // Change to the URL of your Django view
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    const editButton = document.querySelector('.edit-form .btn-edit');
-    const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
-    const resolveButton = document.querySelector('.resolve-button');
-    const form = document.getElementById('report-preview-form');
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const statusText = document.getElementById('status-text-{{ report.id }}');
-
-    function checkStatusAndDisableEdit() {
-        const isCaseClosed = statusText && statusText.textContent.trim() === 'Case Closed';
-
-        if (isCaseClosed) {
-            editButton.style.pointerEvents = 'none';
-            editButton.style.opacity = '0.5';
-            resolveButton.disabled = true;
-            resolveButton.style.opacity = '0.5';
-
+        const editButton = document.querySelector('.edit-form .btn-edit');
+        const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
+        const resolveButton = document.querySelector('.resolve-button');
+        const saveButton = document.querySelector('.save-button'); 
+        const form = document.getElementById('report-preview-form');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const statusText = document.getElementById('status-text-{{ report.id }}');
+        const previewModal = document.getElementById('previewModal'); 
+        const closeButton = document.getElementById('close-button'); 
+    
+        function checkStatusAndDisableEdit() {
+            const isCaseClosed = statusText && statusText.textContent.trim() === 'Case Closed';
+    
+            if (isCaseClosed) {
+                editButton.style.pointerEvents = 'none';
+                editButton.style.opacity = '0.5';
+                resolveButton.disabled = true;
+                resolveButton.style.opacity = '0.5';
+    
+                formInputs.forEach(input => {
+                    input.disabled = true;
+                    input.readOnly = true;
+                });
+            }
+        }
+        
+    
+        checkStatusAndDisableEdit();
+    
+        editButton.addEventListener('click', function() {
+            if (!resolveButton.disabled) {
+                formInputs.forEach(input => {
+                    input.disabled = !input.disabled;
+                    input.readOnly = !input.readOnly;
+                });
+                const icon = editButton.querySelector('i');
+                icon.style.color = formInputs[0].disabled ? '' : 'blue';
+                saveButton.style.display = formInputs[0].disabled ? 'none' : 'inline-block'; 
+            }
+        });
+    
+        saveButton.addEventListener('click', function(event) {
+            event.preventDefault(); 
+    
+            const formData = new FormData(form);
+            formData.append('csrfmiddlewaretoken', csrfToken);
+    
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    if (data.new_status === 'Case Closed') {
+                        statusText.textContent = 'Case Closed';
+                        checkStatusAndDisableEdit();
+                    }
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    
+        resolveButton.addEventListener('click', function(event) {
+            event.preventDefault();
+    
+            const formData = new FormData(form);
+            formData.append('csrfmiddlewaretoken', csrfToken);
+    
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    if (data.new_status === 'Case Closed') {
+                        statusText.textContent = 'Case Closed';
+                        checkStatusAndDisableEdit(); 
+                    }
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    
+        function resetFormState() {
+            saveButton.style.display = 'none';
             formInputs.forEach(input => {
                 input.disabled = true;
                 input.readOnly = true;
             });
-        }
-    }
-
-    checkStatusAndDisableEdit();
-
-    editButton.addEventListener('click', function() {
-        if (!resolveButton.disabled) {
-            formInputs.forEach(input => {
-                input.disabled = !input.disabled;
-                input.readOnly = !input.readOnly;
-            });
+    
             const icon = editButton.querySelector('i');
-            icon.style.color = formInputs[0].disabled ? '' : 'blue';
-            resolveButton.textContent = formInputs[0].disabled ? 'Resolve' : 'Save';
+            icon.style.color = ''; 
+            editButton.style.pointerEvents = ''; 
+            editButton.style.opacity = ''; 
+            resolveButton.disabled = false; 
+            resolveButton.style.opacity = '1'; 
         }
-    });
-
-    resolveButton.addEventListener('click', function(event) {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-        formData.append('csrfmiddlewaretoken', csrfToken);
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': csrfToken
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert(data.message);
-                
-                if (data.new_status === 'Case Closed') {
-                    statusText.textContent = 'Case Closed';
-                    checkStatusAndDisableEdit();
-                }
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+    
+        closeButton.addEventListener('click', function() {
+            resetFormState();
+        });
+    
+        previewModal.addEventListener('hidden.bs.modal', function () {
+            resetFormState();
         });
     });
-});
-
 </script>
 
 

@@ -9,12 +9,14 @@
             <div class="modal-header">
                 <h3 class="modal-title" id="modal-title">Initial Report</h3>
                 <div class="edit-form">
-                    <button class="btn btn-edit" id="edit-button-{{ report.id }}" onclick="toggleEditButton({{ report.id }})">
+                    <button class="btn btn-edit" id="edit-button-{{ report.id }}">
                         <i class="bi bi-pencil-square" id="edit-icon-{{ report.id }}"></i>
                         <span id="edit-text-{{ report.id }}">Edit</span>
                     </button>
+                    
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" id="close-button" class="btn-close"  aria-label="Close"></button>
+                
             </div>
             <div class="modal-body">
                 <form  action="{% url 'update_report' report.id  %}" enctype="multipart/form-data" method="post" id="report-preview-form">
@@ -177,7 +179,7 @@
                             <button  type="submit" class="btn btn-lg px-4 resolve-button"  >
                                 Resolve
                             </button>
-                            <button  type="submit" class="btn btn-lg px-4 save-button"  >
+                            <button  type="submit" class="btn btn-lg px-4 save-button"  style="display: none;">
                                 Save Changes
                             </button>
                         </div>
@@ -189,29 +191,68 @@
 </div>
 {% endfor %}
 
-<script>
-    function toggleEditButton(reportId) {
-        var icon = document.getElementById('edit-icon-' + reportId);
-        var text = document.getElementById('edit-text-' + reportId);
-        var button = document.getElementById('edit-button-' + reportId);
 
-        // Hide the icon
+<script>
+    let isEditing = false; // Track if any report is being edited
+
+function toggleEditButton(reportId) {
+    const icon = document.getElementById('edit-icon-' + reportId);
+    const text = document.getElementById('edit-text-' + reportId);
+    const button = document.getElementById('edit-button-' + reportId);
+
+    if (!isEditing) {
         icon.style.display = 'none'; 
-        
-        // Change the button text to "Save the changes"
         text.textContent = 'Editing'; 
-        
-        // Disable the button
-        button.disabled = true; 
-        
-        // Adjust the button width to auto, font size to 0.9rem, background color to white, and border
-        button.style.width = 'auto'; // Make button width auto
-        button.style.fontSize = '0.8rem'; // Adjust font size
-        button.style.fontWeight = '500'; // Adjust font size
+        button.disabled = true;
+        button.style.width = 'auto';
+        button.style.fontSize = '0.8rem';
+        button.style.fontWeight = '500';
         button.style.color = '#ED7027';
-        button.style.backgroundColor = 'white'; // Set background to white
-        button.style.border = '1px solid #ED7027'; // Set border to solid 1px with color #ED7027
+        button.style.backgroundColor = 'white';
+        button.style.border = '1px solid #ED7027';
+
+        isEditing = true; 
     }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const reportPreviewModal = document.getElementById('report-preview-modal'); 
+
+    reportPreviewModal.addEventListener('hidden.bs.modal', () => {
+        if (isEditing) {
+            // Reset all Edit buttons to their default state
+            const editButtons = document.querySelectorAll('[id^="edit-button-"]');
+            const editIcons = document.querySelectorAll('[id^="edit-icon-"]');
+            const editTexts = document.querySelectorAll('[id^="edit-text-"]');
+
+            editButtons.forEach((button, index) => {
+                button.disabled = false;
+                button.style.width = '';
+                button.style.fontSize = '';
+                button.style.fontWeight = '';
+                button.style.color = '';
+                button.style.backgroundColor = '';
+                button.style.border = '';
+
+                const icon = editIcons[index];
+                if (icon) icon.style.display = '';
+
+                const text = editTexts[index];
+                if (text) text.textContent = 'Edit'; 
+            });
+
+            isEditing = false; 
+        }
+    });
+
+    const editButtons = document.querySelectorAll('[id^="edit-button-"]');
+    editButtons.forEach(button => {
+        const reportId = button.id.split('-').pop(); // Extract the report ID from the button ID
+        button.addEventListener('click', () => toggleEditButton(reportId));
+    });
+});
+
+
 </script>
 
 

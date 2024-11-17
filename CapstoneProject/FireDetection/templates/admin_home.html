@@ -165,8 +165,9 @@
 
 
 <script>
-    let selectedEmails = []; 
-    document.getElementById('remveButton').addEventListener('click', function () {
+    let selectedEmails = [];
+
+document.getElementById('remveButton').addEventListener('click', function () {
     selectedEmails = []; 
     document.querySelectorAll('#accountTable .form-check-input:checked').forEach((checkbox) => {
         selectedEmails.push(checkbox.value);
@@ -190,7 +191,7 @@ document.getElementById('confirmRemoveButton').addEventListener('click', functio
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCsrfToken()
+            'X-CSRFToken': getCsrfToken() // Fetch CSRF token
         },
         body: JSON.stringify({ emails: selectedEmails })
     })
@@ -199,6 +200,7 @@ document.getElementById('confirmRemoveButton').addEventListener('click', functio
             if (data.success) {
                 const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
                 modal.hide();
+
                 selectedEmails.forEach(email => {
                     const row = [...document.querySelectorAll('#accountTable tr')].find(tr =>
                         tr.querySelector('td:nth-child(4)')?.textContent.trim() === email
@@ -206,7 +208,7 @@ document.getElementById('confirmRemoveButton').addEventListener('click', functio
                     if (row) row.remove();
                 });
 
-                window.location.href = '/admin_home/'; 
+                window.location.href = '/admin_home/';
             } else {
                 alert(data.message);
             }
@@ -215,6 +217,10 @@ document.getElementById('confirmRemoveButton').addEventListener('click', functio
             console.error('Error:', error);
             alert('An error occurred while removing accounts.');
         });
+});
+
+document.querySelector('.btn-cancel').addEventListener('click', function () {
+    window.location.href = '/admin_home/'; 
 });
 
 function getCsrfToken() {
