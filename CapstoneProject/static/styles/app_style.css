@@ -1596,7 +1596,7 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-header .btn:hover{
-    background-color: var(--color-secondary);
+    background-color: var(--color-hover);
     border: var(--border-input);
     font-weight: 300;
 }
@@ -2051,7 +2051,7 @@ input[type="password"]::-ms-clear {
 }
 
 .ab-header .btn:hover{
-    background-color: var(--color-secondary);
+    background-color: var(--color-hover);
     border: var(--border-input);
     font-weight: 300;
 }
