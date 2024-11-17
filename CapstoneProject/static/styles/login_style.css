@@ -414,3 +414,18 @@ input:not(:placeholder-shown) + .input-label {
         margin-top: 3.5rem;
     }
 }
+
+@media only screen and (max-width: 700px) {
+    #reset-button{
+        font-size: 0.8rem;
+        width: auto;
+        padding: 5px 5px;
+    }
+    #icon-back{
+        font-size: 1.5rem;
+    }
+    .forgot-area {
+        border-radius: 8px;
+        height: auto;
+    }
+}
