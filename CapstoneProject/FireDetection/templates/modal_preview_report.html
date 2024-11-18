@@ -13,7 +13,6 @@
                         <i class="bi bi-pencil-square" id="edit-icon-{{ report.id }}"></i>
                         <span id="edit-text-{{ report.id }}">Edit</span>
                     </button>
-                    
                 </div>
                 <button type="button" id="close-button" class="btn-close"  aria-label="Close"></button>
                 
@@ -193,34 +192,11 @@
 
 
 <script>
-    let isEditing = false; // Track if any report is being edited
-
-function toggleEditButton(reportId) {
-    const icon = document.getElementById('edit-icon-' + reportId);
-    const text = document.getElementById('edit-text-' + reportId);
-    const button = document.getElementById('edit-button-' + reportId);
-
-    if (!isEditing) {
-        icon.style.display = 'none'; 
-        text.textContent = 'Editing'; 
-        button.disabled = true;
-        button.style.width = 'auto';
-        button.style.fontSize = '0.8rem';
-        button.style.fontWeight = '500';
-        button.style.color = '#ED7027';
-        button.style.backgroundColor = 'white';
-        button.style.border = '1px solid #ED7027';
-
-        isEditing = true; 
-    }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     const reportPreviewModal = document.getElementById('report-preview-modal'); 
 
     reportPreviewModal.addEventListener('hidden.bs.modal', () => {
         if (isEditing) {
-            // Reset all Edit buttons to their default state
             const editButtons = document.querySelectorAll('[id^="edit-button-"]');
             const editIcons = document.querySelectorAll('[id^="edit-icon-"]');
             const editTexts = document.querySelectorAll('[id^="edit-text-"]');
@@ -247,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const editButtons = document.querySelectorAll('[id^="edit-button-"]');
     editButtons.forEach(button => {
-        const reportId = button.id.split('-').pop(); // Extract the report ID from the button ID
+        const reportId = button.id.split('-').pop(); 
         button.addEventListener('click', () => toggleEditButton(reportId));
     });
 });

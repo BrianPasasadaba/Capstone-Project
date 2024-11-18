@@ -90,21 +90,25 @@
                             <tr>
                                 <td>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="{{ account.email }}" id="flexCheckDefault-{{ account.id }}">
+                                        <input 
+                                            class="form-check-input account-checkbox" 
+                                            type="checkbox" 
+                                            value="{{ account.email }}" 
+                                            id="flexCheckDefault-{{ account.id }}">
                                         <label class="form-check-label" for="flexCheckDefault-{{ account.id }}"></label>
                                     </div>
                                 </td>
                                 <td>{{ account.name }}</td>
                                 <td>{{ account.get_role_display }}</td>
-                                <td>09123456789</td>
+                                <td>{{ account.contact_number }}</td>
                                 <td>{{ account.email }}</td>
                                 <td>
                                     <div>
                                         <h6>
                                             {% if account.verified %}
-                                                <span>Verified</span>
+                                            <span>Verified</span>
                                             {% else %}
-                                                <span>Unverified</span>
+                                            <span>Unverified</span>
                                             {% endif %}
                                         </h6>
                                     </div>
@@ -112,17 +116,24 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="5">No accounts available.</td>
+                                <td colspan="6">No accounts available.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
-                    </table>                    
+                    </table>         
 
                 </div>
                 <div class="ab-buttons">
                     <div class="ab-add">
                         <button type="button" class="btn btn-lg btn" data-bs-toggle="modal" data-bs-target="#add-account-modal">Add</button>
-                        <button type="button" class="btn btn-lg btn" data-bs-toggle="modal" data-bs-target="#remove-account-modal" id="remveButton">Remove</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-lg btn" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#remove-account-modal" 
+                            id="removeButton"  disabled>
+                            Remove
+                        </button>
                     </div>
 
                     <div class="ab-pagination">
@@ -167,78 +178,90 @@
 
 
 <script>
-    let selectedEmails = [];
+    let selectedEmails = []; 
 
-// Disable Remove button initially
-const removeButton = document.getElementById('remveButton');
+    document.addEventListener("DOMContentLoaded", () => {
+    const removeButton = document.getElementById("removeButton");
+    const checkboxes = document.querySelectorAll(".account-checkbox");
+
     removeButton.disabled = true;
+    function toggleRemoveButton() {
+        const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        removeButton.disabled = !anyChecked;
+    }
 
-    // Event listener for checkbox state changes
-    const checkboxes = document.querySelectorAll('#accountTable .form-check-input');
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateRemoveButtonState);
+        checkbox.addEventListener("change", toggleRemoveButton);
     });
 
-    function updateRemoveButtonState() {
-        // Check if any checkbox is selected
-        const isAnyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-        removeButton.disabled = !isAnyChecked; // Disable button if none are checked
-    }
-
-    // Initial state update for the Remove button
-    updateRemoveButtonState();
-
-document.getElementById('confirmRemoveButton').addEventListener('click', function () {
-    if (selectedEmails.length === 0) {
-        return;
-    }
-
-    fetch('/remove-accounts/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCsrfToken() // Fetch CSRF token
-        },
-        body: JSON.stringify({ emails: selectedEmails })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
-                modal.hide();
-
-                selectedEmails.forEach(email => {
-                    const row = [...document.querySelectorAll('#accountTable tr')].find(tr =>
-                        tr.querySelector('td:nth-child(4)')?.textContent.trim() === email
-                    );
-                    if (row) row.remove();
-                });
-
-                window.location.href = '/admin_home/';
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while removing accounts.');
+    removeButton.addEventListener("click", function () {
+        selectedEmails = []; 
+        document.querySelectorAll('#accountTable .form-check-input:checked').forEach((checkbox) => {
+            selectedEmails.push(checkbox.value);
         });
-});
 
-document.querySelector('.btn-cancel').addEventListener('click', function () {
-    window.location.href = '/admin_home/'; 
-});
-
-function getCsrfToken() {
-    const cookies = document.cookie.split(';');
-    for (const cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        if (name === 'csrftoken') {
-            return value;
+        if (selectedEmails.length === 0) {
+            alert('Please select at least one account to remove.');
+            return;
         }
+
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('remove-account-modal'));
+        modal.show();
+    });
+
+    document.getElementById('confirmRemoveButton').addEventListener("click", function () {
+        if (selectedEmails.length === 0) {
+            return;
+        }
+
+        fetch('/remove-accounts/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken() 
+            },
+            body: JSON.stringify({ emails: selectedEmails })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
+                    modal.hide();
+
+                    selectedEmails.forEach(email => {
+                        const row = [...document.querySelectorAll('#accountTable tr')].find(tr =>
+                            tr.querySelector('td:nth-child(4)')?.textContent.trim() === email
+                        );
+                        if (row) row.remove();
+                    });
+
+                    window.location.href = '/admin_home/';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while removing accounts.');
+            });
+    });
+
+    document.querySelector('.btn-cancel').addEventListener("click", function () {
+        window.location.href = '/admin_home/';
+    });
+
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (const cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'csrftoken') {
+                return value;
+            }
+        }
+        return null;
     }
-    return null;
-}
+});
+
 
 </script>
 

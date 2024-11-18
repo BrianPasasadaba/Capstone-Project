@@ -485,81 +485,45 @@ def faq_view(request):
 
 def update_report(request, report_id):
     if request.method == 'POST':
-        location = request.POST.get('where')
-        team = request.POST.get('team')
-        date_reported = request.POST.get('date') or None
-        time_reported = request.POST.get('detect') or None
-        involved = request.POST.get('involved')
-        owner = request.POST.get('owner')
-        alarm = request.POST.get('alarm')
-        alarm_declared_by = request.POST.get('alarm-dec')
-        time_of_arrival = request.POST.get('time-arrive') or None
-        time_of_fire_under_control = request.POST.get('time-under') or None
-        date_of_fire_under_control = request.POST.get('date-under') or None
-        fire_under_control_declared_by = request.POST.get('funder-dec')
-        time_of_fire_out = request.POST.get('time-out') or None
-        date_of_fire_out = request.POST.get('date-out') or None
-        fire_out_declared_by = request.POST.get('fout-dec')
-        estimated_damages = request.POST.get('damage', '0')
-        no_of_fatality = request.POST.get('fatality', 0)
-        no_of_injured = request.POST.get('injured', 0)
-        no_of_families_affected = request.POST.get('affected', 0)
-        no_of_establishments = request.POST.get('establishment', 1)
-        no_of_fire_trucks = request.POST.get('truck', 0)
-        ground_commander = request.POST.get('ground')
-        commander_contact_number = request.POST.get('ground-num')
-        safety_officer = request.POST.get('safety')
-        officer_contact_number = request.POST.get('safety-num')
-        name_of_sender = request.POST.get('sender')
-        sender_contact_number = request.POST.get('sender-num')
-        proof = request.FILES.get('proof')  
-
         report = get_object_or_404(InitialReport, id=report_id)
 
-        datetime_of_report = f"{date_reported} {time_reported}" if date_reported and time_reported else None
-        datetime_of_arrival = f"{date_reported} {time_of_arrival}" if date_reported and time_of_arrival else None
-        datetime_of_fire_under_control = f"{date_reported} {time_of_fire_under_control}" if date_reported and time_of_fire_under_control else None
-        datetime_of_fire_out = f"{date_of_fire_out} {time_of_fire_out}" if date_of_fire_out and time_of_fire_out else None
+        data = request.POST
+        report.where = data.get('where', report.where)
+        report.team = data.get('team', report.team)
+        report.date_reported = data.get('date', report.date_reported)
+        report.time_reported = f"{data.get('date', '')} {data.get('detect', '')}" or report.time_reported
+        report.involved = data.get('involved', report.involved)
+        report.name_of_owner = data.get('owner', report.name_of_owner)
+        report.alarm_status = data.get('alarm', report.alarm_status)
+        report.alarm_declared_by = data.get('alarm-dec', report.alarm_declared_by)
+        report.time_of_arrival = f"{data.get('date', '')} {data.get('time-arrive', '')}" or report.time_of_arrival
+        report.time_of_fire_under_control = f"{data.get('date', '')} {data.get('time-under', '')}" or report.time_of_fire_under_control
+        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
+        report.fire_under_control_declared_by = data.get('funder-dec', report.fire_under_control_declared_by)
+        report.time_of_fire_out = f"{data.get('date-out', '')} {data.get('time-out', '')}" or report.time_of_fire_out
+        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
+        report.fire_out_declared_by = data.get('fout-dec', report.fire_out_declared_by)
+        report.estimated_damages = data.get('damage', report.estimated_damages)
+        report.no_of_fatality = data.get('fatality', report.no_of_fatality)
+        report.no_of_injured = data.get('injured', report.no_of_injured)
+        report.no_of_families_affected = data.get('affected', report.no_of_families_affected)
+        report.no_of_establishments = data.get('establishment', report.no_of_establishments)
+        report.no_of_fire_trucks = data.get('truck', report.no_of_fire_trucks)
+        report.ground_commander = data.get('ground', report.ground_commander)
+        report.commander_contact_number = data.get('ground-num', report.commander_contact_number)
+        report.safety_officer = data.get('safety', report.safety_officer)
+        report.officer_contact_number = data.get('safety-num', report.officer_contact_number)
+        report.name_of_sender = data.get('sender', report.name_of_sender)
+        report.sender_contact_number = data.get('sender-num', report.sender_contact_number)
 
-        report.where = location
-        report.team = team
-        report.date_reported = date_reported
-        report.time_reported = datetime_of_report
-        report.involved = involved
-        report.name_of_owner = owner
-        report.alarm_status = alarm
-        report.alarm_declared_by = alarm_declared_by
-        report.time_of_arrival = datetime_of_arrival
-        report.time_of_fire_under_control = datetime_of_fire_under_control
-        report.date_of_fire_under_control = date_of_fire_under_control
-        report.fire_under_control_declared_by = fire_under_control_declared_by
-        report.time_of_fire_out = datetime_of_fire_out
-        report.date_of_fire_out = date_of_fire_out
-        report.fire_out_declared_by = fire_out_declared_by
-        report.estimated_damages = estimated_damages
-        report.no_of_fatality = no_of_fatality
-        report.no_of_injured = no_of_injured
-        report.no_of_families_affected = no_of_families_affected
-        report.no_of_establishments = no_of_establishments
-        report.no_of_fire_trucks = no_of_fire_trucks
-        report.ground_commander = ground_commander
-        report.commander_contact_number = commander_contact_number
-        report.safety_officer = safety_officer
-        report.officer_contact_number = officer_contact_number
-        report.name_of_sender = name_of_sender
-        report.sender_contact_number = sender_contact_number
-
+        proof = request.FILES.get('proof')
         if proof:
             report.proof = proof
 
         report.save()
+        return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})
 
-        messages.success(request, 'Report has been updated successfully.')
-        time.sleep(2)
-
-        return redirect('reports')  
-
-    return render(request, 'reports.html')
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
         
 @csrf_exempt
 def desktop_notification(request):
