@@ -169,20 +169,24 @@
 <script>
     let selectedEmails = [];
 
-document.getElementById('remveButton').addEventListener('click', function () {
-    selectedEmails = []; 
-    document.querySelectorAll('#accountTable .form-check-input:checked').forEach((checkbox) => {
-        selectedEmails.push(checkbox.value);
+// Disable Remove button initially
+const removeButton = document.getElementById('remveButton');
+    removeButton.disabled = true;
+
+    // Event listener for checkbox state changes
+    const checkboxes = document.querySelectorAll('#accountTable .form-check-input');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateRemoveButtonState);
     });
 
-    if (selectedEmails.length === 0) {
-        alert('Please select at least one account to remove.');
-        return;
+    function updateRemoveButtonState() {
+        // Check if any checkbox is selected
+        const isAnyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        removeButton.disabled = !isAnyChecked; // Disable button if none are checked
     }
 
-    const modal = new bootstrap.Modal(document.getElementById('remove-account-modal'));
-    modal.show();
-});
+    // Initial state update for the Remove button
+    updateRemoveButtonState();
 
 document.getElementById('confirmRemoveButton').addEventListener('click', function () {
     if (selectedEmails.length === 0) {
