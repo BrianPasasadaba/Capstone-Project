@@ -37,6 +37,117 @@ from django.core.validators import validate_integer
 import time
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
+from django.db.models import Count
+from django.db.models.functions import TruncMonth, TruncYear
+from django.utils.timezone import now
+from django.utils.timezone import localtime, now
+from django.db.models import Count, Func
+from django.db.models.functions import ExtractMonth
+from django.db.models import Sum
+from django.db.models import Count, Sum, Value
+from django.db.models.functions import ExtractMonth, Coalesce
+
+def peak_report_summary(request):
+    year = int(request.GET.get('year', datetime.now().year))
+    
+    reports = InitialReport.objects.filter(date_reported__year=year)
+    
+    month_counts = (
+        reports
+        .annotate(month=ExtractMonth('date_reported'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+
+    peak_month = month_counts[0] if month_counts else None
+    peak_month_name = datetime(1900, peak_month['month'], 1).strftime('%B') if peak_month else 'N/A'
+
+    peak_month_reports = reports.filter(date_reported__month=peak_month['month']) if peak_month else None
+
+
+    location_counts = (
+        peak_month_reports
+        .values('where')
+        .annotate(count=Count('where'))  
+        .order_by('-count')
+    ) if peak_month_reports else None
+    most_affected_location = location_counts[0]['where'] if location_counts else 'N/A'
+
+    total_casualties = (
+        peak_month_reports.aggregate(
+            fatalities=Sum('no_of_fatality', default=0),
+            injured=Sum('no_of_injured', default=0)
+        ) if peak_month_reports else {'fatalities': 0, 'injured': 0}
+    )
+    total_casualties_count = (total_casualties['fatalities'] or 0) + (total_casualties['injured'] or 0)
+
+    total_estimated_damages = 0
+    if peak_month_reports:
+        try:
+            damages = peak_month_reports.values_list('estimated_damages', flat=True)
+            total_estimated_damages = sum(
+                int(damage) for damage in damages if damage and damage.isdigit()
+            )
+        except ValueError:
+            total_estimated_damages = 'Invalid data'
+
+    peak_data = {
+        'peak_month': peak_month_name,
+        'peak_month_count': peak_month['count'] if peak_month else 0,
+        'most_affected_location': most_affected_location,
+        'total_casualties': total_casualties_count,
+        'total_estimated_damages': total_estimated_damages,
+    }
+
+    return JsonResponse(peak_data)
+    
+def reports_count_for_2024(request):
+    reports_2024 = InitialReport.objects.filter(date_reported__year=2024).count()
+    return JsonResponse({'year': 2024, 'count': reports_2024})
+
+
+def monthly_reports_for_2024(request):
+    reports_by_month = (
+        InitialReport.objects.filter(date_reported__year=2024)
+        .annotate(month=TruncMonth('date_reported'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+    all_months = {date(2024, month, 1).strftime('%b'): 0 for month in range(1, 13)}
+
+    for report in reports_by_month:
+        month_name = report['month'].strftime('%b')
+        all_months[month_name] = report['count']
+
+    return JsonResponse({'year': 2024, 'monthly_data': all_months})
+
+
+def analytics_view(request):
+    current_date = localtime(now())
+
+    responded_this_month = InitialReport.objects.filter(
+        status="Case Closed",
+        date_reported__year=current_date.year,
+        date_reported__month=current_date.month
+    ).count()
+
+    responded_this_year = InitialReport.objects.filter(
+        status="Case Closed",
+        date_reported__year=current_date.year
+    ).count()
+
+    print(f"Responded this month: {responded_this_month}")
+    print(f"Responded this year: {responded_this_year}")
+
+    context = {
+        'responded_this_month': responded_this_month,
+        'responded_this_year': responded_this_year,
+    }
+
+    return render(request, "analytics.html", context)
+
 
 def remove_accounts(request):
     if request.method == 'POST':
@@ -333,10 +444,6 @@ def logout_view(request):
     response['Pragma'] = 'no-cache'
     return response
 
-@login_required
-def analytics_view(request):
-    context = {}  
-    return render(request, "analytics.html", context)
 
 @login_required
 def reports_view(request):

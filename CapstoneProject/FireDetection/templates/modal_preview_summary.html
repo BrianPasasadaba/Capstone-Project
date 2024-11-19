@@ -5,6 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="mh-left">
+
                     <h3 class="modal-title" id="modal-title">INCIDENT SUMMARY</h3>
                     <div class="summary-option">
                         <div class="select-filter" id="period-filter">
@@ -39,22 +40,29 @@
                         <div>Fire Detected Counts:</div>
                         <span>20</span>
                     </div>
-                    <div class="indiv-summary">
-                        <div>Peak Fire Month/Week:</div>
-                        <span>Week 2</span>
+
+                    <div class="indiv-summary" id="peakFireContainer">
+                        <div>Peak Fire Month:</div>
+                        <span id="peakFireValue"></span>
                     </div>
-                    <div class="indiv-summary">
+                    
+
+                    <div class="indiv-summary" id="mostAffectedContainer">
                         <div>Most Affected Location:</div>
-                        <span>Barangay Caingin</span>
+                        <span id="mostAffected"></span>
                     </div>
-                    <div class="indiv-summary">
+
+                    <div class="indiv-summary" id="totalCasualtyContainer">
                         <div>Total Casualties:</div>
-                        <span>20</span>
+                        <span id="totalCasualty"></span>
                     </div>
-                    <div class="indiv-summary">
+
+
+                    <div class="indiv-summary" id="estimatedDamageContainer"> 
                         <div>Estimated Damages:</div>
-                        <span>P500,000</span>
+                        <span id="estimatedDamage"></span>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -63,3 +71,34 @@
 
 
 <script src="{% static 'js/incident_preview_filter.js' %}"></script>
+
+<script>
+
+fetch('/api/peak-report-summary/?year=2024') 
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+
+        const peakFireSpan = document.getElementById('peakFireValue');
+        peakFireSpan.textContent = data.peak_month;
+
+        const mostAffectedSpan = document.getElementById('mostAffected');
+        mostAffectedSpan.textContent = data.most_affected_location || 'No data';
+
+        const totalCasualtySpan = document.getElementById('totalCasualty');
+        totalCasualtySpan.textContent = data.total_casualties;
+
+        const estimatedDamageSpan = document.getElementById('estimatedDamage');
+        estimatedDamageSpan.textContent = data.total_estimated_damages || 'No data';
+    })
+    .catch(error => console.error('Error fetching peak fire data:', error));
+
+
+
+
+
+</script>

@@ -5,7 +5,7 @@ from .views import login_view
 from .views import logout_view,change_password
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import toggle_status, update_report, create_report_view,export_initial_report
+from .views import toggle_status, update_report, create_report_view,export_initial_report,peak_report_summary
 
 urlpatterns = [
     path('', views.login_view, name='login'),
@@ -24,6 +24,9 @@ urlpatterns = [
     path('api/events/', views.event_stream, name='event-stream'),
     path('export-initial-report/', export_initial_report, name='export_initial_report'),
     path('remove-accounts/', views.remove_accounts, name='remove_accounts'),
+    path('api/reports-2024/', views.reports_count_for_2024, name='reports_count_for_2024'),
+    path('api/reports-monthly-2024/', views.monthly_reports_for_2024, name='monthly_reports_for_2024'),
+     path('api/peak-report-summary/', peak_report_summary, name='peak_report_summary'),
 
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
