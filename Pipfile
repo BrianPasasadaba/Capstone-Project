@@ -10,6 +10,7 @@ pillow = "*"
 django-active-link = "*"
 python-dotenv = "*"
 openpyxl = "*"
+whitenoise = "*"
 
 [dev-packages]
 
