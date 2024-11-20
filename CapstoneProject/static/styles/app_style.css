@@ -918,14 +918,34 @@ input[type="password"]::-ms-clear {
 }
 
 .btn-prev-summary{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: var(--color-tertiary)!important;
     border: none;
     border-radius: 8px;
-    transition: background-color 0.2s ease, transform 0.2s ease; /* Smooth transition */
+    color: white!important;
+    transition: var(--tran-03)!important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding-left: var(--padding-1)!important;
+    padding-right: var(--padding-1)!important;
+}
+
+.btn-prev-summary i{
+    color: white!important;
+    font-size: 1rem;
 }
 
 .btn-prev-summary:hover {
-    transform: scale(1.05); /* Enlarges the button by 10% */
-    background-color: var(--box-shadow); /* Background turns light gray on hover */
+    background-color: var(--color-hover) !important;
+    transform: scale(1.05)!important;
+    color: var(--color-primary);
+}
+
+.btn-prev-summary:focus{
+    box-shadow: var(--box-shadow-min)!important;
 }
 
 .select-filter{
@@ -3230,6 +3250,11 @@ input[type="password"]::-ms-clear {
         font-size: 1rem;
     }
     /* ================================  <700-INCIDENT-SUMMARY ================================  */
+    .chart-header{
+        flex-direction: column;
+        align-items: start;
+        gap: var(--gap-half);
+    }
     #preview-incident-summary .mh-left,
     #latest-detection .mh-left{
         /* border: var(--color-secondary) 1px solid; */
