@@ -2545,10 +2545,11 @@ input[type="password"]::-ms-clear {
 
 #report-preview-modal .mf-button{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     padding-bottom: var(--padding-half);
+    gap: var(--gap-half);
 }
 
 #report-preview-modal .mf-button .btn{
