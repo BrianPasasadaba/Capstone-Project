@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-column">
                             <label for="team" class="form-label">Responding Team</label>
-                            <select class="form-select" aria-label="Default select example" name="team" >
+                            <select class="form-select" aria-label="Default select example" name="team" id="team">
                                 <option value="1">Shift A</option>
                                 <option value="2">Shift B</option>
                             </select>
@@ -175,9 +175,9 @@
                     </div>
                     <div class="modal-footer">
                         <div class="mf-button">
-                            <button  type="submit" class="btn btn-lg px-4 copy-button">
+                            <button type="button" class="btn btn-lg px-4 copy-button" onclick="copyModalContent()">
                                 Copy
-                            </button>
+                            </button>                            
                             <button  type="submit" class="btn btn-lg px-4 resolve-button"  >
                                 Resolve
                             </button>
@@ -187,12 +187,85 @@
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 </div>
 {% endfor %}
 
+
+<script>
+    function copyModalContent() {
+    const form = document.getElementById('report-preview-form'); 
+    const previewModal = document.getElementById('report-preview-modal');
+    const customAlertModal = document.getElementById('customAlertModal');
+    const customAlertOkButton = customAlertModal.querySelector('.btn-disconfirm'); // The OK button
+    let contentToCopy = "";
+
+    Array.from(form.elements).forEach(element => {
+        if (
+            element.name && 
+            element.name !== "csrfmiddlewaretoken" && 
+            element.type !== "submit" && 
+            element.type !== "button" && 
+            element.name !== "proof" 
+        ) {
+            const label = document.querySelector(`label[for="${element.id}"]`);
+            const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
+
+            let value;
+            if (element.type === "select-one") {
+                value = element.options[element.selectedIndex]?.text.trim();
+            } else if (element.type === "checkbox" || element.type === "radio") {
+                value = element.checked ? "Yes" : "No";
+            } else {
+                value = element.value.trim();
+            }
+
+            if (value) {
+                contentToCopy += `${labelText}: ${value}\n`;
+            }
+        }
+    });
+
+    navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
+        console.log("Content copied to clipboard.");
+
+        const previewModalInstance = bootstrap.Modal.getInstance(previewModal);
+        if (previewModalInstance) {
+            previewModal.addEventListener(
+                "hidden.bs.modal",
+                function () {
+                    console.log("Preview modal hidden. Showing custom alert modal...");
+                    const customAlertInstance = new bootstrap.Modal(customAlertModal);
+                    customAlertInstance.show();
+                },
+                { once: true }
+            );
+
+            previewModalInstance.hide(); 
+        } else {
+            console.log("No preview modal instance found. Showing custom alert modal directly...");
+            const customAlertInstance = new bootstrap.Modal(customAlertModal);
+            customAlertInstance.show();
+        }
+    }).catch((err) => {
+        console.error("Failed to copy content: ", err);
+        alert("Failed to copy content.");
+    });
+
+
+    customAlertOkButton.addEventListener(
+        "click",
+        function () {
+            window.location.href = "/reports/";
+        },
+        { once: true } 
+    );
+}
+
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
