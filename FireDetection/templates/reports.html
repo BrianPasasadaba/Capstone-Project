@@ -129,7 +129,7 @@
                                 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#report-preview-modal">
-                                <td id="report-case">FIR-{{ forloop.counter|stringformat:"02d" }}</td>
+                                <td>{{ report.fir_number }}</td>
                                 <td>{{ report.where }}</td>
                                 <td>{{ report.date_reported|date:"m/d/Y" }}</td>
                                 <td>{{ report.time_reported|time:"h:i A" }}</td>
