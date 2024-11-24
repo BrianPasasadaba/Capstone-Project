@@ -8,7 +8,7 @@ class tempReports(models.Model):
     where = models.CharField(max_length=255)
     date = models.DateField()
     time_detected = models.DateTimeField()
-    proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
+    proof = models.URLField(max_length=255)
     status = models.CharField(max_length=20, choices=[('Filed', 'Filed'), ('Dismissed', 'Dismissed')], null=True)
 
 class InitialReport(models.Model):
@@ -40,7 +40,7 @@ class InitialReport(models.Model):
     officer_contact_number = models.CharField(max_length=15, blank=True, null=True)
     name_of_sender = models.CharField(max_length=255, blank=True, null=True)
     sender_contact_number = models.CharField(max_length=15, blank=True, null=True)
-    proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
+    proof = models.URLField(max_length=255, blank=True, null=True)
     status = models.CharField(max_length=20, choices=[('Ongoing', 'Ongoing'), ('Case Closed', 'Case Closed')], default='Ongoing')
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
