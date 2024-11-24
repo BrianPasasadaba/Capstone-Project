@@ -12,6 +12,7 @@ class tempReports(models.Model):
     status = models.CharField(max_length=20, choices=[('Filed', 'Filed'), ('Dismissed', 'Dismissed')], null=True)
 
 class InitialReport(models.Model):
+    fir_number = models.CharField(max_length=10, unique=True, editable=False, null=True, blank=True)
     where = models.CharField(max_length=255, blank=True, null=True)
     team = models.CharField(max_length=255, blank=True, null=True)
     time_reported = models.DateTimeField(blank=True, null=True)
@@ -44,8 +45,16 @@ class InitialReport(models.Model):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 
-    def __str__(self):
-        return f"Report {self.id} - {self.where} on {self.date_reported}"
+    def save(self, *args, **kwargs):
+        if not self.fir_number:
+            last_report = InitialReport.objects.order_by('id').last()
+            if last_report:
+                last_id = int(last_report.fir_number.split('-')[1])
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.fir_number = f"FIR-{new_id:02d}"
+        super().save(*args, **kwargs)
     
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
