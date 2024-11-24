@@ -1,6 +1,6 @@
 .env
-CapstoneProject/CapstoneProject/__pycache__/
-CapstoneProject/FireDetection/__pycache__/
-CapstoneProject/FireDetection/Migrations/__pycache__/
+CapstoneProject/__pycache__/
+FireDetection/__pycache__/
+FireDetection/Migrations/__pycache__/
 
-CapstoneProject/.env
+

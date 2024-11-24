@@ -539,8 +539,25 @@ def create_report_view(request):
                 time_out_combined = datetime.strptime(f"{date_out} {time_out}", "%Y-%m-%d %H:%M")
             except ValueError:
                 time_out_combined = None
+# Generate FIR number manually
+            last_report = InitialReport.objects.order_by('id').last()
+
+            if last_report and getattr(last_report, 'fir_number', None):  # Check if last_report and fir_number exist
+                try:
+                    last_id = int(last_report.fir_number.split('-')[1])  # Safely extract the number part
+                    new_id = last_id + 1
+                except (ValueError, IndexError):  # Handle invalid or malformed fir_number
+                    new_id = 1
+            else:
+                new_id = 1
+
+            fir_number = f"FIR-{new_id:02d}"
+
+            # Generate FIR number manually
+
 
             new_report = InitialReport.objects.create(
+                fir_number=fir_number, 
                 where=location,
                 team=team,
                 time_reported=time_reported_combined,

@@ -8,10 +8,11 @@ class tempReports(models.Model):
     where = models.CharField(max_length=255)
     date = models.DateField()
     time_detected = models.DateTimeField()
-    proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
+    proof = models.URLField(max_length=255)
     status = models.CharField(max_length=20, choices=[('Filed', 'Filed'), ('Dismissed', 'Dismissed')], null=True)
 
 class InitialReport(models.Model):
+    fir_number = models.CharField(max_length=10, unique=True, editable=False, null=True, blank=True)
     where = models.CharField(max_length=255, blank=True, null=True)
     team = models.CharField(max_length=255, blank=True, null=True)
     time_reported = models.DateTimeField(blank=True, null=True)
@@ -39,13 +40,21 @@ class InitialReport(models.Model):
     officer_contact_number = models.CharField(max_length=15, blank=True, null=True)
     name_of_sender = models.CharField(max_length=255, blank=True, null=True)
     sender_contact_number = models.CharField(max_length=15, blank=True, null=True)
-    proof = models.ImageField(upload_to='proofs/', blank=True, null=True)
+    proof = models.URLField(max_length=255, blank=True, null=True)
     status = models.CharField(max_length=20, choices=[('Ongoing', 'Ongoing'), ('Case Closed', 'Case Closed')], default='Ongoing')
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 
-    def __str__(self):
-        return f"Report {self.id} - {self.where} on {self.date_reported}"
+    def save(self, *args, **kwargs):
+        if not self.fir_number:
+            last_report = InitialReport.objects.order_by('id').last()
+            if last_report:
+                last_id = int(last_report.fir_number.split('-')[1])
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.fir_number = f"FIR-{new_id:02d}"
+        super().save(*args, **kwargs)
     
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
