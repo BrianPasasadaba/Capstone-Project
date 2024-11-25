@@ -2828,7 +2828,7 @@ input[type="password"]::-ms-clear {
         padding-right: var(--padding-1);
     }
     .header-nav h1{
-        font-size: 2rem;
+        font-size: 2rem!important;
     }
     .navigation-list{
         justify-content: end;
@@ -2890,12 +2890,12 @@ input[type="password"]::-ms-clear {
 
     .ab-table thead th,
     .rb-table thead th{
-        font-size: 1rem;
+        font-size: 1rem!important;
         font-weight: 500;
     }
     .ab-table tbody td,
     .rb-table tbody td{
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
         font-weight: 500;
         word-wrap: break-word;
         white-space: normal;
@@ -2905,7 +2905,7 @@ input[type="password"]::-ms-clear {
     .rb-table td:last-child h6{
         width: 100%;
         padding: 0;
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
         border-radius: var(--border-radius-button-half);
         padding-top: var(--padding-1);
         padding-bottom: var(--padding-1);
@@ -2934,7 +2934,7 @@ input[type="password"]::-ms-clear {
         border: none;
         border-radius: var(--border-radius-input);
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
         width: 120px;
     }
     .rb-header .btn{
@@ -3097,17 +3097,17 @@ input[type="password"]::-ms-clear {
         width: 100%;
     }
     .ab-table thead th{
-        font-size: 1rem;
-        font-weight: 500;
+        font-size: 1rem!important;
+        font-weight: 500!important;
     }
     .rb-table thead th{
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
         font-weight: 500;
     }
     .ab-table tbody td,
     .rb-table tbody td{
-        font-size: 0.7rem;
-        font-weight: 500;
+        font-size: 0.7rem!important;
+        font-weight: 500!important;
         word-wrap: break-word;
         white-space: normal;
         word-break: break-word;
@@ -3116,7 +3116,7 @@ input[type="password"]::-ms-clear {
     .rb-table td:last-child h6{
         width: 100%;
         padding: 0;
-        font-size: 0.7rem;
+        font-size: 0.7rem!important;
         border-radius: var(--border-radius-button-half);
         padding-top: var(--padding-1);
         padding-bottom: var(--padding-1);
@@ -3138,21 +3138,21 @@ input[type="password"]::-ms-clear {
     }
 
     .ab-add .btn{
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
         width: 85px;
     }
 
     .ab-pagination .page-item{
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
     }
 
     .remove-logo i{
         /* border: #ED7027 1px solid; */
-        font-size: 110px;
+        font-size: 110px!important;
     }
 
     .remove-logo h3{
-        font-size: 1.2rem;
+        font-size: 1.2rem!important;
     }
     /* ================================  <700-REPORTS ================================  */
 
@@ -3190,12 +3190,12 @@ input[type="password"]::-ms-clear {
         border: none;
         border-radius: var(--border-radius-input);
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
         width: 120px;
     }
     .rb-header .btn{
         width: 100%;
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
     }
     .rb-footer{
         padding: var(--padding-half);
@@ -3227,7 +3227,7 @@ input[type="password"]::-ms-clear {
     }
     .rb-footer .pagination,
     .rb-footer .btn-excel{
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
     }
 
     #icon-back{
@@ -3237,17 +3237,17 @@ input[type="password"]::-ms-clear {
 
     #report-preview-modal .btn-edit{
         width: 75px;
-        font-size: 0.8rem;
+        font-size: 0.8rem!important;
     }
     /* ================================  <700-POPALERT ================================  */
     .indiv-detail span,
     .indiv-summary span{
-        font-size: 0.9rem;
-        font-weight: 400;
+        font-size: 0.9rem !important;
+        font-weight: 400 !important;
     }
     .indiv-detail div,
     .indiv-summary div{
-        font-size: 1rem;
+        font-size: 1rem !important;
     }
     /* ================================  <700-INCIDENT-SUMMARY ================================  */
     .chart-header{
