@@ -17,7 +17,11 @@
                 <button type="button" id="close-button" class="btn-close"  aria-label="Close"></button>
                 
             </div>
+
             <div class="modal-body">
+                <div id="hide_status" style="display: none;">
+                    <strong>Status:</strong> <span id="modal-status"></span>
+                </div>
                 <form  action="{% url 'update_report' report.id  %}" enctype="multipart/form-data" method="post" id="report-preview-form">
                     {% csrf_token %}
 

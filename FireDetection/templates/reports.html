@@ -85,7 +85,7 @@
                 <div class="rb-table">   
                     <table>
                         <thead>
-                            <tr>
+                            <tr  data-bs-toggle="modal" data-bs-target="#report-preview-modal" data-report-id="{{ report.id }}">
                                 <th>Report</th>
                                 <th>Location</th>
                                 <th>Date</th>
@@ -98,6 +98,7 @@
                             {% for report in reports %}
                             <tr
                                 data-report-id="{{ report.id }}"
+                                data-status="{{ report.status }}"
                                 data-location="{{ report.where }}" 
                                 data-date="{{ report.date_reported|date:'Y-m-d' }}"
                                 data-time="{{ report.time_reported|time:'H:i' }}"
@@ -133,6 +134,7 @@
                                 <td>{{ report.where }}</td>
                                 <td>{{ report.date_reported|date:"m/d/Y" }}</td>
                                 <td>{{ report.time_reported|time:"h:i A" }}</td>
+
                                 
                                 <td>
                                     <h6 id="status-text-{{ report.id }}">{{ report.status }}</h6>
@@ -227,6 +229,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+    const modalStatusElement = document.getElementById('modal-status');
+    if (modalStatusElement && modalStatusElement.textContent.trim() === 'Ongoing') {
+        document.getElementById('hide_status').style.display = 'none'; // Hide the div with id="hide_status"
+    }
+});
+
+
+    document.addEventListener('DOMContentLoaded', function () {
         const editButton = document.querySelector('.edit-form .btn-edit');
         const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
         const resolveButton = document.querySelector('.resolve-button');
@@ -241,11 +251,14 @@
     const isCaseClosed = statusText && statusText.textContent.trim() === 'Case Closed';
 
     if (isCaseClosed) {
-        editButton.style.pointerEvents = 'none';
-        editButton.style.opacity = '0.5';
+        // Hide the Edit Button
+        editButton.style.display = 'none';
+
+        // Disable and make the Resolve Button semi-transparent
         resolveButton.disabled = true;
         resolveButton.style.opacity = '0.5';
 
+        // Disable all form inputs
         formInputs.forEach(input => {
             input.disabled = true;
             input.readOnly = true;
@@ -285,6 +298,7 @@ editButton.addEventListener('click', function() {
         saveButton.style.display = isEditable ? 'inline-block' : 'none';
     }
 });
+
 
 
         saveButton.addEventListener('click', function(event) {

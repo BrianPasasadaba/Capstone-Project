@@ -85,10 +85,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
+const modalStatus = document.querySelector('#modal-status');
+const editButton = document.querySelector('.btn-edit');
 
 reportRows.forEach(row => {
     row.addEventListener('click', function () {
         const reportId = row.getAttribute('data-report-id');
+        
         const location = row.getAttribute('data-location');
         const dateReported = row.getAttribute('data-date');
         const timeReported = row.getAttribute('data-time');
@@ -121,7 +124,20 @@ reportRows.forEach(row => {
         const sender = row.getAttribute('data-sender');
         const senderContact = row.getAttribute('data-sender-contact');
 
+        const status = row.getAttribute('data-status'); 
+            
+        if (modalStatus) {
+            modalStatus.textContent = status; 
+        }
+
+        if (status === 'Case Closed') {
+            editButton.style.display = 'none';
+        } else {
+            editButton.style.display = ''; 
+        }
+
         // Populate the form fields in the modal
+        
         document.getElementById('loc').value = location;
         document.getElementById('date').value = dateReported;
         document.getElementById('detect').value = timeReported;
