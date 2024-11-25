@@ -1787,7 +1787,6 @@ input[type="password"]::-ms-clear {
 .rb-footer{
     /* border: var(--color-primary) 1px solid; */
     width: 100%;
-    height: 100px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -2892,6 +2891,9 @@ input[type="password"]::-ms-clear {
     .rb-table thead th{
         font-size: 1rem!important;
         font-weight: 500;
+        word-wrap: break-word;
+        white-space: normal;
+        word-break: break-word;
     }
     .ab-table tbody td,
     .rb-table tbody td{
@@ -3097,12 +3099,18 @@ input[type="password"]::-ms-clear {
         width: 100%;
     }
     .ab-table thead th{
-        font-size: 1rem!important;
+        font-size: 0.8rem!important;
         font-weight: 500!important;
+        word-wrap: break-word;
+        white-space: normal;
+        word-break: break-word;
     }
     .rb-table thead th{
         font-size: 0.8rem!important;
         font-weight: 500;
+        word-wrap: break-word;
+        white-space: normal;
+        word-break: break-word;
     }
     .ab-table tbody td,
     .rb-table tbody td{
@@ -3142,7 +3150,8 @@ input[type="password"]::-ms-clear {
         width: 85px;
     }
 
-    .ab-pagination .page-item{
+    .ab-pagination .page-item,
+    .rb-pagination .page-item{
         font-size: 0.8rem!important;
     }
 
@@ -3220,12 +3229,11 @@ input[type="password"]::-ms-clear {
         width: 100%;
         padding: 0;
         gap: 0;
-        padding-top: var(--padding-half);
     }
     .rb-footer .rb-export .input-group{
         width: 50%;
     }
-    .rb-footer .pagination,
+    .rb-footer .pagination li .page-link ,
     .rb-footer .btn-excel{
         font-size: 0.8rem!important;
     }

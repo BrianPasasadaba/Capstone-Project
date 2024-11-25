@@ -270,11 +270,12 @@ editButton.addEventListener('click', function() {
         if (isEditable) {
             icon.style.display = 'none'; 
             text.textContent = 'Editing';
-             // Change appearance of edit button
+
+            // Change appearance of edit button
             editButton.style.backgroundColor = 'white';
             editButton.style.borderColor = '#ED7027';
             editButton.style.color = '#ED7027';
-            text.style.fontWeight = '500';
+            text.style.fontWeight = '500'; // Set text weight to 500
             editButton.disabled = true; // Disable the button
         } else {
             icon.style.display = '';
