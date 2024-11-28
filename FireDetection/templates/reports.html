@@ -85,7 +85,7 @@
                 <div class="rb-table">   
                     <table>
                         <thead>
-                            <tr  data-bs-toggle="modal" data-bs-target="#report-preview-modal" data-report-id="{{ report.id }}">
+                            <tr  data-bs-toggle="modal" >
                                 <th>Report</th>
                                 <th>Location</th>
                                 <th>Date</th>
@@ -138,11 +138,12 @@
                                 
                                 <td>
                                     <h6 id="status-text-{{ report.id }}">{{ report.status }}</h6>
+                                    
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="12">No reports available.</td>
+                                <td colspan="5">No reports available.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
