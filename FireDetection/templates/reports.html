@@ -228,12 +228,6 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const modalStatusElement = document.getElementById('modal-status');
-    if (modalStatusElement && modalStatusElement.textContent.trim() === 'Ongoing') {
-        document.getElementById('hide_status').style.display = 'none'; // Hide the div with id="hide_status"
-    }
-});
 
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -301,7 +295,7 @@ editButton.addEventListener('click', function() {
 
 
 
-        saveButton.addEventListener('click', function(event) {
+saveButton.addEventListener('click', function(event) {
             event.preventDefault(); 
     
             const formData = new FormData(form);
@@ -317,22 +311,13 @@ editButton.addEventListener('click', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    if (data.new_status === 'Case Closed') {
-                        statusText.textContent = 'Case Closed';
-                        checkStatusAndDisableEdit();
-                    }
-                    window.location.href = "/reports/";
-                } else {
-                    console.error('Error:', data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                setTimeout(() => {
-                    window.location.href = "/reports/";
-                }, 2000); 
+    window.location.href = "/reports/";
+} else {
+    alert('Error updating report: ' + data.message);
+}
             });
         });    
+
     });
     </script>
     
