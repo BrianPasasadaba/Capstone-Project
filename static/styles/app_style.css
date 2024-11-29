@@ -611,6 +611,10 @@ aside{
 .custom-class .description{
     color: var(--color-white);
 }
+.disabled-link {
+    pointer-events: none !important; /* Disable click events */
+    cursor: not-allowed !important; /* Change cursor to indicate it's not clickable */
+}
 
 /* ================================  LOGOUT ================================  */
 
@@ -1793,7 +1797,7 @@ input[type="password"]::-ms-clear {
     align-items: center;
     color: var(--color-primary);
     white-space:nowrap;
-    padding: var(--padding-3);
+    padding: 0.5rem 2rem;
 }
 
 .rb-group{
@@ -1806,6 +1810,7 @@ input[type="password"]::-ms-clear {
 
 .rb-footer .rb-export {
     width: 100%;
+    height: 100%;
     /* border: var(--color-primary) 1px solid; */
     display: flex;
     flex-direction: row;
@@ -1817,7 +1822,14 @@ input[type="password"]::-ms-clear {
 
 .rb-footer .btn-excel{
     border: var(--border-input);
+    transition: var(--tran-03);
 }
+
+.rb-footer .btn-excel:hover{
+    border: 1px var(--color-primary) solid;
+    box-shadow: var(--box-shadow-min);
+}
+
 
 .rb-footer .btn-excel:focus{
     box-shadow: var(--box-shadow);
@@ -3059,6 +3071,9 @@ input[type="password"]::-ms-clear {
     .sb-body  .nav-con {
         padding: 0;
         justify-content: center;
+    }
+    .custom-class{
+        background: var(--color-sidebar)!important;
     }
 
 /* ================================  <700-ANALYTICS ================================  */
