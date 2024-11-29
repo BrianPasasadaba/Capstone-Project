@@ -249,6 +249,7 @@ reportRows.forEach(row => {
             if (data.message) {
                 console.log(data.message);
             }
+            window.location.href = '/reports/';
         })
         .catch(error => {
             console.error('Error in status update:', error);
