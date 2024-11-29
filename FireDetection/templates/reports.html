@@ -85,7 +85,7 @@
                 <div class="rb-table">   
                     <table>
                         <thead>
-                            <tr>
+                            <tr  data-bs-toggle="modal" >
                                 <th>Report</th>
                                 <th>Location</th>
                                 <th>Date</th>
@@ -98,6 +98,7 @@
                             {% for report in reports %}
                             <tr
                                 data-report-id="{{ report.id }}"
+                                data-status="{{ report.status }}"
                                 data-location="{{ report.where }}" 
                                 data-date="{{ report.date_reported|date:'Y-m-d' }}"
                                 data-time="{{ report.time_reported|time:'H:i' }}"
@@ -133,14 +134,16 @@
                                 <td>{{ report.where }}</td>
                                 <td>{{ report.date_reported|date:"m/d/Y" }}</td>
                                 <td>{{ report.time_reported|time:"h:i A" }}</td>
+
                                 
                                 <td>
                                     <h6 id="status-text-{{ report.id }}">{{ report.status }}</h6>
+                                    
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="12">No reports available.</td>
+                                <td colspan="5">No reports available.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -226,6 +229,8 @@
 
 
 <script>
+
+
     document.addEventListener('DOMContentLoaded', function () {
         const editButton = document.querySelector('.edit-form .btn-edit');
         const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
@@ -241,11 +246,14 @@
     const isCaseClosed = statusText && statusText.textContent.trim() === 'Case Closed';
 
     if (isCaseClosed) {
-        editButton.style.pointerEvents = 'none';
-        editButton.style.opacity = '0.5';
+        // Hide the Edit Button
+        editButton.style.display = 'none';
+
+        // Disable and make the Resolve Button semi-transparent
         resolveButton.disabled = true;
         resolveButton.style.opacity = '0.5';
 
+        // Disable all form inputs
         formInputs.forEach(input => {
             input.disabled = true;
             input.readOnly = true;
@@ -287,7 +295,8 @@ editButton.addEventListener('click', function() {
 });
 
 
-        saveButton.addEventListener('click', function(event) {
+
+saveButton.addEventListener('click', function(event) {
             event.preventDefault(); 
     
             const formData = new FormData(form);
@@ -303,22 +312,13 @@ editButton.addEventListener('click', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    if (data.new_status === 'Case Closed') {
-                        statusText.textContent = 'Case Closed';
-                        checkStatusAndDisableEdit();
-                    }
-                    window.location.href = "/reports/";
-                } else {
-                    console.error('Error:', data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                setTimeout(() => {
-                    window.location.href = "/reports/";
-                }, 2000); 
+    window.location.href = "/reports/";
+} else {
+    alert('Error updating report: ' + data.message);
+}
             });
         });    
+
     });
     </script>
     

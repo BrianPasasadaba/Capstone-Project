@@ -145,10 +145,8 @@
 
             <div class="sb-body">
                 <nav class="nav">
-
                     {% if request.user.is_authenticated and request.user.is_active and request.user.is_staff %}
-                    <a class="nav-link {% active_link 'admin_home' 'custom-class' %}" href="{% url 'admin_home' %}">
-                        
+                    <a class="nav-link {% active_link 'admin_home' 'custom-class' %} {% if request.resolver_match.url_name == 'admin_home' %}disabled-link{% endif %}" href="{% url 'admin_home' %}">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-person-fill-gear"></i>
@@ -157,32 +155,29 @@
                         </div>
                     </a>
                     {% endif %}
-                    <a class="nav-link {% active_link 'analytics' 'custom-class' %}" href="{% url 'analytics' %}">
+                    <a class="nav-link {% active_link 'analytics' 'custom-class' %} {% if request.resolver_match.url_name == 'analytics' %}disabled-link{% endif %}" href="{% url 'analytics' %}">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-columns-gap"></i>
                             </span>
                             <span class="description">Analytics</span>
                         </div>
-                        
                     </a>
-                    <a class="nav-link {% active_link 'reports' 'custom-class' %}" href="{% url 'reports' %}">
+                    <a class="nav-link {% active_link 'reports' 'custom-class' %} {% if request.resolver_match.url_name == 'reports' %}disabled-link{% endif %}" href="{% url 'reports' %}">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-clipboard2-data"></i>
                             </span>
                             <span class="description">Reports</span>
                         </div>
-                        
                     </a>
-                    <a class="nav-link {% active_link 'faq' 'custom-class' %}" href="{% url 'faq' %}">
+                    <a class="nav-link {% active_link 'faq' 'custom-class' %} {% if request.resolver_match.url_name == 'faq' %}disabled-link{% endif %}" href="{% url 'faq' %}">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-question-circle"></i>
                             </span>
                             <span class="description">FAQ</span>
                         </div>
-                        
                     </a>
                     <a class="nav-link" data-bs-toggle="modal" data-bs-target="#logout-modal">
                         <div class="nav-con">
@@ -192,14 +187,6 @@
                             <span class="description">Logout</span>
                         </div>
                     </a>
-                    <!-- <a class="nav-link" href="{% url 'logout' %}">
-                        <div class="nav-con">
-                            <span class="icon">
-                                <i class="bi bi-box-arrow-left"></i>
-                            </span>
-                            <span class="description">Logout</span>
-                        </div>
-                    </a> -->
                 </nav>
             </div>
         </div>

@@ -46,6 +46,7 @@ from django.db.models.functions import ExtractMonth
 from django.db.models import Sum
 from django.db.models import Count, Sum, Value
 from django.db.models.functions import ExtractMonth, Coalesce
+import logging
 
 def peak_report_summary(request):
     year = int(request.GET.get('year', datetime.now().year))
@@ -607,11 +608,16 @@ def create_report_view(request):
 def faq_view(request):
    return render(request, "faq.html")
 
+
+logger = logging.getLogger(__name__)
+
 def update_report(request, report_id):
     if request.method == 'POST':
         report = get_object_or_404(InitialReport, id=report_id)
 
         data = request.POST
+
+        # Update fields only, excluding fir_number
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
@@ -644,10 +650,13 @@ def update_report(request, report_id):
         if proof:
             report.proof = proof
 
+        # Save the report without altering fir_number
         report.save()
+
         return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
+
         
 @csrf_exempt
 def desktop_notification(request):
