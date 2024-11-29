@@ -1715,8 +1715,10 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-table thead th{
+    /* border: var(--color-secondary) solid 3px; */
     position: sticky;
     top: 0;
+    width: 100%!important;
     background-color: var(--color-default);
     font-size: 1.2rem;
     font-weight: 600;
