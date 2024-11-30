@@ -1059,7 +1059,6 @@ input[type="password"]::-ms-clear {
 #pop-up-modal .modal-dialog{
     padding: var(--padding-1);
     max-width: 600px;
-    min-width: 200px;
     width: auto;
     height: auto;
     display: flex;
@@ -1448,12 +1447,11 @@ input[type="password"]::-ms-clear {
 }
 #latest-detection .modal-dialog{
     padding: var(--padding-1);
-    max-width: 600px;
-    min-width: 200px;
-    width: 100%;
-    height: auto;
+    max-width: 700px;
+    height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: start;
 }
 
 #latest-detection .modal-header{
@@ -1715,8 +1713,10 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-table thead th{
+    /* border: var(--color-secondary) solid 3px; */
     position: sticky;
     top: 0;
+    width: 100%!important;
     background-color: var(--color-default);
     font-size: 1.2rem;
     font-weight: 600;
@@ -2713,11 +2713,9 @@ input[type="password"]::-ms-clear {
     /* border: var(--color-secondary) solid 3px; */
     padding: var(--padding-1);
     max-width: 700px;
-    min-width: 200px;
-    width: 100%;
-    height: auto;
+    height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: center;
 }
 

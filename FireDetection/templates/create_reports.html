@@ -62,7 +62,12 @@
             <div class="creports-body">
                 <form action="{% url 'create_reports' %}" method="POST" enctype="multipart/form-data" id="create-report-form">
                     {% csrf_token %}
-                
+                    <div class="form-row">
+                        <div class="form-column" style="display: flex; flex-direction: row; align-items: start;">
+                            <span style="color: red; font-size: 0.8rem;">* Indicates Required Field</span>
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-column">
                             <label for="crloc" class="form-label">Location<i class="bi bi-asterisk"></i></label>

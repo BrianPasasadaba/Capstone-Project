@@ -9,12 +9,12 @@
                     <h3 class="modal-title" id="modal-title">INCIDENT SUMMARY</h3>
                     <div class="summary-option">
                         <div class="select-filter" id="period-filter">
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="1" selected>Yearly</option>
+                            <select class="form-select" aria-label="Default select example" id="period-select" onchange="toggleFilters()">
+                                <option value="1" selected>Yearly</option>  <!-- Default selected is Yearly -->
                                 <option value="2">Monthly</option>
                             </select>
                         </div>
-                        <div class="select-filter" id="specific-filter">
+                        <div class="select-filter" id="month-filter" style="display: none;">  <!-- Initially hidden -->
                             <select class="form-select" aria-label="Default select example">
                                 <option value="1" selected>January</option>
                                 <option value="2">February</option>
@@ -28,6 +28,16 @@
                                 <option value="10">October</option>
                                 <option value="11">November</option>
                                 <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="select-filter" id="year-filter" style="display: block;">  <!-- Initially visible -->
+                            <select class="form-select" aria-label="Default select example">
+                                <option value="2024" selected>2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
                             </select>
                         </div>
                     </div>
@@ -45,7 +55,6 @@
                         <div>Peak Fire Month:</div>
                         <span id="peakFireValue"></span>
                     </div>
-                    
 
                     <div class="indiv-summary" id="mostAffectedContainer">
                         <div>Most Affected Location:</div>
@@ -56,7 +65,6 @@
                         <div>Total Casualties:</div>
                         <span id="totalCasualty"></span>
                     </div>
-
 
                     <div class="indiv-summary" id="estimatedDamageContainer"> 
                         <div>Estimated Damages:</div>
@@ -69,9 +77,7 @@
     </div>
 </div>
 
-
 <script src="{% static 'js/incident_preview_filter.js' %}"></script>
-
 <script>
 
 fetch('/api/peak-report-summary/?year=2024') 
@@ -97,7 +103,9 @@ fetch('/api/peak-report-summary/?year=2024')
     })
     .catch(error => console.error('Error fetching peak fire data:', error));
 
+</script>
 
+<<<<<<< HEAD
     document.addEventListener("DOMContentLoaded", function () {
     const periodSelect = document.querySelector("#period-filter select");
     const monthSelect = document.querySelector("#specific-filter select"); 
@@ -137,3 +145,5 @@ fetch('/api/peak-report-summary/?year=2024')
 
 
 </script>
+=======
+>>>>>>> 26d3ff4c8db7fad094b330a171a00a8b20cf2dd8
