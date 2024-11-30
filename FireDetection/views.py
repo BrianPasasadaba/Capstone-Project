@@ -102,6 +102,48 @@ def peak_report_summary(request):
     }
 
     return JsonResponse(peak_data)
+
+def monthly_report_summary(request):
+    year = int(request.GET.get('year', datetime.now().year))
+    month = int(request.GET.get('month', datetime.now().month))
+
+    reports = InitialReport.objects.filter(date_reported__year=year, date_reported__month=month)
+
+    # Calculate the most affected location
+    location_counts = (
+        reports
+        .values('where')
+        .annotate(count=Count('where'))
+        .order_by('-count')
+    )
+    most_affected_location = location_counts[0]['where'] if location_counts else 'N/A'
+
+    # Calculate total casualties
+    total_casualties = reports.aggregate(
+        fatalities=Sum('no_of_fatality', default=0),
+        injured=Sum('no_of_injured', default=0),
+    )
+    total_casualties_count = (total_casualties['fatalities'] or 0) + (total_casualties['injured'] or 0)
+
+    # Calculate total estimated damages
+    total_estimated_damages = 0
+    try:
+        damages = reports.values_list('estimated_damages', flat=True)
+        total_estimated_damages = sum(
+            int(damage) for damage in damages if damage and damage.isdigit()
+        )
+    except ValueError:
+        total_estimated_damages = 'Invalid data'
+
+    # Prepare the response data
+    monthly_data = {
+        'most_affected_location': most_affected_location,
+        'total_casualties': total_casualties_count,
+        'total_estimated_damages': total_estimated_damages,
+    }
+
+    return JsonResponse(monthly_data)
+
     
 def reports_count_for_2024(request):
     reports_2024 = InitialReport.objects.filter(date_reported__year=2024).count()
