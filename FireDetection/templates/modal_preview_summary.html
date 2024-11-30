@@ -79,71 +79,94 @@
 
 <script src="{% static 'js/incident_preview_filter.js' %}"></script>
 <script>
-
-fetch('/api/peak-report-summary/?year=2024') 
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-
-        const peakFireSpan = document.getElementById('peakFireValue');
-        peakFireSpan.textContent = data.peak_month;
-
-        const mostAffectedSpan = document.getElementById('mostAffected');
-        mostAffectedSpan.textContent = data.most_affected_location || 'No data';
-
-        const totalCasualtySpan = document.getElementById('totalCasualty');
-        totalCasualtySpan.textContent = data.total_casualties;
-
-        const estimatedDamageSpan = document.getElementById('estimatedDamage');
-        estimatedDamageSpan.textContent = data.total_estimated_damages || 'No data';
-    })
-    .catch(error => console.error('Error fetching peak fire data:', error));
-
-</script>
-
-<<<<<<< HEAD
     document.addEventListener("DOMContentLoaded", function () {
-    const periodSelect = document.querySelector("#period-filter select");
-    const monthSelect = document.querySelector("#specific-filter select"); 
-    const year = 2024;
+    const periodSelect = document.querySelector("#period-select");
+    const monthSelect = document.querySelector("#month-filter select"); 
+    const yearSelect = document.querySelector("#year-filter select");
+    const monthFilter = document.getElementById("month-filter"); 
 
-    function fetchMonthlyData(month) {
-        fetch(`/api/monthly-report-summary/?year=${year}&month=${month}`)
+    function fetchYearlyData(year) {
+        fetch(`/api/peak-report-summary/?year=${year}`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error("Network response was not ok");
                 }
                 return response.json();
             })
             .then(data => {
-                document.getElementById('peakFireValue').textContent = data.peak_month || 'N/A';
-                document.getElementById('mostAffected').textContent = data.most_affected_location || 'No data';
-                document.getElementById('totalCasualty').textContent = data.total_casualties || '0';
-                document.getElementById('estimatedDamage').textContent = data.total_estimated_damages || 'No data';
+                document.getElementById("peakFireValue").textContent = data.peak_month || "N/A";
+                document.getElementById("mostAffected").textContent = data.most_affected_location || "No data";
+                document.getElementById("totalCasualty").textContent = data.total_casualties || "0";
+                document.getElementById("estimatedDamage").textContent = data.total_estimated_damages || "No data";
             })
-            .catch(error => console.error('Error fetching monthly data:', error));
+            .catch(error => console.error("Error fetching yearly data:", error));
     }
 
+    function fetchMonthlyData(year, month) {
+        fetch(`/api/monthly-report-summary/?year=${year}&month=${month}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("peakFireValue").textContent = data.peak_month || "N/A";
+                document.getElementById("mostAffected").textContent = data.most_affected_location || "No data";
+                document.getElementById("totalCasualty").textContent = data.total_casualties || "0";
+                document.getElementById("estimatedDamage").textContent = data.total_estimated_damages || "No data";
+            })
+            .catch(error => console.error("Error fetching monthly data:", error));
+    }
+
+    // Event listener for period dropdown
     periodSelect.addEventListener("change", function () {
-        const selectedPeriod = this.value;
+        const selectedPeriod = this.value; // 1 = Yearly, 2 = Monthly
         if (selectedPeriod === "2") {
-            fetchMonthlyData(monthSelect.value);
+            monthFilter.style.display = "block";
+            fetchMonthlyData(yearSelect.value, monthSelect.value); // Fetch data for the selected year and month
+        } else {
+
+            monthFilter.style.display = "none";
+            fetchYearlyData(yearSelect.value);
         }
     });
+
+    yearSelect.addEventListener("change", function () {
+        const selectedYear = this.value;
+        if (periodSelect.value === "1") {
+            fetchYearlyData(selectedYear);
+        } else if (periodSelect.value === "2") {
+            fetchMonthlyData(selectedYear, monthSelect.value);
+        }
+    });
+
 
     monthSelect.addEventListener("change", function () {
         if (periodSelect.value === "2") {
-            const selectedMonth = this.value; 
-            fetchMonthlyData(selectedMonth);
+            fetchMonthlyData(yearSelect.value, this.value);
         }
     });
+
+    function handleTransitionToMonthly() {
+        if (periodSelect.value === "2") {
+            fetchMonthlyData(yearSelect.value, monthSelect.value); // Ensure correct year and month are fetched
+        }
+    }
+
+
+    periodSelect.addEventListener("change", function () {
+        if (this.value === "2") {
+            handleTransitionToMonthly();
+        }
+    });
+
+
+    if (periodSelect.value === "1") {
+        fetchYearlyData(yearSelect.value); 
+    } else if (periodSelect.value === "2") {
+        fetchMonthlyData(yearSelect.value, monthSelect.value); 
+    }
 });
 
-
 </script>
-=======
->>>>>>> 26d3ff4c8db7fad094b330a171a00a8b20cf2dd8
