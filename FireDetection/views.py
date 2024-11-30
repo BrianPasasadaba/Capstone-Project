@@ -353,6 +353,8 @@ def generate_random_password(length=10):
 
 
 def forgot_password_view(request):
+    show_success_modal = False
+
     if request.method == 'POST':
         email = request.POST.get('email')
         new_password = request.POST.get('password')
@@ -364,7 +366,6 @@ def forgot_password_view(request):
 
         try:
             user = CustomUser.objects.get(email=email)
-
             user.set_password(new_password)
             user.save()
 
@@ -377,13 +378,14 @@ def forgot_password_view(request):
             )
 
             messages.success(request, 'Password reset successful! A confirmation email has been sent.')
-            return redirect('login')
+            show_success_modal = True
 
         except CustomUser.DoesNotExist:
             messages.error(request, 'Email address not found.')
             return redirect('forgot_password')
 
-    return render(request, 'forgot_password.html')
+    return render(request, 'forgot_password.html', {'show_success_modal': show_success_modal})
+
 
 
 @login_required
