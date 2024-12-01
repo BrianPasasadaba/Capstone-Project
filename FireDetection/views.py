@@ -62,7 +62,7 @@ def peak_report_summary(request):
     )
 
     peak_month = month_counts[0] if month_counts else None
-    peak_month_name = datetime(1900, peak_month['month'], 1).strftime('%B') if peak_month else 'N/A'
+    peak_month_name = datetime(1900, peak_month['month'], 1).strftime('%B') if peak_month else 'None'
 
     peak_month_reports = reports.filter(date_reported__month=peak_month['month']) if peak_month else None
 
@@ -73,7 +73,7 @@ def peak_report_summary(request):
         .annotate(count=Count('where'))  
         .order_by('-count')
     ) if peak_month_reports else None
-    most_affected_location = location_counts[0]['where'] if location_counts else 'N/A'
+    most_affected_location = location_counts[0]['where'] if location_counts else 'None'
 
     total_casualties = (
         peak_month_reports.aggregate(
@@ -116,7 +116,7 @@ def monthly_report_summary(request):
         .annotate(count=Count('where'))
         .order_by('-count')
     )
-    most_affected_location = location_counts[0]['where'] if location_counts else 'N/A'
+    most_affected_location = location_counts[0]['where'] if location_counts else 'None'
 
     # Calculate total casualties
     total_casualties = reports.aggregate(

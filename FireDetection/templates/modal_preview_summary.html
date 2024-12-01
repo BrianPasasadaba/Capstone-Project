@@ -94,10 +94,10 @@
                 return response.json();
             })
             .then(data => {
-                document.getElementById("peakFireValue").textContent = data.peak_month || "N/A";
-                document.getElementById("mostAffected").textContent = data.most_affected_location || "No data";
+                document.getElementById("peakFireValue").textContent = data.peak_month || "None";
+                document.getElementById("mostAffected").textContent = data.most_affected_location || "None";
                 document.getElementById("totalCasualty").textContent = data.total_casualties || "0";
-                document.getElementById("estimatedDamage").textContent = data.total_estimated_damages || "No data";
+                document.getElementById("estimatedDamage").textContent = data.total_estimated_damages || "0";
             })
             .catch(error => console.error("Error fetching yearly data:", error));
     }
@@ -111,10 +111,10 @@
                 return response.json();
             })
             .then(data => {
-                document.getElementById("peakFireValue").textContent = data.peak_month || "N/A";
-                document.getElementById("mostAffected").textContent = data.most_affected_location || "No data";
+                document.getElementById("peakFireValue").textContent = data.peak_month || "None";
+                document.getElementById("mostAffected").textContent = data.most_affected_location || "None";
                 document.getElementById("totalCasualty").textContent = data.total_casualties || "0";
-                document.getElementById("estimatedDamage").textContent = data.total_estimated_damages || "No data";
+                document.getElementById("estimatedDamage").textContent = data.total_estimated_damages || "0";
             })
             .catch(error => console.error("Error fetching monthly data:", error));
     }
