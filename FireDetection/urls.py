@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/reports-2024/', views.reports_count_for_2024, name='reports_count_for_2024'),
     path('api/reports-monthly-2024/', views.monthly_reports_for_2024, name='monthly_reports_for_2024'),
     path('api/peak-report-summary/', peak_report_summary, name='peak_report_summary'),
+    path('get-temp-report-details/<int:report_id>/', views.get_temp_report_details_view, name='get-temp-report-details'),
     path('api/monthly-report-summary/', views.monthly_report_summary, name='monthly_report_summary'),
 
 ]

@@ -12,7 +12,7 @@ from django.contrib import messages
 from .models import CustomUser
 from django.core.cache import cache
 from django.core.validators import validate_email 
-from .models import InitialReport
+from .models import InitialReport, tempReports
 from datetime import date,  timedelta
 from django.db.models.functions import TruncMonth
 from django.utils.timezone import now
@@ -732,3 +732,23 @@ def event_stream(request):
     response['Cache-Control'] = 'no-cache'
     response['Connection'] = 'keep-alive'
     return response
+
+def get_temp_report_details(report_id):
+    try:
+        report = tempReports.objects.get(id=report_id)
+        return {
+            'id': report.id,
+            'where': report.where,
+            'date': report.date.strftime('%B %d, %Y'),
+            'time': report.time_detected.strftime('%I:%M %p'),
+            'proof': report.proof,
+            'status': report.status
+        }
+    except tempReports.DoesNotExist:
+        return None
+
+def get_temp_report_details_view(request, report_id):
+    details = get_temp_report_details(report_id)
+    if details:
+        return JsonResponse(details)
+    return JsonResponse({'error': 'Report not found'}, status=404)
