@@ -615,7 +615,13 @@ aside{
     pointer-events: none !important; /* Disable click events */
     cursor: not-allowed !important; /* Change cursor to indicate it's not clickable */
 }
+.custom-tooltip .tooltip-inner{
+    background-color: var(--color-secondary);
+  }
 
+.custom-tooltip .tooltip-arrow {
+    display: none !important; /* Hide the tooltip arrow */
+}
 /* ================================  LOGOUT ================================  */
 
 
@@ -944,8 +950,6 @@ input[type="password"]::-ms-clear {
 
 .btn-prev-summary:hover {
     background-color: var(--color-hover) !important;
-    transform: scale(1.05)!important;
-    color: var(--color-primary);
 }
 
 .btn-prev-summary:focus{
@@ -1691,7 +1695,6 @@ input[type="password"]::-ms-clear {
 
 .rbh-left .create-button .btn-create:hover{
     background-color: var(--color-hover) !important;
-    transform: scale(1.05)!important;
     color: var(--color-primary);
     cursor: pointer;
 }
@@ -1983,7 +1986,6 @@ input[type="password"]::-ms-clear {
 .creports-body .btn:hover{
     background-color: var(--color-hover);
     border: var(--color-hover) 1px solid;
-    transform: scale(1.05);
 }
 
 .creports-body .btn:focus{
@@ -2260,7 +2262,6 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-hover) !important;
     border: 1px var(--color-hover) solid;
     border: none;
-    transform: scale(1.05);
     font-weight: 400;
 }
 
@@ -2540,7 +2541,6 @@ input[type="password"]::-ms-clear {
 .modal-footer .btn:hover{
     background-color: var(--color-hover);
     border: var(--color-hover) 1px solid;
-    transform: scale(1.05);
 }
 
 .modal-footer .btn:focus{
