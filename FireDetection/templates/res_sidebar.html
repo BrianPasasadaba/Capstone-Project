@@ -150,7 +150,10 @@
             <div class="sb-body">
                 <nav class="nav">
                     {% if request.user.is_authenticated and request.user.is_active and request.user.is_staff %}
-                    <a class="nav-link {% active_link 'admin_home' 'custom-class' %} {% if request.resolver_match.url_name == 'admin_home' %}disabled-link{% endif %}" href="{% url 'admin_home' %}">
+                    <a class="nav-link {% active_link 'admin_home' 'custom-class' %} {% if request.resolver_match.url_name == 'admin_home' %}disabled-link{% endif %}" href="{% url 'admin_home' %}"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="Accounts">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-person-fill-gear"></i>
@@ -159,7 +162,10 @@
                         </div>
                     </a>
                     {% endif %}
-                    <a class="nav-link {% active_link 'analytics' 'custom-class' %} {% if request.resolver_match.url_name == 'analytics' %}disabled-link{% endif %}" href="{% url 'analytics' %}">
+                    <a class="nav-link {% active_link 'analytics' 'custom-class' %} {% if request.resolver_match.url_name == 'analytics' %}disabled-link{% endif %}" href="{% url 'analytics' %}"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="Analytics">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-columns-gap"></i>
@@ -167,7 +173,10 @@
                             <span class="description">Analytics</span>
                         </div>
                     </a>
-                    <a class="nav-link {% active_link 'reports' 'custom-class' %} {% if request.resolver_match.url_name == 'reports' %}disabled-link{% endif %}" href="{% url 'reports' %}">
+                    <a class="nav-link {% active_link 'reports' 'custom-class' %} {% if request.resolver_match.url_name == 'reports' %}disabled-link{% endif %}" href="{% url 'reports' %}"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="Reports">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-clipboard2-data"></i>
@@ -175,7 +184,10 @@
                             <span class="description">Reports</span>
                         </div>
                     </a>
-                    <a class="nav-link {% active_link 'faq' 'custom-class' %} {% if request.resolver_match.url_name == 'faq' %}disabled-link{% endif %}" href="{% url 'faq' %}">
+                    <a class="nav-link {% active_link 'faq' 'custom-class' %} {% if request.resolver_match.url_name == 'faq' %}disabled-link{% endif %}" href="{% url 'faq' %}"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="FAQ">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-question-circle"></i>
@@ -251,6 +263,14 @@
             });
         </script>
 -->
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+</script>
+
 <!-- DESKTOP UPDATE -->
 <script>
     class DesktopUpdates {

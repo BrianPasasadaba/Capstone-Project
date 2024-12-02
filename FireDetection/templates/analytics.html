@@ -35,7 +35,7 @@
                         <div class="drop-user">{{ user.name }}</div>
                     </button>
                     <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
-                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#terms-condition">Terms & Condition</button></li>
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#terms-condition-modal">Terms & Condition</button></li>
                         <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
                     </ul>
                 </div>
@@ -209,6 +209,7 @@
 {% include "modal_forgot_success.html" %}
 {% include "modal_preview_summary.html" %}
 {% include "modal_latest_detection.html" %}
+{% include "modal_terms_condi.html" %}
 {% endblock %}
 
 {% block scripts %}
