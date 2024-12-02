@@ -1865,13 +1865,17 @@ input[type="password"]::-ms-clear {
     padding-top: var(--padding-1);
 }
 
-.rb-footer .rb-pagination nav .page-link{
-    color: var(--color-primary);
+.page-item .page-link{
+    color: var(--color-primary) !important;
 }
 
-.rb-footer .rb-pagination nav .page-link:focus{
+.page-item.disabled .page-link {
+    color: var(--color-placeholder) !important;
+}
+
+.page-item .page-link:focus{
     background-color: var(--color-tertiary);
-    box-shadow: 0 0 5px .25rem var(--color-default)
+    box-shadow: 0 0 5px .25rem var(--color-default)!important;
 }
 
 .page-item.active .page-link {
