@@ -616,7 +616,7 @@ aside{
     cursor: not-allowed !important; /* Change cursor to indicate it's not clickable */
 }
 .custom-tooltip .tooltip-inner{
-    background-color: var(--color-secondary);
+    display: none
   }
 
 .custom-tooltip .tooltip-arrow {
@@ -2896,6 +2896,11 @@ input[type="password"]::-ms-clear {
         padding: 0;
         justify-content: center;
     }
+    .custom-tooltip .tooltip-inner{
+        display: block;
+        background-color: var(--color-secondary);
+      }
+
 
     .ab-table thead th,
     .rb-table thead th{
@@ -3073,6 +3078,11 @@ input[type="password"]::-ms-clear {
     .custom-class{
         background: var(--color-sidebar)!important;
     }
+
+    .custom-tooltip .tooltip-inner{
+        display: block;
+        background-color: var(--color-secondary);
+      }
 
 /* ================================  <700-ANALYTICS ================================  */
     .analyses-box {
