@@ -1,0 +1,164 @@
+<!-- create-account-modal -->
+{% load static %}
+<div class="modal fade" id="terms-condition-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- <div class="modal-header">
+                <h4 class="modal-title" id="modal-title"></h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div> -->
+            <div class="modal-body">
+                <div class="terms-box">
+                    <div class="terms-text">
+                        <br><h4 style="text-align: center;">Terms & Condition</h4><br>
+                        <p>True the Fire Web application is designed for fire incident report management for the Bureau of Fire Protection (BFP) Santa Rosa City. 
+                            By accessing or using the True the Fire platform, you agree to comply with and be bound by these Terms and Conditions. 
+                            If you do not agree with any part of these terms, you must refrain from using the platform.</p>
+                        <h5 >I. Acceptance of Terms</h5>
+                        <p>By accessing or using the True the Fire web application, you confirm that:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	You are authorized by BFP Santa Rosa City or other relevant authorities to access and use the platform.</li>
+                            <li>B.	You agree to use the application in compliance with these Terms and all applicable laws and regulations.</li>
+                        </ul>
+
+                        <h5 >II. User Responsibilities</h5>
+                        <p>As a user of True the Fire, you agree to:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	Provide accurate and up-to-date information during registration or use of the platform.</li>
+                            <li>B.	Use the application solely for receiving fire incident reports, communicating incident report details, and related authorized purposes.</li>
+                            <li>C.	Avoid unauthorized access to or tampering with the system’s data or functionalities.</li>
+                        </ul>
+                        <p>You are prohibited from:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	Using the platform to engage in illegal activities.</li>
+                            <li>B.	Transmitting harmful or malicious code that could compromise the system.</li>
+                            <li>C.	Sharing access credentials with unauthorized users.</li>
+                        </ul>
+
+                        <h5 >III. System Accuracy and Limitations</h5>
+                        <p>True the Fire web application receives alerts from its complementary application--desktop application's fire detection and surveillance; 
+                            however:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	The platform’s alerts and notifications are intended to assist but are not guaranteed to detect all fire incidents.</li>
+                            <li>B.	Users are responsible for verifying alerts and taking appropriate actions.</li>
+                            <li>C.	The system authors are not liable for any damages resulting from reliance on the platform.</li>
+                        </ul>
+
+                        <h5 >IV. Data Collection and Privacy</h5>
+                        <p>The platform collects and processes data for system functionality and improvement. This includes but is not limited to:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	Fire detection footage and user input.</li>
+                            <li>B.	Usage logs for performance monitoring and troubleshooting.</li>
+                        </ul>
+                        <p>Privacy Commitment:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	Data is securely stored and accessible only to authorized personnel.</li>
+                            <li>B.	Personal data will not be shared with third parties without prior consent, except as required by law.</li>
+                        </ul>
+                        <p>For more details, please refer to our Privacy Policy.</p>
+
+                        <h5 >V. Modifications and Updates</h5>
+                        <p>BFP Santa Rosa City reserves the right to:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	Modify these Terms and Conditions at any time.</li>
+                            <li>B.	Update the platform’s features and functionalities to improve performance or security (contact the developer).</li>
+                        </ul>
+                        <p>Users will be notified of significant changes, and continued use of the platform signifies acceptance of the updated terms.</p>
+
+                        <h5 >VI. Disclaimers and Liability</h5>
+                        <p>The True the Fire platform is provided on an “as-is” basis.</p>
+                        <ul style="list-style: none;">
+                            <li>A.	No guarantees are made regarding uninterrupted or error-free operation.</li>
+                            <li>B.	The developers are not liable for damages resulting from the use or inability to use the platform.</li>
+                        </ul>
+
+                        <h5 >VII. Termination</h5>
+                        <p>Access to the True the Fire platform may be terminated:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	For breach of these Terms and Conditions.</li>
+                            <li>B.	Upon the discretion of BFP Santa Rosa City for operational or security reasons.</li><br>
+                        </ul>
+
+                        <h4 style="text-align: center;">Privacy Policy</h4><br>
+                        <p>The True the Fire web application is committed to protecting the privacy and security of your personal information. 
+                            This Privacy Policy explains how we collect, use, store, and share information collected through the platform. 
+                            By using the application, you consent to the practices described in this Privacy Policy.</p>
+                        
+                        <h5 >I. Information We Collect</h5>
+                        <p>To provide fire incident report management, the platform collects the following types of information:</p>
+                        <p>A. Personal Information</p>
+                        <ul style="list-style: none;">
+                            <li>1.	Name, contact details, and credentials of authorized users (e.g., BFP personnel).</li>
+                            <li>2.	Login activity to track account access and usage.</li>
+                        </ul>
+                        <p>B. Device and Usage Data</p>
+                        <ul style="list-style: none;">
+                            <li>1.	IP addresses, browser types, and access logs.</li>
+                            <li>2.	Data related to the device or network used to access the platform.</li>
+                        </ul>
+                        <p>C. Fire Incident Data</p>
+                        <ul style="list-style: none;">
+                            <li>1.	Screenshots of the incident, metadata such as location, time detection, and date, and 
+                                incident details such as alarm status, estimated damages, name of involved personnel, type of establishments, and the like.</li>
+                        </ul>
+                        <p>D. System Performance Data</p>
+                        <ul style="list-style: none;">
+                            <li>1.	Logs and metrics to monitor, debug, and improve the application.</li>
+                        </ul>
+
+                        <h5 >II. How We Use Your Information</h5>
+                        <p>The information collected is used for the following purposes:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	To operate and maintain the True the Fire platform.</li>
+                            <li>B.	To identify and alert users about fire-related incidents.</li>
+                            <li>C.	To improve system performance and enhance detection accuracy using machine learning.</li>
+                            <li>D.	To comply with legal and regulatory obligations.</li>
+                        </ul>
+                        <p>We do not sell, rent, or trade your personal information to third parties.</p>
+
+                        <h5 >III. Sharing of Information</h5>
+                        <p>We may share information with:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	Authorized Personnel: Data is accessible to authorized BFP personnel for monitoring and response purposes.</li>
+                            <li>B.	Service Providers: Third-party vendors who assist with system maintenance, hosting, or analytics (bound by confidentiality agreements).</li>
+                            <li>C.	Legal Authorities: If required by law or to prevent harm, fraud, or illegal activity.</li>
+                        </ul>
+
+                        <h5 >IV. Data Security</h5>
+                        <p>We implement robust security measures to protect your information, including:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	Encryption of sensitive data in transit and at rest.</li>
+                            <li>B.	Regular security audits and activity monitoring.</li>
+                            <li>C.	Restricted access to personal and surveillance data based on roles and responsibilities.</li>
+                        </ul>
+                        <p>However, no method of transmission or storage is 100% secure. 
+                            While we strive to protect your data, we cannot guarantee absolute security.
+                        </p>
+
+                        <h5 >V. Data Retention</h5>
+                        <p>Information collected through the platform will be retained as follows:</p>
+                        <ul style="list-style: none;">
+                            <li>A.	Personal Data: Retained as long as the user account remains active or as required by law.</li>
+                            <li>B.	Surveillance Data: Stored for a period necessary for fire response and analysis, 
+                                after which it will be securely deleted or anonymized.</li> 
+                        </ul>
+
+                        <h5 >VI. Changes to This Privacy Policy</h5>
+                        <p>We may update this Privacy Policy from time to time. Users will be notified of significant changes via email or application notifications. 
+                            Continued use of the platform after updates signifies acceptance of the revised policy.</p>
+                        <p>You may contact us at truethefireauthors@gmail.com for any concerns or inquiries.</p>
+                    </div>
+                </div>
+                    <div class="modal-footer" style="display: none;">
+                        <h6 style="text-align: center;">I Agree to the Terms & Condition and I read the Privacy Policy</h5>
+                        <div class="mf-button">
+                            <button class="btn btn-lg px-4 btn-agree" type="button">Agree</button>
+                            <button class="btn btn-lg px-4 btn-decline"  type="button" data-bs-dismiss="modal" aria-label="Close">Decline</button>
+                        </div>
+                    </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

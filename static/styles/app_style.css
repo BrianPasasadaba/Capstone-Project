@@ -159,7 +159,7 @@ header, .container, .container-fluid, .btn-group {
 .btn-hotline,
 .btn-profile{
     color: white;
-    font-size: 19px;
+    font-size: 1rem;
     background: transparent;
     border: none;
     padding-left: var(--padding-half);
@@ -384,6 +384,67 @@ input[type="password"]::-ms-clear {
     border: none;
 }
 
+/* ============================== TERMS CONDITION MODAL ============================== */
+
+#terms-condition-modal .modal-dialog{
+    max-width: 650px;
+}
+#terms-condition-modal .modal-body{
+    padding: 1.5rem 3rem;
+}
+
+#terms-condition-modal .terms-text h4{
+    color: var(--color-secondary);
+}
+
+#terms-condition-modal .modal-dialog .terms-text p,
+#terms-condition-modal .modal-dialog .terms-text li{
+    font-size: 0.9rem!important;
+    text-align: justify;
+}
+
+#terms-condition-modal  .modal-footer{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    padding-top: var(--padding-1);
+}
+#terms-condition-modal .modal-footer .mf-button{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--padding-half);
+    gap: var(--gap-1);
+}
+
+#terms-condition-modal .modal-footer .btn-agree{
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 500;
+    border: none;
+    font-size:1rem;
+    transition: var(--tran-03);
+    border-radius:var(--border-radius-input)!important;
+}
+#terms-condition-modal .modal-footer .btn-decline{
+    background-color: var(--color-default);
+    color: var(--color-primary);
+    font-weight: 500;
+    border: 0.5px solid var(--color-primary);
+    font-size:1rem;
+    transition: var(--tran-03);
+    border-radius:var(--border-radius-input)!important;
+}
+
+#terms-condition-modal .modal-footer .btn-decline:hover,
+#terms-condition-modal .modal-footer .btn-agree:hover{
+    box-shadow: var(--box-shadow);
+    transform: scale(1.03);
+}
 
 /* ============================== TOAST ============================== */
 .toast-container {
@@ -704,12 +765,23 @@ aside{
     color: white;
     font-weight: 600;
     border: none;
+    font-size: 1.1rem;
+    border-radius: var(--border-radius-input)!important;
+    transition: var(--tran-03);
 }
 #logout-modal .modal-footer .btn-cancel{
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 600;
     border: none;
+    font-size: 1.1rem;
+    border-radius: var(--border-radius-input)!important;
+    transition: var(--tran-03);
+}
+
+#logout-modal .modal-footer .btn-confirm:hover,
+#logout-modal .modal-footer .btn-cancel:hover{
+    transform: scale(1.03);
 }
 /* ================================  MAIN ================================  */
 
@@ -938,7 +1010,7 @@ input[type="password"]::-ms-clear {
     border-radius: 8px;
     color: white!important;
     transition: var(--tran-03)!important;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--box-shadow);
     padding-left: var(--padding-1)!important;
     padding-right: var(--padding-1)!important;
 }
@@ -949,11 +1021,11 @@ input[type="password"]::-ms-clear {
 }
 
 .btn-prev-summary:hover {
-    background-color: var(--color-hover) !important;
+    transform: scale(1.03);
 }
 
 .btn-prev-summary:focus{
-    box-shadow: var(--box-shadow-min)!important;
+    box-shadow: none!important;
 }
 
 .select-filter{
@@ -1233,13 +1305,13 @@ input[type="password"]::-ms-clear {
 #dismiss-modal .modal-footer .btn-disconfirm{
     background-color: var(--color-primary);
     color: white;
-    font-weight: 600;
+    font-weight: 500;
     border: none;
 }
 #dismiss-modal .modal-footer .btn-discancel{
     background-color: var(--color-default);
     color: var(--color-primary);
-    font-weight: 600;
+    font-weight: 500;
     border: none;
 }
 
@@ -1622,16 +1694,16 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-header .btn:hover{
-    background-color: var(--color-hover);
+    background-color: var(--color-tertiary);
     border: var(--border-input);
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .rb-header .btn:focus{
     background-color: var(--color-secondary);
     box-shadow: 1px 0.2px 5px var(--color-tertiary);
     border: var(--border-input);
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .rbh-filter .dropdown-item:focus {
@@ -1680,8 +1752,8 @@ input[type="password"]::-ms-clear {
 .rbh-left .create-button .btn-create{
     background-color: var(--color-tertiary) !important;
     border: none;
-    border-radius: var(--border-radius-button-half);
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-input);
+    box-shadow: var(--box-shadow);
     transition: var(--tran-03);
     text-decoration: none;
     color: var(--color-primary);
@@ -1694,8 +1766,7 @@ input[type="password"]::-ms-clear {
 }
 
 .rbh-left .create-button .btn-create:hover{
-    background-color: var(--color-hover) !important;
-    color: var(--color-primary);
+    transform: scale(1.03);
     cursor: pointer;
 }
 
@@ -1988,7 +2059,7 @@ input[type="password"]::-ms-clear {
 }
 
 .creports-body .btn:hover{
-    background-color: var(--color-hover);
+    background-color: var(--color-tertiary);
     border: var(--color-hover) 1px solid;
 }
 
@@ -2088,7 +2159,7 @@ input[type="password"]::-ms-clear {
 }
 
 .ab-header .btn:hover{
-    background-color: var(--color-hover);
+    background-color: var(--color-tertiary);
     border: var(--border-input);
     font-weight: 300;
 }
@@ -2257,16 +2328,11 @@ input[type="password"]::-ms-clear {
 }
 
 .ab-add .btn:focus{
-    background-color: var(--color-secondary);
-    border: 1px var(--color-secondary) solid;
     box-shadow: var(--box-shadow);
 }
 
 .ab-add .btn:hover{
-    background-color: var(--color-hover) !important;
-    border: 1px var(--color-hover) solid;
-    border: none;
-    font-weight: 400;
+    transform: scale(1.03);
 }
 
 .ab-buttons .ab-pagination{
@@ -2364,13 +2430,25 @@ input[type="password"]::-ms-clear {
     color: white;
     font-weight: 600;
     border: none;
+    font-size: 1.1rem;
+    border-radius: var(--border-radius-input)!important;
+    transition: var(--tran-03);
 }
 #remove-account-modal .modal-footer .btn-cancel{
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 600;
     border: none;
+    font-size: 1.1rem;
+    border-radius: var(--border-radius-input)!important;
+    transition: var(--tran-03);
 }
+
+#remove-account-modal .modal-footer .btn-confirm:hover,
+#remove-account-modal .modal-footer .btn-cancel:hover{
+    transform: scale(1.03);
+}
+
 /* ============================== FAQ ============================== */
 
 .faq-box{
@@ -2535,7 +2613,7 @@ input[type="password"]::-ms-clear {
     color: var(--color-primary);
     border-radius: var(--border-radius-button-half);
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: var(--tran-03);
     height: 80%;
     margin-bottom: var(--margin-half);
@@ -2543,8 +2621,7 @@ input[type="password"]::-ms-clear {
 }
 
 .modal-footer .btn:hover{
-    background-color: var(--color-hover);
-    border: var(--color-hover) 1px solid;
+    background-color: var(--color-tertiary);
 }
 
 .modal-footer .btn:focus{
@@ -2564,7 +2641,8 @@ input[type="password"]::-ms-clear {
 #logout-modal .modal-header .btn-close,
 #report-preview-modal .modal-header .btn-close,
 #latest-detection .modal-header .btn-close,
-#customAlertModal .modal-header .btn-close{
+#customAlertModal .modal-header .btn-close,
+#terms-condition-modal .modal-header .btn-close{
     margin-right: var(--margin-half);
 }
 
@@ -2589,7 +2667,7 @@ input[type="password"]::-ms-clear {
 
 #report-preview-modal .mf-button .btn{
     width: auto;
-    font-size: 1.05rem;
+    font-size: 1rem;
     border-radius: var(--border-radius-input);
     padding: 5px 5px;
 }
@@ -2601,15 +2679,27 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-secondary);
     margin-left: var(--margin-half);
     font-weight: 400;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--color-white);
     border: var(--border-input);
     transition: var(--tran-03);
+    box-shadow: var(--box-shadow-min);
+}
+#report-preview-modal .resolve-btn{
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
+    box-shadow: var(--box-shadow);
+}
+#report-preview-modal .copy-btn{
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
+    box-shadow: var(--box-shadow);
 }
 
+#report-preview-modal .copy-btn:hover,
+#report-preview-modal .resolve-btn:hover,
 #report-preview-modal .btn-edit:hover{
-    box-shadow: var(--box-shadow);
-    background-color: var(--color-tertiary);
+    transform: scale(1.03)!important;
     
 }
 
@@ -2737,7 +2827,19 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-1);
 }
 
+#add-account-modal .btn{
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
+}
+#add-account-modal .btn:hover{
+    transform: scale(1.03);
+    background-color: var(--color-tertiary);
+}
 
+#add-account-modal .modal-footer{
+    padding: 0;
+    padding-top: var(--padding-1);
+}
 /* ======== Divider Styles ======== */
 .top-divider {
     position: fixed;
