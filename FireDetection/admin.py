@@ -1,23 +1,34 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, InitialReport
+from .models import tempReports  
 
+class TempReportsAdmin(admin.ModelAdmin):
+    list_display = ('where', 'date', 'time_detected', 'status','proof')  # Customize the columns displayed in the list view
+    search_fields = ('where', 'status')  # Enable searching by location or status
+    list_filter = ('status', 'date')  # Add filters for status and date
+    
+    fieldsets = (
+        (None, {
+            'fields': ('where', 'date', 'time_detected', 'proof', 'status'),
+        }),
+    )
+
+admin.site.register(tempReports, TempReportsAdmin)
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
 
-    # Define the fields to display in the list view of the admin panel
+
     list_display = ('email', 'name', 'role', 'verified', 'is_staff', 'is_active')
     list_filter = ('role', 'verified', 'is_staff', 'is_active')
     
-    # Fields to edit in the form view of the admin panel
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal Info', {'fields': ('first_name', 'last_name', 'name', 'date_of_birth')}),
         ('Roles & Status', {'fields': ('role', 'verified', 'is_staff', 'is_active')}),
     )
     
-    # Fields for adding new users
     add_fieldsets = (
         (None, {
             'classes': ('wide',),

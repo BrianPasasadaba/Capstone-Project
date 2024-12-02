@@ -6,10 +6,7 @@
                 <div class="mh-left">
                     <h3 class="modal-title" id="modal-title">Latest Detection</h3>
                     <div class="summary-option">
-                        <div class="detection-status" id="detection-status">
-                            DISMISSED
-                            <!-- REPORTED | DISMISSED -->
-                        </div>
+                        <div class="detection-status" id="detection-status"></div>
                     </div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -28,8 +25,8 @@
                             <div>Location</div>
                         </div>
                         <div class="info-detail">
-                            <span>October 22, 2024</span>
-                            <span>Barangay Caingin</span>
+                            <span id="detection-date"></span>
+                            <span id="detection-location"></span>
                         </div>
                     </div>
                     <div class="indiv-detail">
@@ -37,7 +34,7 @@
                             <div>Time</div>
                         </div>
                         <div class="info-detail">
-                            <span>1:11 PM</span>
+                            <span id="detection-time"></span>
                         </div>
                     </div>
                 </div>
@@ -45,6 +42,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

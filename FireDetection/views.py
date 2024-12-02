@@ -47,6 +47,26 @@ from django.db.models import Sum
 from django.db.models import Count, Sum, Value
 from django.db.models.functions import ExtractMonth, Coalesce
 import logging
+from .models import tempReports
+
+def transfer_report(request, temp_report_id):
+    try:
+
+        temp_report = tempReports.objects.get(id=temp_report_id)
+
+        new_initial_report = InitialReport.objects.create(
+            where=temp_report.where,
+            date_reported=temp_report.date,
+            time_detected=temp_report.time_detected,
+            proof=temp_report.proof,
+        )
+
+        temp_report.delete()  # Remove or update the tempReport entry if necessary
+
+        return redirect('success_url')  # Replace 'success_url' with the actual URL to redirect to
+
+    except tempReports.DoesNotExist:
+        return render(request, 'error.html', {'message': 'Temp report not found.'})
 
 def peak_report_summary(request):
     year = int(request.GET.get('year', datetime.now().year))
@@ -170,6 +190,10 @@ def monthly_reports_for_2024(request):
 def analytics_view(request):
     current_date = localtime(now())
 
+    # Fetch the latest 5 reports from tempReports
+    latest_reports = tempReports.objects.order_by('-date', '-time_detected')[:5]
+
+    # Other context data
     responded_this_month = InitialReport.objects.filter(
         status="Case Closed",
         date_reported__year=current_date.year,
@@ -183,10 +207,12 @@ def analytics_view(request):
 
     print(f"Responded this month: {responded_this_month}")
     print(f"Responded this year: {responded_this_year}")
+    print(f"Latest detections: {latest_reports}")
 
     context = {
         'responded_this_month': responded_this_month,
         'responded_this_year': responded_this_year,
+        'latest_reports': latest_reports,  # Pass the latest 5 reports to the template
     }
 
     return render(request, "analytics.html", context)
@@ -584,7 +610,7 @@ def create_report_view(request):
                 time_out_combined = datetime.strptime(f"{date_out} {time_out}", "%Y-%m-%d %H:%M")
             except ValueError:
                 time_out_combined = None
-# Generate FIR number manually
+
             last_report = InitialReport.objects.order_by('id').last()
 
             if last_report and getattr(last_report, 'fir_number', None):  # Check if last_report and fir_number exist

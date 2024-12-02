@@ -175,31 +175,32 @@
                 </div>
                 <div class="detect-body">
 
-                            <div class="detect-content-{{ forloop.counter }}">
-                                <a class="latest-preview" data-bs-toggle="modal" data-bs-target="#latest-detection">
-                                    <div class="dc-info">
-                                        <div class="dc-header">
-                                            <h6>{{ report.where|default:"No report available" }}</h6>
-                                        </div>
-                                        <div class="dc-date-time">
-                                            <h6>{{ report.date|date:"M d, Y"|default:"N/A" }}</h6>
-                                            <h6>{{ report.time|date:"H:i"|default:"N/A" }}</h6>
-                                        </div>
+                    <div class="latest-detections">
+                        {% for report in latest_reports %}
+                        <div class="detect-content-{{ forloop.counter }}">
+                            <a class="latest-preview" 
+                               data-bs-toggle="modal" 
+                               data-bs-target="#latest-detection" 
+                               data-report-status="{{ report.status|default:'No status available' }}" 
+                               data-report-proof="{{ report.proof|default:'' }}" 
+                               data-report-date="{{ report.date|date:'M d, Y'|default:'N/A' }}" 
+                               data-report-location="{{ report.where|default:'N/A' }}" 
+                               data-report-time="{{ report.time_detected|date:'h:i a, M d, Y'|default:'N/A' }}">
+                                <div class="dc-info">
+                                    <div class="dc-header">
+                                        <h6>{{ report.where|default:"No report available" }}</h6>
                                     </div>
-                                </a>
-                            </div>
-                        
-                        <div class="detect-content">
-                            <div class="dc-info">
-                                <div class="dc-header">
-                                    <h6>No reports available</h6>
+                                    <div class="dc-date-time">
+                                        <h6>{{ report.date|date:"M d, Y"|default:"N/A" }}</h6>
+                                        <h6>{{ report.time_detected|date:"H:i"|default:"N/A" }}</h6>
+                                    </div>
                                 </div>
-                                <div class="dc-date-time">
-                                    <h6>N/A</h6>
-                                    <h6>N/A</h6>
-                                </div>
-                            </div>
+                            </a>
                         </div>
+                        {% endfor %}
+                    </div>
+                    
+                     
 
                 </div>
             </div>
@@ -218,3 +219,54 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 {% endblock %}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Target the modal and its fields
+    const modal = document.getElementById('latest-detection');
+    const modalStatus = modal.querySelector('#detection-status');
+    const modalProof = modal.querySelector('#detect-proof');
+    const modalDate = modal.querySelector('#detection-date');
+    const modalLocation = modal.querySelector('#detection-location');
+    const modalTime = modal.querySelector('#detection-time');
+
+    // Add event listeners to each preview link
+    document.querySelectorAll('.latest-preview').forEach(reportLink => {
+        reportLink.addEventListener('click', () => {
+            // Extract data attributes from the clicked element
+            const reportData = {
+                status: reportLink.getAttribute('data-report-status') || 'No status available',
+                proof: reportLink.getAttribute('data-report-proof') || '',
+                date: reportLink.getAttribute('data-report-date') || 'N/A',
+                location: reportLink.getAttribute('data-report-location') || 'N/A',
+                time: reportLink.getAttribute('data-report-time') || 'N/A',
+            };
+
+            // Populate modal fields
+            modalStatus.textContent = reportData.status;
+            modalDate.textContent = reportData.date;
+            modalLocation.textContent = reportData.location;
+            modalTime.textContent = reportData.time;
+
+            // Handle proof image
+            if (reportData.proof) {
+                modalProof.src = reportData.proof.startsWith('/media/') 
+                    ? reportData.proof 
+                    : `/media/${reportData.proof}`;
+                modalProof.style.display = 'block';
+                modalProof.alt = 'Proof Image';
+            } else {
+                modalProof.src = ''; // Clear image
+                modalProof.style.display = 'none';
+                modalProof.alt = 'No proof available';
+            }
+
+            // Debugging for verification
+            console.log("Modal populated with:", reportData);
+        });
+    });
+});
+
+
+</script>
