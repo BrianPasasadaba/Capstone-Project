@@ -661,22 +661,30 @@ def update_report(request, report_id):
 
         data = request.POST
 
-        # Update fields only, excluding fir_number
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
-        report.time_reported = f"{data.get('date', '')} {data.get('detect', '')}" or report.time_reported
+
+        def convert_to_aware_datetime(date_str, time_str):
+            if date_str and time_str:
+                naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+                return timezone.make_aware(naive_dt, timezone.get_current_timezone())
+            return None
+
+        report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
+        report.time_of_arrival = convert_to_aware_datetime(data.get('date', ''), data.get('time-arrive', '')) or report.time_of_arrival
+        report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', ''), data.get('time-under', '')) or report.time_of_fire_under_control
+        report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', ''), data.get('time-out', '')) or report.time_of_fire_out
+
+        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
+        report.fire_under_control_declared_by = data.get('funder-dec', report.fire_under_control_declared_by)
+        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
+        report.fire_out_declared_by = data.get('fout-dec', report.fire_out_declared_by)
+
         report.involved = data.get('involved', report.involved)
         report.name_of_owner = data.get('owner', report.name_of_owner)
         report.alarm_status = data.get('alarm', report.alarm_status)
         report.alarm_declared_by = data.get('alarm-dec', report.alarm_declared_by)
-        report.time_of_arrival = f"{data.get('date', '')} {data.get('time-arrive', '')}" or report.time_of_arrival
-        report.time_of_fire_under_control = f"{data.get('date', '')} {data.get('time-under', '')}" or report.time_of_fire_under_control
-        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
-        report.fire_under_control_declared_by = data.get('funder-dec', report.fire_under_control_declared_by)
-        report.time_of_fire_out = f"{data.get('date-out', '')} {data.get('time-out', '')}" or report.time_of_fire_out
-        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
-        report.fire_out_declared_by = data.get('fout-dec', report.fire_out_declared_by)
         report.estimated_damages = data.get('damage', report.estimated_damages)
         report.no_of_fatality = data.get('fatality', report.no_of_fatality)
         report.no_of_injured = data.get('injured', report.no_of_injured)
@@ -694,7 +702,6 @@ def update_report(request, report_id):
         if proof:
             report.proof = proof
 
-        # Save the report without altering fir_number
         report.save()
 
         return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})
