@@ -1,47 +1,70 @@
-
-<div class="modal fade" id="latest-detection" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div
+    class="modal fade"
+    id="latest-detection"
+    tabindex="-1"
+    aria-labelledby="modal-title"
+    aria-hidden="true"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="mh-left">
                     <h3 class="modal-title" id="modal-title">Latest Detection</h3>
+                    {% if latest_reports %}
                     <div class="summary-option">
-                        <div class="detection-status" id="detection-status"></div>
+                        <div class="detection-status" id="detection-status">{{ latest_reports.0.status }}</div>
                     </div>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
             </div>
             <div class="modal-body">
                 <div class="group-report">
-                    <div class="indiv-detail">
-                        <div>Proof</div>
-                        <span class="proof-image">
-                            <img id="detect-proof" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
-                        </span>
-                    </div>
-                    <div class="indiv-detail">
-                        <div class="label-detail">
-                            <div>Date</div>
-                            <div>Location</div>
+                  
+                        <div class="indiv-detail">
+                            <div>Proof</div>
+                            <span class="proof-image">
+                                <img
+                                    id="detect-proof"
+                                    class="img-fluid"
+                                    style="max-width: 500px;"
+                                    src="{{ latest_reports.0.proof }}"  
+                                    alt="Proof Image"
+                                />
+                            </span>
                         </div>
-                        <div class="info-detail">
-                            <span id="detection-date"></span>
-                            <span id="detection-location"></span>
+                        <div class="indiv-detail">
+                            <div class="label-detail">
+                                <div>Date</div>
+                                <div>Location</div>
+                            </div>
+                            <div class="info-detail">
+                                <span id="detection-date">{{ latest_reports.0.date }}</span>
+                                <span id="detection-location">{{ latest_reports.0.where }}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="indiv-detail">
-                        <div class="label-detail">
-                            <div>Time</div>
+                        <div class="indiv-detail">
+                            <div class="label-detail">
+                                <div>Time</div>
+                            </div>
+                            <div class="info-detail">
+                                <span id="detection-time">{{ latest_reports.0.time_detected }}</span>
+                            </div>
                         </div>
-                        <div class="info-detail">
-                            <span id="detection-time"></span>
-                        </div>
-                    </div>
+                        <hr>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <script>
