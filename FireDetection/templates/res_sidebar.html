@@ -29,8 +29,9 @@
 
 <!--POP UP ALERT-->
     <!-- Modal -->
-    {% if request.user.role == "Radio Operator" %}
 <!--
+    {% if request.user.role == "Radio Operator" %}
+
 <div class="modal fade" id="pop-up-modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -78,7 +79,7 @@
       </div>
     </div>
 </div>
--->
+
 {% endif %}
 
 {% if user_role == "Radio Operator" %}
@@ -89,6 +90,8 @@
     });
 </script>
 {% endif %}
+
+-->
 
 <!--TOAST START-->
    <!-- Toast container -->
@@ -369,7 +372,7 @@ document.addEventListener('DOMContentLoaded', async function(){
                     <small class="text-muted">just now</small>
                 </div>
                 <div class="toast-body">
-                    <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#${modalId}" data-bs-dismiss="toast" aria-label="Close">
+                    <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#${modalId}"  aria-label="Close">
                         View Details <i class="bi bi-arrow-right-circle"></i>
                     </button>
                 </div>
