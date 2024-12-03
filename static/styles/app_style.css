@@ -1053,10 +1053,10 @@ input[type="password"]::-ms-clear {
 }
 
 /* ============================== POP UP ALERT MODAL============================== */
-#pop-up-modal{
+.modal-container .custom-modal{
     text-align: center;
 }
-#pop-up-modal .modal-dialog{
+.modal-container .custom-modal .modal-dialog{
     padding: var(--padding-1);
     max-width: 600px;
     width: auto;
@@ -1065,13 +1065,13 @@ input[type="password"]::-ms-clear {
     justify-content: center;
 }
 
-#pop-up-modal .modal-header{
+.modal-container .custom-modal .modal-header{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-#pop-up-modal .modal-title{
+.modal-container .custom-modal .modal-title{
     /* border: 2px solid var(--color-primary); */
     display: flex;
     flex-direction: row;
@@ -1080,23 +1080,23 @@ input[type="password"]::-ms-clear {
     font-weight: 600;
 }
 
-#pop-up-modal .modal-title .bi{
+.modal-container .custom-modal .modal-title .bi{
     font-size: 40px;
 }
 
-#pop-up-modal .modal-body h4{
+.modal-container .custom-modal .modal-body h4{
     color: var(--color-danger);
     font-weight: 600;
 }
 
-.group-report{
+.custom-modal .modal-body .group-report{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: start;
     /* border: 2px solid var(--color-primary);  */
 }
-.indiv-detail{
+.modal-container .custom-modal .modal-body .indiv-detail{
     /* border: 2px solid var(--color-sidebar);  */
     width: 100%;
     display: flex;
@@ -1106,46 +1106,46 @@ input[type="password"]::-ms-clear {
     padding: var(--padding-half);
 }
 
-.label-detail{
+.custom-modal .modal-body .label-detail{
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
 }
 
-.info-detail{
+.custom-modal .modal-body .info-detail{
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
 }
 
-.indiv-detail span{
+.custom-modal .modal-body .indiv-detail span{
     /* border: 2px solid var(--color-tertiary);  */
     font-size: 1rem;
     font-weight: 400;
     color: var(--color-secondary);
 }
-.indiv-detail div{
+.custom-modal .modal-body .indiv-detail div{
     /* border: 2px solid var(--color-secondary);  */
     color: var(--color-primary);
     font-size: 1.3rem;
     font-weight: 600;
 }
 
-#pop-up-modal .modal-footer .mf-button{
+.custom-modal .modal-footer .mf-button{
     gap: var(--gap-2);
 }
 
-#pop-up-modal .modal-footer .btn{
+.custom-modal .modal-footer .btn{
     width: 120px;
 }
 
-#pop-up-modal .modal-footer #btn-popreport{
+.custom-modal .modal-footer .report-btn{
     color: white;
 }
 
-#pop-up-modal .modal-footer #btn-dismiss{
+.custom-modal .modal-footer .dismiss-btn{
     background-color: var(--color-primary);
     color: white;
     border: none;
@@ -2453,7 +2453,7 @@ input[type="password"]::-ms-clear {
 
 #create-report-modal,
 #report-preview-modal,
-#pop-up-modal{
+.modal-container .custom-modal{
     color: var(--color-primary);
 }
 

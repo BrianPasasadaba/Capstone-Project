@@ -752,3 +752,21 @@ def get_temp_report_details_view(request, report_id):
     if details:
         return JsonResponse(details)
     return JsonResponse({'error': 'Report not found'}, status=404)
+
+def get_unresolved_reports(request):
+    # Query tempReports where status is null
+    unresolved_reports = tempReports.objects.filter(status__isnull=True)
+    
+    # Prepare report details
+    report_details = []
+    for report in unresolved_reports:
+        report_details.append({
+            'id': report.id,
+            'where': report.where,
+            'date': report.date.strftime('%B %d, %Y'),
+            'time': report.time_detected.strftime('%I:%M %p'),
+            'proof': report.proof,
+            'status': report.status
+        })
+    
+    return JsonResponse(report_details, safe=False)

@@ -14,9 +14,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" charset="UTF-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script defer src="{% static 'js/toast.js' %}"></script>
-    <script defer src="{% static 'js/popup_alert.js' %}"></script>
     <script defer src="{% static 'js/sidebar_pop.js' %}"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>{% block title %} True the Fire {% endblock %}</title>
@@ -24,6 +21,12 @@
 </head>
 
 <body>
+    <!--CSRF-TOKEN-->
+    <form>
+        {% csrf_token %}
+    </form>
+
+
 <!--POP UP ALERT-->
     <!-- Modal -->
     {% if request.user.role == "Radio Operator" %}
@@ -122,6 +125,10 @@
         </div>
       </div>
         -->
+</div>
+
+<div class="modal-container">
+
 </div>
 {% endif %}
 
@@ -253,6 +260,7 @@
 -->
 <!-- DESKTOP UPDATE -->
 <script>
+document.addEventListener('DOMContentLoaded', async function(){
     class DesktopUpdates {
         constructor() {
             this.eventSource = new EventSource('{% url "event-stream" %}');
@@ -271,12 +279,10 @@
         async handleUpdate(data) {
             if (data.type === 'new_temp_report') {
                 try {
-                    // Fetch report details
                     const response = await fetch(`/get-temp-report-details/${data.report_id}/`);
                     const reportDetails = await response.json();
                     
                     if (reportDetails) {
-                        // Create unique IDs for toast and modal
                         this.createToastAndModal(reportDetails);
                     }
                 } catch (error) {
@@ -284,12 +290,10 @@
                 }
             } else if (data.type === 'updated_record') {
                 try {
-                    // Fetch updated report details
                     const response = await fetch(`/get-temp-report-details/${data.report_id}/`);
                     const reportDetails = await response.json();
                     
                     if (reportDetails) {
-                        // Update existing toast and modal
                         this.updateExistingToastAndModal(data.report_id, reportDetails);
                     }
                 } catch (error) {
@@ -299,17 +303,14 @@
         }
     
         updateExistingToastAndModal(reportId, reportDetails) {
-            // Find the modal associated with this report ID
             const modal = document.querySelector(`[data-report-id="${reportId}"]`);
             
             if (modal) {
-                // Update the proof image in the modal
                 const proofImage = modal.querySelector('.proof-image img');
                 if (proofImage) {
                     proofImage.src = reportDetails.proof;
                 }
     
-                // Optionally, update other details if needed
                 const dateElement = modal.querySelector('.info-detail span:first-child');
                 const locationElement = modal.querySelector('.info-detail span:nth-child(2)');
                 const timeElement = modal.querySelector('.info-detail span:last-child');
@@ -326,6 +327,12 @@
             // Create unique IDs
             const toastId = `dynamic-toast-${this.toastCounter}`;
             const modalId = `dynamic-modal-${this.toastCounter}`;
+    
+            // Ensure bootstrap is available
+            if (typeof bootstrap === 'undefined') {
+                console.error('Bootstrap is not loaded');
+                return;
+            }
     
             // Create Toast
             const toastContainer = document.querySelector('.toast-container');
@@ -351,9 +358,10 @@
             toastContainer.appendChild(newToast);
     
             // Create Modal
-            const modalContainer = document.createElement('div');
-            modalContainer.innerHTML = `
-            <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" data-report-id="${reportDetails.id}">
+            const modalContainer = document.querySelector('.modal-container');
+            const newModal = document.createElement('div');
+            newModal.innerHTML = `
+            <div class="modal fade custom-modal" id="${modalId}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" data-report-id="${reportDetails.id}">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -362,7 +370,6 @@
                                     <path d="M8.97897 26.875V25.0834H7.1873V21.5H8.97897V19.7084H12.5623V26.875H8.97897ZM34.0623 21.5V19.7084H30.479V26.875H34.0623V25.0834H35.854V21.5H34.0623ZM32.2706 10.75H28.4365C27.7915 8.24171 25.8206 6.27087 23.3123 5.62587V3.58337H19.729V5.62587C17.2206 6.27087 15.2498 8.24171 14.6048 10.75H10.7706V14.3334H32.2706V10.75ZM32.2706 39.4167H10.7706C10.7706 37.4459 12.3831 35.8334 14.354 35.8334V16.125H28.6873V35.8334C29.6377 35.8334 30.5491 36.2109 31.2211 36.8829C31.8931 37.5549 32.2706 38.4664 32.2706 39.4167ZM17.9373 23.2917C17.9373 24.2421 18.3148 25.1535 18.9868 25.8255C19.6588 26.4975 20.5703 26.875 21.5206 26.875C22.471 26.875 23.3824 26.4975 24.0544 25.8255C24.7264 25.1535 25.104 24.2421 25.104 23.2917C25.104 21.303 23.5094 19.7084 21.5206 19.7084C19.5319 19.7084 17.9373 21.3209 17.9373 23.2917Z" fill="#ED7027"/>
                                 </svg>Alert!
                             </h3>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <h4>The System Detected a Fire!</h4>
@@ -370,7 +377,7 @@
                                 <div class="indiv-detail">
                                     <div>Proof</div>
                                     <span class="proof-image">
-                                        <img id="detect-proof-${this.toastCounter}" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
+                                        <img src="${reportDetails.proof}" id="detect-proof-${this.toastCounter}" class="img-fluid" style="max-width: 350px;" alt="Proof Image">
                                     </span>
                                 </div>
                                 <div class="indiv-detail">
@@ -395,8 +402,8 @@
                         </div>
                         <div class="modal-footer">
                             <div class="mf-button">
-                                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Dismiss</button>
-                                <button type="button" class="btn" id="btn-popreport-${this.toastCounter}">Report</button>
+                                <button type="button" class="btn dismiss-btn" data-bs-dismiss="modal" aria-label="Close">Dismiss</button>
+                                <button type="button" class="btn report-btn" id="btn-popreport-${this.toastCounter}">Report</button>
                             </div>
                         </div>
                     </div>
@@ -405,25 +412,65 @@
             `;
             
             // Append modal to body
-            document.body.appendChild(modalContainer.firstChild);
-    
-            // Update proof image
-            const proofImg = document.getElementById(`detect-proof-${this.toastCounter}`);
-            proofImg.src = reportDetails.proof;
-    
-            // Initialize Toast
+            modalContainer.appendChild(newModal);
+            console.log(newModal.firstChild);
+
+            // Initialize Bootstrap components
             const toastElement = document.getElementById(toastId);
-            const toastInstance = new bootstrap.Toast(toastElement, {
-                autohide: false
-            });
-            toastInstance.show();
+                if (toastElement && bootstrap.Toast) {
+                    new bootstrap.Toast(toastElement, {
+                        autohide: false
+                    }).show();
+                }
+    
+            // Initialize Modal
+            const modalElement = document.getElementById(modalId);
+            if (modalElement && bootstrap.Modal) {
+                new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+            }
         }
     }
-    
-    // Initialize the connection
-    const desktopUpdates = new DesktopUpdates();
-    </script>
 
+    try {
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Ensure Bootstrap is loaded
+        if (typeof bootstrap === 'undefined') {
+            console.error('Bootstrap is not loaded');
+            return;
+        }
+
+        const response = await fetch('/get-unresolved-reports/', {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        });
+
+        const unresolvedReports = await response.json();
+
+        // Create a global instance of DesktopUpdates
+        window.desktopUpdates = new DesktopUpdates();
+
+        // Create toasts and modals for unresolved reports
+        unresolvedReports.forEach(reportDetails => {
+            window.desktopUpdates.createToastAndModal(reportDetails);
+        });
+    } catch (error) {
+        console.error('Error fetching unresolved reports:', error);
+    }
+
+    // Initialize the class after DOM is loaded
+    const desktopUpdates = new DesktopUpdates();
+});
+</script>
+
+    
     {%block scripts%}
     <!-- DO NOT ADD SCRIPTS HERE -->
     {%endblock%}
