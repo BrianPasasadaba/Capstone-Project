@@ -47,6 +47,26 @@ from django.db.models import Sum
 from django.db.models import Count, Sum, Value
 from django.db.models.functions import ExtractMonth, Coalesce
 import logging
+from .models import tempReports
+
+def transfer_report(request, temp_report_id):
+    try:
+
+        temp_report = tempReports.objects.get(id=temp_report_id)
+
+        new_initial_report = InitialReport.objects.create(
+            where=temp_report.where,
+            date_reported=temp_report.date,
+            time_detected=temp_report.time_detected,
+            proof=temp_report.proof,
+        )
+
+        temp_report.delete()  # Remove or update the tempReport entry if necessary
+
+        return redirect('success_url')  # Replace 'success_url' with the actual URL to redirect to
+
+    except tempReports.DoesNotExist:
+        return render(request, 'error.html', {'message': 'Temp report not found.'})
 
 def peak_report_summary(request):
     year = int(request.GET.get('year', datetime.now().year))
@@ -62,7 +82,7 @@ def peak_report_summary(request):
     )
 
     peak_month = month_counts[0] if month_counts else None
-    peak_month_name = datetime(1900, peak_month['month'], 1).strftime('%B') if peak_month else 'N/A'
+    peak_month_name = datetime(1900, peak_month['month'], 1).strftime('%B') if peak_month else 'None'
 
     peak_month_reports = reports.filter(date_reported__month=peak_month['month']) if peak_month else None
 
@@ -73,7 +93,7 @@ def peak_report_summary(request):
         .annotate(count=Count('where'))  
         .order_by('-count')
     ) if peak_month_reports else None
-    most_affected_location = location_counts[0]['where'] if location_counts else 'N/A'
+    most_affected_location = location_counts[0]['where'] if location_counts else 'None'
 
     total_casualties = (
         peak_month_reports.aggregate(
@@ -116,7 +136,7 @@ def monthly_report_summary(request):
         .annotate(count=Count('where'))
         .order_by('-count')
     )
-    most_affected_location = location_counts[0]['where'] if location_counts else 'N/A'
+    most_affected_location = location_counts[0]['where'] if location_counts else 'None'
 
     # Calculate total casualties
     total_casualties = reports.aggregate(
@@ -170,6 +190,10 @@ def monthly_reports_for_2024(request):
 def analytics_view(request):
     current_date = localtime(now())
 
+    # Fetch the latest 5 reports from tempReports
+    latest_reports = tempReports.objects.order_by('-date', '-time_detected')[:5]
+
+    # Other context data
     responded_this_month = InitialReport.objects.filter(
         status="Case Closed",
         date_reported__year=current_date.year,
@@ -183,10 +207,12 @@ def analytics_view(request):
 
     print(f"Responded this month: {responded_this_month}")
     print(f"Responded this year: {responded_this_year}")
+    print(f"Latest detections: {latest_reports}")
 
     context = {
         'responded_this_month': responded_this_month,
         'responded_this_year': responded_this_year,
+        'latest_reports': latest_reports,  # Pass the latest 5 reports to the template
     }
 
     return render(request, "analytics.html", context)
@@ -584,7 +610,7 @@ def create_report_view(request):
                 time_out_combined = datetime.strptime(f"{date_out} {time_out}", "%Y-%m-%d %H:%M")
             except ValueError:
                 time_out_combined = None
-# Generate FIR number manually
+
             last_report = InitialReport.objects.order_by('id').last()
 
             if last_report and getattr(last_report, 'fir_number', None):  # Check if last_report and fir_number exist
@@ -661,22 +687,30 @@ def update_report(request, report_id):
 
         data = request.POST
 
-        # Update fields only, excluding fir_number
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
-        report.time_reported = f"{data.get('date', '')} {data.get('detect', '')}" or report.time_reported
+
+        def convert_to_aware_datetime(date_str, time_str):
+            if date_str and time_str:
+                naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+                return timezone.make_aware(naive_dt, timezone.get_current_timezone())
+            return None
+
+        report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
+        report.time_of_arrival = convert_to_aware_datetime(data.get('date', ''), data.get('time-arrive', '')) or report.time_of_arrival
+        report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', ''), data.get('time-under', '')) or report.time_of_fire_under_control
+        report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', ''), data.get('time-out', '')) or report.time_of_fire_out
+
+        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
+        report.fire_under_control_declared_by = data.get('funder-dec', report.fire_under_control_declared_by)
+        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
+        report.fire_out_declared_by = data.get('fout-dec', report.fire_out_declared_by)
+
         report.involved = data.get('involved', report.involved)
         report.name_of_owner = data.get('owner', report.name_of_owner)
         report.alarm_status = data.get('alarm', report.alarm_status)
         report.alarm_declared_by = data.get('alarm-dec', report.alarm_declared_by)
-        report.time_of_arrival = f"{data.get('date', '')} {data.get('time-arrive', '')}" or report.time_of_arrival
-        report.time_of_fire_under_control = f"{data.get('date', '')} {data.get('time-under', '')}" or report.time_of_fire_under_control
-        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
-        report.fire_under_control_declared_by = data.get('funder-dec', report.fire_under_control_declared_by)
-        report.time_of_fire_out = f"{data.get('date-out', '')} {data.get('time-out', '')}" or report.time_of_fire_out
-        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
-        report.fire_out_declared_by = data.get('fout-dec', report.fire_out_declared_by)
         report.estimated_damages = data.get('damage', report.estimated_damages)
         report.no_of_fatality = data.get('fatality', report.no_of_fatality)
         report.no_of_injured = data.get('injured', report.no_of_injured)
@@ -694,7 +728,6 @@ def update_report(request, report_id):
         if proof:
             report.proof = proof
 
-        # Save the report without altering fir_number
         report.save()
 
         return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})

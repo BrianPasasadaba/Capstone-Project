@@ -30,6 +30,7 @@ urlpatterns = [
     path('get-temp-report-details/<int:report_id>/', views.get_temp_report_details_view, name='get-temp-report-details'),
     path('api/monthly-report-summary/', views.monthly_report_summary, name='monthly_report_summary'),
     path('get-unresolved-reports/', views.get_unresolved_reports, name='get-unresolved-reports'),
+    path('transfer_report/<int:temp_report_id>/', views.transfer_report, name='transfer_report'),
 
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
