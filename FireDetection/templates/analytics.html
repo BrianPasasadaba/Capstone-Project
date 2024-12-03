@@ -149,60 +149,50 @@
                                 <li><span>0</span></li>
                             </ul>
                             <ul class="incident-bars">
-
-                                {% comment %} <li><div class="bar" data-percentage="55" style="background: #E4AE7E;"></div><span>2018</span></li>
-                                <li><div class="bar" data-percentage="85" style="background: #E08E44;"></div><span>2019</span></li>
-                                <li><div class="bar" data-percentage="75" style="background: #ED7027;"></div><span>2020</span></li>
-                                <li><div class="bar" data-percentage="50" style="background: #E4AE7E;"></div><span>2021</span></li>
-                                <li><div class="bar" data-percentage="45" style="background: #3C4273;"></div><span>2022</span></li>
-                                <li><div class="bar" data-percentage="60" style="background: #FE982D;"></div><span>2023</span></li>
-                                <li>
-
-                                    <div class="bar" data-percentage="{{ incidents_per_year.2024 }}" 
-                                         style="background: #3C4273; height: {{  incidents_in_2024 }}%;"></div>
-                                    <span>2024</span>
-
-                                    
-                                </li>                      {% endcomment %}
                             </ul>
                     </div>
 <!--CHART END-->
                 </div>
             </div>
             <div class="detect-card">
-                <div class="detect-header">
-                    <h1>LATEST DETECTION</h1>
-                </div>
-                <div class="detect-body">
-
-                    <div class="latest-detections">
-                        {% for report in latest_reports %}
-                        <div class="detect-content-{{ forloop.counter }}">
-                            <a class="latest-preview" 
-                               data-bs-toggle="modal" 
-                               data-bs-target="#latest-detection" 
-                               data-report-status="{{ report.status|default:'No status available' }}" 
-                               data-report-proof="{{ report.proof|default:'' }}" 
-                               data-report-date="{{ report.date|date:'M d, Y'|default:'N/A' }}" 
-                               data-report-location="{{ report.where|default:'N/A' }}" 
-                               data-report-time="{{ report.time_detected|date:'h:i a, M d, Y'|default:'N/A' }}">
-                                <div class="dc-info">
-                                    <div class="dc-header">
-                                        <h6>{{ report.where|default:"No report available" }}</h6>
-                                    </div>
-                                    <div class="dc-date-time">
-                                        <h6>{{ report.date|date:"M d, Y"|default:"N/A" }}</h6>
-                                        <h6>{{ report.time_detected|date:"H:i"|default:"N/A" }}</h6>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        {% endfor %}
+                    <div class="ld-table">
+                        <table>
+                                <thead>
+                                    <tr>
+                                        <th><h1>LATEST DETECTION</h1></th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    <tr data-bs-toggle="modal" data-bs-target="#latest-detection">
+                                        <td class="ld-loc" id="ld-loc">top</td>
+                                        <td class="ld-date" id="ld-date">bottom left</td>
+                                        <td class="ld-time" id="ld-time">bottom right</td>
+                                    </tr>
+                                    <tr data-bs-toggle="modal" data-bs-target="#latest-detection">
+                                        <td class="ld-loc" id="ld-loc">top</td>
+                                        <td class="ld-date" id="ld-date">bottom left</td>
+                                        <td class="ld-time" id="ld-time">bottom right</td>
+                                    </tr>
+                                    <tr data-bs-toggle="modal" data-bs-target="#latest-detection">
+                                        <td class="ld-loc" id="ld-loc">top</td>
+                                        <td class="ld-date" id="ld-date">bottom left</td>
+                                        <td class="ld-time" id="ld-time">bottom right</td>
+                                    </tr>
+                                    <tr data-bs-toggle="modal" data-bs-target="#latest-detection">
+                                        <td class="ld-loc" id="ld-loc">top</td>
+                                        <td class="ld-date" id="ld-date">bottom left</td>
+                                        <td class="ld-time" id="ld-time">bottom right</td>
+                                    </tr>
+                                    <tr data-bs-toggle="modal" data-bs-target="#latest-detection">
+                                        <td class="ld-loc" id="ld-loc">top</td>
+                                        <td class="ld-date" id="ld-date">bottom left</td>
+                                        <td class="ld-time" id="ld-time">bottom right</td>
+                                    </tr>
+                                </tbody>
+                                
+                        </table>
                     </div>
-                    
-                     
-
-                </div>
             </div>
 </main>
 {% include "modal_change_password.html" %}
