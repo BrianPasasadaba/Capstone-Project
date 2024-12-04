@@ -1510,9 +1510,10 @@ input[type="password"]::-ms-clear {
 
 .ld-table tbody tr:hover{
     transform: scale(1.03);
-    box-shadow: var(--box-shadow-min);
+    box-shadow: var(--box-shadow);
     cursor: pointer;
     border: var(--color-primary) solid 2px;
+    font-weight: 500;
 }
 
 .ld-table tbody tr .ld-loc{
