@@ -75,6 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'CapstoneProject.wsgi.application'
+ASGI_APPLICATION = 'CapstoneProject.asgi.application'
 
 
 
