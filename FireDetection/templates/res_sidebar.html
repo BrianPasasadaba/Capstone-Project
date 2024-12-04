@@ -388,6 +388,9 @@ document.addEventListener('DOMContentLoaded', async function(){
                                 bootstrap.Toast.getInstance(toast).hide();
                                 toast.remove();
                             }
+
+                            // Reload the page to remove the dismissed report
+                            location.reload();
                         } else {
                             console.error('Failed to update report status');
                         }
@@ -452,6 +455,9 @@ document.addEventListener('DOMContentLoaded', async function(){
                                 bootstrap.Toast.getInstance(toast).hide();
                                 toast.remove();
                             }
+
+                            // Reload the page to remove the report
+                            location.reload();
                         } else {
                             console.error('Failed to transfer report');
                         }
