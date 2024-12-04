@@ -1492,6 +1492,7 @@ input[type="password"]::-ms-clear {
     align-items: center;
     gap: var(--gap-half);
     padding: var(--padding-half);
+    overflow-y: auto;
 }
 
 .ld-table tbody tr{
