@@ -136,6 +136,7 @@ def peak_report_summary(request):
     peak_data = {
         'peak_month': peak_month_name,
         'peak_month_count': peak_month['count'] if peak_month else 0,
+        'reported_count' : reports.count(),
         'most_affected_location': most_affected_location,
         'total_casualties': total_casualties_count,
         'total_estimated_damages': total_estimated_damages,
@@ -177,6 +178,7 @@ def monthly_report_summary(request):
 
     # Prepare the response data
     monthly_data = {
+        'reported_count': reports.count(),
         'most_affected_location': most_affected_location,
         'total_casualties': total_casualties_count,
         'total_estimated_damages': total_estimated_damages,

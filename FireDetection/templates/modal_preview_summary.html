@@ -47,8 +47,8 @@
             <div class="modal-body">
                 <div class="group-summary">
                     <div class="indiv-summary">
-                        <div>Fire Detected Counts:</div>
-                        <span>20</span>
+                        <div>Fire Reported Counts:</div>
+                        <span id="reportedCount"></span>
                     </div>
 
                     <div class="indiv-summary" id="peakFireContainer">
@@ -94,6 +94,7 @@
                 return response.json();
             })
             .then(data => {
+                document.getElementById("reportedCount").textContent = data.reported_count || "0";
                 document.getElementById("peakFireValue").textContent = data.peak_month || "None";
                 document.getElementById("mostAffected").textContent = data.most_affected_location || "None";
                 document.getElementById("totalCasualty").textContent = data.total_casualties || "0";
@@ -111,6 +112,7 @@
                 return response.json();
             })
             .then(data => {
+                document.getElementById("reportedCount").textContent = data.reported_count || "0";
                 document.getElementById("peakFireValue").textContent = data.peak_month || "None";
                 document.getElementById("mostAffected").textContent = data.most_affected_location || "None";
                 document.getElementById("totalCasualty").textContent = data.total_casualties || "0";
