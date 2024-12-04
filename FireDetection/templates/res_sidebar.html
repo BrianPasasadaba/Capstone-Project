@@ -322,6 +322,13 @@ document.addEventListener('DOMContentLoaded', async function(){
                         const confirmButton = dismissModal.querySelector('.btn-disconfirm');
                         confirmButton.setAttribute('data-report-id', reportId);
                         confirmButton.setAttribute('data-main-modal-id', modalId);
+
+                        // Hide the main modal when dismiss-modal opens
+                        const mainModal = document.getElementById(modalId);
+                        if (mainModal) {
+                            const mainModalInstance = bootstrap.Modal.getInstance(mainModal);
+                            mainModalInstance.hide();
+                        }
                         
                         bootstrapDismissModal.show();
                     }
@@ -460,18 +467,13 @@ document.addEventListener('DOMContentLoaded', async function(){
                         const dismissModalInstance = bootstrap.Modal.getInstance(dismissModal);
                         dismissModalInstance.hide();
                         
-                        // Manually remove backdrops
-                        const removeBackdrop = () => {
-                            const backdrops = document.querySelectorAll('.modal-backdrop');
-                            backdrops.forEach(backdrop => backdrop.remove());
-                            document.body.classList.remove('modal-open');
-                        };
-                        
-                        // Use event listener to ensure backdrop is removed
-                        dismissModal.addEventListener('hidden.bs.modal', removeBackdrop, { once: true });
-                        
-                        // Fallback to manual backdrop removal
-                        removeBackdrop();
+                        // Find and re-open the main modal
+                        const mainModalId = dismissModal.querySelector('.btn-disconfirm').getAttribute('data-main-modal-id');
+                        const mainModal = document.getElementById(mainModalId);
+                        if (mainModal) {
+                            const mainModalInstance = bootstrap.Modal.getInstance(mainModal);
+                            mainModalInstance.show();
+                        }
                     }
                 }
             });
