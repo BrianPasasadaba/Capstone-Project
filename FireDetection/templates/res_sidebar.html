@@ -591,20 +591,18 @@ document.addEventListener('DOMContentLoaded', async function(){
                                 </div>
                                 <div class="indiv-detail">
                                     <div class="label-detail">
-                                        <div>Date</div>
-                                        <div>Location</div>
-                                    </div>
-                                    <div class="info-detail">
-                                        <span>${reportDetails.date}</span>
-                                        <span>${reportDetails.where}</span>
-                                    </div>
-                                </div>
-                                <div class="indiv-detail">
-                                    <div class="label-detail">
-                                        <div>Time</div>
-                                    </div>
-                                    <div class="info-detail">
-                                        <span>${reportDetails.time}</span>
+                                        <div class="info-detail ind-date">
+                                            <div>Date</div>
+                                            <span>${reportDetails.date}</span>
+                                        </div>
+                                        <div class="info-detail ind-where">
+                                            <div>Location</div>
+                                            <span>${reportDetails.where}</span>
+                                        </div>
+                                        <div class="info-detail ind-time">
+                                            <div>Time</div>
+                                            <span>${reportDetails.time}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
