@@ -176,7 +176,7 @@ reportRows.forEach(row => {
         // Handle proof image
         const proofImg = document.getElementById('proof');
         if (proof) {
-            proofImg.src = proof;
+            proofImg.src = `/media/${proof}`;
             proofImg.style.display = 'block';
         } else {
             proofImg.style.display = 'none';
