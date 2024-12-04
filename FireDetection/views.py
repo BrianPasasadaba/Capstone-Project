@@ -213,8 +213,8 @@ def analytics_view(request):
     current_date = localtime(now())
 
     latest_reports = tempReports.objects.filter(
-        status__in=['Filed', 'Dismissed']
-    ).order_by('-date', '-time_detected')[:10]
+        status__in=['Reported', 'Dismissed']
+    ).order_by('-date', '-time_detected')[:8]
 
 
     responded_this_month = InitialReport.objects.filter(
@@ -541,7 +541,8 @@ def logout_view(request):
 
 @login_required
 def reports_view(request):
-    reports = InitialReport.objects.all() 
+    reports = reports = InitialReport.objects.order_by('fir_number')
+
     context = {
         'reports': reports,
     }
