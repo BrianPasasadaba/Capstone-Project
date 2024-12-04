@@ -29,8 +29,9 @@
 
 <!--POP UP ALERT-->
     <!-- Modal -->
-    {% if request.user.role == "Radio Operator" %}
 <!--
+    {% if request.user.role == "Radio Operator" %}
+
 <div class="modal fade" id="pop-up-modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -78,7 +79,7 @@
       </div>
     </div>
 </div>
--->
+
 {% endif %}
 
 {% if user_role == "Radio Operator" %}
@@ -89,6 +90,8 @@
     });
 </script>
 {% endif %}
+
+-->
 
 <!--TOAST START-->
    <!-- Toast container -->
@@ -294,6 +297,181 @@ document.addEventListener('DOMContentLoaded', async function(){
             this.eventSource.onerror = (error) => {
                 console.error('EventSource failed:', error);
             };
+
+            this.addGlobalEventListeners();
+        }
+
+        addGlobalEventListeners() {
+            // Delegate event listeners to handle dynamically created buttons
+            document.addEventListener('click', async (event) => {
+                // Dismiss button in main modal
+                if (event.target.closest('.dismiss-btn')) {
+                    const modal = event.target.closest('.modal');
+                    const reportId = modal.getAttribute('data-report-id');
+                    const modalId = modal.getAttribute('id');
+                    
+                    // Show dismiss confirmation modal
+                    const dismissModal = document.getElementById('dismiss-modal');
+                    if (dismissModal) {
+                        const bootstrapDismissModal = new bootstrap.Modal(dismissModal);
+                        
+                        // Store the current report ID on the confirm button
+                        const confirmButton = dismissModal.querySelector('.btn-disconfirm');
+                        confirmButton.setAttribute('data-report-id', reportId);
+                        confirmButton.setAttribute('data-main-modal-id', modalId);
+                        
+                        bootstrapDismissModal.show();
+                    }
+                }
+
+                // Confirm dismiss button
+                if (event.target.closest('.btn-disconfirm')) {
+                    const reportId = event.target.getAttribute('data-report-id');
+                    const mainModalId = event.target.getAttribute('data-main-modal-id');
+                    
+                    try {
+                        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                        const response = await fetch(`/update-temp-report-status/${reportId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrftoken,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ status: 'Dismissed' }),
+                            credentials: 'same-origin'
+                        });
+
+                        if (response.ok) {
+                            // Close both modals
+                            const dismissModal = document.getElementById('dismiss-modal');
+                            const mainModal = document.getElementById(mainModalId);
+                            
+                            // Manually remove backdrops
+                            const removeBackdrop = () => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                            };
+                            
+                            if (dismissModal) {
+                                const dismissModalInstance = bootstrap.Modal.getInstance(dismissModal);
+                                dismissModalInstance.hide();
+                                
+                                // Use event listener to ensure backdrop is removed
+                                dismissModal.addEventListener('hidden.bs.modal', removeBackdrop, { once: true });
+                            }
+                            
+                            if (mainModal) {
+                                const mainModalInstance = bootstrap.Modal.getInstance(mainModal);
+                                mainModalInstance.hide();
+                                
+                                // Use event listener to ensure backdrop is removed
+                                mainModal.addEventListener('hidden.bs.modal', removeBackdrop, { once: true });
+                            }
+
+                            // Fallback to manual backdrop removal
+                            removeBackdrop();
+
+                            // Remove corresponding toast
+                            const toast = document.querySelector(`.toast[data-report-id="${reportId}"]`);
+                            if (toast) {
+                                bootstrap.Toast.getInstance(toast).hide();
+                                toast.remove();
+                            }
+                        } else {
+                            console.error('Failed to update report status');
+                        }
+                    } catch (error) {
+                        console.error('Error updating report status:', error);
+                    }
+                }
+
+                // Report button
+                if (event.target.closest('.report-btn')) {
+                    const modal = event.target.closest('.modal');
+                    const reportId = modal.getAttribute('data-report-id');
+                    const modalId = modal.getAttribute('id');
+                    
+                    try {
+                        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                        const response = await fetch(`/transfer_report/${reportId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrftoken,
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'same-origin'
+                        });
+
+                        if (response.ok) {
+                            // Update report status to Filed
+                            await fetch(`/update-temp-report-status/${reportId}/`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRFToken': csrftoken,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ status: 'Filed' }),
+                                credentials: 'same-origin'
+                            });
+
+                            // Manually remove backdrops
+                            const removeBackdrop = () => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                            };
+
+
+                            // Close the modal
+                            const mainModal = document.getElementById(modalId);
+                            if (mainModal) {
+                                const mainModalInstance = bootstrap.Modal.getInstance(mainModal);
+                                mainModalInstance.hide();
+                                
+                                // Use event listener to ensure backdrop is removed
+                                mainModal.addEventListener('hidden.bs.modal', removeBackdrop, { once: true });
+                            }
+
+                            // Fallback to manual backdrop removal
+                            removeBackdrop();
+
+                            // Remove corresponding toast
+                            const toast = document.querySelector(`.toast[data-report-id="${reportId}"]`);
+                            if (toast) {
+                                bootstrap.Toast.getInstance(toast).hide();
+                                toast.remove();
+                            }
+                        } else {
+                            console.error('Failed to transfer report');
+                        }
+                    } catch (error) {
+                        console.error('Error transferring report:', error);
+                    }
+                }
+
+                // Cancel dismiss button (return to previous modal)
+                if (event.target.closest('.btn-discancel')) {
+                    const dismissModal = document.getElementById('dismiss-modal');
+                    if (dismissModal) {
+                        const dismissModalInstance = bootstrap.Modal.getInstance(dismissModal);
+                        dismissModalInstance.hide();
+                        
+                        // Manually remove backdrops
+                        const removeBackdrop = () => {
+                            const backdrops = document.querySelectorAll('.modal-backdrop');
+                            backdrops.forEach(backdrop => backdrop.remove());
+                            document.body.classList.remove('modal-open');
+                        };
+                        
+                        // Use event listener to ensure backdrop is removed
+                        dismissModal.addEventListener('hidden.bs.modal', removeBackdrop, { once: true });
+                        
+                        // Fallback to manual backdrop removal
+                        removeBackdrop();
+                    }
+                }
+            });
         }
     
         async handleUpdate(data) {
@@ -359,6 +537,7 @@ document.addEventListener('DOMContentLoaded', async function(){
             const newToast = document.createElement('div');
             newToast.className = 'toast';
             newToast.id = toastId;
+            newToast.setAttribute('data-report-id', reportDetails.id);
             newToast.setAttribute('role', 'alert');
             newToast.setAttribute('aria-live', 'assertive');
             newToast.setAttribute('aria-atomic', 'true');
@@ -367,10 +546,9 @@ document.addEventListener('DOMContentLoaded', async function(){
                 <div class="toast-header">
                     <strong class="me-auto">A Fire has been Detected!</strong>
                     <small class="text-muted">just now</small>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
                 <div class="toast-body">
-                    <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#${modalId}" data-bs-dismiss="toast" aria-label="Close">
+                    <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#${modalId}"  aria-label="Close">
                         View Details <i class="bi bi-arrow-right-circle"></i>
                     </button>
                 </div>
@@ -422,7 +600,7 @@ document.addEventListener('DOMContentLoaded', async function(){
                         </div>
                         <div class="modal-footer">
                             <div class="mf-button">
-                                <button type="button" class="btn dismiss-btn" data-bs-dismiss="modal" aria-label="Close">Dismiss</button>
+                                <button type="button" class="btn dismiss-btn" aria-label="Close">Dismiss</button>
                                 <button type="button" class="btn report-btn" id="btn-popreport-${this.toastCounter}">Report</button>
                             </div>
                         </div>
@@ -486,7 +664,7 @@ document.addEventListener('DOMContentLoaded', async function(){
     }
 
     // Initialize the class after DOM is loaded
-    const desktopUpdates = new DesktopUpdates();
+    // const desktopUpdates = new DesktopUpdates();
 });
 </script>
 
