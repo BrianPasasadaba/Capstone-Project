@@ -48,26 +48,46 @@ from django.db.models import Count, Sum, Value
 from django.db.models.functions import ExtractMonth, Coalesce
 import logging
 from .models import tempReports
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_protect
 
+@csrf_protect
+@require_POST
 def transfer_report(request, temp_report_id):
     try:
-
         temp_report = tempReports.objects.get(id=temp_report_id)
 
         new_initial_report = InitialReport.objects.create(
             where=temp_report.where,
             date_reported=temp_report.date,
-            time_detected=temp_report.time_detected,
+            time_reported=temp_report.time_detected,
             proof=temp_report.proof,
         )
 
-        temp_report.delete()  # Remove or update the tempReport entry if necessary
-
-        return redirect('success_url')  # Replace 'success_url' with the actual URL to redirect to
+        return JsonResponse({'status': 'success', 'report_id': new_initial_report.id})
 
     except tempReports.DoesNotExist:
-        return render(request, 'error.html', {'message': 'Temp report not found.'})
-
+        return JsonResponse({'status': 'error', 'message': 'Temp report not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+@csrf_protect
+@require_POST
+def update_temp_report_status(request, temp_report_id):
+    try:
+        data = json.loads(request.body)
+        status = data.get('status')
+        
+        temp_report = tempReports.objects.get(id=temp_report_id)
+        temp_report.status = status
+        temp_report.save()
+        
+        return JsonResponse({'status': 'success'})
+    except tempReports.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Report not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
 def peak_report_summary(request):
     year = int(request.GET.get('year', datetime.now().year))
     
