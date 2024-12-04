@@ -214,7 +214,7 @@ def analytics_view(request):
 
     latest_reports = tempReports.objects.filter(
         status__in=['Filed', 'Dismissed']
-    ).order_by('-date', '-time_detected')[:5]
+    ).order_by('-date', '-time_detected')[:10]
 
 
     responded_this_month = InitialReport.objects.filter(
