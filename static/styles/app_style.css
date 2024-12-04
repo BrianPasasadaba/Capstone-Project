@@ -448,13 +448,13 @@ input[type="password"]::-ms-clear {
 
 /* ============================== TOAST ============================== */
 .toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
     z-index: 3 !important;
   }
   .toast{
-    position: relative;
+    position: relative !important;
     padding: 10px;
     color: #fff;
     margin-bottom: 10px;
@@ -1505,6 +1505,14 @@ input[type="password"]::-ms-clear {
     width: 100%;
     border-radius: var(--border-radius-button-half);
     padding: var(--padding-half);
+    transition: var(--tran-03);
+}
+
+.ld-table tbody tr:hover{
+    transform: scale(1.03);
+    box-shadow: var(--box-shadow-min);
+    cursor: pointer;
+    border: var(--color-primary) solid 2px;
 }
 
 .ld-table tbody tr .ld-loc{
@@ -1513,14 +1521,10 @@ input[type="password"]::-ms-clear {
     grid-area: ldl;
     padding-bottom: var(--padding-half);
 }
-.ld-table tbody tr .ld-date{
+
+.ld-table tbody tr .ld-time{
     text-align: left;
     grid-area: ldd;
-    padding-top: var(--padding-half);
-}
-.ld-table tbody tr .ld-time{
-    text-align: right;
-    grid-area: ldt;
     padding-top: var(--padding-half);
 }
 
