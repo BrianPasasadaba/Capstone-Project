@@ -3385,6 +3385,18 @@ input[type="password"]::-ms-clear {
         font-size: 0.8rem!important;
     }
     /* ================================  <700-POPALERT ================================  */
+    .custom-modal .proof-image img{
+        width: 200px;
+    }
+    .custom-modal .info-detail span{
+        font-size: 0.7rem !important;
+        font-weight: 400 !important;
+    }
+    .custom-modal .label-detail div {
+        font-size: 0.9rem !important;
+    }
+
+
     .indiv-detail span,
     .indiv-summary span{
         font-size: 0.9rem !important;
