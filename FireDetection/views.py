@@ -265,7 +265,7 @@ def export_initial_report(request):
     ws.title = "Initial Report Data"
 
     headers = [
-        "No.", "Station", "Exact Location/ Address of Fire Incident", "Team", "Time Reported", "Date Reported", "Type Of", "Name of Owner",
+        "No.", "Station", "Exact Location/ Address of Fire Incident", "Team", "Time Reported", "Date Reported", "Involved", "Name of Owner",
         "Alarm Status", "Alarm Declared By", "Time of Arrival At Scene", "Time of Fire Under Control", 
         "Date of Fire Under Control", "Fire Under Control Declared By", "Time of Fire Out", 
         "Date of Fire Out", "Fire Out Declared By", "Estimated Damages", "No. of Fatalities",
@@ -320,7 +320,7 @@ def export_initial_report(request):
         cell.alignment = center_alignment
         cell.border = thick_border
 
-    reports = InitialReport.objects.filter(status='Case Closed').values(*fields)
+    reports = InitialReport.objects.filter(status__in=['Case Closed', 'Ongoing']).values(*fields)
 
     for row_num, report in enumerate(reports, 4):
 
