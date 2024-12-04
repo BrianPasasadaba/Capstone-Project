@@ -97,56 +97,54 @@
                         <tbody id="reportTable">
                             {% for report in reports %}
                             <tr
-                                data-report-id="{{ report.id }}"
-                                data-status="{{ report.status }}"
-                                data-location="{{ report.where }}" 
-                                data-date="{{ report.date_reported|date:'Y-m-d' }}"
-                                data-time="{{ report.time_reported|time:'H:i' }}"
-                                data-fireout="{{ report.time_of_fire_out|time:'H:i' }}"
-                                data-owner="{{ report.name_of_owner }}"
-                                data-alarm="{{ report.alarm_status }}"
-                                data-damages="{{ report.estimated_damages }}"
-                                data-establishments="{{ report.no_of_establishments }}"
-                                data-casualties="{{ report.no_of_fatality }}" 
-                                data-injured="{{ report.no_of_injured }}"
-                                data-proof="{{ report.proof }}"
-                                data-involved="{{ report.involved }}"
-                                data-alarm-declared-by="{{ report.alarm_declared_by }}"
-                                data-time-arrival="{{ report.time_of_arrival|time:'H:i' }}"
-                                data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i' }}"
-                                data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d' }}"
-                                data-fire-under-declared-by="{{ report.fire_under_control_declared_by }}"
-                                data-time-fire-out="{{ report.time_of_fire_out|time:'H:i' }}"
-                                data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d' }}"
-                                data-fire-out-declared-by="{{ report.fire_out_declared_by }}"
-                                data-families-affected="{{ report.no_of_families_affected }}"
-                                data-trucks="{{ report.no_of_fire_trucks }}"
-                                data-ground-commander="{{ report.ground_commander }}"
-                                data-ground-commander-contact="{{ report.commander_contact_number }}"
-                                data-safety-officer="{{ report.safety_officer }}"
-                                data-safety-officer-contact="{{ report.officer_contact_number }}"
-                                data-sender="{{ report.name_of_sender }}"
-                                data-sender-contact="{{ report.sender_contact_number }}"
+                                data-report-id="{{ report.id|default:0 }}"
+                                data-status="{{ report.status|default:'None' }}"
+                                data-location="{{ report.where|default:'None' }}" 
+                                data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
+                                data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
+                                data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                data-owner="{{ report.name_of_owner|default:'None' }}"
+                                data-alarm="{{ report.alarm_status|default:'None' }}"
+                                data-damages="{{ report.estimated_damages|default:0 }}"
+                                data-establishments="{{ report.no_of_establishments|default:0 }}"
+                                data-casualties="{{ report.no_of_fatality|default:0 }}" 
+                                data-injured="{{ report.no_of_injured|default:0 }}"
+                                data-proof="{{ report.proof|default:'None' }}"
+                                data-involved="{{ report.involved|default:'None' }}"
+                                data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
+                                data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
+                                data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
+                                data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
+                                data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
+                                data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
+                                data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
+                                data-families-affected="{{ report.no_of_families_affected|default:0 }}"
+                                data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
+                                data-ground-commander="{{ report.ground_commander|default:'None' }}"
+                                data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
+                                data-safety-officer="{{ report.safety_officer|default:'None' }}"
+                                data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
+                                data-sender="{{ report.name_of_sender|default:'None' }}"
+                                data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
                                 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#report-preview-modal">
-                                <td>{{ report.fir_number }}</td>
-                                <td>{{ report.where }}</td>
-                                <td>{{ report.date_reported|date:"m/d/Y" }}</td>
-                                <td>{{ report.time_reported|time:"h:i A" }}</td>
-
-                                
+                                <td>{{ report.fir_number|default:'None' }}</td>
+                                <td>{{ report.where|default:'None' }}</td>
+                                <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
                                 <td>
-                                    <h6 id="status-text-{{ report.id }}">{{ report.status }}</h6>
-                                    
+                                    <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="5">No reports available.</td>
+                                <td colspan="5">No reports available</td>
                             </tr>
                             {% endfor %}
                         </tbody>
+                        
                         
                                     
                     </table>
