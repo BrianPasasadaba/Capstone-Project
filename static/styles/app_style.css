@@ -2734,7 +2734,7 @@ input[type="password"]::-ms-clear {
     margin: var(--margin-half);
 }
 #report-preview-form .proof-image img{
-    border: var(--color-secondary) 3px solid;
+    /* border: var(--color-secondary) 3px solid; */
     width: 100%;
     height: auto;
     border-radius: var(--border-radius-button-half);
