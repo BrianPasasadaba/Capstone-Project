@@ -212,10 +212,11 @@ def monthly_reports_for_2024(request):
 def analytics_view(request):
     current_date = localtime(now())
 
-    # Fetch the latest 5 reports from tempReports
-    latest_reports = tempReports.objects.order_by('-date', '-time_detected')[:5]
+    latest_reports = tempReports.objects.filter(
+        status__in=['Filed', 'Dismissed']
+    ).order_by('-date', '-time_detected')[:5]
 
-    # Other context data
+
     responded_this_month = InitialReport.objects.filter(
         status="Case Closed",
         date_reported__year=current_date.year,
@@ -234,7 +235,7 @@ def analytics_view(request):
     context = {
         'responded_this_month': responded_this_month,
         'responded_this_year': responded_this_year,
-        'latest_reports': latest_reports,  # Pass the latest 5 reports to the template
+        'latest_reports': latest_reports,
     }
 
     return render(request, "analytics.html", context)
