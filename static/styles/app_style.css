@@ -1444,7 +1444,6 @@ input[type="password"]::-ms-clear {
     justify-content: start;
     align-items: center;
     box-shadow: var(--box-shadow);
-    overflow: auto;
 }
 
 
@@ -1484,7 +1483,7 @@ input[type="password"]::-ms-clear {
 .ld-table tbody{
     /* border: var(--color-secondary) solid 3px; */
     border-radius:var(--border-radius-button-half);
-    height: 100%;
+    max-height: 500px;
     background-color: var(--color-white);
     display: flex;
     flex-direction: column;
@@ -3211,9 +3210,9 @@ input[type="password"]::-ms-clear {
     .analyses-box {
         grid-template-columns: 1fr;
     }
-
+    .chart-card,
     .detect-card{
-        width: 90%;
+        width: 100%;
     }
 /* ================================  <700-ACCOUNTS ================================  */
 
