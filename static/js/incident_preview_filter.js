@@ -1,62 +1,46 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const periodFilter = document.getElementById("period-filter").querySelector(".form-select");
-    const specificFilter = document.getElementById("specific-filter").querySelector(".form-select");
+// Function to toggle between month filter and year filter
+function toggleFilters() {
+    var period = document.getElementById('period-select').value;  // Get selected value of period
+    var monthFilter = document.getElementById('month-filter');
+    var yearFilter = document.getElementById('year-filter');
 
-    // Function to update options
-    function updateSpecificFilterOptions() {
-        specificFilter.innerHTML = ""; // Clear existing options
-
-        if (periodFilter.value === "1") { // Yearly
-            const years = ["2018", "2019", "2020", "2021", "2022", "2023", "2024"];
-            let highestYear = years[0]; // Initialize with the first year
-
-            years.forEach(year => {
-                const option = document.createElement("option");
-                option.value = year;
-                option.textContent = year;
-                specificFilter.appendChild(option);
-                
-                // Update highestYear to the latest value
-                if (year > highestYear) {
-                    highestYear = year;
-                }
-            });
-
-            // Set the highest year as selected by default
-            specificFilter.value = highestYear;
-
-        } else if (periodFilter.value === "2") { // Monthly
-            const months = [
-                { value: "1", text: "January" },
-                { value: "2", text: "February" },
-                { value: "3", text: "March" },
-                { value: "4", text: "April" },
-                { value: "5", text: "May" },
-                { value: "6", text: "June" },
-                { value: "7", text: "July" },
-                { value: "8", text: "August" },
-                { value: "9", text: "September" },
-                { value: "10", text: "October" },
-                { value: "11", text: "November" },
-                { value: "12", text: "December" }
-            ];
-            months.forEach((month, index) => {
-                const option = document.createElement("option");
-                option.value = month.value;
-                option.textContent = month.text;
-                specificFilter.appendChild(option);
-
-                // Set the first month (January) as selected by default
-                if (index === 0) {
-                    option.selected = true;
-                }
-            });
-        }
+    if (period === '1') {
+        // If "Yearly" is selected, show year-filter and hide month-filter
+        yearFilter.style.display = 'block';
+        monthFilter.style.display = 'none';
+    } else if (period === '2') {
+        // If "Monthly" is selected, show month-filter and hide year-filter
+        yearFilter.style.display = 'none';
+        monthFilter.style.display = 'block';
     }
+}
 
-    // Initial call to set up the options based on the default selected period
-    updateSpecificFilterOptions();
+// Initialize the toggle state when the page is loaded
+window.onload = function() {
+    toggleFilters();  // Ensure the correct filter is displayed when the page loads
+};
 
-    // Update options whenever the period filter selection changes
-    periodFilter.addEventListener("change", updateSpecificFilterOptions);
+document.addEventListener("DOMContentLoaded", function () {
+    const periodSelect = document.querySelector("#period-select");
+    const monthFilter = document.getElementById("month-filter");
+    const peakFireContainer = document.getElementById("peakFireContainer");  // Container for peak fire month
+
+    // Event listener for period dropdown
+    periodSelect.addEventListener("change", function () {
+        const selectedPeriod = this.value; // 1 = Yearly, 2 = Monthly
+        if (selectedPeriod === "2") {
+            monthFilter.style.display = "flex";  // Show month filter
+            peakFireContainer.style.display = "none"; // Hide Peak Fire Month
+        } else {
+            monthFilter.style.display = "none";  // Hide month filter
+            peakFireContainer.style.display = "flex"; // Show Peak Fire Month
+        }
+    });
+
+    // Initial check when the page loads
+    if (periodSelect.value === "1") {
+        peakFireContainer.style.display = "flex";  // Show Peak Fire Month if "Yearly" is selected
+    } else {
+        peakFireContainer.style.display = "none";  // Hide Peak Fire Month if "Monthly" is selected
+    }
 });

@@ -36,7 +36,7 @@
                         <div class="drop-user">{{ user.name }}</div>
                     </button>
                     <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
-                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#terms-condition">Terms & Condition</button></li>
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#terms-condition-modal">Terms & Condition</button></li>
                         <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
                     </ul>
                 </div>
@@ -62,7 +62,12 @@
             <div class="creports-body">
                 <form action="{% url 'create_reports' %}" method="POST" enctype="multipart/form-data" id="create-report-form">
                     {% csrf_token %}
-                
+                    <div class="form-row">
+                        <div class="form-column" style="display: flex; flex-direction: row; align-items: start;">
+                            <span style="color: red; font-size: 0.8rem;">* Indicates Required Field</span>
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-column">
                             <label for="crloc" class="form-label">Location<i class="bi bi-asterisk"></i></label>
@@ -187,7 +192,8 @@
                         </div>
                         <div class="form-column">
                             <label for="crground-num" class="form-label">/ Contact No.</label>
-                            <input type="text" class="form-control" name="crground-num" id="crground-num" placeholder="e.g. 09227807570" maxlength="11" >
+                            <input type="text" class="form-control" name="crground-num" id="crground-num" placeholder="e.g. 09227807570" maxlength="11" pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="crsafety" class="form-label">Safety Officer</label>
@@ -195,7 +201,8 @@
                         </div>
                         <div class="form-column">
                             <label for="crsafety-num" class="form-label">/ Contact No.</label>
-                            <input type="text" class="form-control" name="crsafety-num" id="crsafety-num" placeholder="e.g. 09227807570" maxlength="11" >
+                            <input type="text" class="form-control" name="crsafety-num" id="crsafety-num" placeholder="e.g. 09227807570" maxlength="11" pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                     <div class="form-row">
@@ -205,7 +212,8 @@
                         </div>
                         <div class="form-column">
                             <label for="crsender-num" class="form-label">Name of Sender Contact No.</label>
-                            <input type="text" class="form-control" name="crsender-num" id="crsender-num" placeholder="e.g. 09227807570" maxlength="11" >
+                            <input type="text" class="form-control" name="crsender-num" id="crsender-num" placeholder="e.g. 09227807570" maxlength="11" pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="proof" class="form-label">Proof</label>
@@ -228,6 +236,7 @@
 {% include "modal_change_password.html" %}
 {% include "modal_forgot_success.html" %}
 {% include "modal_copied_success.html" %}
+{% include "modal_terms_condi.html" %}
 {% endblock %}
 
 {% block scripts %}

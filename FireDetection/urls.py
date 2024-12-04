@@ -26,7 +26,12 @@ urlpatterns = [
     path('remove-accounts/', views.remove_accounts, name='remove_accounts'),
     path('api/reports-2024/', views.reports_count_for_2024, name='reports_count_for_2024'),
     path('api/reports-monthly-2024/', views.monthly_reports_for_2024, name='monthly_reports_for_2024'),
-     path('api/peak-report-summary/', peak_report_summary, name='peak_report_summary'),
+    path('api/peak-report-summary/', peak_report_summary, name='peak_report_summary'),
+    path('get-temp-report-details/<int:report_id>/', views.get_temp_report_details_view, name='get-temp-report-details'),
+    path('api/monthly-report-summary/', views.monthly_report_summary, name='monthly_report_summary'),
+    path('get-unresolved-reports/', views.get_unresolved_reports, name='get-unresolved-reports'),
+    path('transfer_report/<int:temp_report_id>/', views.transfer_report, name='transfer_report'),
+    path('update-temp-report-status/<int:temp_report_id>/', views.update_temp_report_status, name='update_temp_report_status'),
 
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

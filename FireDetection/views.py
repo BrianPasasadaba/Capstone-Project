@@ -12,7 +12,7 @@ from django.contrib import messages
 from .models import CustomUser
 from django.core.cache import cache
 from django.core.validators import validate_email 
-from .models import InitialReport
+from .models import InitialReport, tempReports
 from datetime import date,  timedelta
 from django.db.models.functions import TruncMonth
 from django.utils.timezone import now
@@ -47,7 +47,47 @@ from django.db.models import Sum
 from django.db.models import Count, Sum, Value
 from django.db.models.functions import ExtractMonth, Coalesce
 import logging
+from .models import tempReports
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_protect
 
+@csrf_protect
+@require_POST
+def transfer_report(request, temp_report_id):
+    try:
+        temp_report = tempReports.objects.get(id=temp_report_id)
+
+        new_initial_report = InitialReport.objects.create(
+            where=temp_report.where,
+            date_reported=temp_report.date,
+            time_reported=temp_report.time_detected,
+            proof=temp_report.proof,
+        )
+
+        return JsonResponse({'status': 'success', 'report_id': new_initial_report.id})
+
+    except tempReports.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Temp report not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+@csrf_protect
+@require_POST
+def update_temp_report_status(request, temp_report_id):
+    try:
+        data = json.loads(request.body)
+        status = data.get('status')
+        
+        temp_report = tempReports.objects.get(id=temp_report_id)
+        temp_report.status = status
+        temp_report.save()
+        
+        return JsonResponse({'status': 'success'})
+    except tempReports.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Report not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
 def peak_report_summary(request):
     year = int(request.GET.get('year', datetime.now().year))
     
@@ -62,7 +102,7 @@ def peak_report_summary(request):
     )
 
     peak_month = month_counts[0] if month_counts else None
-    peak_month_name = datetime(1900, peak_month['month'], 1).strftime('%B') if peak_month else 'N/A'
+    peak_month_name = datetime(1900, peak_month['month'], 1).strftime('%B') if peak_month else 'None'
 
     peak_month_reports = reports.filter(date_reported__month=peak_month['month']) if peak_month else None
 
@@ -73,7 +113,7 @@ def peak_report_summary(request):
         .annotate(count=Count('where'))  
         .order_by('-count')
     ) if peak_month_reports else None
-    most_affected_location = location_counts[0]['where'] if location_counts else 'N/A'
+    most_affected_location = location_counts[0]['where'] if location_counts else 'None'
 
     total_casualties = (
         peak_month_reports.aggregate(
@@ -96,12 +136,56 @@ def peak_report_summary(request):
     peak_data = {
         'peak_month': peak_month_name,
         'peak_month_count': peak_month['count'] if peak_month else 0,
+        'reported_count' : reports.count(),
         'most_affected_location': most_affected_location,
         'total_casualties': total_casualties_count,
         'total_estimated_damages': total_estimated_damages,
     }
 
     return JsonResponse(peak_data)
+
+def monthly_report_summary(request):
+    year = int(request.GET.get('year', datetime.now().year))
+    month = int(request.GET.get('month', datetime.now().month))
+
+    reports = InitialReport.objects.filter(date_reported__year=year, date_reported__month=month)
+
+    # Calculate the most affected location
+    location_counts = (
+        reports
+        .values('where')
+        .annotate(count=Count('where'))
+        .order_by('-count')
+    )
+    most_affected_location = location_counts[0]['where'] if location_counts else 'None'
+
+    # Calculate total casualties
+    total_casualties = reports.aggregate(
+        fatalities=Sum('no_of_fatality', default=0),
+        injured=Sum('no_of_injured', default=0),
+    )
+    total_casualties_count = (total_casualties['fatalities'] or 0) + (total_casualties['injured'] or 0)
+
+    # Calculate total estimated damages
+    total_estimated_damages = 0
+    try:
+        damages = reports.values_list('estimated_damages', flat=True)
+        total_estimated_damages = sum(
+            int(damage) for damage in damages if damage and damage.isdigit()
+        )
+    except ValueError:
+        total_estimated_damages = 'Invalid data'
+
+    # Prepare the response data
+    monthly_data = {
+        'reported_count': reports.count(),
+        'most_affected_location': most_affected_location,
+        'total_casualties': total_casualties_count,
+        'total_estimated_damages': total_estimated_damages,
+    }
+
+    return JsonResponse(monthly_data)
+
     
 def reports_count_for_2024(request):
     reports_2024 = InitialReport.objects.filter(date_reported__year=2024).count()
@@ -128,6 +212,11 @@ def monthly_reports_for_2024(request):
 def analytics_view(request):
     current_date = localtime(now())
 
+    latest_reports = tempReports.objects.filter(
+        status__in=['Reported', 'Dismissed']
+    ).order_by('-date', '-time_detected')[:8]
+
+
     responded_this_month = InitialReport.objects.filter(
         status="Case Closed",
         date_reported__year=current_date.year,
@@ -141,10 +230,12 @@ def analytics_view(request):
 
     print(f"Responded this month: {responded_this_month}")
     print(f"Responded this year: {responded_this_year}")
+    print(f"Latest detections: {latest_reports}")
 
     context = {
         'responded_this_month': responded_this_month,
         'responded_this_year': responded_this_year,
+        'latest_reports': latest_reports,
     }
 
     return render(request, "analytics.html", context)
@@ -177,7 +268,7 @@ def export_initial_report(request):
     ws.title = "Initial Report Data"
 
     headers = [
-        "No.", "Station", "Exact Location/ Address of Fire Incident", "Team", "Time Reported", "Date Reported", "Type Of", "Name of Owner",
+        "No.", "Station", "Exact Location/ Address of Fire Incident", "Team", "Time Reported", "Date Reported", "Involved", "Name of Owner",
         "Alarm Status", "Alarm Declared By", "Time of Arrival At Scene", "Time of Fire Under Control", 
         "Date of Fire Under Control", "Fire Under Control Declared By", "Time of Fire Out", 
         "Date of Fire Out", "Fire Out Declared By", "Estimated Damages", "No. of Fatalities",
@@ -232,7 +323,7 @@ def export_initial_report(request):
         cell.alignment = center_alignment
         cell.border = thick_border
 
-    reports = InitialReport.objects.filter(status='Case Closed').values(*fields)
+    reports = InitialReport.objects.filter(status__in=['Case Closed', 'Ongoing']).values(*fields)
 
     for row_num, report in enumerate(reports, 4):
 
@@ -311,6 +402,8 @@ def generate_random_password(length=10):
 
 
 def forgot_password_view(request):
+    show_success_modal = False
+
     if request.method == 'POST':
         email = request.POST.get('email')
         new_password = request.POST.get('password')
@@ -322,7 +415,6 @@ def forgot_password_view(request):
 
         try:
             user = CustomUser.objects.get(email=email)
-
             user.set_password(new_password)
             user.save()
 
@@ -335,13 +427,14 @@ def forgot_password_view(request):
             )
 
             messages.success(request, 'Password reset successful! A confirmation email has been sent.')
-            return redirect('login')
+            show_success_modal = True
 
         except CustomUser.DoesNotExist:
             messages.error(request, 'Email address not found.')
             return redirect('forgot_password')
 
-    return render(request, 'forgot_password.html')
+    return render(request, 'forgot_password.html', {'show_success_modal': show_success_modal})
+
 
 
 @login_required
@@ -448,7 +541,8 @@ def logout_view(request):
 
 @login_required
 def reports_view(request):
-    reports = InitialReport.objects.all() 
+    reports = reports = InitialReport.objects.order_by('fir_number')
+
     context = {
         'reports': reports,
     }
@@ -540,7 +634,7 @@ def create_report_view(request):
                 time_out_combined = datetime.strptime(f"{date_out} {time_out}", "%Y-%m-%d %H:%M")
             except ValueError:
                 time_out_combined = None
-# Generate FIR number manually
+
             last_report = InitialReport.objects.order_by('id').last()
 
             if last_report and getattr(last_report, 'fir_number', None):  # Check if last_report and fir_number exist
@@ -617,22 +711,30 @@ def update_report(request, report_id):
 
         data = request.POST
 
-        # Update fields only, excluding fir_number
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
-        report.time_reported = f"{data.get('date', '')} {data.get('detect', '')}" or report.time_reported
+
+        def convert_to_aware_datetime(date_str, time_str):
+            if date_str and time_str:
+                naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+                return timezone.make_aware(naive_dt, timezone.get_current_timezone())
+            return None
+
+        report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
+        report.time_of_arrival = convert_to_aware_datetime(data.get('date', ''), data.get('time-arrive', '')) or report.time_of_arrival
+        report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', ''), data.get('time-under', '')) or report.time_of_fire_under_control
+        report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', ''), data.get('time-out', '')) or report.time_of_fire_out
+
+        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
+        report.fire_under_control_declared_by = data.get('funder-dec', report.fire_under_control_declared_by)
+        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
+        report.fire_out_declared_by = data.get('fout-dec', report.fire_out_declared_by)
+
         report.involved = data.get('involved', report.involved)
         report.name_of_owner = data.get('owner', report.name_of_owner)
         report.alarm_status = data.get('alarm', report.alarm_status)
         report.alarm_declared_by = data.get('alarm-dec', report.alarm_declared_by)
-        report.time_of_arrival = f"{data.get('date', '')} {data.get('time-arrive', '')}" or report.time_of_arrival
-        report.time_of_fire_under_control = f"{data.get('date', '')} {data.get('time-under', '')}" or report.time_of_fire_under_control
-        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
-        report.fire_under_control_declared_by = data.get('funder-dec', report.fire_under_control_declared_by)
-        report.time_of_fire_out = f"{data.get('date-out', '')} {data.get('time-out', '')}" or report.time_of_fire_out
-        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
-        report.fire_out_declared_by = data.get('fout-dec', report.fire_out_declared_by)
         report.estimated_damages = data.get('damage', report.estimated_damages)
         report.no_of_fatality = data.get('fatality', report.no_of_fatality)
         report.no_of_injured = data.get('injured', report.no_of_injured)
@@ -650,7 +752,6 @@ def update_report(request, report_id):
         if proof:
             report.proof = proof
 
-        # Save the report without altering fir_number
         report.save()
 
         return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})
@@ -688,3 +789,41 @@ def event_stream(request):
     response['Cache-Control'] = 'no-cache'
     response['Connection'] = 'keep-alive'
     return response
+
+def get_temp_report_details(report_id):
+    try:
+        report = tempReports.objects.get(id=report_id)
+        return {
+            'id': report.id,
+            'where': report.where,
+            'date': report.date.strftime('%B %d, %Y'),
+            'time': report.time_detected.strftime('%I:%M %p'),
+            'proof': report.proof,
+            'status': report.status
+        }
+    except tempReports.DoesNotExist:
+        return None
+
+def get_temp_report_details_view(request, report_id):
+    details = get_temp_report_details(report_id)
+    if details:
+        return JsonResponse(details)
+    return JsonResponse({'error': 'Report not found'}, status=404)
+
+def get_unresolved_reports(request):
+    # Query tempReports where status is null
+    unresolved_reports = tempReports.objects.filter(status__isnull=True)
+    
+    # Prepare report details
+    report_details = []
+    for report in unresolved_reports:
+        report_details.append({
+            'id': report.id,
+            'where': report.where,
+            'date': report.date.strftime('%B %d, %Y'),
+            'time': report.time_detected.strftime('%I:%M %p'),
+            'proof': report.proof,
+            'status': report.status
+        })
+    
+    return JsonResponse(report_details, safe=False)

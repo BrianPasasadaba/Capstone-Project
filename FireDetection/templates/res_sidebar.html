@@ -24,9 +24,17 @@
 </head>
 
 <body>
+    <!--CSRF-TOKEN-->
+    <form>
+        {% csrf_token %}
+    </form>
+
+
 <!--POP UP ALERT-->
     <!-- Modal -->
+<!--
     {% if request.user.role == "Radio Operator" %}
+
 <div class="modal fade" id="pop-up-modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -74,6 +82,7 @@
       </div>
     </div>
 </div>
+
 {% endif %}
 
 {% if user_role == "Radio Operator" %}
@@ -85,10 +94,13 @@
 </script>
 {% endif %}
 
+-->
+
 <!--TOAST START-->
    <!-- Toast container -->
-   {% if request.user.role == "Radio Operator" %}
+{% if request.user.role == "Radio Operator" %}
 <div class="toast-container">
+    <!--
     <div class="toast" id="toast-1" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
           <strong class="me-auto">A Fire has been Detected!</strong>
@@ -118,6 +130,11 @@
           <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#pop-up-modal" data-bs-dismiss="toast" aria-label="Close">View Details <i class="bi bi-arrow-right-circle"></i></button>
         </div>
       </div>
+        -->
+</div>
+
+<div class="modal-container">
+
 </div>
 {% endif %}
 
@@ -146,7 +163,10 @@
             <div class="sb-body">
                 <nav class="nav">
                     {% if request.user.is_authenticated and request.user.is_active and request.user.is_staff %}
-                    <a class="nav-link {% active_link 'admin_home' 'custom-class' %} {% if request.resolver_match.url_name == 'admin_home' %}disabled-link{% endif %}" href="{% url 'admin_home' %}">
+                    <a class="nav-link {% active_link 'admin_home' 'custom-class' %} {% if request.resolver_match.url_name == 'admin_home' %}disabled-link{% endif %}" href="{% url 'admin_home' %}"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="Accounts">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-person-fill-gear"></i>
@@ -155,7 +175,10 @@
                         </div>
                     </a>
                     {% endif %}
-                    <a class="nav-link {% active_link 'analytics' 'custom-class' %} {% if request.resolver_match.url_name == 'analytics' %}disabled-link{% endif %}" href="{% url 'analytics' %}">
+                    <a class="nav-link {% active_link 'analytics' 'custom-class' %} {% if request.resolver_match.url_name == 'analytics' %}disabled-link{% endif %}" href="{% url 'analytics' %}"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="Analytics">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-columns-gap"></i>
@@ -163,7 +186,10 @@
                             <span class="description">Analytics</span>
                         </div>
                     </a>
-                    <a class="nav-link {% active_link 'reports' 'custom-class' %} {% if request.resolver_match.url_name == 'reports' %}disabled-link{% endif %}" href="{% url 'reports' %}">
+                    <a class="nav-link {% active_link 'reports' 'custom-class' %} {% if request.resolver_match.url_name == 'reports' %}disabled-link{% endif %}" href="{% url 'reports' %}"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="Reports">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-clipboard2-data"></i>
@@ -171,7 +197,10 @@
                             <span class="description">Reports</span>
                         </div>
                     </a>
-                    <a class="nav-link {% active_link 'faq' 'custom-class' %} {% if request.resolver_match.url_name == 'faq' %}disabled-link{% endif %}" href="{% url 'faq' %}">
+                    <a class="nav-link {% active_link 'faq' 'custom-class' %} {% if request.resolver_match.url_name == 'faq' %}disabled-link{% endif %}" href="{% url 'faq' %}"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="FAQ">
                         <div class="nav-con">
                             <span class="icon">
                                 <i class="bi bi-question-circle"></i>
@@ -233,7 +262,8 @@
         });
         </script>
 <!-- TOAST -->
-        <script>
+
+<!--      <script>
             // If you want to ensure the toast does not auto-dismiss, use this JavaScript to handle it explicitly.
             document.addEventListener('DOMContentLoaded', function () {
                 const toastElements = Array.from(document.querySelectorAll('.toast'));
@@ -245,37 +275,411 @@
                 });
             });
         </script>
+-->
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+</script>
+
 <!-- DESKTOP UPDATE -->
-        <script>
-            class DesktopUpdates {
-                constructor() {
-                    this.eventSource = new EventSource('{% url "event-stream" %}');
-                    
-                    this.eventSource.onmessage = (event) => {
-                        const data = JSON.parse(event.data);
-                        this.handleUpdate(data);
-                    };
-                    
-                    this.eventSource.onerror = (error) => {
-                        console.error('EventSource failed:', error);
-                        // Implement reconnection logic if needed
-                    };
-                }
+<script>
+document.addEventListener('DOMContentLoaded', async function(){
+    class DesktopUpdates {
+        constructor() {
+            this.eventSource = new EventSource('{% url "event-stream" %}');
+            this.toastCounter = 0;
             
-                handleUpdate(data) {
-                    // Handle the update in your UI
-                    console.log('New update:', data);
-                    // Example: Update a table or list
-                    if (data.type === 'new_record') {
-                        // Update your UI accordingly
+            this.eventSource.onmessage = async (event) => {
+                const data = JSON.parse(event.data);
+                await this.handleUpdate(data);
+            };
+            
+            this.eventSource.onerror = (error) => {
+                console.error('EventSource failed:', error);
+            };
+
+            this.addGlobalEventListeners();
+        }
+
+        addGlobalEventListeners() {
+            // Delegate event listeners to handle dynamically created buttons
+            document.addEventListener('click', async (event) => {
+                // Dismiss button in main modal
+                if (event.target.closest('.dismiss-btn')) {
+                    const modal = event.target.closest('.modal');
+                    const reportId = modal.getAttribute('data-report-id');
+                    const modalId = modal.getAttribute('id');
+                    
+                    // Show dismiss confirmation modal
+                    const dismissModal = document.getElementById('dismiss-modal');
+                    if (dismissModal) {
+                        const bootstrapDismissModal = new bootstrap.Modal(dismissModal);
+                        
+                        // Store the current report ID on the confirm button
+                        const confirmButton = dismissModal.querySelector('.btn-disconfirm');
+                        confirmButton.setAttribute('data-report-id', reportId);
+                        confirmButton.setAttribute('data-main-modal-id', modalId);
+
+                        // Hide the main modal when dismiss-modal opens
+                        const mainModal = document.getElementById(modalId);
+                        if (mainModal) {
+                            const mainModalInstance = bootstrap.Modal.getInstance(mainModal);
+                            mainModalInstance.hide();
+                        }
+                        
+                        bootstrapDismissModal.show();
                     }
                 }
-            }
-            
-            // Initialize the connection
-            const desktopUpdates = new DesktopUpdates();
-            </script>
 
+                // Confirm dismiss button
+                if (event.target.closest('.btn-disconfirm')) {
+                    const reportId = event.target.getAttribute('data-report-id');
+                    const mainModalId = event.target.getAttribute('data-main-modal-id');
+                    
+                    try {
+                        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                        const response = await fetch(`/update-temp-report-status/${reportId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrftoken,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ status: 'Dismissed' }),
+                            credentials: 'same-origin'
+                        });
+
+                        if (response.ok) {
+                            // Close both modals
+                            const dismissModal = document.getElementById('dismiss-modal');
+                            const mainModal = document.getElementById(mainModalId);
+                            
+                            // Manually remove backdrops
+                            const removeBackdrop = () => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                            };
+                            
+                            if (dismissModal) {
+                                const dismissModalInstance = bootstrap.Modal.getInstance(dismissModal);
+                                dismissModalInstance.hide();
+                                
+                                // Use event listener to ensure backdrop is removed
+                                dismissModal.addEventListener('hidden.bs.modal', removeBackdrop, { once: true });
+                            }
+                            
+                            if (mainModal) {
+                                const mainModalInstance = bootstrap.Modal.getInstance(mainModal);
+                                mainModalInstance.hide();
+                                
+                                // Use event listener to ensure backdrop is removed
+                                mainModal.addEventListener('hidden.bs.modal', removeBackdrop, { once: true });
+                            }
+
+                            // Fallback to manual backdrop removal
+                            removeBackdrop();
+
+                            // Remove corresponding toast
+                            const toast = document.querySelector(`.toast[data-report-id="${reportId}"]`);
+                            if (toast) {
+                                bootstrap.Toast.getInstance(toast).hide();
+                                toast.remove();
+                            }
+
+                            // Reload the page to remove the dismissed report
+                            location.reload();
+                        } else {
+                            console.error('Failed to update report status');
+                        }
+                    } catch (error) {
+                        console.error('Error updating report status:', error);
+                    }
+                }
+
+                // Report button
+                if (event.target.closest('.report-btn')) {
+                    const modal = event.target.closest('.modal');
+                    const reportId = modal.getAttribute('data-report-id');
+                    const modalId = modal.getAttribute('id');
+                    
+                    try {
+                        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                        const response = await fetch(`/transfer_report/${reportId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrftoken,
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'same-origin'
+                        });
+
+                        if (response.ok) {
+                            // Update report status to Filed
+                            await fetch(`/update-temp-report-status/${reportId}/`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRFToken': csrftoken,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ status: 'Filed' }),
+                                credentials: 'same-origin'
+                            });
+
+                            // Manually remove backdrops
+                            const removeBackdrop = () => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                            };
+
+
+                            // Close the modal
+                            const mainModal = document.getElementById(modalId);
+                            if (mainModal) {
+                                const mainModalInstance = bootstrap.Modal.getInstance(mainModal);
+                                mainModalInstance.hide();
+                                
+                                // Use event listener to ensure backdrop is removed
+                                mainModal.addEventListener('hidden.bs.modal', removeBackdrop, { once: true });
+                            }
+
+                            // Fallback to manual backdrop removal
+                            removeBackdrop();
+
+                            // Remove corresponding toast
+                            const toast = document.querySelector(`.toast[data-report-id="${reportId}"]`);
+                            if (toast) {
+                                bootstrap.Toast.getInstance(toast).hide();
+                                toast.remove();
+                            }
+
+                            // Reload the page to remove the report
+                            location.reload();
+                        } else {
+                            console.error('Failed to transfer report');
+                        }
+                    } catch (error) {
+                        console.error('Error transferring report:', error);
+                    }
+                }
+
+                // Cancel dismiss button (return to previous modal)
+                if (event.target.closest('.btn-discancel')) {
+                    const dismissModal = document.getElementById('dismiss-modal');
+                    if (dismissModal) {
+                        const dismissModalInstance = bootstrap.Modal.getInstance(dismissModal);
+                        dismissModalInstance.hide();
+                        
+                        // Find and re-open the main modal
+                        const mainModalId = dismissModal.querySelector('.btn-disconfirm').getAttribute('data-main-modal-id');
+                        const mainModal = document.getElementById(mainModalId);
+                        if (mainModal) {
+                            const mainModalInstance = bootstrap.Modal.getInstance(mainModal);
+                            mainModalInstance.show();
+                        }
+                    }
+                }
+            });
+        }
+    
+        async handleUpdate(data) {
+            if (data.type === 'new_temp_report') {
+                try {
+                    const response = await fetch(`/get-temp-report-details/${data.report_id}/`);
+                    const reportDetails = await response.json();
+                    
+                    if (reportDetails) {
+                        this.createToastAndModal(reportDetails);
+                    }
+                } catch (error) {
+                    console.error('Error fetching report details:', error);
+                }
+            } else if (data.type === 'updated_record') {
+                try {
+                    const response = await fetch(`/get-temp-report-details/${data.report_id}/`);
+                    const reportDetails = await response.json();
+                    
+                    if (reportDetails) {
+                        this.updateExistingToastAndModal(data.report_id, reportDetails);
+                    }
+                } catch (error) {
+                    console.error('Error fetching updated report details:', error);
+                }
+            }
+        }
+    
+        updateExistingToastAndModal(reportId, reportDetails) {
+            const modal = document.querySelector(`[data-report-id="${reportId}"]`);
+            
+            if (modal) {
+                const proofImage = modal.querySelector('.proof-image img');
+                if (proofImage) {
+                    proofImage.src = reportDetails.proof;
+                }
+    
+                const dateElement = modal.querySelector('.info-detail span:first-child');
+                const locationElement = modal.querySelector('.info-detail span:nth-child(2)');
+                const timeElement = modal.querySelector('.info-detail span:last-child');
+    
+                if (dateElement) dateElement.textContent = reportDetails.date;
+                if (locationElement) locationElement.textContent = reportDetails.where;
+                if (timeElement) timeElement.textContent = reportDetails.time;
+            }
+        }
+    
+        createToastAndModal(reportDetails) {
+            this.toastCounter++;
+            
+            // Create unique IDs
+            const toastId = `dynamic-toast-${this.toastCounter}`;
+            const modalId = `dynamic-modal-${this.toastCounter}`;
+    
+            // Ensure bootstrap is available
+            if (typeof bootstrap === 'undefined') {
+                console.error('Bootstrap is not loaded');
+                return;
+            }
+    
+            // Create Toast
+            const toastContainer = document.querySelector('.toast-container');
+            const newToast = document.createElement('div');
+            newToast.className = 'toast';
+            newToast.id = toastId;
+            newToast.setAttribute('data-report-id', reportDetails.id);
+            newToast.setAttribute('role', 'alert');
+            newToast.setAttribute('aria-live', 'assertive');
+            newToast.setAttribute('aria-atomic', 'true');
+            
+            newToast.innerHTML = `
+                <div class="toast-header">
+                    <strong class="me-auto">A Fire has been Detected!</strong>
+                    <small class="text-muted">just now</small>
+                </div>
+                <div class="toast-body">
+                    <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#${modalId}"  aria-label="Close">
+                        View Details <i class="bi bi-arrow-right-circle"></i>
+                    </button>
+                </div>
+            `;
+            toastContainer.appendChild(newToast);
+    
+            // Create Modal
+            const modalContainer = document.querySelector('.modal-container');
+            const newModal = document.createElement('div');
+            newModal.innerHTML = `
+            <div class="modal fade custom-modal" id="${modalId}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" data-report-id="${reportDetails.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="43" viewBox="0 0 44 43" fill="none">
+                                    <path d="M8.97897 26.875V25.0834H7.1873V21.5H8.97897V19.7084H12.5623V26.875H8.97897ZM34.0623 21.5V19.7084H30.479V26.875H34.0623V25.0834H35.854V21.5H34.0623ZM32.2706 10.75H28.4365C27.7915 8.24171 25.8206 6.27087 23.3123 5.62587V3.58337H19.729V5.62587C17.2206 6.27087 15.2498 8.24171 14.6048 10.75H10.7706V14.3334H32.2706V10.75ZM32.2706 39.4167H10.7706C10.7706 37.4459 12.3831 35.8334 14.354 35.8334V16.125H28.6873V35.8334C29.6377 35.8334 30.5491 36.2109 31.2211 36.8829C31.8931 37.5549 32.2706 38.4664 32.2706 39.4167ZM17.9373 23.2917C17.9373 24.2421 18.3148 25.1535 18.9868 25.8255C19.6588 26.4975 20.5703 26.875 21.5206 26.875C22.471 26.875 23.3824 26.4975 24.0544 25.8255C24.7264 25.1535 25.104 24.2421 25.104 23.2917C25.104 21.303 23.5094 19.7084 21.5206 19.7084C19.5319 19.7084 17.9373 21.3209 17.9373 23.2917Z" fill="#ED7027"/>
+                                </svg>Alert!
+                            </h3>
+                        </div>
+                        <div class="modal-body">
+                            <h4>The System Detected a Fire!</h4>
+                            <div class="group-report">
+                                <div class="indiv-detail">
+                                    <div>Proof</div>
+                                    <span class="proof-image">
+                                        <img src="${reportDetails.proof}" id="detect-proof-${this.toastCounter}" class="img-fluid" style="max-width: 350px;" alt="Proof Image">
+                                    </span>
+                                </div>
+                                <div class="indiv-detail">
+                                    <div class="label-detail">
+                                        <div>Date</div>
+                                        <div>Location</div>
+                                    </div>
+                                    <div class="info-detail">
+                                        <span>${reportDetails.date}</span>
+                                        <span>${reportDetails.where}</span>
+                                    </div>
+                                </div>
+                                <div class="indiv-detail">
+                                    <div class="label-detail">
+                                        <div>Time</div>
+                                    </div>
+                                    <div class="info-detail">
+                                        <span>${reportDetails.time}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="mf-button">
+                                <button type="button" class="btn dismiss-btn" aria-label="Close">Dismiss</button>
+                                <button type="button" class="btn report-btn" id="btn-popreport-${this.toastCounter}">Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+            
+            // Append modal to body
+            modalContainer.appendChild(newModal);
+            console.log(newModal.firstChild);
+
+            // Initialize Bootstrap components
+            const toastElement = document.getElementById(toastId);
+                if (toastElement && bootstrap.Toast) {
+                    new bootstrap.Toast(toastElement, {
+                        autohide: false
+                    }).show();
+                }
+    
+            // Initialize Modal
+            const modalElement = document.getElementById(modalId);
+            if (modalElement && bootstrap.Modal) {
+                new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+            }
+        }
+    }
+
+    try {
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Ensure Bootstrap is loaded
+        if (typeof bootstrap === 'undefined') {
+            console.error('Bootstrap is not loaded');
+            return;
+        }
+
+        const response = await fetch('/get-unresolved-reports/', {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        });
+
+        const unresolvedReports = await response.json();
+
+        // Create a global instance of DesktopUpdates
+        window.desktopUpdates = new DesktopUpdates();
+
+        // Create toasts and modals for unresolved reports
+        unresolvedReports.forEach(reportDetails => {
+            window.desktopUpdates.createToastAndModal(reportDetails);
+        });
+    } catch (error) {
+        console.error('Error fetching unresolved reports:', error);
+    }
+
+    // Initialize the class after DOM is loaded
+    // const desktopUpdates = new DesktopUpdates();
+});
+</script>
+
+    
     {%block scripts%}
     <!-- DO NOT ADD SCRIPTS HERE -->
     {%endblock%}

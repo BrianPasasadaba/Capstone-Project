@@ -9,7 +9,7 @@ class tempReports(models.Model):
     date = models.DateField()
     time_detected = models.DateTimeField()
     proof = models.URLField(max_length=255)
-    status = models.CharField(max_length=20, choices=[('Filed', 'Filed'), ('Dismissed', 'Dismissed')], null=True)
+    status = models.CharField(max_length=20, choices=[('Reported', 'Reported'), ('Dismissed', 'Dismissed')], null=True)
 
 class InitialReport(models.Model):
     fir_number = models.CharField(max_length=10, unique=True, editable=False, null=True, blank=True)
