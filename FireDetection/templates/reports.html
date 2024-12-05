@@ -127,6 +127,7 @@
                                 data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
                                 data-sender="{{ report.name_of_sender|default:'None' }}"
                                 data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
+                                data-team="{{ report.team|default:'None' }}" 
                                 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#report-preview-modal">
@@ -230,6 +231,39 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Reference to the tbody and hidden input
+    const reportTable = document.getElementById('reportTable');
+    const hiddenReportIdInput = document.getElementById('report-id');
+    const modal = document.getElementById('report-preview-modal');
+
+    // Add event listener to the table body
+    reportTable.addEventListener('click', function (event) {
+        // Find the closest row that was clicked
+        const clickedRow = event.target.closest('tr');
+
+        // Ensure the row exists and has a data-report-id attribute
+        if (clickedRow && clickedRow.dataset.reportId) {
+            const reportId = clickedRow.dataset.reportId;
+
+            // Debug log to confirm correct report ID
+            console.log('Clicked Report ID:', reportId);
+
+            // Set the hidden input value
+            hiddenReportIdInput.value = reportId;
+
+            // Debug log to confirm the hidden input has been updated
+            console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
+
+            // Open the modal (if needed, for Bootstrap modals)
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        } else {
+            console.error('No valid report ID found for the clicked row.');
+        }
+    });
+});
+
 
     document.addEventListener('DOMContentLoaded', function () {
         const editButton = document.querySelector('.edit-form .btn-edit');
@@ -260,6 +294,8 @@
         });
     }
 }
+
+
 
 checkStatusAndDisableEdit();
 
@@ -296,28 +332,78 @@ editButton.addEventListener('click', function() {
 
 
 
-saveButton.addEventListener('click', function(event) {
-            event.preventDefault(); 
-    
-            const formData = new FormData(form);
-            formData.append('csrfmiddlewaretoken', csrfToken);
-    
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': csrfToken
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-    window.location.href = "/reports/";
-} else {
-    alert('Error updating report: ' + data.message);
-}
-            });
-        });    
+saveButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    // Fetch the report ID from the hidden input field
+    const reportId = document.getElementById('report-id').value;
+
+    if (!reportId) {
+        console.error('Report ID is missing!');
+        alert('Report ID is missing. Please try again.');
+        return;
+    }
+
+    console.log('Submitting Report ID:', reportId); // Debug log for the fetched report ID
+
+    // Collect the form data
+    const formData = new FormData(form);
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Ensure that all fields are included, even if empty
+    const fieldsToEnsure = [
+        'where', 'team', 'date', 'detect', 'time-arrive', 'time-under',
+        'date-under', 'funder-dec', 'time-out', 'date-out', 'fout-dec',
+        'damage', 'fatality', 'injured', 'affected', 'establishment', 'truck',
+        'ground', 'ground-num', 'safety', 'safety-num', 'sender', 'sender-num',
+    ];
+
+    // Add missing fields with empty values
+    fieldsToEnsure.forEach(field => {
+        if (!formData.has(field)) {
+            formData.append(field, ''); // Add an empty string if the field is missing
+        }
+    });
+
+    // Log the form data for debugging (optional, remove in production)
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+
+    // Submit the data to the server
+    fetch(`/update-report/${reportId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrfToken,
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    console.error('Server error:', err.message);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${err.message}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                console.log('Report updated successfully.');
+                window.location.href = "/reports/";
+            } else {
+                console.error('Error updating report:', data.message);
+                alert('Error updating report: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            alert('An error occurred. Please try again.');
+        });
+});
+
+
+
 
     });
     </script>

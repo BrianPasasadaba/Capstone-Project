@@ -123,6 +123,7 @@ reportRows.forEach(row => {
         const safetyOfficerContact = row.getAttribute('data-safety-officer-contact');
         const sender = row.getAttribute('data-sender');
         const senderContact = row.getAttribute('data-sender-contact');
+        const team = row.getAttribute('data-team');
 
         const status = row.getAttribute('data-status'); 
             

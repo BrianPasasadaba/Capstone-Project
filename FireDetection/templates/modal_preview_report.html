@@ -23,6 +23,7 @@
                     <strong>Status:</strong> <span id="modal-status"></span>
                 </div>
                 <form  action="{% url 'update_report' report.id  %}" enctype="multipart/form-data" method="post" id="report-preview-form">
+                    <input type="hidden" id="report-id" name="report_id" value="">
                     {% csrf_token %}
 
                     <div class="form-row">
@@ -30,6 +31,7 @@
                             <label for="loc" class="form-label">Location</label>
                             <input type="text" name="where" maxlength="100"  class="form-control" id="loc" required>
                         </div>
+
                         <div class="form-column">
                             <label for="team" class="form-label">Responding Team</label>
                             <select class="form-select" aria-label="Default select example" name="team" id="team">
@@ -37,6 +39,7 @@
                                 <option value="2">Shift B</option>
                             </select>
                         </div>
+                        
                         <div class="form-column">
                             <label for="detect" class="form-label">Time Reported</label>
                             <input type="time" name="detect" class="form-control" id="detect" required> 
