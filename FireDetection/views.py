@@ -50,6 +50,7 @@ import logging
 from .models import tempReports
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
+from django.utils.timezone import make_aware, get_current_timezone
 from asgiref.sync import sync_to_async
 import asyncio
 
@@ -707,6 +708,17 @@ def faq_view(request):
 
 logger = logging.getLogger(__name__)
 
+def convert_to_aware_datetime(date_str, time_str):
+    """Convert date and time strings to a timezone-aware datetime."""
+    if not date_str or not time_str:  # Check for blank or None values
+        return None
+    try:
+        naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+        return make_aware(naive_dt, get_current_timezone())
+    except ValueError as e:
+        print(f"Invalid datetime format: {date_str} {time_str}. Error: {e}")
+        return None
+    
 def update_report(request, report_id):
     if request.method == 'POST':
         report = get_object_or_404(InitialReport, id=report_id)
@@ -724,39 +736,51 @@ def update_report(request, report_id):
             return None
 
         report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
-        report.time_of_arrival = convert_to_aware_datetime(data.get('date', ''), data.get('time-arrive', '')) or report.time_of_arrival
-        report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', ''), data.get('time-under', '')) or report.time_of_fire_under_control
-        report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', ''), data.get('time-out', '')) or report.time_of_fire_out
 
-        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
-        report.fire_under_control_declared_by = data.get('funder-dec', report.fire_under_control_declared_by)
-        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
-        report.fire_out_declared_by = data.get('fout-dec', report.fire_out_declared_by)
+        report.time_of_arrival = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-arrive', '').strip()) or report.time_of_arrival
+        report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-under', '').strip()) or report.time_of_fire_under_control
+        report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
 
-        report.involved = data.get('involved', report.involved)
-        report.name_of_owner = data.get('owner', report.name_of_owner)
-        report.alarm_status = data.get('alarm', report.alarm_status)
-        report.alarm_declared_by = data.get('alarm-dec', report.alarm_declared_by)
-        report.estimated_damages = data.get('damage', report.estimated_damages)
-        report.no_of_fatality = data.get('fatality', report.no_of_fatality)
-        report.no_of_injured = data.get('injured', report.no_of_injured)
-        report.no_of_families_affected = data.get('affected', report.no_of_families_affected)
-        report.no_of_establishments = data.get('establishment', report.no_of_establishments)
-        report.no_of_fire_trucks = data.get('truck', report.no_of_fire_trucks)
-        report.ground_commander = data.get('ground', report.ground_commander)
-        report.commander_contact_number = data.get('ground-num', report.commander_contact_number)
-        report.safety_officer = data.get('safety', report.safety_officer)
-        report.officer_contact_number = data.get('safety-num', report.officer_contact_number)
-        report.name_of_sender = data.get('sender', report.name_of_sender)
-        report.sender_contact_number = data.get('sender-num', report.sender_contact_number)
+        # Date fields with fallback to existing values
+        report.date_of_fire_under_control = data.get('date-under', '').strip() or report.date_of_fire_under_control
+        report.date_of_fire_out = data.get('date-out', '').strip() or report.date_of_fire_out
 
+        # Other fields with validation for blanks
+        report.fire_under_control_declared_by = data.get('funder-dec', '').strip() or report.fire_under_control_declared_by
+        report.fire_out_declared_by = data.get('fout-dec', '').strip() or report.fire_out_declared_by
+
+        report.involved = data.get('involved', '').strip() or report.involved
+        report.name_of_owner = data.get('owner', '').strip() or report.name_of_owner
+        report.alarm_status = data.get('alarm', '').strip() or report.alarm_status
+        report.alarm_declared_by = data.get('alarm-dec', '').strip() or report.alarm_declared_by
+
+        # Numeric fields with default values
+        report.estimated_damages = int(data.get('damage', report.estimated_damages or 0))
+        report.no_of_fatality = int(data.get('fatality', report.no_of_fatality or 0))
+        report.no_of_injured = int(data.get('injured', report.no_of_injured or 0))
+        report.no_of_families_affected = int(data.get('affected', report.no_of_families_affected or 0))
+        report.no_of_establishments = int(data.get('establishment', report.no_of_establishments or 0))
+        report.no_of_fire_trucks = int(data.get('truck', report.no_of_fire_trucks or 0))
+
+        # Other optional fields
+        report.ground_commander = data.get('ground', '').strip() or report.ground_commander
+        report.commander_contact_number = data.get('ground-num', '').strip() or report.commander_contact_number
+        report.safety_officer = data.get('safety', '').strip() or report.safety_officer
+        report.officer_contact_number = data.get('safety-num', '').strip() or report.officer_contact_number
+        report.name_of_sender = data.get('sender', '').strip() or report.name_of_sender
+        report.sender_contact_number = data.get('sender-num', '').strip() or report.sender_contact_number
+
+        # Handle file uploads
         proof = request.FILES.get('proof')
         if proof:
             report.proof = proof
 
-        report.save()
-
-        return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})
+        try:
+            report.save()
+            return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})
+        except Exception as e:
+            print(f"Error saving report: {e}")
+            return JsonResponse({'status': 'error', 'message': 'Failed to save report.'}, status=500)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
 

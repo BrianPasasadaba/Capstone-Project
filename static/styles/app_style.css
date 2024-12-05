@@ -1230,14 +1230,43 @@ input[type="password"]::-ms-clear {
     width: 120px;
 }
 
-.custom-modal .modal-footer .report-btn{
+.custom-modal .modal-footer .report-btn,
+.custom-modal .modal-footer .dismiss-btn{
     color: white;
+    border: none;
+    border-radius:var(--border-radius-input);
+    font-size: 1rem;
+    transition: var(--tran-03);
 }
 
 .custom-modal .modal-footer .dismiss-btn{
     background-color: var(--color-primary);
-    color: white;
-    border: none;
+}
+
+.custom-modal .modal-footer .report-btn:hover,
+.custom-modal .modal-footer .dismiss-btn:hover{
+    transform: scale(1.03);
+    box-shadow: var(--box-shadow-min);
+}
+
+.custom-modal .modal-footer .report-btn:focus,
+.custom-modal .modal-footer .dismiss-btn:focus{
+    background-color: var(--color-white) !important;
+}
+
+.custom-modal .modal-footer .report-btn:focus{
+    border: 1px var(--color-secondary) solid;
+    color: var(--color-secondary);
+}
+
+.custom-modal .modal-footer .dismiss-btn:focus{
+    border: 1px var(--color-primary) solid;
+    color: var(--color-primary);
+}
+
+
+.custom-modal .modal-footer .dismiss-btn:hover{
+    background-color: var(--color-primary);
 }
 
 /* ============================== DISMISS ALERT MODAL ============================== */
@@ -1320,12 +1349,21 @@ input[type="password"]::-ms-clear {
     color: white;
     font-weight: 500;
     border: none;
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
 }
 #dismiss-modal .modal-footer .btn-discancel{
     background-color: var(--color-default);
     color: var(--color-primary);
-    font-weight: 500;
+    font-weight: 600 !important;
     border: none;
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
+}
+
+#dismiss-modal .modal-footer .btn-disconfirm:hover,
+#dismiss-modal .modal-footer .btn-discancel:hover{
+    transform: scale(1.03);
 }
 
 /* ============================== ANALYTICS GRAPH ============================== */
@@ -3030,6 +3068,10 @@ input[type="password"]::-ms-clear {
         background-color: var(--color-secondary);
       }
 
+    #latest-detection .proof-image img,
+    .custom-modal .proof-image img{
+        width: 350px !important;
+    }
 
     .ab-table thead th,
     .rb-table thead th{
@@ -3114,10 +3156,11 @@ input[type="password"]::-ms-clear {
             "hs hn"; /* Different areas for the elements */
 }
     .header-nav{
+        /* border: purple 3px solid; */
         width: calc(100vw - 90px);
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
-        padding-right: var(--padding-half);
+        padding: 0;
     }
     .header-nav h1{
         padding-top: var(--padding-1);
@@ -3128,7 +3171,8 @@ input[type="password"]::-ms-clear {
         font-size: 0.9rem;
     }
     .navigation-list{
-        justify-content: center;
+        /* border: purple 3px solid; */
+        justify-content: end;
         align-items: center;
     }
     main{
@@ -3142,13 +3186,20 @@ input[type="password"]::-ms-clear {
     .btn-profile{
         gap: 0;
     }
+    .btn-sb{
+        width: 22px;
+        height: 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 /* ================================  <700-SIDEBAR ================================  */
     #sidebar-toggle{
         display: block;
     }
     #sidebar-toggle img{
-        width: 35px;
-        height: 35px;
+        width: 22px;
+        height: 22px;
     }
     aside{
         height: calc(100vh - 90px);
@@ -3406,15 +3457,18 @@ input[type="password"]::-ms-clear {
         align-items: center;
     }
     
-    
+    #latest-detection .proof-image img,
     .custom-modal .proof-image img{
         width: 200px !important;
     }
-    .custom-modal .info-detail span{
+
+    .custom-modal .info-detail span,
+    .latest-detection .info-detail span{
         font-size: 0.9rem !important;
         font-weight: 400 !important;
     }
-    .custom-modal .label-detail div {
+    .custom-modal .label-detail div,
+    .latest-detection .label-detail div {
         font-size: 1rem !important;
     }
 
