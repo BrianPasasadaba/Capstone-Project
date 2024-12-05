@@ -11,6 +11,8 @@ django-active-link = "*"
 python-dotenv = "*"
 openpyxl = "*"
 whitenoise = "*"
+gunicorn = "*"
+uvicorn = "*"
 
 [dev-packages]
 
