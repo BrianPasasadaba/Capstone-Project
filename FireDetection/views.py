@@ -51,8 +51,6 @@ from .models import tempReports
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
 from django.utils.timezone import make_aware, get_current_timezone
-from asgiref.sync import sync_to_async
-import asyncio
 
 @csrf_protect
 @require_POST
@@ -796,25 +794,24 @@ def desktop_notification(request):
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
-async def event_stream(request):
-    """Async SSE endpoint that clients connect to for updates"""
-    async def event_generator():
+def event_stream(request):
+    """SSE endpoint that clients connect to for updates"""
+    def event_generator():
         last_check = time.time()
         
         while True:
-            current_time = await sync_to_async(cache.get)('last_update_time')
-
+            current_time = cache.get('last_update_time')
             if current_time and current_time > last_check:
-                data = await sync_to_async(cache.get)('latest_update')
+                data = cache.get('latest_update')
                 if data:
                     yield f"data: {json.dumps(data)}\n\n"
                     last_check = current_time
             
-            await asyncio.sleep(1)
+            time.sleep(1)
 
     response = StreamingHttpResponse(event_generator(), content_type='text/event-stream')
     response['Cache-Control'] = 'no-cache'
-    response['X-Accel-Buffering'] = 'no'
+    response['Connection'] = 'keep-alive'
     return response
 
 def get_temp_report_details(report_id):
