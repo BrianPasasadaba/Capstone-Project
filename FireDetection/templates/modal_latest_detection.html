@@ -1,8 +1,9 @@
+{% for report in latest_reports %}
 <div
     class="modal fade"
-    id="latest-detection"
+    id="latest-detection-{{ report.id }}"
     tabindex="-1"
-    aria-labelledby="modal-title"
+    aria-labelledby="modal-title-{{ report.id }}"
     aria-hidden="true"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
@@ -11,10 +12,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="mh-left">
-                    <h3 class="modal-title" id="modal-title">Latest Detection</h3>
-                    {% if latest_reports %}
+                    <h3 class="modal-title" id="modal-title-{{ report.id }}">Latest Detection</h3>
                     <div class="summary-option">
-                        <div class="detection-status" id="detection-status">{{ latest_reports.0.status }}</div>
+                        <div class="detection-status" id="detection-status-{{ report.id }}">{{ report.status }}</div>
                     </div>
                 </div>
                 <button
@@ -26,51 +26,52 @@
             </div>
             <div class="modal-body">
                 <div class="group-report">
-                  
-                        <div class="indiv-detail">
-                            <div>Proof</div>
-                            <span class="proof-image">
-                                <img
-                                    id="detect-proof"
-                                    class="img-fluid"
-                                    style="max-width: 500px;"
-                                    src="{{ latest_reports.0.proof }}"  
-                                    alt="Proof Image"
-                                />
-                            </span>
+                    <div class="indiv-detail">
+                        <div>Proof</div>
+                        <span class="proof-image">
+                            <img
+                                id="detect-proof-{{ report.id }}"
+                                class="img-fluid"
+                                style="max-width: 350px;"
+                                src="{{ report.proof }}"  
+                                alt="Proof Image"
+                            />
+                        </span>
+                    </div>
+                    <div class="indiv-detail">
+                        <div class="label-detail">
+                            <div>Date</div>
+                            <div>Location</div>
                         </div>
-                        <div class="indiv-detail">
-                            <div class="label-detail">
-                                <div>Date</div>
-                                <div>Location</div>
-                            </div>
-                            <div class="info-detail">
-                                <span id="detection-date">{{ latest_reports.0.date }}</span>
-                                <span id="detection-location">{{ latest_reports.0.where }}</span>
-                            </div>
+                        <div class="info-detail">
+                            <span id="detection-date-{{ report.id }}">{{ report.date }}</span>
+                            <span id="detection-location-{{ report.id }}">{{ report.where }}</span>
                         </div>
-                        <div class="indiv-detail">
-                            <div class="label-detail">
-                                <div>Time</div>
-                            </div>
-                            <div class="info-detail">
-                                <span id="detection-time">{{ latest_reports.0.time_detected }}</span>
-                            </div>
+                    </div>
+                    <div class="indiv-detail">
+                        <div class="label-detail">
+                            <div>Time</div>
                         </div>
-                        <hr>
-                    {% endif %}
+                        <div class="info-detail">
+                            <span id="detection-time-{{ report.id }}">{{ report.time_detected }}</span>
+                        </div>
+                    </div>
+                    <hr>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+{% endfor %}
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const detectionStatus = document.getElementById("detection-status");
+document.addEventListener("DOMContentLoaded", function() {
+    // Select all detection status elements
+    const detectionStatuses = document.getElementsByClassName('detection-status');
     
+    detectionStatuses.forEach(function(detectionStatus) {
         // Check the status text (case-insensitive) and apply the corresponding styles
         const statusText = detectionStatus.innerText.trim().toLowerCase();
         
@@ -82,5 +83,6 @@
             detectionStatus.style.border = "2px solid #0E1E4B";
         }
     });
-    </script>
+});
+</script>
     
