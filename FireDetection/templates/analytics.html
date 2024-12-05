@@ -166,7 +166,7 @@
                                     {% for report in latest_reports %}
                                     <tr 
                                         data-bs-toggle="modal" 
-                                        data-bs-target="#latest-detection"
+                                        data-bs-target="#latest-detection-{{ report.id }}"
                                         data-location="{{ report.where }}"
                                         data-date="{{ report.date }}"
                                         data-time="{{ report.time_detected }}"
