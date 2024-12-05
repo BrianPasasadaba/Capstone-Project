@@ -3462,11 +3462,13 @@ input[type="password"]::-ms-clear {
         width: 200px !important;
     }
 
-    .custom-modal .info-detail span{
+    .custom-modal .info-detail span,
+    .latest-detection .info-detail span{
         font-size: 0.9rem !important;
         font-weight: 400 !important;
     }
-    .custom-modal .label-detail div {
+    .custom-modal .label-detail div,
+    .latest-detection .label-detail div {
         font-size: 1rem !important;
     }
 
