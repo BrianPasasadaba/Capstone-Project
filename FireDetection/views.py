@@ -209,7 +209,7 @@ def monthly_reports_for_2024(request):
 
     return JsonResponse({'year': 2024, 'monthly_data': all_months})
 
-
+@login_required
 def analytics_view(request):
     current_date = localtime(now())
 
@@ -364,7 +364,7 @@ def export_initial_report(request):
     return response
 
 
-
+@login_required
 def change_password(request):
     if request.method == 'POST':
         new_password = request.POST.get('password')

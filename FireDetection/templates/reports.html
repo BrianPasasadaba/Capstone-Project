@@ -230,14 +230,13 @@
 
 
 
+    
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    // Reference to the tbody and hidden input
     const reportTable = document.getElementById('reportTable');
     const hiddenReportIdInput = document.getElementById('report-id');
     const modal = document.getElementById('report-preview-modal');
 
-    // Add event listener to the table body
     reportTable.addEventListener('click', function (event) {
         // Find the closest row that was clicked
         const clickedRow = event.target.closest('tr');
@@ -344,13 +343,11 @@ saveButton.addEventListener('click', function (event) {
         return;
     }
 
-    console.log('Submitting Report ID:', reportId); // Debug log for the fetched report ID
+    console.log('Submitting Report ID:', reportId); 
 
-    // Collect the form data
     const formData = new FormData(form);
     formData.append('csrfmiddlewaretoken', csrfToken);
 
-    // Ensure that all fields are included, even if empty
     const fieldsToEnsure = [
         'where', 'team', 'date', 'detect', 'time-arrive', 'time-under',
         'date-under', 'funder-dec', 'time-out', 'date-out', 'fout-dec',
@@ -358,19 +355,16 @@ saveButton.addEventListener('click', function (event) {
         'ground', 'ground-num', 'safety', 'safety-num', 'sender', 'sender-num',
     ];
 
-    // Add missing fields with empty values
     fieldsToEnsure.forEach(field => {
         if (!formData.has(field)) {
-            formData.append(field, ''); // Add an empty string if the field is missing
+            formData.append(field, '');
         }
     });
 
-    // Log the form data for debugging (optional, remove in production)
     for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
     }
 
-    // Submit the data to the server
     fetch(`/update-report/${reportId}/`, {
         method: 'POST',
         body: formData,
@@ -410,46 +404,7 @@ saveButton.addEventListener('click', function (event) {
     
 
 
-    <script>
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const reportPreviewModal = document.getElementById('report-preview-modal'); 
-    
-        reportPreviewModal.addEventListener('hidden.bs.modal', () => {
-            if (isEditing) {
-                const editButtons = document.querySelectorAll('[id^="edit-button-"]');
-                const editIcons = document.querySelectorAll('[id^="edit-icon-"]');
-                const editTexts = document.querySelectorAll('[id^="edit-text-"]');
-    
-                editButtons.forEach((button, index) => {
-                    button.disabled = false;
-                    button.style.width = '';
-                    button.style.fontSize = '';
-                    button.style.fontWeight = '';
-                    button.style.color = '';
-                    button.style.backgroundColor = '';
-                    button.style.border = '';
-    
-                    const icon = editIcons[index];
-                    if (icon) icon.style.display = '';
-    
-                    const text = editTexts[index];
-                    if (text) text.textContent = 'Edit'; 
-                });
-    
-                isEditing = false; 
-            }
-        });
-    
-        const editButtons = document.querySelectorAll('[id^="edit-button-"]');
-        editButtons.forEach(button => {
-            const reportId = button.id.split('-').pop(); // Extract the report ID from the button ID
-            button.addEventListener('click', () => toggleEditButton(reportId));
-        });
-    });
-    
-    
-    </script>
 
 
 {% endblock %}

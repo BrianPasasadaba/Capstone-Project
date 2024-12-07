@@ -159,30 +159,36 @@
                     <div class="form-row">
                         <div class="form-column">
                             <label for="crdamages" class="form-label">Estimated Damages</label>
-                            <input type="text" class="form-control" name="crdamages" id="crdamages" placeholder="e.g. P1,000,000" maxlength="12" >
+                            <input type="text" class="form-control" name="crdamages" id="crdamages" placeholder="e.g. P1,000,000" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="crfatality" class="form-label">No. of Fatality</label>
-                            <input type="text" class="form-control" id="crfatality" placeholder="e.g. 11" name="crfatality" maxlength="12" >
+                            <input type="text" class="form-control" id="crfatality" placeholder="e.g. 11" name="crfatality" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="crinjured" class="form-label">No. of Injured</label>
-                            <input type="text" class="form-control" id="crinjured" placeholder="e.g. 11" name="crinjured" maxlength="12" >
+                            <input type="text" class="form-control" id="crinjured" placeholder="e.g. 11" name="crinjured" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                 
                     <div class="form-row">
                         <div class="form-column">
                             <label for="craffected" class="form-label">No. of Families Affected</label>
-                            <input type="text" class="form-control" id="craffected" placeholder="e.g. 11" name="craffected" maxlength="12" >
+                            <input type="text" class="form-control" id="craffected" placeholder="e.g. 11" name="craffected" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="crestablishment" class="form-label">No. of Establishment</label>
-                            <input type="text" class="form-control" id="crestablishment" placeholder="e.g. 11" name="crestablishment" maxlength="12" >
+                            <input type="text" class="form-control" id="crestablishment" placeholder="e.g. 11" name="crestablishment" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="crtruck" class="form-label">No. of Fire Trucks Responded</label>
-                            <input type="text" class="form-control" id="crtruck" placeholder="e.g. 11" name="crtruck" maxlength="12" >
+                            <input type="text" class="form-control" id="crtruck" placeholder="e.g. 11" name="crtruck" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                     <div class="form-row">
@@ -249,6 +255,40 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/preview.js' %}"></script>
+
+<script>
+    document.getElementById('crinvolved-search').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crowner').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('cralarm-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crfout-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crground').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crsafety').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crsender').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crfunder-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+</script>
 
 <script>
 function customAlert(message) {

@@ -53,7 +53,7 @@
                         </div>
                         <div class="form-column">
                             <label for="involved" class="form-label">Involved</label>
-                            <input type="text" class="form-control" name="involved" id="involved" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" name="involved" id="involved" placeholder="e.g. Juan Dela Cruz" maxlength="60" pattern="[A-Za-z\s]+" title="Only letters are allowed" >
                         </div>
                         <div class="form-column">
                             <label for="owner" class="form-label">Name of Owner</label>
@@ -116,30 +116,36 @@
                     <div class="form-row">
                         <div class="form-column">
                             <label for="damages" class="form-label">Estimated Damages</label>
-                            <input type="text" class="form-control" name="damage" id="damage" placeholder="e.g. P1,000,000" maxlength="12" >
+                            <input type="text" class="form-control" name="damage" id="damage" placeholder="e.g. P1,000,000" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="fatality" class="form-label">No. of Fatality</label>
-                            <input type="text" class="form-control" id="fatality" placeholder="e.g. 11" name="fatality" maxlength="12" >
+                            <input type="text" class="form-control" id="fatality" placeholder="e.g. 11" name="fatality" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="injured" class="form-label">No. of Injured</label>
-                            <input type="text" class="form-control" id="injured" placeholder="e.g. 11" name="injured" maxlength="12" >
+                            <input type="text" class="form-control" id="injured" placeholder="e.g. 11" name="injured" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                 
                     <div class="form-row">
                         <div class="form-column">
                             <label for="affected" class="form-label">No. of Families Affected</label>
-                            <input type="text" class="form-control" id="affected" placeholder="e.g. 11" name="affected" maxlength="12" >
+                            <input type="text" class="form-control" id="affected" placeholder="e.g. 11" name="affected" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="establishment" class="form-label">No. of Establishment</label>
-                            <input type="text" class="form-control" id="establishment" placeholder="e.g. 11" name="establishment" maxlength="12" >
+                            <input type="text" class="form-control" id="establishment" placeholder="e.g. 11" name="establishment" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                         <div class="form-column">
                             <label for="truck" class="form-label">No. of Fire Trucks Responded</label>
-                            <input type="text" class="form-control" id="truck" placeholder="e.g. 11" name="truck" maxlength="12" >
+                            <input type="text" class="form-control" id="truck" placeholder="e.g. 11" name="truck" maxlength="12" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                     <div class="form-row">
@@ -149,7 +155,8 @@
                         </div>
                         <div class="form-column">
                             <label for="ground-num" class="form-label">Ground Commander Contact No.</label>
-                            <input type="text" class="form-control" name="ground-num" id="ground-num" placeholder="e.g. 09227807570" maxlength="11" >
+                            <input type="text" class="form-control" name="ground-num" id="ground-num" placeholder="e.g. 09227807570" maxlength="11" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                     <div class="form-row">
@@ -159,7 +166,8 @@
                         </div>
                         <div class="form-column">
                             <label for="safety-num" class="form-label">Safety Officer Contact No.</label>
-                            <input type="text" class="form-control" name="safety-num" id="safety-num" placeholder="e.g. 09227807570" maxlength="11" >
+                            <input type="text" class="form-control" name="safety-num" id="safety-num" placeholder="e.g. 09227807570" maxlength="11" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                     <div class="form-row">
@@ -169,17 +177,19 @@
                         </div>
                         <div class="form-column">
                             <label for="sender-num" class="form-label">Name of Sender Contact No.</label>
-                            <input type="text" class="form-control" name="sender-num" id="sender-num" placeholder="e.g. 09227807570" maxlength="11" >
+                            <input type="text" class="form-control" name="sender-num" id="sender-num" placeholder="e.g. 09227807570" maxlength="11" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                     <div class="form-row"></div>
                         <div class="form-column">
                             <div class="proof-image">
                                 <label for="proof" class="form-label">Proof of Fire Incident</label>
-                                <img id="proof"  name="proof" class="img-fluid" style="max-width: 500px;" alt="Nothing To Show">
+                                <img id="proof"  name="proof" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-footer">
                         <div class="mf-button">
                             <button type="button" class="btn btn-lg px-4 copy-button" onclick="copyModalContent()">
@@ -201,13 +211,47 @@
 </div>
 {% endfor %}
 
+<script>
+    document.getElementById('involved').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('owner').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('alarm-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('fout-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('ground').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('safety').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('sender').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('funder-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+</script>
+
 
 <script>
     function copyModalContent() {
     const form = document.getElementById('report-preview-form'); 
     const previewModal = document.getElementById('report-preview-modal');
     const customAlertModal = document.getElementById('customAlertModal');
-    const customAlertOkButton = customAlertModal.querySelector('.btn-disconfirm'); // The OK button
+    const customAlertOkButton = customAlertModal.querySelector('.btn-disconfirm'); 
     let contentToCopy = "";
 
     Array.from(form.elements).forEach(element => {
@@ -262,56 +306,21 @@
         alert("Failed to copy content.");
     });
 
-
     customAlertOkButton.addEventListener(
         "click",
         function () {
-            window.location.href = "/reports/";
+            const customAlertInstance = bootstrap.Modal.getInstance(customAlertModal);
+            if (customAlertInstance) {
+                customAlertInstance.hide();
+            }
+
+            const previewModalInstance = new bootstrap.Modal(previewModal);
+            previewModalInstance.show();
         },
         { once: true } 
     );
 }
 
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const reportPreviewModal = document.getElementById('report-preview-modal'); 
-
-    reportPreviewModal.addEventListener('hidden.bs.modal', () => {
-        if (isEditing) {
-            const editButtons = document.querySelectorAll('[id^="edit-button-"]');
-            const editIcons = document.querySelectorAll('[id^="edit-icon-"]');
-            const editTexts = document.querySelectorAll('[id^="edit-text-"]');
-
-            editButtons.forEach((button, index) => {
-                button.disabled = false;
-                button.style.width = '';
-                button.style.fontSize = '';
-                button.style.fontWeight = '';
-                button.style.color = '';
-                button.style.backgroundColor = '';
-                button.style.border = '';
-
-                const icon = editIcons[index];
-                if (icon) icon.style.display = '';
-
-                const text = editTexts[index];
-                if (text) text.textContent = 'Edit'; 
-            });
-
-            isEditing = false; 
-        }
-    });
-
-    const editButtons = document.querySelectorAll('[id^="edit-button-"]');
-    editButtons.forEach(button => {
-        const reportId = button.id.split('-').pop(); 
-        button.addEventListener('click', () => toggleEditButton(reportId));
-    });
-});
-
 
 </script>
-
 

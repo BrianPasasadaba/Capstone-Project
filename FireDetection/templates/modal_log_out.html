@@ -12,7 +12,8 @@
                 <div class="modal-footer">
                     <div class="mf-button">
                         <button class="btn btn-lg px-4 btn-cancel"  type="button" class="btn-close" data-bs-dismiss="modal">Cancel</button>
-                        <a href="{% url 'logout' %}"><button class="btn btn-lg px-4 btn-confirm" type="submit">Confirm</button></a>
+                        <button id="logout-confirm-btn" class="btn btn-lg px-4 btn-confirm" type="button">Confirm</button>
+
                     </div>
                 </div>
 
@@ -21,3 +22,34 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('logout-confirm-btn').addEventListener('click', function () {
+        sessionStorage.setItem('logout-confirmed', 'true');
+
+        history.pushState(null, null, window.location.href);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, window.location.href); 
+        });
+
+        window.location.href = "{% url 'logout' %}";
+    });
+
+</script>
+
+<script type="text/javascript">
+    // Prevent back navigation
+    window.history.forward();
+
+    function noBack() {
+        window.history.forward();
+    }
+
+    window.onload = noBack;
+    window.onpageshow = function (event) {
+        if (event.persisted) {
+            noBack();
+        }
+    };
+</script>
+
