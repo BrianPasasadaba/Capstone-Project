@@ -28,12 +28,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Handle click to select the item
                     item.addEventListener('click', () => {
+                        // Replace the current input value with the selected option
                         searchInput.value = option; // Set input to selected suggestion
                         hiddenInput.value = option; // Update hidden input
                         
                         // Hide dropdown after selection
                         suggestionsBox.innerHTML = '';
                         suggestionsBox.style.display = 'none';
+                        
+                        // Set the cursor to the end of the input field to allow further typing
+                        searchInput.focus();
+                        searchInput.setSelectionRange(option.length, option.length);
                     });
                     suggestionsBox.appendChild(item);
                 });

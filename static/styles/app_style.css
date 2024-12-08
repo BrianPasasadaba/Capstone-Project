@@ -349,6 +349,7 @@ input[type="password"]::-ms-clear {
 #change-password-form .mf-button .btn:disabled{
     color: var(--color-primary) !important;
     border: none;
+    background-color: var(--color-tertiary);
 }
 
 #change-password-form .requirement-list li.valid i,
@@ -2148,7 +2149,7 @@ input[type="password"]::-ms-clear {
 
 .creports-body .btn:hover{
     background-color: var(--color-tertiary);
-    border: var(--color-hover) 1px solid;
+    transform: scale(1.03);
 }
 
 .creports-body .btn:focus{
