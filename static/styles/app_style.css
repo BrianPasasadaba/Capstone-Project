@@ -285,7 +285,7 @@ input[type="password"]::-ms-clear {
 
 #change-password-form input:focus + .input-label,
 #change-password-form input:not(:placeholder-shown) + .input-label {
-    color: #ED7027;
+    color: var(--color-secondary) !important;
     height: 30px;
     line-height: 30px;
     transform: translate(-5px, -16px) scale(0.88);
@@ -333,6 +333,22 @@ input[type="password"]::-ms-clear {
     font-size: 0.7rem;
     padding-right: 0.5rem;
     color: RED;
+}
+
+#change-password-form .mf-button .btn{
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
+}
+
+#change-password-form .mf-button .btn:hover{
+    transform: scale(1.03);
+    box-shadow: var(--box-shadow);
+}
+
+
+#change-password-form .mf-button .btn:disabled{
+    color: var(--color-primary) !important;
+    border: none;
 }
 
 #change-password-form .requirement-list li.valid i,
@@ -2734,7 +2750,7 @@ input[type="password"]::-ms-clear {
     justify-content: center;
     align-items: center;
     padding-bottom: var(--padding-half);
-    gap: var(--gap-half);
+    gap: var(--gap-1);
 }
 
 #report-preview-modal .mf-button .btn{
@@ -2746,16 +2762,26 @@ input[type="password"]::-ms-clear {
 
 
 #report-preview-modal .btn-edit{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     border-radius: var(--border-radius-input);
-    width: 85px;
+    width: 75px;
+    height: 2rem;
     background-color: var(--color-secondary);
     margin-left: var(--margin-half);
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--color-white);
     border: var(--border-input);
     transition: var(--tran-03);
     box-shadow: var(--box-shadow-min);
+    gap: var(--gap-half);
+}
+
+#report-preview-modal .btn-edit i{
+    font-size: 0.8rem;
 }
 #report-preview-modal .resolve-btn{
     border-radius: var(--border-radius-input);
@@ -2768,8 +2794,8 @@ input[type="password"]::-ms-clear {
     box-shadow: var(--box-shadow);
 }
 
-#report-preview-modal .copy-btn:hover,
-#report-preview-modal .resolve-btn:hover,
+#report-preview-modal .copy-button:hover,
+#report-preview-modal .resolve-button:hover,
 #report-preview-modal .btn-edit:hover{
     transform: scale(1.03)!important;
     
@@ -2862,12 +2888,23 @@ input[type="password"]::-ms-clear {
     color: white;
     font-weight: 600;
     border: none;
+    font-size: 1rem;
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
 }
 #unsaved-warning-modal .modal-footer .btn-stay{
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 600;
     border: none;
+    font-size: 1rem;
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
+}
+
+#unsaved-warning-modal .modal-footer .btn-leave:hover,
+#unsaved-warning-modal .modal-footer .btn-stay:hover{
+    transform: scale(1.03);
 }
 
 /* ============================== ACCOUNTS MODAL============================== */
