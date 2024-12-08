@@ -625,7 +625,7 @@ aside{
 
 .sb-body .nav-link {
     /* border: orange solid 2px; */
-    border-radius: var(--border-radius-button-half);
+    border-radius: var(--border-radius-input);
     margin-bottom: var(--margin-half);
     padding: 2px;
     /* padding-left: var(--padding-2); */
@@ -642,13 +642,13 @@ aside{
 
 .sb-body .icon{
     /* border: var(--color-sidebar) solid 2px; */
-    font-size: 30px;
+    font-size: 25px;
     color: var(--color-sidebar)
 }
 
 .sb-body .description{
     /* border: var(--color-sidebar) solid 2px; */
-    font-size: 19px;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--color-sidebar)
 }
@@ -1075,8 +1075,7 @@ input[type="password"]::-ms-clear {
     color: var(--color-secondary);
 }
 
-#preview-incident-summary .mh-left,
-#latest-detection .mh-left{
+#preview-incident-summary .mh-left{
     /* border: var(--color-secondary) 1px solid; */
     display: flex;
     flex-direction: row;
@@ -1178,7 +1177,8 @@ input[type="password"]::-ms-clear {
     align-items: start;
     /* border: 2px solid var(--color-primary);  */
 }
-.modal-container .custom-modal .modal-body .indiv-detail{
+.modal-container .custom-modal .modal-body .indiv-detail,
+.latest-detection .modal-body .indiv-detail{
     /* border: 2px solid var(--color-sidebar);  */
     width: 100%;
     display: flex;
@@ -1188,24 +1188,29 @@ input[type="password"]::-ms-clear {
     padding: var(--padding-half);
 }
 
-.custom-modal .modal-body .label-detail{
+.custom-modal .modal-body .label-detail,
+.latest-detection .label-detail{
     /* border: 2px solid var(--color-sidebar);  */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 2fr;
 }
 
-.custom-modal .modal-body .info-detail{
+.custom-modal .modal-body .info-detail,
+.latest-detection .info-detail{
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 .custom-modal .modal-body .ind-date,
-.custom-modal .modal-body .ind-time{
+.custom-modal .modal-body .ind-time,
+.latest-detection .ind-date,
+.latest-detection .ind-time{
     align-items: start;
 }
 
-.custom-modal .modal-body .ind-where{
+.custom-modal .modal-body .ind-where,
+.latest-detection .ind-where{
     align-items: end;
 }
 
@@ -1577,10 +1582,10 @@ input[type="password"]::-ms-clear {
 
 
 /* ============================== lATEST DETECTION MODAL============================== */
-#latest-detection{
+.latest-detection{
     text-align: center;
 }
-#latest-detection .modal-dialog{
+.latest-detection .modal-dialog{
     padding: var(--padding-1);
     max-width: 700px;
     height: 100vh;
@@ -1589,14 +1594,15 @@ input[type="password"]::-ms-clear {
     align-items: start;
 }
 
-#latest-detection .modal-header{
+.latest-detection .modal-header{
     /* border: 2px solid var(--color-primary); */
     display: flex;
     flex-direction: row;
     justify-content: start;
     align-items: center;
 }
-#latest-detection .modal-title{
+
+.latest-detection .modal-title{
     /* border: 2px solid var(--color-primary); */
     display: flex;
     flex-direction: row;
@@ -1607,19 +1613,26 @@ input[type="password"]::-ms-clear {
     color: var(--color-secondary);
 }
 
-#latest-detection .modal-title .bi{
+.latest-detection .mh-left{
+    /* border: var(--color-secondary) 1px solid; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.latest-detection .modal-title .bi{
     font-size: 40px;
 }
 
 .detection-status{
     padding-left: var(--padding-1);
     padding-right: var(--padding-1);
-    border: var(--color-primary) 1px solid;
+    border: var(--color-primary) 2px solid;
     border-radius: var(--border-radius-card-2);
     font-weight: 500;
 }
 
-#latest-detection .modal-body h4{
+.latest-detection .modal-body h4{
     color: var(--color-danger);
     font-weight: 600;
 }
@@ -1668,19 +1681,19 @@ input[type="password"]::-ms-clear {
     font-weight: 600;
 }
 
-#latest-detection .modal-footer .mf-button{
+.latest-detection .modal-footer .mf-button{
     gap: var(--gap-2);
 }
 
-#latest-detection .modal-footer .btn{
+.latest-detection .modal-footer .btn{
     width: 120px;
 }
 
-#latest-detection .modal-footer #btn-popreport{
+.latest-detection .modal-footer #btn-popreport{
     color: white;
 }
 
-#latest-detection .modal-footer #btn-dismiss{
+.latest-detection .modal-footer #btn-dismiss{
     background-color: var(--color-primary);
     color: white;
     border: none;
@@ -2699,7 +2712,7 @@ input[type="password"]::-ms-clear {
 #create-report-modal .modal-header .btn-close,
 #logout-modal .modal-header .btn-close,
 #report-preview-modal .modal-header .btn-close,
-#latest-detection .modal-header .btn-close,
+.latest-detection .modal-header .btn-close,
 #customAlertModal .modal-header .btn-close,
 #terms-condition-modal .modal-header .btn-close{
     margin-right: var(--margin-half);
@@ -3068,7 +3081,7 @@ input[type="password"]::-ms-clear {
         background-color: var(--color-secondary);
       }
 
-    #latest-detection .proof-image img,
+    .latest-detection .proof-image img,
     .custom-modal .proof-image img{
         width: 350px !important;
     }
@@ -3443,21 +3456,21 @@ input[type="password"]::-ms-clear {
         font-size: 0.8rem!important;
     }
     /* ================================  <700-POPALERT ================================  */
-    .custom-modal .modal-body .label-detail{
+    .custom-modal .modal-body .label-detail,
+    .latest-detection .label-detail{
         grid-template-columns: 1fr;
+        gap: var(--gap-half);
     }
     
-    .custom-modal .modal-body .info-detail{
+    .custom-modal .modal-body .info-detail,
+    .latest-detection .info-detail{
         display: flex;
         flex-direction: column;
         width: 100%;
-    }
-    
-    .custom-modal .modal-body .info-detail{
         align-items: center;
     }
-    
-    #latest-detection .proof-image img,
+
+    .latest-detection .proof-image img,
     .custom-modal .proof-image img{
         width: 200px !important;
     }
@@ -3488,7 +3501,7 @@ input[type="password"]::-ms-clear {
         gap: var(--gap-half);
     }
     #preview-incident-summary .mh-left,
-    #latest-detection .mh-left{
+    .latest-detection .mh-left{
         /* border: var(--color-secondary) 1px solid; */
         display: flex;
         flex-direction: column;

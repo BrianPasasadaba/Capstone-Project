@@ -1,6 +1,6 @@
 {% for report in latest_reports %}
 <div
-    class="modal fade"
+    class="modal fade latest-detection"
     id="latest-detection-{{ report.id }}"
     tabindex="-1"
     aria-labelledby="modal-title-{{ report.id }}"
@@ -40,20 +40,18 @@
                     </div>
                     <div class="indiv-detail">
                         <div class="label-detail">
-                            <div>Date</div>
-                            <div>Location</div>
-                        </div>
-                        <div class="info-detail">
-                            <span id="detection-date-{{ report.id }}">{{ report.date }}</span>
-                            <span id="detection-location-{{ report.id }}">{{ report.where }}</span>
-                        </div>
-                    </div>
-                    <div class="indiv-detail">
-                        <div class="label-detail">
-                            <div>Time</div>
-                        </div>
-                        <div class="info-detail">
-                            <span id="detection-time-{{ report.id }}">{{ report.time_detected }}</span>
+                            <div class="info-detail ind-date">
+                                <div>Date</div>
+                                <span id="detection-date-{{ report.id }}">{{ report.date }}</span>
+                            </div>
+                            <div class="info-detail ind-where">
+                                <div>Location</div>
+                                <span id="detection-location-{{ report.id }}">{{ report.where }}</span>
+                            </div>
+                            <div class="info-detail ind-time">
+                                <div>Time</div>
+                                <span id="detection-time-{{ report.id }}">{{ report.time_detected }}</span>
+                            </div>
                         </div>
                     </div>
                     <hr>
