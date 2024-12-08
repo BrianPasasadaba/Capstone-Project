@@ -301,32 +301,42 @@ function copyModalContent() {
     const form = document.getElementById('create-report-form');
     let contentToCopy = "";
 
+    // Blur all input fields to ensure they are unfocused and updated
     Array.from(form.elements).forEach(element => {
-        // Exclude CSRF token, buttons, and the 'proof' field
-        if (
-            element.name && 
-            element.name !== "csrfmiddlewaretoken" && 
-            element.type !== "submit" && 
-            element.type !== "button" && 
-            element.name !== "proof" // Exclude the 'proof' field
-        ) {
-            const label = document.querySelector(`label[for="${element.id}"]`);
-            const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
-            const value = element.value.trim();
-            if (value) {
-                contentToCopy += `${labelText}: ${value}\n`;
-            }
+        if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
+            element.blur(); // This will ensure the input value is updated
         }
     });
 
-    navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
-        customAlert("Content copied to clipboard!");
-    }).catch((err) => {
-        console.error("Could not copy text: ", err);
-        customAlert("Failed to copy content.");
-    });
-}
+    // Use a timeout to allow the blur event to process
+    setTimeout(() => {
+        Array.from(form.elements).forEach(element => {
+            // Exclude CSRF token, buttons, and the 'proof' field
+            if (
+                element.name && 
+                element.name !== "csrfmiddlewaretoken" && 
+                element.type !== "submit" && 
+                element.type !== "button" && 
+                element.name !== "proof" // Exclude the 'proof' field
+            ) {
+                const label = document.querySelector(`label[for="${element.id}"]`);
+                const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
+                const value = element.value.trim();
+                if (value) {
+                    contentToCopy += `${labelText}: ${value}\n`;
+                }
+            }
+        });
 
+        // Copy the content to the clipboard
+        navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
+            customAlert("Content copied to clipboard!");
+        }).catch((err) => {
+            console.error("Could not copy text: ", err);
+            customAlert("Failed to copy content.");
+        });
+    }, 100); // Adjust the timeout duration if necessary
+}
 
 </script>
     

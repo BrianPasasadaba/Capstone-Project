@@ -277,6 +277,15 @@
     const customAlertOkButton = customAlertModal.querySelector('.btn-disconfirm'); 
     let contentToCopy = "";
 
+    // Blur all input fields to ensure they are unfocused and updated
+    Array.from(form.elements).forEach(element => {
+        if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
+            element.blur(); // This will ensure the input value is updated
+        }
+    });
+
+    // Use a timeout to allow the blur event to process
+    setTimeout(() => {
     Array.from(form.elements).forEach(element => {
         if (
             element.name && 
@@ -328,6 +337,7 @@
         console.error("Failed to copy content: ", err);
         alert("Failed to copy content.");
     });
+    }, 100);
 
     customAlertOkButton.addEventListener(
         "click",
