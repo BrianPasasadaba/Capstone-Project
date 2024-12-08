@@ -51,6 +51,7 @@ from .models import tempReports
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
 from django.utils.timezone import make_aware, get_current_timezone
+from django.db.models.functions import ExtractYear
 
 @csrf_protect
 @require_POST
@@ -188,12 +189,28 @@ def monthly_report_summary(request):
     return JsonResponse(monthly_data)
 
     
-def reports_count_for_2024(request):
-    reports_2024 = InitialReport.objects.filter(date_reported__year=2024).count()
-    return JsonResponse({'year': 2024, 'count': reports_2024})
+def reports_count_for_years(request):
+    # Get counts for each year from 2018 to 2024
+    years_range = range(2018, 2025)
+    counts = (
+        InitialReport.objects.filter(date_reported__year__in=years_range)
+        .annotate(year=ExtractYear('date_reported'))
+        .values('year')
+        .annotate(count=Count('id'))
+        .order_by('year')
+    )
 
+    # Convert queryset to a dictionary
+    data = {year['year']: year['count'] for year in counts}
+    
+    # Ensure all years in range are included, even if no reports exist
+    for year in years_range:
+        data.setdefault(year, 0)
+
+    return JsonResponse({'yearly_data': data})
 
 def monthly_reports_for_2024(request):
+    # Group reports by month
     reports_by_month = (
         InitialReport.objects.filter(date_reported__year=2024)
         .annotate(month=TruncMonth('date_reported'))
@@ -201,8 +218,11 @@ def monthly_reports_for_2024(request):
         .annotate(count=Count('id'))
         .order_by('month')
     )
+    
+    # Initialize all months with a count of 0
     all_months = {date(2024, month, 1).strftime('%b'): 0 for month in range(1, 13)}
 
+    # Populate months with data from the query
     for report in reports_by_month:
         month_name = report['month'].strftime('%b')
         all_months[month_name] = report['count']
