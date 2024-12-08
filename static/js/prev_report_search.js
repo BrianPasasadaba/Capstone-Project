@@ -80,11 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     // Set up search functionality for each field
-    setupSearch('crinvolved-search', 'crinvolved', 'crinvolved-options', involvedOptions);
-    setupSearch('cralarm-dec-search', 'cralarm-dec', 'cralarm-dec-options', namesOptions);
-    setupSearch('crfunder-dec-search', 'crfunder-dec', 'crfunder-dec-options', namesOptions);
-    setupSearch('crfout-dec-search', 'crfout-dec', 'crfout-dec-options', namesOptions);
-    setupSearch('crground-search', 'crground', 'crground-options', namesOptions);
-    setupSearch('crsafety-search', 'crsafety', 'crsafety-options', namesOptions);
-    setupSearch('crsender-search', 'crsender', 'crsender-options', namesOptions);
+    setupSearch('involved-search', 'involved', 'involved-options', involvedOptions);
+    setupSearch('alarm-dec-search', 'alarm-dec', 'alarm-dec-options', namesOptions);
+    setupSearch('funder-dec-search', 'funder-dec', 'funder-dec-options', namesOptions);
+    setupSearch('fout-dec-search', 'fout-dec', 'fout-dec-options', namesOptions);
+    setupSearch('ground-search', 'ground', 'ground-options', namesOptions);
+    setupSearch('safety-search', 'safety', 'safety-options', namesOptions);
+    setupSearch('sender-search', 'sender', 'sender-options', namesOptions);
 });
