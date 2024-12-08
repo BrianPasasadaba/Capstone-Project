@@ -457,6 +457,12 @@ def forgot_password_view(request):
     return render(request, 'forgot_password.html', {'show_success_modal': show_success_modal})
 
 
+def check_email_exists(request):
+    email = request.GET.get('email', None)
+    if email:
+        exists = CustomUser.objects.filter(email=email).exists()
+        return JsonResponse({'exists': exists})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 @login_required
 def register_view(request):

@@ -91,6 +91,7 @@
                             <label for="crdate" class="form-label">Date Reported<i class="bi bi-asterisk"></i></label>
                             <input type="date" name="crdate" class="form-control" id="crdate" required> 
                         </div>
+
                         <div class="form-column" style="position: relative;">
                             <label for="crinvolved" class="form-label">Involved</label>
                             <input type="text" class="form-control" id="crinvolved-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" >
@@ -242,7 +243,7 @@
                     <div class="footer">
                         <div class="mf-button" id="cr-buttons">
                             <button class="btn btn-lg px-4" type="button" onclick="copyModalContent()">Copy</button>
-                            <button class="btn btn-lg px-4" type="submit">Save</button>
+                            <button class="btn btn-lg px-4 save-button" type="submit">Save</button>
                         </div>
                     </div>
                 </form>
@@ -267,6 +268,117 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/preview.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const saveButton = document.querySelector('.save-button'); 
+    const locationField = document.getElementById('crloc');
+    const detectField = document.getElementById('crdetect');
+    const dateField = document.getElementById('crdate');
+
+    saveButton.addEventListener('click', function (event) {
+        let valid = true;
+        clearErrorMessages(); 
+
+        if (!locationField.value.trim()) {
+            showErrorMessage(locationField, 'Location is required.');
+            valid = false;
+        }
+
+        if (!detectField.value) {
+            showErrorMessage(detectField, 'Time Reported is required.');
+            valid = false;
+        }
+
+        if (!dateField.value) {
+            showErrorMessage(dateField, 'Date Reported is required.');
+            valid = false;
+        }
+
+        
+        if (!valid) {
+            event.preventDefault(); 
+        }
+    });
+
+    function showErrorMessage(field, message) {
+        const errorElement = document.createElement('small');
+        errorElement.textContent = message;
+        errorElement.style.color = 'red';
+        errorElement.style.fontSize = '0.8rem';
+        field.parentNode.appendChild(errorElement); 
+        field.classList.add('is-invalid'); 
+    }
+
+    function clearErrorMessages() {
+        const errorMessages = document.querySelectorAll('.is-invalid');
+        errorMessages.forEach(function (field) {
+            field.classList.remove('is-invalid'); 
+        });
+
+        const errorText = document.querySelectorAll('small');
+        errorText.forEach(function (msg) {
+            msg.remove(); 
+        });
+    }
+});
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form'); 
+    const locationField = document.getElementById('crloc');
+    const detectField = document.getElementById('crdetect');
+    const dateField = document.getElementById('crdate');
+
+    form.addEventListener('submit', function (event) {
+        let valid = true;
+        clearErrorMessages();
+        
+        if (!locationField.value.trim()) {
+            showErrorMessage(locationField, 'Location is required.');
+            valid = false;
+        }
+
+        if (!detectField.value) {
+            showErrorMessage(detectField, 'Time Reported is required.');
+            valid = false;
+        }
+
+        if (!dateField.value) {
+            showErrorMessage(dateField, 'Date Reported is required.');
+            valid = false;
+        }
+
+        if (!valid) {
+            event.preventDefault(); 
+        }
+    });
+
+    function showErrorMessage(field, message) {
+        const errorElement = document.createElement('small');
+        errorElement.textContent = message;
+        errorElement.style.color = 'red';
+        errorElement.style.fontSize = '0.8rem';
+        field.parentNode.appendChild(errorElement); 
+        field.classList.add('is-invalid');
+    }
+
+    function clearErrorMessages() {
+        const errorMessages = document.querySelectorAll('.is-invalid');
+        errorMessages.forEach(function (field) {
+            field.classList.remove('is-invalid');
+        });
+
+        const errorText = document.querySelectorAll('small');
+        errorText.forEach(function (msg) {
+            msg.remove(); 
+        });
+    }
+});
+
+</script>
 
 <script>
     document.getElementById('crinvolved-search').addEventListener('input', function() {
