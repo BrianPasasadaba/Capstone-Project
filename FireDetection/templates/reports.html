@@ -145,10 +145,9 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-                        
-                        
-                                    
+                                                    
                     </table>
+                    
 
                 </div>
                 <div class="rb-footer">
@@ -334,7 +333,33 @@ editButton.addEventListener('click', function() {
 saveButton.addEventListener('click', function (event) {
     event.preventDefault();
 
-    // Fetch the report ID from the hidden input field
+    const locationField = document.getElementById('loc');
+        const detectField = document.getElementById('detect');
+        const dateField = document.getElementById('date');
+        
+        let valid = true
+        clearErrorMessages();
+
+        // Check if the required fields are filled
+        if (!locationField.value.trim()) {
+            showErrorMessage(locationField, 'Location is required.');
+            valid = false;
+        }
+        
+        if (!detectField.value) {
+            showErrorMessage(detectField, 'Time Reported is required.');
+            valid = false;
+        }
+
+        if (!dateField.value) {
+            showErrorMessage(dateField, 'Date is required.');
+            valid = false;
+        }
+
+        if (!valid) {
+            return;
+        }
+
     const reportId = document.getElementById('report-id').value;
 
     if (!reportId) {
@@ -397,7 +422,26 @@ saveButton.addEventListener('click', function (event) {
 });
 
 
+    function showErrorMessage(field, message) {
+        const errorElement = document.createElement('small');
+        errorElement.textContent = message;
+        errorElement.style.color = 'red';
+        errorElement.style.fontSize = '0.875rem';
+        field.parentNode.appendChild(errorElement);
+        field.classList.add('is-invalid');
+    }
 
+    function clearErrorMessages() {
+        const errorMessages = document.querySelectorAll('.is-invalid');
+        errorMessages.forEach(function (field) {
+            field.classList.remove('is-invalid');
+        });
+
+        const errorText = document.querySelectorAll('small');
+        errorText.forEach(function (msg) {
+            msg.remove();
+        });
+    }
 
     });
     </script>
