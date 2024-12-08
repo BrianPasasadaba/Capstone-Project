@@ -296,7 +296,7 @@
 
 
 checkStatusAndDisableEdit();
-
+// Add event listener to the edit button
 editButton.addEventListener('click', function() {
     if (!resolveButton.disabled) {
         formInputs.forEach(input => {
@@ -307,7 +307,61 @@ editButton.addEventListener('click', function() {
         const icon = editButton.querySelector('i');
         const text = editButton.querySelector('span'); 
 
-        const isEditable = !formInputs[0].disabled; 
+        const isEditable = !formInputs[0].disabled; // Check if form inputs are editable
+
+        // Fields to toggle visibility for (the original fields you mentioned)
+        const originalFields = [
+            document.getElementById('involved'),
+            document.getElementById('alarm-dec'),
+            document.getElementById('funder-dec'),
+            document.getElementById('fout-dec'),
+            document.getElementById('ground'),
+            document.getElementById('safety'),
+            document.getElementById('sender')
+        ];
+
+        // Search fields to toggle visibility for (ending with -search)
+        const searchFields = [
+            document.getElementById('involved-search'),
+            document.getElementById('alarm-dec-search'),
+            document.getElementById('funder-dec-search'),
+            document.getElementById('fout-dec-search'),
+            document.getElementById('ground-search'),
+            document.getElementById('safety-search'),
+            document.getElementById('sender-search')
+        ];
+
+        // Check if all original fields and search fields are present in the DOM
+        originalFields.forEach((field, index) => {
+            if (field === null) {
+                console.error(`Original field with ID ${originalFields[index].id} not found.`);
+            }
+        });
+        searchFields.forEach((field, index) => {
+            if (field === null) {
+                console.error(`Search field with ID ${searchFields[index].id} not found.`);
+            }
+        });
+
+        // When editing, pass the current value of original fields to the search fields
+        originalFields.forEach((originalField, index) => {
+            if (originalField && searchFields[index]) {
+                searchFields[index].value = originalField.value; // Set search field value to original field's value
+            }
+        });
+
+        // Toggle visibility of search fields and original fields
+        searchFields.forEach(searchField => {
+            if (searchField) {
+                searchField.style.display = isEditable ? 'block' : 'none'; // Show or hide search fields based on edit mode
+            }
+        });
+
+        originalFields.forEach(originalField => {
+            if (originalField) {
+                originalField.style.display = isEditable ? 'none' : 'block'; // Hide or show original fields based on edit mode
+            }
+        });
 
         if (isEditable) {
             icon.style.display = 'none'; 
@@ -327,6 +381,8 @@ editButton.addEventListener('click', function() {
         saveButton.style.display = isEditable ? 'inline-block' : 'none';
     }
 });
+
+
 
 
 

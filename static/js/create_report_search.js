@@ -5,8 +5,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const hiddenInput = document.getElementById(hiddenInputId);
         const suggestionsBox = document.getElementById(optionsListId);
 
-        // Set the width of the suggestions box to match the input field
-        suggestionsBox.style.width = `${searchInput.offsetWidth}px`;
+        // Function to update the suggestions box width
+        function updateSuggestionsBoxWidth() {
+            suggestionsBox.style.width = `${searchInput.offsetWidth}px`;
+        }
+
+        // Set the initial width of the suggestions box
+        updateSuggestionsBoxWidth();
+
+        // Adjust the width whenever the window is resized
+        window.addEventListener('resize', updateSuggestionsBoxWidth);
 
         // Show suggestions while typing
         searchInput.addEventListener('input', function() {

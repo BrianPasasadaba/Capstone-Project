@@ -5,9 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const hiddenInput = document.getElementById(hiddenInputId);
         const suggestionsBox = document.getElementById(optionsListId);
 
-        // Set the width of the suggestions box to match the input field
-        suggestionsBox.style.width = `${searchInput.offsetWidth}px`;
-
         // Show suggestions while typing
         searchInput.addEventListener('input', function() {
             const query = searchInput.value.toLowerCase();
@@ -25,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         // Handle click to select the item
                         item.addEventListener('click', () => {
-                            // Replace the current input value with the selected option
                             searchInput.value = option; // Set input to selected suggestion
                             hiddenInput.value = option; // Update hidden input
                             

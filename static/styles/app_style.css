@@ -2162,7 +2162,8 @@ input[type="password"]::-ms-clear {
 #crfout-dec-options .dropdown-item,
 #crground-options .dropdown-item,
 #crsafety-options .dropdown-item,
-#crsender-options .dropdown-item{
+#crsender-options .dropdown-item,
+#report-preview-modal .dropdown-item{
     cursor: pointer;
     padding: 8px;
     transition: background-color 0.3s;
@@ -2175,7 +2176,8 @@ input[type="password"]::-ms-clear {
 #crfout-dec-options .dropdown-item:hover,
 #crground-options .dropdown-item:hover,
 #crsafety-options .dropdown-item:hover,
-#crsender-options .dropdown-item:hover{
+#crsender-options .dropdown-item:hover,
+#report-preview-modal .dropdown-item:hover{
     background-color: #767676; /* Light gray on hover */
     color: white;
 }
