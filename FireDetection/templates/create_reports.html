@@ -117,8 +117,10 @@
                             </select>
                         </div>
                         <div class="form-column">
-                            <label for="cralarm-dec" class="form-label">Alarm Status Declared by</label>
-                            <input type="text" class="form-control" name="cralarm-dec" id="cralarm-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <label for="cralarm-dec-search" class="form-label">Alarm Status Declared by</label>
+                            <input type="text" class="form-control" id="cralarm-dec-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="cralarm-dec" id="cralarm-dec">
+                            <ul class="dropdown-menu" id="cralarm-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                         <div class="form-column">
                             <label for="crtime-arrive" class="form-label">Time of Arrival</label>
@@ -137,7 +139,9 @@
                         </div>
                         <div class="form-column">
                             <label for="crfunder-dec" class="form-label">Fire Under Control Declared by</label>
-                            <input type="text" class="form-control" name="crfunder-dec" id="crfunder-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crfunder-dec-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crfunder-dec" id="crfunder-dec">
+                            <ul class="dropdown-menu" id="crfunder-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                     </div>
 
@@ -152,7 +156,9 @@
                         </div>
                         <div class="form-column">
                             <label for="crfout-dec" class="form-label">Fire Out Declared by</label>
-                            <input type="text" class="form-control" name="crfout-dec" id="crfout-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crfout-dec-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crfout-dec" id="crfout-dec">
+                            <ul class="dropdown-menu" id="crfout-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                     </div>
 
@@ -194,7 +200,9 @@
                     <div class="form-row">
                         <div class="form-column">
                             <label for="crground" class="form-label">Ground Commander</label>
-                            <input type="text" class="form-control" name="crground" id="crground" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crground-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crground" id="crground">
+                            <ul class="dropdown-menu" id="crground-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                         <div class="form-column">
                             <label for="crground-num" class="form-label">/ Contact No.</label>
@@ -203,7 +211,9 @@
                         </div>
                         <div class="form-column">
                             <label for="crsafety" class="form-label">Safety Officer</label>
-                            <input type="text" class="form-control" name="crsafety" id="crsafety" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crsafety-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crsafety" id="crsafety">
+                            <ul class="dropdown-menu" id="crsafety-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                         <div class="form-column">
                             <label for="crsafety-num" class="form-label">/ Contact No.</label>
@@ -214,7 +224,9 @@
                     <div class="form-row">
                         <div class="form-column">
                             <label for="crsender" class="form-label">Name of Sender</label>
-                            <input type="text" class="form-control" name="crsender" id="crsender" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crsender-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crsender" id="crsender">
+                            <ul class="dropdown-menu" id="crsender-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                         <div class="form-column">
                             <label for="crsender-num" class="form-label">Name of Sender Contact No.</label>
@@ -246,7 +258,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/involved_search.js' %}"></script>
+<script src="{% static 'js/create_report_search.js' %}"></script>
 <script src="{% static 'js/form_controls.js' %}"></script>
 <script src="{% static 'js/table_status.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

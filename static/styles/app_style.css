@@ -2156,14 +2156,26 @@ input[type="password"]::-ms-clear {
     box-shadow: none;
 }
 
-#crinvolved-options .dropdown-item {
+#crinvolved-options .dropdown-item,
+#cralarm-dec-options .dropdown-item,
+#crfunder-dec-options .dropdown-item,
+#crfout-dec-options .dropdown-item,
+#crground-options .dropdown-item,
+#crsafety-options .dropdown-item,
+#crsender-options .dropdown-item{
     cursor: pointer;
     padding: 8px;
     transition: background-color 0.3s;
 }
 
 /* Change background color when an item is hovered */
-#crinvolved-options .dropdown-item:hover {
+#crinvolved-options .dropdown-item:hover,
+#cralarm-dec-options .dropdown-item:hover,
+#crfunder-dec-options .dropdown-item:hover,
+#crfout-dec-options .dropdown-item:hover,
+#crground-options .dropdown-item:hover,
+#crsafety-options .dropdown-item:hover,
+#crsender-options .dropdown-item:hover{
     background-color: #767676; /* Light gray on hover */
     color: white;
 }
