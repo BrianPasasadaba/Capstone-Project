@@ -123,7 +123,7 @@ reportRows.forEach(row => {
         const safetyOfficerContact = row.getAttribute('data-safety-officer-contact');
         const sender = row.getAttribute('data-sender');
         const senderContact = row.getAttribute('data-sender-contact');
-        const team = row.getAttribute('data-team');
+        const fireTeam = row.getAttribute('data-team');
 
         const status = row.getAttribute('data-status'); 
             
@@ -140,6 +140,7 @@ reportRows.forEach(row => {
         // Populate the form fields in the modal
         
         document.getElementById('loc').value = location;
+        document.getElementById('team').value = fireTeam;
         document.getElementById('date').value = dateReported;
         document.getElementById('detect').value = timeReported;
         document.getElementById('time-out').value = timeOut;
@@ -166,13 +167,6 @@ reportRows.forEach(row => {
         document.getElementById('safety-num').value = safetyOfficerContact;
         document.getElementById('sender').value = sender;
         document.getElementById('sender-num').value = senderContact;
-
-        if (respondents) {
-            document.querySelector("select[name='team']").value = respondents;
-        }
-        if (occupancy) {
-            document.querySelector("select[name='occupancy_type']").value = occupancy;
-        }
 
         // Handle proof image
         const proofImg = document.getElementById('proof');
