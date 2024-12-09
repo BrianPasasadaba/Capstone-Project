@@ -325,60 +325,7 @@
 
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form'); 
-    const locationField = document.getElementById('crloc');
-    const detectField = document.getElementById('crdetect');
-    const dateField = document.getElementById('crdate');
 
-    form.addEventListener('submit', function (event) {
-        let valid = true;
-        clearErrorMessages();
-        
-        if (!locationField.value.trim()) {
-            showErrorMessage(locationField, 'Location is required.');
-            valid = false;
-        }
-
-        if (!detectField.value) {
-            showErrorMessage(detectField, 'Time Reported is required.');
-            valid = false;
-        }
-
-        if (!dateField.value) {
-            showErrorMessage(dateField, 'Date Reported is required.');
-            valid = false;
-        }
-
-        if (!valid) {
-            event.preventDefault(); 
-        }
-    });
-
-    function showErrorMessage(field, message) {
-        const errorElement = document.createElement('small');
-        errorElement.textContent = message;
-        errorElement.style.color = 'red';
-        errorElement.style.fontSize = '0.8rem';
-        field.parentNode.appendChild(errorElement); 
-        field.classList.add('is-invalid');
-    }
-
-    function clearErrorMessages() {
-        const errorMessages = document.querySelectorAll('.is-invalid');
-        errorMessages.forEach(function (field) {
-            field.classList.remove('is-invalid');
-        });
-
-        const errorText = document.querySelectorAll('small');
-        errorText.forEach(function (msg) {
-            msg.remove(); 
-        });
-    }
-});
-
-</script>
 
 <script>
     document.getElementById('crinvolved-search').addEventListener('input', function() {
