@@ -138,54 +138,73 @@
 
     document.addEventListener('DOMContentLoaded', function () {
     const emailField = document.getElementById('modal-email');
+    const phoneField = document.getElementById('modal-contact');
     const form = document.getElementById('add-account-form');
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         const email = emailField.value.trim();
+        const phone_number = phoneField.value.trim();
 
-        const errorMessage = document.querySelector('#email-error');
-        if (errorMessage) {
-            errorMessage.remove();
-        }
+        removeError(emailField);
+        removeError(phoneField);
 
         if (!email) {
             showError(emailField, 'Email is required.');
             return;
         }
 
-        fetch(`/check-email/?email=${encodeURIComponent(email)}`)
+        if (!phone_number) {
+            showError(phoneField, 'Phone number is required.');
+            return;
+        }
+
+        fetch(`/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)}`)
             .then(response => response.json())
             .then(data => {
-                if (data.exists) {
+                if (data.email_exists) {
                     showError(emailField, 'This email is already registered.');
-                } else {
+                }
+
+                if (data.phone_exists) {
+                    showError(phoneField, 'This phone number is already registered.');
+                }
+
+                if (!data.email_exists && !data.phone_exists) {
                     form.submit();
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 showError(emailField, 'An error occurred while validating the email. Please try again.');
+                showError(phoneField, 'An error occurred while validating the phone number. Please try again.');
             });
     });
 
     function showError(field, message) {
-        // Remove existing error message if present
         let existingError = field.parentNode.querySelector('.error-message');
         if (existingError) {
             existingError.remove();
         }
-        
-        // Add the new error message
+
         const errorElement = document.createElement('small');
-        errorElement.className = 'error-message'; // Use consistent class name
+        errorElement.className = 'error-message'; 
         errorElement.textContent = message;
         errorElement.style.color = 'red';
         errorElement.style.fontSize = '0.8rem';
         field.parentNode.appendChild(errorElement);
         field.classList.add('is-invalid');
     }
+
+    function removeError(field) {
+        let existingError = field.parentNode.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+        field.classList.remove('is-invalid');
+    }
 });
+
 
 </script>
 

@@ -459,10 +459,18 @@ def forgot_password_view(request):
 
 def check_email_exists(request):
     email = request.GET.get('email', None)
+    phone = request.GET.get('phone_number', None)  # Get the phone number from the request
+
+    response_data = {}
+
     if email:
-        exists = CustomUser.objects.filter(email=email).exists()
-        return JsonResponse({'exists': exists})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+        response_data['email_exists'] = CustomUser.objects.filter(email=email).exists()
+
+    if phone:
+        response_data['phone_exists'] = CustomUser.objects.filter(contact_number=phone).exists()
+
+    return JsonResponse(response_data)
+
 
 @login_required
 def register_view(request):

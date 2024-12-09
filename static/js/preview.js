@@ -69,15 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.querySelectorAll('.pagination .page-item[data-page]').forEach((pageButton) => {
-        pageButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (!this.classList.contains('disabled')) {
-                currentPage = parseInt(this.getAttribute('data-page')); 
-                displayRowsForPage(currentPage);
-            }
-        });
-    });
+    
 
     displayRowsForPage(currentPage);
 });

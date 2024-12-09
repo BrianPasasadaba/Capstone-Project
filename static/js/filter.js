@@ -16,10 +16,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to render the current page
     function renderPage(data, page = 1) {
-        tableBody.innerHTML = ''; // Clear the table
         const startIndex = (page - 1) * rowsPerPage;
         const endIndex = page * rowsPerPage;
+
+        // DEBUG: Check what data is being rendered
+        console.log("Rendering page:", page);
+        console.log("Data for current page:", data.slice(startIndex, endIndex));
+
         const rowsToRender = data.slice(startIndex, endIndex);
+
+        // Clear the table body but retain existing data reference
+        tableBody.innerHTML = '';
 
         rowsToRender.forEach(rowData => tableBody.appendChild(rowData.element));
 
@@ -66,11 +73,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     ? rowData.status === 'Ongoing'
                     : rowData.status === 'Case Closed';
             });
+        } else {
+            currentFilteredData = [...allRowsData]; // Reset to all rows for "All" criteria
         }
 
         // Always render page 1 after filtering/sorting
-        renderPage(currentFilteredData, 1);
         currentPage = 1;
+        renderPage(currentFilteredData, currentPage);
     }
 
     // Event listener for dropdown filter
@@ -103,3 +112,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial render
     renderPage(allRowsData, 1);
 });
+
+
+
+
+
+
