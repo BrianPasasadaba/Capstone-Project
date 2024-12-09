@@ -170,8 +170,15 @@
     });
 
     function showError(field, message) {
+        // Remove existing error message if present
+        let existingError = field.parentNode.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Add the new error message
         const errorElement = document.createElement('small');
-        errorElement.id = 'email-error';
+        errorElement.className = 'error-message'; // Use consistent class name
         errorElement.textContent = message;
         errorElement.style.color = 'red';
         errorElement.style.fontSize = '0.8rem';
