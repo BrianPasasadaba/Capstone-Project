@@ -82,7 +82,7 @@
             showErrorMessage(emailField, 'Email is required.');
             valid = false;
         } else if (!validateEmail(emailField.value.trim())) {
-            showErrorMessage(emailField, 'Invalid email format.');
+            showErrorMessage(emailField, 'Invalid email format. (example@gmail.com)');
             valid = false;
         }
 
@@ -108,7 +108,7 @@
         const errorElement = document.createElement('small');
         errorElement.textContent = message;
         errorElement.style.color = 'red';
-        errorElement.style.fontSize = '0.8rem';
+        errorElement.style.fontSize = '0.75rem';
         errorElement.className = 'error-message';
         field.parentNode.appendChild(errorElement); 
         field.classList.add('is-invalid');

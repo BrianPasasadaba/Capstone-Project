@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const hiddenInput = document.getElementById(hiddenInputId);
         const suggestionsBox = document.getElementById(optionsListId);
 
+         // Set the suggestions box width to match the search input
+        suggestionsBox.style.width = `${searchInput.offsetWidth}px`;
+
         searchInput.addEventListener('input', function () {
             const query = searchInput.value.toLowerCase();
             suggestionsBox.innerHTML = '';

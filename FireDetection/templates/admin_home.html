@@ -200,6 +200,10 @@
     });
 });
 
+document.getElementById('accountSearchInput').addEventListener('input', function (e) {
+    // Replace invalid characters with an empty string
+    this.value = this.value.replace(/[^a-zA-Z0-9.\-\/_@]/g, '');
+});
 </script>
 <script>
     let selectedEmails = []; 
