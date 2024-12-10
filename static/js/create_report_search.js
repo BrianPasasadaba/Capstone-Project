@@ -119,9 +119,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const namesOptions = data.names || [];
 
             // Initialize search functionality for fields that use namesOptions
+            setupSearch('cralarm-dec-search', 'cralarm-dec', 'cralarm-dec-options', namesOptions);
+            setupSearch('crfunder-dec-search', 'crfunder-dec', 'crfunder-dec-options', namesOptions);
+            setupSearch('crfout-dec-search', 'crfout-dec', 'crfout-dec-options', namesOptions);
             setupSearch('crground-search', 'crground', 'crground-options', namesOptions);
             setupSearch('crsafety-search', 'crsafety', 'crsafety-options', namesOptions);
             setupSearch('crsender-search', 'crsender', 'crsender-options', namesOptions);
+
         })
         .catch(error => console.error('Error fetching names:', error));
 
