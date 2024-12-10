@@ -802,6 +802,7 @@ def update_report(request, report_id):
         report.alarm_declared_by = data.get('alarm-dec', None) if data.get('alarm-dec') != "None" else None
         report.fire_under_control_declared_by = data.get('funder-dec', None) if data.get('funder-dec') != "None" else None
         report.fire_out_declared_by = data.get('fout-dec', None) if data.get('fout-dec') != "None" else None
+        report.involved = data.get('involved', None) if data.get('involved') != "None" else None
 
         def convert_to_aware_datetime(date_str, time_str):
             if date_str and time_str:
