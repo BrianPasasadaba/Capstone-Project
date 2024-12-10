@@ -52,6 +52,12 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
 from django.utils.timezone import make_aware, get_current_timezone
 from django.db.models.functions import ExtractYear
+from supabase import create_client, Client
+import mimetypes
+import os
+
+
+supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
 def fetch_names(request):
     if request.method == 'GET':
@@ -623,6 +629,45 @@ def create_report_view(request):
         sender_contact = request.POST.get('crsender-num')
         proof = request.FILES.get('modal-proof')
 
+        # Debug: Print the contents of request.FILES
+        print(request.FILES)
+
+        # Check if a file is uploaded
+        if proof:
+            print(f"File uploaded: {proof.name}")
+        else:
+            print("No file uploaded.")
+
+        def generate_filename(original_filename):
+            # Extract the file extension from the original filename
+            ext = os.path.splitext(original_filename)[1]
+            
+            # If no extension found, default to .jpg
+            if not ext:
+                ext = '.jpg'
+            
+            return f"fire_incident_{datetime.now().strftime('%Y%m%d_%H%M%S')}{ext}"
+
+        # If a file is uploaded, upload to Supabase and get the URL
+        file_url = None
+        if proof:
+            file_name = generate_filename(proof.name)  # Get the file name
+            file_path = file_name  # Path in the bucket
+
+            mime_type= proof.content_type # Get the MIME type
+            # Add more detailed logging
+            print(f"Original File MIME Type: {proof.content_type}")
+            print(f"File Name: {proof.name}")
+            print(f"File Size: {proof.size} bytes")
+
+            
+            file_data = proof.read()  # Read the file contents
+
+            response = supabase.storage.from_('FireProof').upload(file_path, file_data)
+
+            file_url = supabase.storage.from_('FireProof').get_public_url(file_path)
+
+
         def validate_date(date_str):
             if date_str:
                 try:
@@ -693,6 +738,7 @@ def create_report_view(request):
             # Generate FIR number manually
 
 
+            # Create report with Supabase file URL
             new_report = InitialReport.objects.create(
                 fir_number=fir_number, 
                 where=location,
@@ -722,7 +768,7 @@ def create_report_view(request):
                 officer_contact_number=safety_contact,
                 name_of_sender=sender,
                 sender_contact_number=sender_contact,
-                proof=proof,
+                proof=file_url,  # Store the Supabase public URL
                 created_by=request.user
             )
             new_report.save()

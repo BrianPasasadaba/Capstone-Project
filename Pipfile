@@ -11,6 +11,7 @@ django-active-link = "*"
 python-dotenv = "*"
 openpyxl = "*"
 whitenoise = "*"
+supabase = "*"
 
 [dev-packages]
 
