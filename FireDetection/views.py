@@ -59,6 +59,16 @@ import os
 
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
+def generate_filename(original_filename):
+    # Extract the file extension from the original filename
+    ext = os.path.splitext(original_filename)[1]
+    
+    # If no extension found, default to .jpg
+    if not ext:
+        ext = '.jpg'
+    
+    return f"fire_incident_{datetime.now().strftime('%Y%m%d_%H%M%S')}{ext}"
+
 def fetch_names(request):
     if request.method == 'GET':
         # Fetch user ID, name, and contact number
@@ -629,37 +639,11 @@ def create_report_view(request):
         sender_contact = request.POST.get('crsender-num')
         proof = request.FILES.get('modal-proof')
 
-        # Debug: Print the contents of request.FILES
-        print(request.FILES)
-
-        # Check if a file is uploaded
-        if proof:
-            print(f"File uploaded: {proof.name}")
-        else:
-            print("No file uploaded.")
-
-        def generate_filename(original_filename):
-            # Extract the file extension from the original filename
-            ext = os.path.splitext(original_filename)[1]
-            
-            # If no extension found, default to .jpg
-            if not ext:
-                ext = '.jpg'
-            
-            return f"fire_incident_{datetime.now().strftime('%Y%m%d_%H%M%S')}{ext}"
-
         # If a file is uploaded, upload to Supabase and get the URL
         file_url = None
         if proof:
             file_name = generate_filename(proof.name)  # Get the file name
             file_path = file_name  # Path in the bucket
-
-            mime_type= proof.content_type # Get the MIME type
-            # Add more detailed logging
-            print(f"Original File MIME Type: {proof.content_type}")
-            print(f"File Name: {proof.name}")
-            print(f"File Size: {proof.size} bytes")
-
             
             file_data = proof.read()  # Read the file contents
 
@@ -851,10 +835,34 @@ def update_report(request, report_id):
         report.name_of_sender = data.get('sender', '').strip() or report.name_of_sender
         report.sender_contact_number = data.get('sender-num', '').strip() or report.sender_contact_number
 
-        proof = request.FILES.get('proof')
+        proof = request.FILES.get('input-proof')
         if proof:
-            report.proof = proof
+            try:
+                file_name = generate_filename(proof.name)
+                file_path = f"proofs/{file_name}"
 
+                # Read file data
+                file_data = proof.read()
+
+                # Upload to Supabase
+                response = supabase.storage.from_('FireProof').upload(
+                    file_path, 
+                    file_data, 
+                )
+
+                # Get public URL
+                file_url = supabase.storage.from_('FireProof').get_public_url(file_path)
+                
+                # Update report with new file URL
+                report.proof = file_url
+
+            except Exception as e:
+                print(f"Error uploading proof: {e}")
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': f'Failed to upload proof: {str(e)}'
+                }, status=500)
+            
         try:
             report.save()
             return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})
