@@ -41,12 +41,15 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 suggestionsBox.style.display = 'none'; // Hide if query is empty
             }
+            
+            // Always update the hidden input with the current value of the search input
+            hiddenInput.value = searchInput.value.trim();
         });
 
         // Update hidden input on blur (use current text if no selection is made)
         searchInput.addEventListener('blur', function() {
             setTimeout(() => {
-                hiddenInput.value = searchInput.value.trim();
+                hiddenInput.value = searchInput.value.trim(); // Always update hidden input
                 suggestionsBox.style.display = 'none'; // Hide dropdown
             }, 200); // Timeout ensures click on suggestion works before blur
         });
