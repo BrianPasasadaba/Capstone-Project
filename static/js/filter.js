@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const pagination = document.querySelector('.pagination');
     const rowsPerPage = 10; // Number of rows per page
     let currentPage = 1;
+    const noFoundMessage = document.getElementById('noFoundFilter'); // Get the no results message element
 
     // Extract all rows' data into an array
     const allRowsData = Array.from(document.querySelectorAll('#reportTable tr')).map(row => ({
@@ -19,16 +20,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const startIndex = (page - 1) * rowsPerPage;
         const endIndex = page * rowsPerPage;
 
-        // DEBUG: Check what data is being rendered
-        console.log("Rendering page:", page);
-        console.log("Data for current page:", data.slice(startIndex, endIndex));
-
-        const rowsToRender = data.slice(startIndex, endIndex);
-
         // Clear the table body but retain existing data reference
         tableBody.innerHTML = '';
 
-        rowsToRender.forEach(rowData => tableBody.appendChild(rowData.element));
+        const rowsToRender = data.slice(startIndex, endIndex);
+
+        // If no data to display, show the 'No results found' message
+        if (rowsToRender.length === 0) {
+            noFoundMessage.style.display = 'table-row'; // Show the message
+        } else {
+            noFoundMessage.style.display = 'none'; // Hide the message
+            rowsToRender.forEach(rowData => tableBody.appendChild(rowData.element));
+        }
 
         // Update pagination buttons
         updatePagination(data.length, page);
@@ -112,9 +115,3 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial render
     renderPage(allRowsData, 1);
 });
-
-
-
-
-
-

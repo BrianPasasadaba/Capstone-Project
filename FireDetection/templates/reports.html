@@ -149,6 +149,9 @@
                         </tbody>
                         <tr id="noResultsMessage" style="display: none;">
                             <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
+                        </tr>      
+                        <tr id="noFoundFilter" style="display: none;">
+                            <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
                         </tr>                     
                     </table>
                     
@@ -235,6 +238,43 @@
 <script src="{% static 'js/pagination.js' %}"></script>
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+const searchInput = document.getElementById('searchInput');
+const suggestionsBox = document.getElementById('suggestionsBox');
+
+
+const validInputPattern = /^[A-Za-z0-9]*$/;
+searchInput.addEventListener('input', function (e) {
+const inputValue = e.target.value;
+if (!validInputPattern.test(inputValue)) {
+e.target.value = inputValue.slice(0, -1);
+}
+
+updateSuggestions(inputValue);
+});
+
+function updateSuggestions(query) {
+suggestionsBox.innerHTML = ''; 
+if (query.length > 0) {
+const suggestionItem = document.createElement('li');
+suggestionItem.classList.add('dropdown-item');
+suggestionItem.textContent = query; 
+suggestionsBox.appendChild(suggestionItem);
+suggestionsBox.style.display = 'block';
+} else {
+suggestionsBox.style.display = 'none'; 
+}
+}
+document.addEventListener('click', function (event) {
+if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+suggestionsBox.style.display = 'none';
+}
+});
+});
+
+</script>
 
 <script>
     
