@@ -68,11 +68,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById(inputId);
         const hiddenInput = document.getElementById(hiddenInputId);
         const suggestionsBox = document.getElementById(optionsListId);
-
+    
         searchInput.addEventListener('input', function () {
             const query = searchInput.value.toLowerCase();
             suggestionsBox.innerHTML = '';
-
+    
             if (query.length > 0) {
                 const filteredOptions = options.filter(option => option.toLowerCase().includes(query));
                 if (filteredOptions.length > 0) {
@@ -81,11 +81,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         const item = document.createElement('li');
                         item.classList.add('dropdown-item');
                         item.textContent = option;
-
+    
                         item.addEventListener('click', () => {
                             searchInput.value = option;
                             hiddenInput.value = option; // Store the selected option directly
-
+    
                             suggestionsBox.innerHTML = '';
                             suggestionsBox.style.display = 'none';
                             searchInput.focus();
@@ -99,21 +99,25 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 suggestionsBox.style.display = 'none';
             }
+    
+            // Always update the hidden input with the current value of the search input, even if not selecting an option
+            hiddenInput.value = searchInput.value.trim();
         });
-
+    
         searchInput.addEventListener('blur', function () {
             setTimeout(() => {
                 hiddenInput.value = searchInput.value.trim();
                 suggestionsBox.style.display = 'none';
             }, 200);
         });
-
+    
         document.addEventListener('click', function (event) {
             if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
                 suggestionsBox.style.display = 'none';
             }
         });
     }
+    
 
     // Fetch names dynamically for namesOptions
     fetch('/fetch-names/')
