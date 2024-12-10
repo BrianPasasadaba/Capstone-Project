@@ -53,6 +53,13 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.timezone import make_aware, get_current_timezone
 from django.db.models.functions import ExtractYear
 
+def fetch_names(request):
+    if request.method == 'GET':
+        # Fetch user ID, name, and contact number
+        users = CustomUser.objects.filter(name__isnull=False).values('id', 'name', 'contact_number').distinct()
+        return JsonResponse({'names': list(users)}, safe=False)
+
+
 @csrf_protect
 @require_POST
 def transfer_report(request, temp_report_id):
