@@ -761,47 +761,43 @@ def convert_to_aware_datetime(date_str, time_str):
 def update_report(request, report_id):
     if request.method == 'POST':
         report = get_object_or_404(InitialReport, id=report_id)
-
         data = request.POST
+
 
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
 
+        report.name_of_owner = data.get('owner', None) if data.get('owner') != "None" else None
+        report.alarm_declared_by = data.get('alarm-dec', None) if data.get('alarm-dec') != "None" else None
+        report.fire_under_control_declared_by = data.get('funder-dec', None) if data.get('funder-dec') != "None" else None
+        report.fire_out_declared_by = data.get('fout-dec', None) if data.get('fout-dec') != "None" else None
+
         def convert_to_aware_datetime(date_str, time_str):
             if date_str and time_str:
                 naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
-                return timezone.make_aware(naive_dt, timezone.get_current_timezone())
+                return make_aware(naive_dt)
             return None
 
         report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
-
         report.time_of_arrival = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-arrive', '').strip()) or report.time_of_arrival
         report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-under', '').strip()) or report.time_of_fire_under_control
         report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
 
-        # Date fields with fallback to existing values
-        report.date_of_fire_under_control = data.get('date-under', '').strip() or report.date_of_fire_under_control
-        report.date_of_fire_out = data.get('date-out', '').strip() or report.date_of_fire_out
+        def get_int_value(field_name, default=0):
+            try:
+                raw_value = data.get(field_name, '').replace(',', '').strip()  
+                return int(raw_value or default)
+            except (ValueError, TypeError):
+                return default
 
-        # Other fields with validation for blanks
-        report.fire_under_control_declared_by = data.get('funder-dec', '').strip() or report.fire_under_control_declared_by
-        report.fire_out_declared_by = data.get('fout-dec', '').strip() or report.fire_out_declared_by
+        report.estimated_damages = get_int_value('damage', report.estimated_damages or 0)
+        report.no_of_fatality = get_int_value('fatality', report.no_of_fatality or 0)
+        report.no_of_injured = get_int_value('injured', report.no_of_injured or 0)
+        report.no_of_families_affected = get_int_value('affected', report.no_of_families_affected or 0)
+        report.no_of_establishments = get_int_value('establishment', report.no_of_establishments or 0)
+        report.no_of_fire_trucks = get_int_value('truck', report.no_of_fire_trucks or 0)
 
-        report.involved = data.get('involved', '').strip() or report.involved
-        report.name_of_owner = data.get('owner', '').strip() or report.name_of_owner
-        report.alarm_status = data.get('alarm', '').strip() or report.alarm_status
-        report.alarm_declared_by = data.get('alarm-dec', '').strip() or report.alarm_declared_by
-
-        # Numeric fields with default values
-        report.estimated_damages = int(data.get('damage', report.estimated_damages or 0))
-        report.no_of_fatality = int(data.get('fatality', report.no_of_fatality or 0))
-        report.no_of_injured = int(data.get('injured', report.no_of_injured or 0))
-        report.no_of_families_affected = int(data.get('affected', report.no_of_families_affected or 0))
-        report.no_of_establishments = int(data.get('establishment', report.no_of_establishments or 0))
-        report.no_of_fire_trucks = int(data.get('truck', report.no_of_fire_trucks or 0))
-
-        # Other optional fields
         report.ground_commander = data.get('ground', '').strip() or report.ground_commander
         report.commander_contact_number = data.get('ground-num', '').strip() or report.commander_contact_number
         report.safety_officer = data.get('safety', '').strip() or report.safety_officer
@@ -809,7 +805,6 @@ def update_report(request, report_id):
         report.name_of_sender = data.get('sender', '').strip() or report.name_of_sender
         report.sender_contact_number = data.get('sender-num', '').strip() or report.sender_contact_number
 
-        # Handle file uploads
         proof = request.FILES.get('proof')
         if proof:
             report.proof = proof

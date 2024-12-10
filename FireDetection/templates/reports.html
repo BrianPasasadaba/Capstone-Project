@@ -417,35 +417,63 @@ editButton.addEventListener('click', function() {
 
 
 
+// Define the function to clear error messages
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll('.is-invalid');
+    errorMessages.forEach(function (field) {
+        field.classList.remove('is-invalid');
+    });
+
+    const errorText = document.querySelectorAll('small');
+    errorText.forEach(function (msg) {
+        msg.remove();
+    });
+}
+
+// Define the function to show error messages
+function showErrorMessage(field, message) {
+    const errorElement = document.createElement('small');
+    errorElement.textContent = message;
+    errorElement.style.color = 'red';
+    errorElement.style.fontSize = '0.8rem';
+    field.parentNode.appendChild(errorElement);
+    field.classList.add('is-invalid');
+}
+
+// Add event listener for the save button
 saveButton.addEventListener('click', function (event) {
     event.preventDefault();
 
     const locationField = document.getElementById('loc');
-        const detectField = document.getElementById('detect');
-        const dateField = document.getElementById('date');
-        
-        let valid = true
-        clearErrorMessages();
+    const detectField = document.getElementById('detect');
+    const dateField = document.getElementById('date');
+    const ownerField = document.getElementById('owner');
+    const alarmDecField = document.getElementById('alarm-dec');
+    const funderDecField = document.getElementById('funder-dec');
+    const foutDecField = document.getElementById('fout-dec');
 
-        // Check if the required fields are filled
-        if (!locationField.value.trim()) {
-            showErrorMessage(locationField, 'Location is required.');
-            valid = false;
-        }
-        
-        if (!detectField.value) {
-            showErrorMessage(detectField, 'Time Reported is required.');
-            valid = false;
-        }
+    let valid = true;
+    clearErrorMessages();
 
-        if (!dateField.value) {
-            showErrorMessage(dateField, 'Date is required.');
-            valid = false;
-        }
+    // Validate required fields
+    if (!locationField.value.trim()) {
+        showErrorMessage(locationField, 'Location is required.');
+        valid = false;
+    }
 
-        if (!valid) {
-            return;
-        }
+    if (!detectField.value) {
+        showErrorMessage(detectField, 'Time Reported is required.');
+        valid = false;
+    }
+
+    if (!dateField.value) {
+        showErrorMessage(dateField, 'Date is required.');
+        valid = false;
+    }
+
+    if (!valid) {
+        return;
+    }
 
     const reportId = document.getElementById('report-id').value;
 
@@ -455,21 +483,23 @@ saveButton.addEventListener('click', function (event) {
         return;
     }
 
-    console.log('Submitting Report ID:', reportId); 
-
     const formData = new FormData(form);
     formData.append('csrfmiddlewaretoken', csrfToken);
 
-    const fieldsToEnsure = [
-        'where', 'team', 'date', 'detect', 'time-arrive', 'time-under',
-        'date-under', 'funder-dec', 'time-out', 'date-out', 'fout-dec',
-        'damage', 'fatality', 'injured', 'affected', 'establishment', 'truck',
-        'ground', 'ground-num', 'safety', 'safety-num', 'sender', 'sender-num',
-    ];
+    // Handle numeric fields: Default to 0 if empty
+    const numericFields = ['damage', 'fatality', 'injured', 'affected', 'establishment', 'truck'];
+    numericFields.forEach(field => {
+        const fieldElement = document.getElementById(field);
+        if (!fieldElement.value.trim()) {
+            formData.set(field, '0'); // Default to "0"
+        }
+    });
 
-    fieldsToEnsure.forEach(field => {
-        if (!formData.has(field)) {
-            formData.append(field, '');
+    const optionalFields = ['owner', 'alarm-dec', 'funder-dec', 'fout-dec'];
+    optionalFields.forEach(field => {
+        const fieldElement = document.getElementById(field);
+        if (!fieldElement.value.trim()) {
+            formData.set(field, 'None'); // Default to "None"
         }
     });
 
@@ -508,27 +538,6 @@ saveButton.addEventListener('click', function (event) {
         });
 });
 
-
-    function showErrorMessage(field, message) {
-        const errorElement = document.createElement('small');
-        errorElement.textContent = message;
-        errorElement.style.color = 'red';
-        errorElement.style.fontSize = '0.8rem';
-        field.parentNode.appendChild(errorElement);
-        field.classList.add('is-invalid');
-    }
-
-    function clearErrorMessages() {
-        const errorMessages = document.querySelectorAll('.is-invalid');
-        errorMessages.forEach(function (field) {
-            field.classList.remove('is-invalid');
-        });
-
-        const errorText = document.querySelectorAll('small');
-        errorText.forEach(function (msg) {
-            msg.remove();
-        });
-    }
 
     });
     </script>
