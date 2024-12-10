@@ -295,17 +295,17 @@
 
 
     document.addEventListener('DOMContentLoaded', function () {
-        const editButton = document.querySelector('.edit-form .btn-edit');
-        const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
-        const resolveButton = document.querySelector('.resolve-button');
-        const saveButton = document.querySelector('.save-button'); 
-        const form = document.getElementById('report-preview-form');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const statusText = document.getElementById('status-text-{{ report.id }}');
-        const previewModal = document.getElementById('previewModal'); 
-        const closeButton = document.getElementById('close-button'); 
-    
-        function checkStatusAndDisableEdit() {
+    const editButton = document.querySelector('.edit-form .btn-edit');
+    const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
+    const resolveButton = document.querySelector('.resolve-button');
+    const saveButton = document.querySelector('.save-button'); 
+    const form = document.getElementById('report-preview-form');
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const statusText = document.getElementById('status-text-{{ report.id }}');
+    const previewModal = document.getElementById('previewModal'); 
+    const closeButton = document.getElementById('close-button'); 
+
+    function checkStatusAndDisableEdit() {
     const isCaseClosed = statusText && statusText.textContent.trim() === 'Case Closed';
 
     if (isCaseClosed) {
