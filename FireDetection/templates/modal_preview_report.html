@@ -134,36 +134,30 @@
                     <div class="form-row">
                         <div class="form-column">
                             <label for="damages" class="form-label">Estimated Damages</label>
-                            <input type="text" class="form-control" name="damage" id="damage" placeholder="e.g. P1,000,000" maxlength="12" pattern="[0-9]{11}"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            <input type="text" class="form-control" name="damage" id="damage" placeholder="e.g. P1,000,000" maxlength="12" inputmode="decimal" oninput="formatNumber(this)">
                         </div>
                         <div class="form-column">
                             <label for="fatality" class="form-label">No. of Fatality</label>
-                            <input type="text" class="form-control" id="fatality" placeholder="e.g. 11" name="fatality" maxlength="12" pattern="[0-9]{11}"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            <input type="text" class="form-control" id="fatality" placeholder="e.g. 11" name="fatality" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                         <div class="form-column">
                             <label for="injured" class="form-label">No. of Injured</label>
-                            <input type="text" class="form-control" id="injured" placeholder="e.g. 11" name="injured" maxlength="12" pattern="[0-9]{11}"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            <input type="text" class="form-control" id="injured" placeholder="e.g. 11" name="injured" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                     </div>
                 
                     <div class="form-row">
                         <div class="form-column">
                             <label for="affected" class="form-label">No. of Families Affected</label>
-                            <input type="text" class="form-control" id="affected" placeholder="e.g. 11" name="affected" maxlength="12" pattern="[0-9]{11}"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            <input type="text" class="form-control" id="affected" placeholder="e.g. 11" name="affected" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                         <div class="form-column">
                             <label for="establishment" class="form-label">No. of Establishment</label>
-                            <input type="text" class="form-control" id="establishment" placeholder="e.g. 11" name="establishment" maxlength="12" pattern="[0-9]{11}"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            <input type="text" class="form-control" id="establishment" placeholder="e.g. 11" name="establishment" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                         <div class="form-column">
                             <label for="truck" class="form-label">No. of Fire Trucks Responded</label>
-                            <input type="text" class="form-control" id="truck" placeholder="e.g. 11" name="truck" maxlength="12" pattern="[0-9]{11}"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            <input type="text" class="form-control" id="truck" placeholder="e.g. 11" name="truck" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                     </div>
                     <div class="form-row">
@@ -243,6 +237,9 @@
 </div>
 {% endfor %}
 <script src="{% static 'js/prev_report_search.js' %}"></script>
+<script src="{% static 'js/format_numbers.js' %}"></script>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const reportRows = document.querySelectorAll('#reportTable tr[data-bs-toggle="modal"]');

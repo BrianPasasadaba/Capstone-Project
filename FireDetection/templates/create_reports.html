@@ -265,25 +265,8 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/preview.js' %}"></script>
+<script src="{% static 'js/format_numbers.js' %}"></script>
 
-<script>
-    // Function to apply comma formatting to all number inputs
-    function formatNumber(input) {
-        // Remove non-numeric characters except comma and dot
-        let value = input.value.replace(/[^0-9\.]/g, '');
-        
-        // Allow only one dot
-        if ((value.match(/\./g) || []).length > 1) {
-            value = value.replace(/\.(?=.*\.)/g, ''); // Remove extra dots
-        }
-        
-        // Add commas every 3 digits (except the decimal point)
-        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        
-        // Update the input value with the formatted number
-        input.value = value;
-    }
-</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
