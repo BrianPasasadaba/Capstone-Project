@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-3ie-9bx+39e+thj%2v+4k54y72y_4+-y4v+4r7n@t&e7gey9^g
 DEBUG = True
 
 if DEBUG:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
@@ -118,7 +118,7 @@ STATICFILES_DIRS = [
 if DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    
+
 if not DEBUG:
     # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
