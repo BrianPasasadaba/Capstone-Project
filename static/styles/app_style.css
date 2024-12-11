@@ -3215,7 +3215,7 @@ input[type="password"]::-ms-clear {
     }
 /* ================================  <700-HEADER ================================  */
    .header-content {
-        grid-template-columns: 80px 1fr; /* Adjust to account for the fixed sidebar */
+        grid-template-columns: 75px 1fr; /* Adjust to account for the fixed sidebar */
         grid-template-rows: 1fr;
         grid-template-areas:
             "hs hn"; /* Different areas for the elements */
@@ -3226,6 +3226,7 @@ input[type="password"]::-ms-clear {
         justify-content: space-around;
         align-items: center;
         padding: 0;
+        padding-right: var(--padding-half);
     }
     .header-nav h1{
         padding-top: var(--padding-1);
@@ -3266,6 +3267,51 @@ input[type="password"]::-ms-clear {
         width: 22px;
         height: 22px;
     }
+
+    .ham-menu {
+        /* border: var(--color-sidebar) solid 2px; */
+        margin-top: var(--margin-half);
+        height: 35px;
+        width: 35px;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .ham-menu span {
+        height: 3px;
+        width: 80%; /* Adjust width for better proportions */
+        background-color: #ED7027;
+        border-radius: 25px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: var(--tran-03);
+    }
+    
+    .ham-menu span:nth-child(1) {
+        top: 25%; /* Position the first line */
+    }
+    
+    .ham-menu span:nth-child(3) {
+        top: 75%; /* Position the third line */
+    }
+    
+    .ham-menu.active span:nth-child(1) {
+        top: 50%; /* Move to center */
+        transform: translate(-50%, -50%) rotate(45deg); /* Rotate for "X" */
+    }
+    
+    .ham-menu.active span:nth-child(2) {
+        opacity: 0; /* Hide the middle line */
+    }
+    
+    .ham-menu.active span:nth-child(3) {
+        top: 50%; /* Move to center */
+        transform: translate(-50%, -50%) rotate(-45deg); /* Rotate for "X" */
+    }
+
+
     aside{
         height: calc(100vh - 90px);
         top: 90px;
