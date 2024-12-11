@@ -487,16 +487,8 @@ document.addEventListener('DOMContentLoaded', async function(){
     
         async handleUpdate(data) {
             if (data.type === 'new_temp_report') {
-                try {
-                    const response = await fetch(`/get-temp-report-details/${data.report_id}/`);
-                    const reportDetails = await response.json();
-                    
-                    if (reportDetails) {
-                        this.createToastAndModal(reportDetails);
-                    }
-                } catch (error) {
-                    console.error('Error fetching report details:', error);
-                }
+                location.reload();
+                
             } else if (data.type === 'updated_record') {
                 try {
                     const response = await fetch(`/get-temp-report-details/${data.report_id}/`);

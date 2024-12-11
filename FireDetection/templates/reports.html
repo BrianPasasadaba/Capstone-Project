@@ -54,8 +54,10 @@
 
                 <div class="rb-header">
                     <div class="rbh-left">
+
                         <div class="rbh-search">
-                            <input type="text" id="searchInput" class="search-report" placeholder="Search">
+                            <input type="text" id="searchInput" class="search-report" placeholder="Search" maxlength="30">
+                            <ul id="suggestionsBox" class="dropdown-menu"></ul>
                         </div>
                         
                         <div class="create-button">
@@ -145,10 +147,14 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-                        
-                        
-                                    
+                        <tr id="noResultsMessage" style="display: none;">
+                            <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
+                        </tr>      
+                        <tr id="noFoundFilter" style="display: none;">
+                            <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                        </tr>                     
                     </table>
+                    
 
                 </div>
                 <div class="rb-footer">
@@ -165,7 +171,12 @@
                                 </span>
                                 <button class="btn btn-excel" value="1" id="exportButton"  onclick="handleExport()">Export to Excel</button>
                             </div>          
-                            <div id="noDataMessage" style="display: none; text-align: center; color: red;">No data available</div>
+                            
+                            <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
+                                No data available.
+                            </div>
+                            
+
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item prev disabled">
@@ -228,34 +239,97 @@
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
 
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    // Reference to the tbody and hidden input
+const searchInput = document.getElementById('searchInput');
+const suggestionsBox = document.getElementById('suggestionsBox');
+
+
+const validInputPattern = /^[A-Za-z0-9]*$/;
+searchInput.addEventListener('input', function (e) {
+const inputValue = e.target.value;
+if (!validInputPattern.test(inputValue)) {
+e.target.value = inputValue.slice(0, -1);
+}
+
+updateSuggestions(inputValue);
+});
+
+function updateSuggestions(query) {
+suggestionsBox.innerHTML = ''; 
+if (query.length > 0) {
+const suggestionItem = document.createElement('li');
+suggestionItem.classList.add('dropdown-item');
+suggestionItem.textContent = query; 
+suggestionsBox.appendChild(suggestionItem);
+suggestionsBox.style.display = 'block';
+} else {
+suggestionsBox.style.display = 'none'; 
+}
+}
+document.addEventListener('click', function (event) {
+if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+suggestionsBox.style.display = 'none';
+}
+});
+});
+
+</script>
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchInput');
+    const reportTable = document.getElementById('reportTable');
+    const noResultsMessage = document.getElementById('noResultsMessage');
+
+    searchInput.addEventListener('input', function () {
+        const query = searchInput.value.toLowerCase();
+        let rows = reportTable.getElementsByTagName('tr');
+        let hasVisibleRows = false;
+
+        Array.from(rows).forEach(row => {
+            const cells = Array.from(row.getElementsByTagName('td'));
+            const rowText = cells.map(cell => cell.textContent.toLowerCase()).join(' ');
+
+            if (rowText.includes(query)) {
+                row.style.display = '';
+                hasVisibleRows = true;
+            } else {
+                row.style.display = 'none'; 
+            }
+        });
+
+        if (hasVisibleRows) {
+            noResultsMessage.style.display = 'none';
+        } else {
+            noResultsMessage.style.display = 'table-row';
+        }
+    });
+});
+
+document.getElementById('searchInput').addEventListener('input', function (e) {
+    // Replace invalid characters with an empty string
+    this.value = this.value.replace(/[^a-zA-Z0-9\-\/_]/g, '');
+});
+
+</script>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
     const reportTable = document.getElementById('reportTable');
     const hiddenReportIdInput = document.getElementById('report-id');
     const modal = document.getElementById('report-preview-modal');
 
-    // Add event listener to the table body
     reportTable.addEventListener('click', function (event) {
-        // Find the closest row that was clicked
         const clickedRow = event.target.closest('tr');
-
-        // Ensure the row exists and has a data-report-id attribute
         if (clickedRow && clickedRow.dataset.reportId) {
             const reportId = clickedRow.dataset.reportId;
-
-            // Debug log to confirm correct report ID
             console.log('Clicked Report ID:', reportId);
 
-            // Set the hidden input value
             hiddenReportIdInput.value = reportId;
 
-            // Debug log to confirm the hidden input has been updated
             console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
-
-            // Open the modal (if needed, for Bootstrap modals)
             const bootstrapModal = new bootstrap.Modal(modal);
             bootstrapModal.show();
         } else {
@@ -266,17 +340,17 @@
 
 
     document.addEventListener('DOMContentLoaded', function () {
-        const editButton = document.querySelector('.edit-form .btn-edit');
-        const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
-        const resolveButton = document.querySelector('.resolve-button');
-        const saveButton = document.querySelector('.save-button'); 
-        const form = document.getElementById('report-preview-form');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const statusText = document.getElementById('status-text-{{ report.id }}');
-        const previewModal = document.getElementById('previewModal'); 
-        const closeButton = document.getElementById('close-button'); 
-    
-        function checkStatusAndDisableEdit() {
+    const editButton = document.querySelector('.edit-form .btn-edit');
+    const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
+    const resolveButton = document.querySelector('.resolve-button');
+    const saveButton = document.querySelector('.save-button'); 
+    const form = document.getElementById('report-preview-form');
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const statusText = document.getElementById('status-text-{{ report.id }}');
+    const previewModal = document.getElementById('previewModal'); 
+    const closeButton = document.getElementById('close-button'); 
+
+    function checkStatusAndDisableEdit() {
     const isCaseClosed = statusText && statusText.textContent.trim() === 'Case Closed';
 
     if (isCaseClosed) {
@@ -298,7 +372,7 @@
 
 
 checkStatusAndDisableEdit();
-
+// Add event listener to the edit button
 editButton.addEventListener('click', function() {
     if (!resolveButton.disabled) {
         formInputs.forEach(input => {
@@ -309,7 +383,61 @@ editButton.addEventListener('click', function() {
         const icon = editButton.querySelector('i');
         const text = editButton.querySelector('span'); 
 
-        const isEditable = !formInputs[0].disabled; 
+        const isEditable = !formInputs[0].disabled; // Check if form inputs are editable
+
+        // Fields to toggle visibility for (the original fields you mentioned)
+        const originalFields = [
+            document.getElementById('involved'),
+            document.getElementById('alarm-dec'),
+            document.getElementById('funder-dec'),
+            document.getElementById('fout-dec'),
+            document.getElementById('ground'),
+            document.getElementById('safety'),
+            document.getElementById('sender')
+        ];
+
+        // Search fields to toggle visibility for (ending with -search)
+        const searchFields = [
+            document.getElementById('involved-search'),
+            document.getElementById('alarm-dec-search'),
+            document.getElementById('funder-dec-search'),
+            document.getElementById('fout-dec-search'),
+            document.getElementById('ground-search'),
+            document.getElementById('safety-search'),
+            document.getElementById('sender-search')
+        ];
+
+        // Check if all original fields and search fields are present in the DOM
+        originalFields.forEach((field, index) => {
+            if (field === null) {
+                console.error(`Original field with ID ${originalFields[index].id} not found.`);
+            }
+        });
+        searchFields.forEach((field, index) => {
+            if (field === null) {
+                console.error(`Search field with ID ${searchFields[index].id} not found.`);
+            }
+        });
+
+        // When editing, pass the current value of original fields to the search fields
+        originalFields.forEach((originalField, index) => {
+            if (originalField && searchFields[index]) {
+                searchFields[index].value = originalField.value; // Set search field value to original field's value
+            }
+        });
+
+        // Toggle visibility of search fields and original fields
+        searchFields.forEach(searchField => {
+            if (searchField) {
+                searchField.style.display = isEditable ? 'block' : 'none'; // Show or hide search fields based on edit mode
+            }
+        });
+
+        originalFields.forEach(originalField => {
+            if (originalField) {
+                originalField.style.display = isEditable ? 'none' : 'block'; // Hide or show original fields based on edit mode
+            }
+        });
 
         if (isEditable) {
             icon.style.display = 'none'; 
@@ -332,10 +460,66 @@ editButton.addEventListener('click', function() {
 
 
 
+
+
+// Define the function to clear error messages
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll('.is-invalid');
+    errorMessages.forEach(function (field) {
+        field.classList.remove('is-invalid');
+    });
+
+    const errorText = document.querySelectorAll('small');
+    errorText.forEach(function (msg) {
+        msg.remove();
+    });
+}
+
+// Define the function to show error messages
+function showErrorMessage(field, message) {
+    const errorElement = document.createElement('small');
+    errorElement.textContent = message;
+    errorElement.style.color = 'red';
+    errorElement.style.fontSize = '0.8rem';
+    field.parentNode.appendChild(errorElement);
+    field.classList.add('is-invalid');
+}
+
+// Add event listener for the save button
 saveButton.addEventListener('click', function (event) {
     event.preventDefault();
 
-    // Fetch the report ID from the hidden input field
+    const locationField = document.getElementById('loc');
+    const detectField = document.getElementById('detect');
+    const dateField = document.getElementById('date');
+    const ownerField = document.getElementById('owner');
+    const alarmDecField = document.getElementById('alarm-dec');
+    const funderDecField = document.getElementById('funder-dec');
+    const foutDecField = document.getElementById('fout-dec');
+
+    let valid = true;
+    clearErrorMessages();
+
+    // Validate required fields
+    if (!locationField.value.trim()) {
+        showErrorMessage(locationField, 'Location is required.');
+        valid = false;
+    }
+
+    if (!detectField.value) {
+        showErrorMessage(detectField, 'Time Reported is required.');
+        valid = false;
+    }
+
+    if (!dateField.value) {
+        showErrorMessage(dateField, 'Date is required.');
+        valid = false;
+    }
+
+    if (!valid) {
+        return;
+    }
+
     const reportId = document.getElementById('report-id').value;
 
     if (!reportId) {
@@ -344,33 +528,30 @@ saveButton.addEventListener('click', function (event) {
         return;
     }
 
-    console.log('Submitting Report ID:', reportId); // Debug log for the fetched report ID
-
-    // Collect the form data
     const formData = new FormData(form);
     formData.append('csrfmiddlewaretoken', csrfToken);
 
-    // Ensure that all fields are included, even if empty
-    const fieldsToEnsure = [
-        'where', 'team', 'date', 'detect', 'time-arrive', 'time-under',
-        'date-under', 'funder-dec', 'time-out', 'date-out', 'fout-dec',
-        'damage', 'fatality', 'injured', 'affected', 'establishment', 'truck',
-        'ground', 'ground-num', 'safety', 'safety-num', 'sender', 'sender-num',
-    ];
-
-    // Add missing fields with empty values
-    fieldsToEnsure.forEach(field => {
-        if (!formData.has(field)) {
-            formData.append(field, ''); // Add an empty string if the field is missing
+    // Handle numeric fields: Default to 0 if empty
+    const numericFields = ['damage', 'fatality', 'injured', 'affected', 'establishment', 'truck'];
+    numericFields.forEach(field => {
+        const fieldElement = document.getElementById(field);
+        if (!fieldElement.value.trim()) {
+            formData.set(field, '0'); // Default to "0"
         }
     });
 
-    // Log the form data for debugging (optional, remove in production)
+    const optionalFields = ['owner', 'alarm-dec', 'funder-dec', 'fout-dec'];
+    optionalFields.forEach(field => {
+        const fieldElement = document.getElementById(field);
+        if (!fieldElement.value.trim()) {
+            formData.set(field, 'None'); // Default to "None"
+        }
+    });
+
     for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
     }
 
-    // Submit the data to the server
     fetch(`/update-report/${reportId}/`, {
         method: 'POST',
         body: formData,
@@ -403,53 +584,12 @@ saveButton.addEventListener('click', function (event) {
 });
 
 
-
-
     });
     </script>
     
 
 
-    <script>
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const reportPreviewModal = document.getElementById('report-preview-modal'); 
-    
-        reportPreviewModal.addEventListener('hidden.bs.modal', () => {
-            if (isEditing) {
-                const editButtons = document.querySelectorAll('[id^="edit-button-"]');
-                const editIcons = document.querySelectorAll('[id^="edit-icon-"]');
-                const editTexts = document.querySelectorAll('[id^="edit-text-"]');
-    
-                editButtons.forEach((button, index) => {
-                    button.disabled = false;
-                    button.style.width = '';
-                    button.style.fontSize = '';
-                    button.style.fontWeight = '';
-                    button.style.color = '';
-                    button.style.backgroundColor = '';
-                    button.style.border = '';
-    
-                    const icon = editIcons[index];
-                    if (icon) icon.style.display = '';
-    
-                    const text = editTexts[index];
-                    if (text) text.textContent = 'Edit'; 
-                });
-    
-                isEditing = false; 
-            }
-        });
-    
-        const editButtons = document.querySelectorAll('[id^="edit-button-"]');
-        editButtons.forEach(button => {
-            const reportId = button.id.split('-').pop(); // Extract the report ID from the button ID
-            button.addEventListener('click', () => toggleEditButton(reportId));
-        });
-    });
-    
-    
-    </script>
 
 
 {% endblock %}

@@ -24,7 +24,7 @@ urlpatterns = [
     path('api/events/', views.event_stream, name='event-stream'),
     path('export-initial-report/', export_initial_report, name='export_initial_report'),
     path('remove-accounts/', views.remove_accounts, name='remove_accounts'),
-    path('api/reports-2024/', views.reports_count_for_2024, name='reports_count_for_2024'),
+     path('api/reports-years/', views.reports_count_for_years, name='reports_count_for_years'),
     path('api/reports-monthly-2024/', views.monthly_reports_for_2024, name='monthly_reports_for_2024'),
     path('api/peak-report-summary/', peak_report_summary, name='peak_report_summary'),
     path('get-temp-report-details/<int:report_id>/', views.get_temp_report_details_view, name='get-temp-report-details'),
@@ -32,6 +32,9 @@ urlpatterns = [
     path('get-unresolved-reports/', views.get_unresolved_reports, name='get-unresolved-reports'),
     path('transfer_report/<int:temp_report_id>/', views.transfer_report, name='transfer_report'),
     path('update-temp-report-status/<int:temp_report_id>/', views.update_temp_report_status, name='update_temp_report_status'),
+    path('check-email/', views.check_email_exists, name='check_email'),
+    path('fetch-names/', views.fetch_names, name='fetch_names'),
+
 
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

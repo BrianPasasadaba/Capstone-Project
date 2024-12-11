@@ -51,8 +51,30 @@ from .models import tempReports
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
 from django.utils.timezone import make_aware, get_current_timezone
-from asgiref.sync import sync_to_async
-import asyncio
+from django.db.models.functions import ExtractYear
+from supabase import create_client, Client
+import mimetypes
+import os
+
+
+supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+
+def generate_filename(original_filename):
+    # Extract the file extension from the original filename
+    ext = os.path.splitext(original_filename)[1]
+    
+    # If no extension found, default to .jpg
+    if not ext:
+        ext = '.jpg'
+    
+    return f"fire_incident_{datetime.now().strftime('%Y%m%d_%H%M%S')}{ext}"
+
+def fetch_names(request):
+    if request.method == 'GET':
+        # Fetch user ID, name, and contact number
+        users = CustomUser.objects.filter(name__isnull=False).values('id', 'name', 'contact_number').distinct()
+        return JsonResponse({'names': list(users)}, safe=False)
+
 
 @csrf_protect
 @require_POST
@@ -190,12 +212,28 @@ def monthly_report_summary(request):
     return JsonResponse(monthly_data)
 
     
-def reports_count_for_2024(request):
-    reports_2024 = InitialReport.objects.filter(date_reported__year=2024).count()
-    return JsonResponse({'year': 2024, 'count': reports_2024})
+def reports_count_for_years(request):
+    # Get counts for each year from 2018 to 2024
+    years_range = range(2018, 2025)
+    counts = (
+        InitialReport.objects.filter(date_reported__year__in=years_range)
+        .annotate(year=ExtractYear('date_reported'))
+        .values('year')
+        .annotate(count=Count('id'))
+        .order_by('year')
+    )
 
+    # Convert queryset to a dictionary
+    data = {year['year']: year['count'] for year in counts}
+    
+    # Ensure all years in range are included, even if no reports exist
+    for year in years_range:
+        data.setdefault(year, 0)
+
+    return JsonResponse({'yearly_data': data})
 
 def monthly_reports_for_2024(request):
+    # Group reports by month
     reports_by_month = (
         InitialReport.objects.filter(date_reported__year=2024)
         .annotate(month=TruncMonth('date_reported'))
@@ -203,15 +241,18 @@ def monthly_reports_for_2024(request):
         .annotate(count=Count('id'))
         .order_by('month')
     )
+    
+    # Initialize all months with a count of 0
     all_months = {date(2024, month, 1).strftime('%b'): 0 for month in range(1, 13)}
 
+    # Populate months with data from the query
     for report in reports_by_month:
         month_name = report['month'].strftime('%b')
         all_months[month_name] = report['count']
 
     return JsonResponse({'year': 2024, 'monthly_data': all_months})
 
-
+@login_required
 def analytics_view(request):
     current_date = localtime(now())
 
@@ -366,7 +407,7 @@ def export_initial_report(request):
     return response
 
 
-
+@login_required
 def change_password(request):
     if request.method == 'POST':
         new_password = request.POST.get('password')
@@ -438,6 +479,20 @@ def forgot_password_view(request):
 
     return render(request, 'forgot_password.html', {'show_success_modal': show_success_modal})
 
+
+def check_email_exists(request):
+    email = request.GET.get('email', None)
+    phone = request.GET.get('phone_number', None)  # Get the phone number from the request
+
+    response_data = {}
+
+    if email:
+        response_data['email_exists'] = CustomUser.objects.filter(email=email).exists()
+
+    if phone:
+        response_data['phone_exists'] = CustomUser.objects.filter(contact_number=phone).exists()
+
+    return JsonResponse(response_data)
 
 
 @login_required
@@ -584,6 +639,19 @@ def create_report_view(request):
         sender_contact = request.POST.get('crsender-num')
         proof = request.FILES.get('modal-proof')
 
+        # If a file is uploaded, upload to Supabase and get the URL
+        file_url = None
+        if proof:
+            file_name = generate_filename(proof.name)  # Get the file name
+            file_path = file_name  # Path in the bucket
+            
+            file_data = proof.read()  # Read the file contents
+
+            response = supabase.storage.from_('FireProof').upload(file_path, file_data)
+
+            file_url = supabase.storage.from_('FireProof').get_public_url(file_path)
+
+
         def validate_date(date_str):
             if date_str:
                 try:
@@ -654,6 +722,7 @@ def create_report_view(request):
             # Generate FIR number manually
 
 
+            # Create report with Supabase file URL
             new_report = InitialReport.objects.create(
                 fir_number=fir_number, 
                 where=location,
@@ -683,7 +752,7 @@ def create_report_view(request):
                 officer_contact_number=safety_contact,
                 name_of_sender=sender,
                 sender_contact_number=sender_contact,
-                proof=proof,
+                proof=file_url,  # Store the Supabase public URL
                 created_by=request.user
             )
             new_report.save()
@@ -722,47 +791,44 @@ def convert_to_aware_datetime(date_str, time_str):
 def update_report(request, report_id):
     if request.method == 'POST':
         report = get_object_or_404(InitialReport, id=report_id)
-
         data = request.POST
+
 
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
 
+        report.name_of_owner = data.get('owner', None) if data.get('owner') != "None" else None
+        report.alarm_declared_by = data.get('alarm-dec', None) if data.get('alarm-dec') != "None" else None
+        report.fire_under_control_declared_by = data.get('funder-dec', None) if data.get('funder-dec') != "None" else None
+        report.fire_out_declared_by = data.get('fout-dec', None) if data.get('fout-dec') != "None" else None
+        report.involved = data.get('involved', None) if data.get('involved') != "None" else None
+
         def convert_to_aware_datetime(date_str, time_str):
             if date_str and time_str:
                 naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
-                return timezone.make_aware(naive_dt, timezone.get_current_timezone())
+                return make_aware(naive_dt)
             return None
 
         report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
-
         report.time_of_arrival = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-arrive', '').strip()) or report.time_of_arrival
         report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-under', '').strip()) or report.time_of_fire_under_control
         report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
 
-        # Date fields with fallback to existing values
-        report.date_of_fire_under_control = data.get('date-under', '').strip() or report.date_of_fire_under_control
-        report.date_of_fire_out = data.get('date-out', '').strip() or report.date_of_fire_out
+        def get_int_value(field_name, default=0):
+            try:
+                raw_value = data.get(field_name, '').replace(',', '').strip()  
+                return int(raw_value or default)
+            except (ValueError, TypeError):
+                return default
 
-        # Other fields with validation for blanks
-        report.fire_under_control_declared_by = data.get('funder-dec', '').strip() or report.fire_under_control_declared_by
-        report.fire_out_declared_by = data.get('fout-dec', '').strip() or report.fire_out_declared_by
+        report.estimated_damages = get_int_value('damage', report.estimated_damages or 0)
+        report.no_of_fatality = get_int_value('fatality', report.no_of_fatality or 0)
+        report.no_of_injured = get_int_value('injured', report.no_of_injured or 0)
+        report.no_of_families_affected = get_int_value('affected', report.no_of_families_affected or 0)
+        report.no_of_establishments = get_int_value('establishment', report.no_of_establishments or 0)
+        report.no_of_fire_trucks = get_int_value('truck', report.no_of_fire_trucks or 0)
 
-        report.involved = data.get('involved', '').strip() or report.involved
-        report.name_of_owner = data.get('owner', '').strip() or report.name_of_owner
-        report.alarm_status = data.get('alarm', '').strip() or report.alarm_status
-        report.alarm_declared_by = data.get('alarm-dec', '').strip() or report.alarm_declared_by
-
-        # Numeric fields with default values
-        report.estimated_damages = int(data.get('damage', report.estimated_damages or 0))
-        report.no_of_fatality = int(data.get('fatality', report.no_of_fatality or 0))
-        report.no_of_injured = int(data.get('injured', report.no_of_injured or 0))
-        report.no_of_families_affected = int(data.get('affected', report.no_of_families_affected or 0))
-        report.no_of_establishments = int(data.get('establishment', report.no_of_establishments or 0))
-        report.no_of_fire_trucks = int(data.get('truck', report.no_of_fire_trucks or 0))
-
-        # Other optional fields
         report.ground_commander = data.get('ground', '').strip() or report.ground_commander
         report.commander_contact_number = data.get('ground-num', '').strip() or report.commander_contact_number
         report.safety_officer = data.get('safety', '').strip() or report.safety_officer
@@ -770,11 +836,34 @@ def update_report(request, report_id):
         report.name_of_sender = data.get('sender', '').strip() or report.name_of_sender
         report.sender_contact_number = data.get('sender-num', '').strip() or report.sender_contact_number
 
-        # Handle file uploads
-        proof = request.FILES.get('proof')
+        proof = request.FILES.get('input-proof')
         if proof:
-            report.proof = proof
+            try:
+                file_name = generate_filename(proof.name)
+                file_path = f"proofs/{file_name}"
 
+                # Read file data
+                file_data = proof.read()
+
+                # Upload to Supabase
+                response = supabase.storage.from_('FireProof').upload(
+                    file_path, 
+                    file_data, 
+                )
+
+                # Get public URL
+                file_url = supabase.storage.from_('FireProof').get_public_url(file_path)
+                
+                # Update report with new file URL
+                report.proof = file_url
+
+            except Exception as e:
+                print(f"Error uploading proof: {e}")
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': f'Failed to upload proof: {str(e)}'
+                }, status=500)
+            
         try:
             report.save()
             return JsonResponse({'status': 'success', 'message': 'Report updated successfully.'})
@@ -796,25 +885,24 @@ def desktop_notification(request):
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
-async def event_stream(request):
-    """Async SSE endpoint that clients connect to for updates"""
-    async def event_generator():
+def event_stream(request):
+    """SSE endpoint that clients connect to for updates"""
+    def event_generator():
         last_check = time.time()
         
         while True:
-            current_time = await sync_to_async(cache.get)('last_update_time')
-
+            current_time = cache.get('last_update_time')
             if current_time and current_time > last_check:
-                data = await sync_to_async(cache.get)('latest_update')
+                data = cache.get('latest_update')
                 if data:
                     yield f"data: {json.dumps(data)}\n\n"
                     last_check = current_time
             
-            await asyncio.sleep(1)
+            time.sleep(1)
 
     response = StreamingHttpResponse(event_generator(), content_type='text/event-stream')
     response['Cache-Control'] = 'no-cache'
-    response['X-Accel-Buffering'] = 'no'
+    response['Connection'] = 'keep-alive'
     return response
 
 def get_temp_report_details(report_id):

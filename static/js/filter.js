@@ -1,134 +1,117 @@
 document.addEventListener('DOMContentLoaded', function () {
     const dropdownItems = document.querySelectorAll('.dropdown-item');
-    const tableRows = document.querySelectorAll('#reportTable tr');
+    const tableBody = document.querySelector('#reportTable');
+    const pagination = document.querySelector('.pagination');
+    const rowsPerPage = 10; // Number of rows per page
+    let currentPage = 1;
+    const noFoundMessage = document.getElementById('noFoundFilter'); // Get the no results message element
 
-    // Function to reset the display of all rows (make all visible)
-    function resetTable() {
-        tableRows.forEach(row => {
-            row.style.display = '';  // Reset all rows to be visible
-        });
+    // Extract all rows' data into an array
+    const allRowsData = Array.from(document.querySelectorAll('#reportTable tr')).map(row => ({
+        element: row,
+        date: new Date(row.dataset.date),
+        status: row.querySelector('h6') ? row.querySelector('h6').textContent.trim() : null,
+    }));
+
+    let currentFilteredData = [...allRowsData]; // Holds the data after filtering/sorting
+
+    // Function to render the current page
+    function renderPage(data, page = 1) {
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = page * rowsPerPage;
+
+        // Clear the table body but retain existing data reference
+        tableBody.innerHTML = '';
+
+        const rowsToRender = data.slice(startIndex, endIndex);
+
+        // If no data to display, show the 'No results found' message
+        if (rowsToRender.length === 0) {
+            noFoundMessage.style.display = 'table-row'; // Show the message
+        } else {
+            noFoundMessage.style.display = 'none'; // Hide the message
+            rowsToRender.forEach(rowData => tableBody.appendChild(rowData.element));
+        }
+
+        // Update pagination buttons
+        updatePagination(data.length, page);
     }
 
-    // Function to filter table rows based on the dropdown selection
-    function filterTable(criteria) {
-        resetTable(); // Reset the table before applying new filter
+    // Function to update pagination buttons
+    function updatePagination(totalRows, currentPage) {
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+        pagination.innerHTML = ''; // Clear existing pagination
 
+        // Previous button
+        const prevItem = document.createElement('li');
+        prevItem.className = `page-item prev ${currentPage === 1 ? 'disabled' : ''}`;
+        prevItem.innerHTML = `<a class="page-link" href="#" tabindex="-1" aria-disabled="${currentPage === 1}">Previous</a>`;
+        pagination.appendChild(prevItem);
+
+        // Page number buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const pageItem = document.createElement('li');
+            pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+            pageItem.dataset.page = i;
+            pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+            pagination.appendChild(pageItem);
+        }
+
+        // Next button
+        const nextItem = document.createElement('li');
+        nextItem.className = `page-item next ${currentPage === totalPages ? 'disabled' : ''}`;
+        nextItem.innerHTML = `<a class="page-link" href="#">Next</a>`;
+        pagination.appendChild(nextItem);
+    }
+
+    // Function to filter and sort data
+    function filterAndSortData(criteria) {
         if (criteria === 'Latest' || criteria === 'Oldest') {
-            filterByDate(criteria === 'Latest' ? 'desc' : 'asc');
-        } else {
-            tableRows.forEach(row => {
-                const statusText = row.querySelector('h6').textContent.trim();
-                
-                if (criteria === 'Ongoing') {
-                    toggleRowVisibility(row, statusText === 'Ongoing');
-                } else if (criteria === 'Case Resolved') {
-                    toggleRowVisibility(row, statusText === 'Case Closed');
-                }
+            currentFilteredData.sort((a, b) => {
+                return criteria === 'Latest' ? b.date - a.date : a.date - b.date;
             });
-        }
-    }
-
-    // Helper function to toggle row visibility based on a condition
-    function toggleRowVisibility(row, condition) {
-        if (condition) {
-            row.style.display = '';
+        } else if (criteria === 'Ongoing' || criteria === 'Case Resolved') {
+            currentFilteredData = allRowsData.filter(rowData => {
+                return criteria === 'Ongoing'
+                    ? rowData.status === 'Ongoing'
+                    : rowData.status === 'Case Closed';
+            });
         } else {
-            row.style.display = 'none';
+            currentFilteredData = [...allRowsData]; // Reset to all rows for "All" criteria
         }
+
+        // Always render page 1 after filtering/sorting
+        currentPage = 1;
+        renderPage(currentFilteredData, currentPage);
     }
 
-    // Function to sort table rows by date
-    function filterByDate(order) {
-        const sortedRows = Array.from(tableRows).sort((a, b) => {
-            const dateA = new Date(a.dataset.date);
-            const dateB = new Date(b.dataset.date);
-
-            // Sort ascending or descending
-            if (order === 'asc') {
-                return dateA - dateB;
-            } else {
-                return dateB - dateA;
-            }
-        });
-
-        // Append sorted rows back to the table body
-        const tableBody = document.querySelector('#reportTable');
-        sortedRows.forEach(row => tableBody.appendChild(row));
-    }
-
-    // Attach event listener to each dropdown item
+    // Event listener for dropdown filter
     dropdownItems.forEach(item => {
         item.addEventListener('click', function (e) {
             const filterCriteria = e.target.textContent.trim();
-            filterTable(filterCriteria);
+            filterAndSortData(filterCriteria);
         });
     });
-});
 
+    // Event listener for pagination
+    pagination.addEventListener('click', function (e) {
+        const pageItem = e.target.closest('.page-item');
+        if (!pageItem || pageItem.classList.contains('disabled')) return;
 
-
-document.addEventListener('DOMContentLoaded', function () {
-    const dropdownItems = document.querySelectorAll('.dropdown-item');
-    const accountRows = document.querySelectorAll('#accountTable tr');
-
-    // Function to reset the display of all rows
-    function resetTable() {
-        accountRows.forEach(row => {
-            row.style.display = ''; // Make all rows visible
-        });
-    }
-
-    // Function to filter and sort table rows based on the dropdown selection
-    function filterTable(criteria) {
-        resetTable(); // Reset the table before applying new filter
-
-        if (criteria === 'Verified' || criteria === 'Unverified') {
-            accountRows.forEach(row => {
-                const statusText = row.querySelector('h6').textContent.trim();
-                
-                if (criteria === 'Verified') {
-                    toggleRowVisibility(row, statusText === 'Verified');
-                } else if (criteria === 'Unverified') {
-                    toggleRowVisibility(row, statusText === 'Unverified');
-                }
-            });
-        } else if (criteria === 'Latest' || criteria === 'Oldest') {
-            sortTableByDate(criteria);
-        }
-    }
-
-    // Helper function to toggle row visibility based on a condition
-    function toggleRowVisibility(row, condition) {
-        if (condition) {
-            row.style.display = '';
+        if (pageItem.classList.contains('prev')) {
+            currentPage = Math.max(1, currentPage - 1);
+        } else if (pageItem.classList.contains('next')) {
+            currentPage = Math.min(
+                Math.ceil(currentFilteredData.length / rowsPerPage),
+                currentPage + 1
+            );
         } else {
-            row.style.display = 'none';
+            currentPage = parseInt(pageItem.dataset.page);
         }
-    }
 
-    // Function to sort the table by date
-    function sortTableByDate(order) {
-        const tableBody = document.querySelector('#accountTable');
-        const rowsArray = Array.from(accountRows);
-
-        rowsArray.sort((a, b) => {
-            const dateA = new Date(a.querySelector('td:nth-child(3)').textContent.trim());
-            const dateB = new Date(b.querySelector('td:nth-child(3)').textContent.trim());
-
-            // Swap the conditions to fix the sorting order
-            return order === 'Latest' ? dateA - dateB : dateB - dateA;
-        });
-
-        // Re-attach rows to the table in the new order
-        rowsArray.forEach(row => tableBody.appendChild(row));
-    }
-
-    // Attach event listener to each dropdown item
-    dropdownItems.forEach(item => {
-        item.addEventListener('click', function (e) {
-            const filterCriteria = e.target.textContent.trim();
-            filterTable(filterCriteria);
-        });
+        renderPage(currentFilteredData, currentPage);
     });
-});
 
+    // Initial render
+    renderPage(allRowsData, 1);
+});

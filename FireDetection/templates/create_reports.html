@@ -91,9 +91,10 @@
                             <label for="crdate" class="form-label">Date Reported<i class="bi bi-asterisk"></i></label>
                             <input type="date" name="crdate" class="form-control" id="crdate" required> 
                         </div>
+
                         <div class="form-column" style="position: relative;">
                             <label for="crinvolved" class="form-label">Involved</label>
-                            <input type="text" class="form-control" id="crinvolved-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" >
+                            <input type="text" class="form-control" id="crinvolved-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s/]+">
                             <input type="hidden" name="crinvolved" id="crinvolved" >
                             <ul class="dropdown-menu" id="crinvolved-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
                                 <!-- Options will be populated here dynamically -->
@@ -117,8 +118,10 @@
                             </select>
                         </div>
                         <div class="form-column">
-                            <label for="cralarm-dec" class="form-label">Alarm Status Declared by</label>
-                            <input type="text" class="form-control" name="cralarm-dec" id="cralarm-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <label for="cralarm-dec-search" class="form-label">Alarm Status Declared by</label>
+                            <input type="text" class="form-control" id="cralarm-dec-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="cralarm-dec" id="cralarm-dec">
+                            <ul class="dropdown-menu" id="cralarm-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                         <div class="form-column">
                             <label for="crtime-arrive" class="form-label">Time of Arrival</label>
@@ -137,7 +140,9 @@
                         </div>
                         <div class="form-column">
                             <label for="crfunder-dec" class="form-label">Fire Under Control Declared by</label>
-                            <input type="text" class="form-control" name="crfunder-dec" id="crfunder-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crfunder-dec-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crfunder-dec" id="crfunder-dec">
+                            <ul class="dropdown-menu" id="crfunder-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                     </div>
 
@@ -152,44 +157,53 @@
                         </div>
                         <div class="form-column">
                             <label for="crfout-dec" class="form-label">Fire Out Declared by</label>
-                            <input type="text" class="form-control" name="crfout-dec" id="crfout-dec" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crfout-dec-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crfout-dec" id="crfout-dec">
+                            <ul class="dropdown-menu" id="crfout-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-column">
                             <label for="crdamages" class="form-label">Estimated Damages</label>
-                            <input type="text" class="form-control" name="crdamages" id="crdamages" placeholder="e.g. P1,000,000" maxlength="12" >
+                            <div class="input-group">
+                                <span class="input-group-text">P</span>
+                                <input type="text" class="form-control" name="crdamages" id="crdamages" placeholder="e.g. 1,000,000" maxlength="12" inputmode="decimal" oninput="formatNumber(this)">
+                            </div>
                         </div>
                         <div class="form-column">
                             <label for="crfatality" class="form-label">No. of Fatality</label>
-                            <input type="text" class="form-control" id="crfatality" placeholder="e.g. 11" name="crfatality" maxlength="12" >
+                            <input type="text" class="form-control" id="crfatality" placeholder="e.g. 11" name="crfatality" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                         <div class="form-column">
                             <label for="crinjured" class="form-label">No. of Injured</label>
-                            <input type="text" class="form-control" id="crinjured" placeholder="e.g. 11" name="crinjured" maxlength="12" >
+                            <input type="text" class="form-control" id="crinjured" placeholder="e.g. 11" name="crinjured" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                     </div>
                 
                     <div class="form-row">
                         <div class="form-column">
                             <label for="craffected" class="form-label">No. of Families Affected</label>
-                            <input type="text" class="form-control" id="craffected" placeholder="e.g. 11" name="craffected" maxlength="12" >
+                            <input type="text" class="form-control" id="craffected" placeholder="e.g. 11" name="craffected" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                         <div class="form-column">
                             <label for="crestablishment" class="form-label">No. of Establishment</label>
-                            <input type="text" class="form-control" id="crestablishment" placeholder="e.g. 11" name="crestablishment" maxlength="12" >
+                            <input type="text" class="form-control" id="crestablishment" placeholder="e.g. 11" name="crestablishment" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                         <div class="form-column">
                             <label for="crtruck" class="form-label">No. of Fire Trucks Responded</label>
-                            <input type="text" class="form-control" id="crtruck" placeholder="e.g. 11" name="crtruck" maxlength="12" >
+                            <input type="text" class="form-control" id="crtruck" placeholder="e.g. 11" name="crtruck" maxlength="12" inputmode="numeric" oninput="formatNumber(this)">
                         </div>
                     </div>
+                    
                     <div class="form-row">
                         <div class="form-column">
                             <label for="crground" class="form-label">Ground Commander</label>
-                            <input type="text" class="form-control" name="crground" id="crground" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crground-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crground" id="crground">
+                            <ul class="dropdown-menu" id="crground-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
+
                         <div class="form-column">
                             <label for="crground-num" class="form-label">/ Contact No.</label>
                             <input type="text" class="form-control" name="crground-num" id="crground-num" placeholder="e.g. 09227807570" maxlength="11" pattern="[0-9]{11}"
@@ -197,7 +211,9 @@
                         </div>
                         <div class="form-column">
                             <label for="crsafety" class="form-label">Safety Officer</label>
-                            <input type="text" class="form-control" name="crsafety" id="crsafety" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crsafety-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crsafety" id="crsafety">
+                            <ul class="dropdown-menu" id="crsafety-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                         <div class="form-column">
                             <label for="crsafety-num" class="form-label">/ Contact No.</label>
@@ -208,7 +224,9 @@
                     <div class="form-row">
                         <div class="form-column">
                             <label for="crsender" class="form-label">Name of Sender</label>
-                            <input type="text" class="form-control" name="crsender" id="crsender" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                            <input type="text" class="form-control" id="crsender-search" placeholder="Search..." autocomplete="off" maxlength="30">
+                            <input type="hidden" name="crsender" id="crsender">
+                            <ul class="dropdown-menu" id="crsender-options" style="display: none; position: absolute; z-index: 1; width: 100%;"></ul>
                         </div>
                         <div class="form-column">
                             <label for="crsender-num" class="form-label">Name of Sender Contact No.</label>
@@ -224,7 +242,7 @@
                     <div class="footer">
                         <div class="mf-button" id="cr-buttons">
                             <button class="btn btn-lg px-4" type="button" onclick="copyModalContent()">Copy</button>
-                            <button class="btn btn-lg px-4" type="submit">Save</button>
+                            <button class="btn btn-lg px-4 save-button" type="submit">Save</button>
                         </div>
                     </div>
                 </form>
@@ -240,7 +258,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/involved_search.js' %}"></script>
+<script src="{% static 'js/create_report_search.js' %}"></script>
 <script src="{% static 'js/form_controls.js' %}"></script>
 <script src="{% static 'js/table_status.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -249,6 +267,112 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/preview.js' %}"></script>
+<script src="{% static 'js/format_numbers.js' %}"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const saveButton = document.querySelector('.save-button'); 
+        const locationField = document.getElementById('crloc');
+        const detectField = document.getElementById('crdetect');
+        const dateField = document.getElementById('crdate');
+
+        saveButton.addEventListener('click', function (event) {
+            let valid = true;
+            clearErrorMessages(); 
+
+            if (!locationField.value.trim()) {
+                showErrorMessage(locationField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Location is required.');
+                valid = false;
+            }
+
+            if (!detectField.value) {
+                showErrorMessage(detectField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Time Reported is required.');
+                valid = false;
+            }
+
+            if (!dateField.value) {
+                showErrorMessage(dateField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Date Reported is required.');
+                valid = false;
+            }
+
+            if (!valid) {
+                event.preventDefault(); 
+                scrollToFirstInvalidField(); // Scroll to the first invalid field
+            }
+        });
+
+        function showErrorMessage(field, message) {
+            const errorElement = document.createElement('small');
+            errorElement.innerHTML = message; // Use innerHTML to render the icon
+            errorElement.style.color = 'red';
+            errorElement.style.fontSize = '0.8rem'; // Set the same font size as the message
+            errorElement.style.display = 'block';
+            errorElement.style.textAlign = 'left';  // Align left
+            errorElement.style.paddingTop = '0.2rem';  // Add padding top
+            field.parentNode.appendChild(errorElement); 
+            field.classList.add('is-invalid'); 
+        }
+
+        function clearErrorMessages() {
+            const errorMessages = document.querySelectorAll('.is-invalid');
+            errorMessages.forEach(function (field) {
+                field.classList.remove('is-invalid');
+            });
+
+            const errorText = document.querySelectorAll('small');
+            errorText.forEach(function (msg) {
+                msg.remove(); 
+            });
+        }
+
+        function scrollToFirstInvalidField() {
+            const firstInvalidField = document.querySelector('.is-invalid');
+            if (firstInvalidField) {
+                firstInvalidField.scrollIntoView({
+                    behavior: 'smooth', // Smooth scrolling
+                    block: 'center' // Scroll the field to the center of the viewport
+                });
+            }
+        }
+    });
+</script>
+
+
+
+<script>
+    document.getElementById('crinvolved-search').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crowner').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('cralarm-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crfout-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crground').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crsafety').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crsender').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+
+    document.getElementById('crfunder-dec').addEventListener('input', function() {
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+</script>
 
 <script>
 function customAlert(message) {
@@ -261,32 +385,42 @@ function copyModalContent() {
     const form = document.getElementById('create-report-form');
     let contentToCopy = "";
 
+    // Blur all input fields to ensure they are unfocused and updated
     Array.from(form.elements).forEach(element => {
-        // Exclude CSRF token, buttons, and the 'proof' field
-        if (
-            element.name && 
-            element.name !== "csrfmiddlewaretoken" && 
-            element.type !== "submit" && 
-            element.type !== "button" && 
-            element.name !== "proof" // Exclude the 'proof' field
-        ) {
-            const label = document.querySelector(`label[for="${element.id}"]`);
-            const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
-            const value = element.value.trim();
-            if (value) {
-                contentToCopy += `${labelText}: ${value}\n`;
-            }
+        if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
+            element.blur(); // This will ensure the input value is updated
         }
     });
 
-    navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
-        customAlert("Content copied to clipboard!");
-    }).catch((err) => {
-        console.error("Could not copy text: ", err);
-        customAlert("Failed to copy content.");
-    });
-}
+    // Use a timeout to allow the blur event to process
+    setTimeout(() => {
+        Array.from(form.elements).forEach(element => {
+            // Exclude CSRF token, buttons, and the 'proof' field
+            if (
+                element.name && 
+                element.name !== "csrfmiddlewaretoken" && 
+                element.type !== "submit" && 
+                element.type !== "button" && 
+                element.name !== "proof" // Exclude the 'proof' field
+            ) {
+                const label = document.querySelector(`label[for="${element.id}"]`);
+                const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
+                const value = element.value.trim();
+                if (value) {
+                    contentToCopy += `${labelText}: ${value}\n`;
+                }
+            }
+        });
 
+        // Copy the content to the clipboard
+        navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
+            customAlert("Content copied to clipboard!");
+        }).catch((err) => {
+            console.error("Could not copy text: ", err);
+            customAlert("Failed to copy content.");
+        });
+    }, 100); // Adjust the timeout duration if necessary
+}
 
 </script>
     
