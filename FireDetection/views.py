@@ -254,7 +254,7 @@ def monthly_reports_for_2024(request):
 
 @login_required
 def analytics_view(request):
-    current_date = datetime(now())
+    current_date = datetime.now()
 
     latest_reports = tempReports.objects.filter(
         status__in=['Reported', 'Dismissed']
