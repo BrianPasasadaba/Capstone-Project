@@ -1596,6 +1596,12 @@ input[type="password"]::-ms-clear {
     padding-top: var(--padding-half);
 }
 
+.ld-table tbody tr .ld-stat{
+    text-align: right;
+    grid-area: ldl;
+    padding-right: var(--padding-half);
+}
+
 
 
 /* ============================== lATEST DETECTION MODAL============================== */
@@ -3032,7 +3038,7 @@ input[type="password"]::-ms-clear {
         width: 90%;
     }
     .detect-card{
-        width: 60%;
+        width: 75%;
     }
 }
 

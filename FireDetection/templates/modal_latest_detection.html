@@ -65,22 +65,23 @@
 
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Select all detection status elements
-    const detectionStatuses = document.getElementsByClassName('detection-status');
-    
-    detectionStatuses.forEach(function(detectionStatus) {
-        // Check the status text (case-insensitive) and apply the corresponding styles
-        const statusText = detectionStatus.innerText.trim().toLowerCase();
+    document.addEventListener("DOMContentLoaded", function() {
+        // Select all detection status elements
+        const detectionStatuses = document.getElementsByClassName('detection-status');
         
-        if (statusText === "dismissed") {
-            detectionStatus.style.color = "red";
-            detectionStatus.style.border = "2px solid red";
-        } else if (statusText === "reported") {
-            detectionStatus.style.color = "#0E1E4B";
-            detectionStatus.style.border = "2px solid #0E1E4B";
-        }
+        // Convert HTMLCollection to an array and iterate through each element
+        Array.from(detectionStatuses).forEach(function(detectionStatus) {
+            // Check the status text (case-insensitive) and apply the corresponding styles
+            const statusText = detectionStatus.innerText.trim().toLowerCase();
+            
+            if (statusText === "dismissed") {
+                detectionStatus.style.color = "red";
+                detectionStatus.style.border = "2px solid red";
+            } else if (statusText === "reported") {
+                detectionStatus.style.color = "#0E1E4B";
+                detectionStatus.style.border = "2px solid #0E1E4B";
+            }
+        });
     });
-});
-</script>
+    </script>
     
