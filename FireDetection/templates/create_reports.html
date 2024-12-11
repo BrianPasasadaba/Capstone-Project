@@ -385,34 +385,47 @@ function copyModalContent() {
     const form = document.getElementById('create-report-form');
     let contentToCopy = "";
 
-    // Blur all input fields to ensure they are unfocused and updated
+    // Ensure all input fields are blurred to update their values
     Array.from(form.elements).forEach(element => {
         if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
-            element.blur(); // This will ensure the input value is updated
+            element.blur(); // Update the field value by blurring
         }
     });
 
     // Use a timeout to allow the blur event to process
     setTimeout(() => {
+        // Default header with 'None' for empty values
+        let crloc = document.getElementById('crloc').value.trim() || "None";
+        let crinvolved = document.getElementById('crinvolved').value.trim() || "None";
+
+        // Add the default header to the content
+        contentToCopy += `SANTA ROSA CITY FIRE STATION reporting a 1070 (${crinvolved}) at (${crloc}), Santa Rosa City, Laguna, R4A\n`;
+
+        // Iterate over form elements and build content for non-empty fields
         Array.from(form.elements).forEach(element => {
-            // Exclude CSRF token, buttons, and the 'proof' field
+            // Exclude CSRF token, buttons, and file input fields
             if (
                 element.name && 
                 element.name !== "csrfmiddlewaretoken" && 
                 element.type !== "submit" && 
                 element.type !== "button" && 
-                element.name !== "proof" // Exclude the 'proof' field
+                element.name !== "proof"
             ) {
                 const label = document.querySelector(`label[for="${element.id}"]`);
                 const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
                 const value = element.value.trim();
-                if (value) {
-                    contentToCopy += `${labelText}: ${value}\n`;
+
+                if (value) {  // Only include if the value is not empty
+                    if (labelText === "Involved" && crinvolved === "None") {
+                        contentToCopy += `INVOLVED: None\n`;
+                    } else {
+                        contentToCopy += `${labelText}: ${value}\n`;
+                    }
                 }
             }
         });
 
-        // Copy the content to the clipboard
+        // Copy the formatted content to the clipboard
         navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
             customAlert("Content copied to clipboard!");
         }).catch((err) => {

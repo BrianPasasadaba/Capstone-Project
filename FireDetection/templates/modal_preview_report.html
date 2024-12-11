@@ -49,7 +49,7 @@
 
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="date" class="form-label">Date</label>
+                            <label for="date" class="form-label">Date Reported</label>
                             <input type="date" name="date" class="form-control" id="date" required>
                         </div>
                         
@@ -134,7 +134,7 @@
                     
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="damages" class="form-label">Estimated Damages</label>
+                            <label for="damage" class="form-label">Estimated Damages</label>
                             <input type="text" class="form-control" name="damage" id="damage" placeholder="e.g. P1,000,000" maxlength="12" inputmode="decimal" oninput="formatNumber(this)">
                         </div>
                         <div class="form-column">
@@ -303,47 +303,62 @@
 
 
 <script>
-    function copyModalContent() {
+function copyModalContent() {
     const form = document.getElementById('report-preview-form'); 
     const previewModal = document.getElementById('report-preview-modal');
     const customAlertModal = document.getElementById('customAlertModal');
     const customAlertOkButton = customAlertModal.querySelector('.btn-disconfirm'); 
     let contentToCopy = "";
 
-    // Blur all input fields to ensure they are unfocused and updated
+    // Ensure all input fields are blurred to update their values
     Array.from(form.elements).forEach(element => {
         if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
-            element.blur(); // This will ensure the input value is updated
+            element.blur(); // Update the field value by blurring
         }
     });
 
     // Use a timeout to allow the blur event to process
     setTimeout(() => {
-    Array.from(form.elements).forEach(element => {
-        if (
-            element.name && 
-            element.name !== "csrfmiddlewaretoken" && 
-            element.type !== "submit" && 
-            element.type !== "button" && 
-            element.name !== "proof" 
-        ) {
-            const label = document.querySelector(`label[for="${element.id}"]`);
-            const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
+        // Default header with 'None' for empty values
+        let loc = document.getElementById('loc')?.value.trim() || "None";
+        let involved = document.getElementById('involved')?.value.trim() || "None";
 
-            let value;
-            if (element.type === "select-one") {
-                value = element.options[element.selectedIndex]?.text.trim();
-            } else if (element.type === "checkbox" || element.type === "radio") {
-                value = element.checked ? "Yes" : "No";
-            } else {
-                value = element.value.trim();
-            }
+        // Add the default header to the content
+        contentToCopy += `SANTA ROSA CITY FIRE STATION reporting a 1070 (${involved}) at (${loc}), Santa Rosa City, Laguna, R4A\n`;
 
-            if (value) {
-                contentToCopy += `${labelText}: ${value}\n`;
+        // Iterate over form elements and build content for non-empty fields
+        Array.from(form.elements).forEach(element => {
+            // Exclude CSRF token, buttons, file input fields, and hidden fields like report-id
+            if (
+                element.name && 
+                element.name !== "csrfmiddlewaretoken" && 
+                element.type !== "submit" && 
+                element.type !== "button" && 
+                element.type !== "hidden" && // Exclude all hidden fields
+                element.name !== "proof"
+            ) {
+                const label = document.querySelector(`label[for="${element.id}"]`);
+                const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
+
+                let value;
+                if (element.type === "select-one") {
+                    value = element.options[element.selectedIndex]?.text.trim();
+                } else if (element.type === "checkbox" || element.type === "radio") {
+                    value = element.checked ? "Yes" : "No";
+                } else {
+                    value = element.value.trim();
+                }
+
+                // Check value is not empty and not "None"
+                if (value && value !== "None") {
+                    if (labelText === "Involved" && involved === "None") {
+                        contentToCopy += `INVOLVED: None\n`;
+                    } else {
+                        contentToCopy += `${labelText}: ${value}\n`;
+                    }
+                }
             }
-        }
-    });
+        });
 
     navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
         console.log("Content copied to clipboard.");
