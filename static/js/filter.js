@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to filter and sort data
     function filterAndSortData(criteria) {
         if (criteria === 'Latest' || criteria === 'Oldest') {
+            // Reset to all rows before sorting
+            currentFilteredData = [...allRowsData];
             currentFilteredData.sort((a, b) => {
                 return criteria === 'Latest' ? b.date - a.date : a.date - b.date;
             });
@@ -77,13 +79,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     : rowData.status === 'Case Closed';
             });
         } else {
-            currentFilteredData = [...allRowsData]; // Reset to all rows for "All" criteria
+            // Reset to all rows for "All" criteria
+            currentFilteredData = [...allRowsData];
         }
-
+    
         // Always render page 1 after filtering/sorting
         currentPage = 1;
         renderPage(currentFilteredData, currentPage);
     }
+    
 
     // Event listener for dropdown filter
     dropdownItems.forEach(item => {
