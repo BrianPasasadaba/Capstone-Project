@@ -180,9 +180,14 @@ reportRows.forEach(row => {
 });
 
 
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
-    const resolveButton = document.querySelector('.resolve-button'); 
+    const resolveButton = document.querySelector('.resolve-button');
+    const previewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
+    const resolveWarningModal = new bootstrap.Modal(document.getElementById('resolve-warning-modal'));
+    const confirmResolveButton = document.getElementById('resconfirm');
+    const cancelResolveButton = document.getElementById('rescancel');
+
     reportRows.forEach(row => {
         row.addEventListener('click', function () {
             const reportId = row.getAttribute('data-report-id');
@@ -190,23 +195,31 @@ reportRows.forEach(row => {
 
             resolveButton.setAttribute('data-report-id', reportId);
             resolveButton.setAttribute('data-status', status);
+
             if (status === 'Case Closed') {
                 resolveButton.disabled = true;
                 resolveButton.textContent = 'Status Closed';
             } else {
                 resolveButton.disabled = false;
-                resolveButton.textContent = 'Resolve'; 
+                resolveButton.textContent = 'Resolve';
             }
         });
     });
 
-    resolveButton.addEventListener('click', function(event) {
+    // Handle Resolve button click
+    resolveButton.addEventListener('click', function (event) {
         event.preventDefault();
 
-        const reportId = this.getAttribute('data-report-id');
-        const currentStatus = this.getAttribute('data-status');
-        const newStatus = currentStatus === 'Ongoing' ? 'Case Closed' : 'Ongoing';
+        // Close the preview modal and show the resolve confirmation modal
+        previewModal.hide();
+        resolveWarningModal.show();
+    });
 
+
+    confirmResolveButton.addEventListener('click', function () {
+        const reportId = resolveButton.getAttribute('data-report-id');
+        const currentStatus = resolveButton.getAttribute('data-status');
+        const newStatus = currentStatus === 'Ongoing' ? 'Case Closed' : 'Ongoing';
         const csrfToken = getCookie('csrftoken');
 
         fetch(`/toggle-status/${reportId}/`, {
@@ -226,23 +239,33 @@ reportRows.forEach(row => {
                     statusTextElement.textContent = data.status;
                 }
 
-                this.setAttribute('data-status', data.status);
+                resolveButton.setAttribute('data-status', data.status);
                 if (data.status === 'Case Closed') {
-                    this.disabled = true;
-                    this.textContent = 'Status Closed';
+                    resolveButton.disabled = true;
+                    resolveButton.textContent = 'Status Closed';
                 }
             }
 
             if (data.message) {
                 console.log(data.message);
             }
+
+            resolveWarningModal.hide();
             window.location.href = '/reports/';
         })
         .catch(error => {
             console.error('Error in status update:', error);
         });
     });
+
+    // Handle Cancel button in the confirmation modal
+    cancelResolveButton.addEventListener('click', function () {
+        // Close the resolve confirmation modal and reopen the preview modal
+        resolveWarningModal.hide();
+        previewModal.show();
+    });
 });
+
 
 function getCookie(name) {
     let cookieValue = null;
