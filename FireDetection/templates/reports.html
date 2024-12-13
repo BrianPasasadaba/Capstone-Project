@@ -6,11 +6,11 @@
 <header>
     <div class="header-content">
         <div class="header-sb">
-            <button type="button" id="sidebar-toggle" class="btn btn-light" onclick="toggleSidebar()">
-                <div class="btn-sb">
-                    <img src="{% static 'images/sidebar-logo.png' %}" alt="bfp-logo">
-                </div>
-            </button>
+            <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
         <div class="header-nav">
             <span class="navigation-title">
@@ -150,9 +150,11 @@
                         <tr id="noResultsMessage" style="display: none;">
                             <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
                         </tr>      
+
                         <tr id="noFoundFilter" style="display: none;">
                             <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
-                        </tr>                     
+                        </tr>       
+                                      
                     </table>
                     
 
@@ -215,6 +217,7 @@
 {% include "modal_remove_account.html" %}
 {% include "modal_copied_success.html" %}
 {% include "modal_terms_condi.html" %}
+{% include "modal_resolve_confirm.html" %}
 
 {% endblock %}
 
@@ -240,78 +243,16 @@
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-const searchInput = document.getElementById('searchInput');
-const suggestionsBox = document.getElementById('suggestionsBox');
-
-
-const validInputPattern = /^[A-Za-z0-9]*$/;
-searchInput.addEventListener('input', function (e) {
-const inputValue = e.target.value;
-if (!validInputPattern.test(inputValue)) {
-e.target.value = inputValue.slice(0, -1);
-}
-
-updateSuggestions(inputValue);
-});
-
-function updateSuggestions(query) {
-suggestionsBox.innerHTML = ''; 
-if (query.length > 0) {
-const suggestionItem = document.createElement('li');
-suggestionItem.classList.add('dropdown-item');
-suggestionItem.textContent = query; 
-suggestionsBox.appendChild(suggestionItem);
-suggestionsBox.style.display = 'block';
-} else {
-suggestionsBox.style.display = 'none'; 
-}
-}
-document.addEventListener('click', function (event) {
-if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
-suggestionsBox.style.display = 'none';
-}
-});
-});
-
+    
 </script>
-
 <script>
     
-    document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('searchInput');
-    const reportTable = document.getElementById('reportTable');
-    const noResultsMessage = document.getElementById('noResultsMessage');
-
-    searchInput.addEventListener('input', function () {
-        const query = searchInput.value.toLowerCase();
-        let rows = reportTable.getElementsByTagName('tr');
-        let hasVisibleRows = false;
-
-        Array.from(rows).forEach(row => {
-            const cells = Array.from(row.getElementsByTagName('td'));
-            const rowText = cells.map(cell => cell.textContent.toLowerCase()).join(' ');
-
-            if (rowText.includes(query)) {
-                row.style.display = '';
-                hasVisibleRows = true;
-            } else {
-                row.style.display = 'none'; 
-            }
-        });
-
-        if (hasVisibleRows) {
-            noResultsMessage.style.display = 'none';
-        } else {
-            noResultsMessage.style.display = 'table-row';
-        }
-    });
-});
-
 document.getElementById('searchInput').addEventListener('input', function (e) {
-    // Replace invalid characters with an empty string
-    this.value = this.value.replace(/[^a-zA-Z0-9\-\/_]/g, '');
+    // Allow only alphanumeric characters, '.', '-', '/', and ':'
+    this.value = this.value.replace(/[^a-zA-Z0-9.\-\/:]/g, '');
 });
+
+
 
 </script>
     

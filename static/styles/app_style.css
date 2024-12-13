@@ -706,13 +706,16 @@ aside{
 #logout-modal .modal-header,
 #logout-modal .modal-footer,
 #unsaved-warning-modal  .modal-header,
-#unsaved-warning-modal .modal-footer{
+#unsaved-warning-modal .modal-footer,
+#resolve-warning-modal  .modal-header,
+#resolve-warning-modal .modal-footer{
     border-bottom: none;
     border-top: none;
 }
 
 #logout-modal .modal-dialog,
-#unsaved-warning-modal .modal-dialog{
+#unsaved-warning-modal .modal-dialog,
+#resolve-warning-modal .modal-dialog{
     margin-top: 0;
     margin-bottom: 0;
     /* border: #ED7027 1px solid; */
@@ -725,7 +728,8 @@ aside{
 }
 
 #logout-modal .modal-content,
-#unsaved-warning-modal .modal-content{
+#unsaved-warning-modal .modal-content,
+#resolve-warning-modal .modal-content{
     height: auto;
 }
 
@@ -1594,6 +1598,12 @@ input[type="password"]::-ms-clear {
     text-align: left;
     grid-area: ldd;
     padding-top: var(--padding-half);
+}
+
+.ld-table tbody tr .ld-stat{
+    text-align: right;
+    grid-area: ldl;
+    padding-right: var(--padding-half);
 }
 
 
@@ -2921,6 +2931,88 @@ input[type="password"]::-ms-clear {
 #unsaved-warning-modal .modal-footer .btn-stay:hover{
     transform: scale(1.03);
 }
+/* ================================  MODAL RESOLVED ================================  */
+
+#resolve-warning-modal .resolve-logo{
+    display: flex;
+    /* border: #ED7027 1px solid; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+#resolve-warning-modal .resolve-logo i{
+    /* border: #ED7027 1px solid; */
+    font-size: 120px;
+    color: var(--color-secondary);
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    padding-top: var(--padding-1);
+    padding-bottom: var(--padding-half);
+    line-height: 1; /* Adjust line-height to minimize spacing */
+}
+
+#resolve-warning-modal .resolve-logo h3{
+    text-align: center; /* Centers the text horizontally */
+    margin: 0; /* Optional: to remove default margins */
+    margin-top: var(--margin-half);
+    color: var(--color-primary);
+}
+
+#resolve-warning-modal .resolve-logo h3 span{
+    color: red;
+    font-weight: 600;
+}
+
+#resolve-warning-modal .resolve-logo h5{
+    margin-top: var(--margin-half);
+    color: var(--color-tertiary);
+    font-size: 1rem;
+    text-align: center;
+}
+
+#resolve-warning-modal.modal-footer{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--margin-1);
+    padding: var(--padding-1);
+}
+#resolve-warning-modal .modal-footer .mf-button{
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-2);
+}
+
+#resolve-warning-modal .modal-footer .btn-resconfirm{
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 600;
+    border: none;
+    font-size: 1rem;
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
+}
+#resolve-warning-modal .modal-footer .btn-rescancel{
+    background-color: var(--color-default);
+    color: var(--color-primary);
+    font-weight: 600;
+    border: none;
+    font-size: 1rem;
+    border-radius: var(--border-radius-input);
+    transition: var(--tran-03);
+}
+
+#resolve-warning-modal .modal-footer .btn-resconfirm:hover,
+#resolve-warning-modal .modal-footer .btn-rescancel:hover{
+    transform: scale(1.03);
+}
 
 /* ============================== ACCOUNTS MODAL============================== */
 #add-account-modal{
@@ -3032,7 +3124,7 @@ input[type="password"]::-ms-clear {
         width: 90%;
     }
     .detect-card{
-        width: 60%;
+        width: 75%;
     }
 }
 
@@ -3215,7 +3307,7 @@ input[type="password"]::-ms-clear {
     }
 /* ================================  <700-HEADER ================================  */
    .header-content {
-        grid-template-columns: 80px 1fr; /* Adjust to account for the fixed sidebar */
+        grid-template-columns: 75px 1fr; /* Adjust to account for the fixed sidebar */
         grid-template-rows: 1fr;
         grid-template-areas:
             "hs hn"; /* Different areas for the elements */
@@ -3226,6 +3318,7 @@ input[type="password"]::-ms-clear {
         justify-content: space-around;
         align-items: center;
         padding: 0;
+        padding-right: var(--padding-half);
     }
     .header-nav h1{
         padding-top: var(--padding-1);
@@ -3266,6 +3359,51 @@ input[type="password"]::-ms-clear {
         width: 22px;
         height: 22px;
     }
+
+    .ham-menu {
+        /* border: var(--color-sidebar) solid 2px; */
+        margin-top: var(--margin-half);
+        height: 35px;
+        width: 35px;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .ham-menu span {
+        height: 3px;
+        width: 80%; /* Adjust width for better proportions */
+        background-color: #ED7027;
+        border-radius: 25px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: var(--tran-03);
+    }
+    
+    .ham-menu span:nth-child(1) {
+        top: 25%; /* Position the first line */
+    }
+    
+    .ham-menu span:nth-child(3) {
+        top: 75%; /* Position the third line */
+    }
+    
+    .ham-menu.active span:nth-child(1) {
+        top: 50%; /* Move to center */
+        transform: translate(-50%, -50%) rotate(45deg); /* Rotate for "X" */
+    }
+    
+    .ham-menu.active span:nth-child(2) {
+        opacity: 0; /* Hide the middle line */
+    }
+    
+    .ham-menu.active span:nth-child(3) {
+        top: 50%; /* Move to center */
+        transform: translate(-50%, -50%) rotate(-45deg); /* Rotate for "X" */
+    }
+
+
     aside{
         height: calc(100vh - 90px);
         top: 90px;
@@ -3359,11 +3497,14 @@ input[type="password"]::-ms-clear {
         width: 100%;
     }
     .ab-table thead th{
-        font-size: 0.8rem!important;
+        /* border: 1px solid orange; */
+        font-size: 0.7rem!important;
         font-weight: 500!important;
         word-wrap: break-word;
         white-space: normal;
         word-break: break-word;
+        padding-left: 0rem;
+        padding-right: 0rem;
     }
     .rb-table thead th{
         font-size: 0.8rem!important;
@@ -3371,6 +3512,8 @@ input[type="password"]::-ms-clear {
         word-wrap: break-word;
         white-space: normal;
         word-break: break-word;
+        padding-left: 0rem;
+        padding-right: 0rem;
     }
     .ab-table tbody td,
     .rb-table tbody td{
@@ -3379,8 +3522,18 @@ input[type="password"]::-ms-clear {
         word-wrap: break-word;
         white-space: normal;
         word-break: break-word;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+        overflow-x: auto;
     }
-    .ab-table td:last-child h6,
+    .ab-table td:last-child h6{
+        width: 100%;
+        padding: 0;
+        font-size: 0.6rem!important;
+        border-radius: var(--border-radius-button-half);
+        padding-top: var(--padding-1);
+        padding-bottom: var(--padding-1);
+    }
     .rb-table td:last-child h6{
         width: 100%;
         padding: 0;

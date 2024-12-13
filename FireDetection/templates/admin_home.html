@@ -5,12 +5,12 @@
 {% block content %}
 <header>
     <div class="header-content">
-        <div class="header-sb">
-            <button type="button" id="sidebar-toggle" class="btn btn-light" onclick="toggleSidebar()">
-                <div class="btn-sb">
-                    <img src="{% static 'images/sidebar-logo.png' %}" alt="bfp-logo">
-                </div>
-            </button>
+        <div class="header-sb" >
+            <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
         <div class="header-nav">
             <span class="navigation-title">
@@ -117,7 +117,11 @@
                                 <td colspan="6">No accounts available.</td>
                             </tr>
                             {% endfor %}
+ 
                         </tbody>
+                        <tr id="noFoundFilter" style="display: none;">
+                            <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                        </tr>  
                     </table>         
 
                 </div>

@@ -216,8 +216,12 @@
                         <div class="form-column">
                             <div class="proof-image" style="gap: 0.5rem;">
                                 <label for="proof" class="form-label">Proof of Fire Incident</label>
-                                <img id="proof"  name="proof" class="img-fluid" style="max-width: 500px;" alt="Proof Image">
-                                <input type="file" class="form-control" id="modal-proof" name="input-proof" accept="image/jpeg, image/jpg, image/png, image/gif" >
+
+                                <div id="proofs">
+                                    <img id="proof"  name="proof" class="img-fluid" style="max-width: 500px;" alt="No Proof to Show" >
+                                </div>
+
+                                <input type="file" class="form-control" id="modal-proof" name="input-proof" accept="image/jpeg, image/jpg, image/png, image/gif" style="display: none;">
                             </div>
                         </div>
                     </div>
@@ -246,6 +250,51 @@
 <script src="{% static 'js/prev_report_search.js' %}"></script>
 <script src="{% static 'js/format_numbers.js' %}"></script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const editButtons = document.querySelectorAll(".btn.btn-edit");
+
+    editButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            const reportId = button.id.split("-").pop();
+
+            const proofImage = document.querySelector(`#proof[name="proof"]`);
+            const proofInput = document.querySelector(`#modal-proof[name="input-proof"]`);
+
+            if (proofImage) {
+                proofImage.style.display = "none";
+            } else {
+                console.error(`Proof image not found for report ID ${reportId}`);
+            }
+
+            if (proofInput) {
+                proofInput.style.display = "block";
+            } else {
+                console.error(`Proof input not found for report ID ${reportId}`);
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const imageUrl = "{{ report.proof }}"; 
+
+    const proofContainer = document.querySelector("div[style='display: none;']");
+    const proofImage = document.querySelector("#proof");
+
+    if (imageUrl) {
+        proofImage.src = imageUrl;
+
+        proofContainer.style.display = "flex"; 
+        proofContainer.style.justifyContent = "center"; 
+        proofContainer.style.alignItems = "center"; 
+    } else {
+        console.warn("No proof data available to display.");
+    }
+});
+
+
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

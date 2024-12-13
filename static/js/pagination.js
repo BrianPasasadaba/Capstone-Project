@@ -1,20 +1,33 @@
-
-    document.getElementById('accountSearchInput').addEventListener('keyup', function() {
+document.getElementById('accountSearchInput').addEventListener('keyup', function() {
     var searchValue = this.value.toLowerCase();
     var tableRows = document.querySelectorAll('#accountTable tr');
+    var noResultsMessage = document.getElementById('noFoundFilter'); // Get the "No Data to Display" row
+
+    let resultsFound = false; // Flag to track if any row matches the search
 
     tableRows.forEach(function(row) {
-        var name = row.cells[1].textContent.toLowerCase();
-        var role = row.cells[2].textContent.toLowerCase();
-        var email = row.cells[3].textContent.toLowerCase();
+        var name = row.cells[1]?.textContent.toLowerCase() || '';
+        var role = row.cells[2]?.textContent.toLowerCase() || '';
+        var email = row.cells[3]?.textContent.toLowerCase() || '';
 
+        // Check if any of the cells contain the search value
         if (name.includes(searchValue) || role.includes(searchValue) || email.includes(searchValue)) {
-            row.style.display = '';  
+            row.style.display = '';  // Show row if it matches
+            resultsFound = true; // At least one match was found
         } else {
-            row.style.display = 'none';  
+            row.style.display = 'none';  // Hide row if it doesn't match
         }
     });
+
+    // Show or hide the "No Data to Display" message based on the search results
+    if (resultsFound) {
+        noResultsMessage.style.display = 'none';  // Hide "No Data" message if results are found
+    } else {
+        noResultsMessage.style.display = '';  // Show "No Data" message if no results are found
+    }
 });
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const rowsPerPage = 10;

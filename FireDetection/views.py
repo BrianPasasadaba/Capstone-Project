@@ -599,12 +599,13 @@ def logout_view(request):
 
 @login_required
 def reports_view(request):
-    reports = reports = InitialReport.objects.order_by('fir_number')
+    reports = InitialReport.objects.order_by('-date_reported')
 
     context = {
         'reports': reports,
     }
     return render(request, 'reports.html', context)
+
 
 
 @login_required

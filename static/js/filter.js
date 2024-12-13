@@ -1,19 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
     const dropdownItems = document.querySelectorAll('.dropdown-item');
+    const searchInput = document.getElementById('searchInput'); // Search input element
     const tableBody = document.querySelector('#reportTable');
     const pagination = document.querySelector('.pagination');
     const rowsPerPage = 10; // Number of rows per page
     let currentPage = 1;
-    const noFoundMessage = document.getElementById('noFoundFilter'); // Get the no results message element
+    const noFoundMessage = document.getElementById('noFoundFilter'); // No results message row
 
     // Extract all rows' data into an array
     const allRowsData = Array.from(document.querySelectorAll('#reportTable tr')).map(row => ({
         element: row,
         date: new Date(row.dataset.date),
         status: row.querySelector('h6') ? row.querySelector('h6').textContent.trim() : null,
+        textContent: row.textContent.toLowerCase(), // Store the full row text for search
     }));
 
-    let currentFilteredData = [...allRowsData]; // Holds the data after filtering/sorting
+    let currentFilteredData = [...allRowsData]; // Holds filtered and searched data
 
     // Function to render the current page
     function renderPage(data, page = 1) {
@@ -64,23 +66,27 @@ document.addEventListener('DOMContentLoaded', function () {
         pagination.appendChild(nextItem);
     }
 
-    // Function to filter and sort data
-    function filterAndSortData(criteria) {
-        if (criteria === 'Latest' || criteria === 'Oldest') {
-            currentFilteredData.sort((a, b) => {
-                return criteria === 'Latest' ? b.date - a.date : a.date - b.date;
+    // Function to apply filter and search together
+    function applyFilterAndSearch(filterCriteria, searchTerm) {
+        // Apply filter
+        let filteredData = [...allRowsData];
+        if (filterCriteria === 'Latest' || filterCriteria === 'Oldest') {
+            filteredData.sort((a, b) => {
+                return filterCriteria === 'Latest' ? b.date - a.date : a.date - b.date;
             });
-        } else if (criteria === 'Ongoing' || criteria === 'Case Resolved') {
-            currentFilteredData = allRowsData.filter(rowData => {
-                return criteria === 'Ongoing'
-                    ? rowData.status === 'Ongoing'
-                    : rowData.status === 'Case Closed';
-            });
-        } else {
-            currentFilteredData = [...allRowsData]; // Reset to all rows for "All" criteria
+        } else if (filterCriteria === 'Ongoing' || filterCriteria === 'Case Resolved') {
+            filteredData = filteredData.filter(rowData =>
+                filterCriteria === 'Ongoing' ? rowData.status === 'Ongoing' : rowData.status === 'Case Closed'
+            );
         }
 
-        // Always render page 1 after filtering/sorting
+        // Apply search
+        const lowerCaseSearchTerm = searchTerm.toLowerCase().trim();
+        currentFilteredData = filteredData.filter(rowData =>
+            rowData.textContent.includes(lowerCaseSearchTerm)
+        );
+
+        // Render the first page of results
         currentPage = 1;
         renderPage(currentFilteredData, currentPage);
     }
@@ -89,8 +95,16 @@ document.addEventListener('DOMContentLoaded', function () {
     dropdownItems.forEach(item => {
         item.addEventListener('click', function (e) {
             const filterCriteria = e.target.textContent.trim();
-            filterAndSortData(filterCriteria);
+            const searchTerm = searchInput.value; // Include the current search term
+            applyFilterAndSearch(filterCriteria, searchTerm);
         });
+    });
+
+    // Event listener for search input
+    searchInput.addEventListener('input', function () {
+        const searchTerm = searchInput.value; // Current search term
+        const activeFilter = document.querySelector('.dropdown-item.active')?.textContent.trim() || 'All';
+        applyFilterAndSearch(activeFilter, searchTerm);
     });
 
     // Event listener for pagination
