@@ -62,26 +62,46 @@
 
 <script>
     // Utility function to clean the input value based on allowed characters
-    const cleanInput = (event, allowedChars) => event.target.value = event.target.value.replace(new RegExp(`[^${allowedChars}]`, 'g'), '');
+    const cleanInput = (event, allowedChars) => {
+        const input = event.target;
+        let value = input.value;
+
+        // Check if the first character is invalid (not a letter or number)
+        if (/[^A-Za-z0-9]/.test(value.charAt(0)) && value.length === 1) {
+            return; // Don't update if the first character is invalid and it's the only character
+        }
+
+        // If the first character is invalid but there are more characters, allow editing
+        if (value.length > 1 && /[^A-Za-z0-9]/.test(value.charAt(0))) {
+            // Remove the invalid first character and continue processing
+            value = value.slice(1);
+        }
+
+        // Replace all invalid characters except the first one if it's valid
+        input.value = value.replace(new RegExp(`[^${allowedChars}]`, 'g'), '');
+    };
 
     // Generic validation function for name and email fields
     const validateFirstChar = (input, pattern, message) => {
         const firstChar = input.value.charAt(0);
         if (!pattern.test(firstChar)) {
-            input.setCustomValidity(message);
-            input.value = ''; // Optionally clear input or leave the value intact
-            return false;
+            input.setCustomValidity(message);  // Set error message
+            input.value = ''; // Clear the input value if invalid
+            return false; // Invalid first character
         }
-        input.setCustomValidity('');
-        return true;
+        input.setCustomValidity(''); // Reset custom validity if valid
+        return true; // First character is valid
     };
 
     // Name field validation
     document.getElementById("modal-name").addEventListener("input", function(event) {
         const input = event.target;
-        if (validateFirstChar(input, /^[A-Za-z]/, "First character must be an alphabet")) {
-            cleanInput(event, 'A-Za-z\\s.,-'); // Clean input if valid
+        // Validate first character (must be alphabet or number)
+        if (!validateFirstChar(input, /^[A-Za-z]/, "First character must be an alphabet")) {
+            return; // Don't proceed if the first character is invalid
         }
+        // Clean all non-alphabet characters (allow spaces, dots, commas, hyphens)
+        cleanInput(event, 'A-Za-z\\s.,-');
     });
 
     // Email field validation
@@ -89,18 +109,28 @@
         const input = event.target;
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
-        // Remove spaces from email input
+        // Validate first character (must be alphabet)
+        if (!validateFirstChar(input, /^[A-Za-z]/, "First character must be an alphabet")) {
+            return; // Don't proceed if the first character is invalid
+        }
+
+        // Clean spaces from the email input
         input.value = input.value.replace(/\s+/g, '');
+
+        // Clean all invalid characters for email (only allow valid email characters)
+        cleanInput(event, 'A-Za-z0-9._%+-@.-');
         
-        if (validateFirstChar(input, /^[A-Za-z]/, "First character must be an alphabet")) {
-            if (!emailPattern.test(input.value)) {
-                input.setCustomValidity("Please enter a valid email address.");
-            } else {
-                input.setCustomValidity(""); // Reset custom validity
-            }
+        // Check if the email is valid
+        if (!emailPattern.test(input.value)) {
+            input.setCustomValidity("Please enter a valid email address.");
+        } else {
+            input.setCustomValidity(""); // Reset custom validity
         }
     });
 </script>
+
+
+
 
 
 <script>

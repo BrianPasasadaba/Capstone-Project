@@ -1,6 +1,21 @@
 // Function to clean the input value (to remove disallowed characters)
 function cleanInput(event, allowedChars) {
-    event.target.value = event.target.value.replace(new RegExp(`[^${allowedChars}]`, 'g'), ''); // Remove invalid characters
+    const input = event.target;
+    let value = input.value;
+
+    // Check if the first character is invalid (space or special character)
+    if (/[^A-Za-z0-9]/.test(value.charAt(0)) && value.length === 1) {
+        return; // Don't update if the first character is invalid
+    }
+
+    // If the first character is invalid but there are more characters, allow editing
+    if (value.length > 1 && /[^A-Za-z0-9]/.test(value.charAt(0))) {
+        // Remove the invalid first character
+        value = value.slice(1);
+    }
+    
+    // Replace invalid characters anywhere except the first one
+    input.value = value.replace(new RegExp(`[^${allowedChars}]`, 'g'), '');
 }
 
 // Attach to specific input fields
