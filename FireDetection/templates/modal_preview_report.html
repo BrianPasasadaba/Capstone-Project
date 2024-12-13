@@ -55,7 +55,7 @@
                         
                         <div class="form-column" style="position: relative;">
                             <label for="involved" class="form-label">Involved</label>
-                            <input type="text" class="form-control" id="involved-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" style="display:none;">
+                            <input type="text" class="form-control" id="involved-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
                             <input type="text" class="form-control" name="involved" id="involved">
                             <ul class="dropdown-menu" id="involved-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
                                 <!-- Options will be populated here dynamically -->
@@ -82,7 +82,7 @@
 
                         <div class="form-column" style="position: relative;">
                             <label for="alarm-dec" class="form-label">Alarm Status Declared by</label>
-                            <input type="text" class="form-control" id="alarm-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" style="display:none;">
+                            <input type="text" class="form-control" id="alarm-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
                             <input type="text" class="form-control" name="alarm-dec" id="alarm-dec">
                             <ul class="dropdown-menu" id="alarm-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
                                 <!-- Options will be populated here dynamically -->
@@ -105,7 +105,7 @@
                         </div>
                         <div class="form-column" style="position: relative;">
                             <label for="funder-dec" class="form-label">Fire Under Control Declared by</label>
-                            <input type="text" class="form-control" id="funder-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" style="display:none;">
+                            <input type="text" class="form-control" id="funder-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
                             <input type="text" class="form-control" name="funder-dec" id="funder-dec">
                             <ul class="dropdown-menu" id="funder-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
                                 <!-- Options will be populated here dynamically -->
@@ -124,7 +124,7 @@
                         </div>
                         <div class="form-column" style="position: relative;">
                             <label for="fout-dec" class="form-label">Fire Out Declared by</label>
-                            <input type="text" class="form-control" id="fout-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" style="display:none;">
+                            <input type="text" class="form-control" id="fout-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
                             <input type="text" class="form-control" name="fout-dec" id="fout-dec">
                             <ul class="dropdown-menu" id="fout-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
                                 <!-- Options will be populated here dynamically -->
@@ -164,7 +164,7 @@
                     <div class="form-row">
                         <div class="form-column" style="position: relative;">
                             <label for="ground" class="form-label">Ground Commander</label>
-                            <input type="text" class="form-control" id="ground-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" style="display:none;">
+                            <input type="text" class="form-control" id="ground-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
                             <input type="text" class="form-control" name="ground" id="ground">
                             <ul class="dropdown-menu" id="ground-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
                                 <!-- Options will be populated here dynamically -->
@@ -181,7 +181,7 @@
                     <div class="form-row">
                         <div class="form-column" style="position: relative;">
                             <label for="safety" class="form-label">Safety Officer</label>
-                            <input type="text" class="form-control" id="safety-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" style="display:none;">
+                            <input type="text" class="form-control" id="safety-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
                             <input type="text" class="form-control" name="safety" id="safety">
                             <ul class="dropdown-menu" id="safety-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
                                 <!-- Options will be populated here dynamically -->
@@ -198,7 +198,7 @@
                     <div class="form-row">
                         <div class="form-column" style="position: relative;">
                             <label for="sender" class="form-label">Name of Sender</label>
-                            <input type="text" class="form-control" id="sender-search" placeholder="Search..." autocomplete="off" maxlength="30" pattern="[A-Za-z\s]+" style="display:none;">
+                            <input type="text" class="form-control" id="sender-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
                             <input type="text" class="form-control" name="sender" id="sender">
                             <ul class="dropdown-menu" id="sender-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
                                 <!-- Options will be populated here dynamically -->
@@ -249,6 +249,38 @@
 {% endfor %}
 <script src="{% static 'js/prev_report_search.js' %}"></script>
 <script src="{% static 'js/format_numbers.js' %}"></script>
+
+<script>
+ // Function to clean the input value (to remove disallowed characters)
+function cleanInput(event, allowedChars) {
+    event.target.value = event.target.value.replace(new RegExp(`[^${allowedChars}]`, 'g'), ''); // Remove invalid characters
+}
+
+// Attach to specific input fields
+document.addEventListener("DOMContentLoaded", function() {
+    const fields = [
+        { id: "loc", allowedChars: 'A-Za-z0-9.,\\s-' },
+        { id: "involved-search", allowedChars: 'A-Za-z\\s.,/-' },
+        { id: "owner", allowedChars: 'A-Za-z\\s.,-' },
+        { id: "alarm-dec-search", allowedChars: 'A-Za-z\\s.,-' },
+        { id: "funder-dec-search", allowedChars: 'A-Za-z\\s.,-' },
+        { id: "fout-dec-search", allowedChars: 'A-Za-z\\s.,-' },
+        { id: "ground-search", allowedChars: 'A-Za-z\\s.,-' },
+        { id: "safety-search", allowedChars: 'A-Za-z\\s.,-' },
+        { id: "sender-search", allowedChars: 'A-Za-z\\s.,-' }
+    ];
+
+    fields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (element) {
+            element.addEventListener("input", function(event) {
+                cleanInput(event, field.allowedChars);
+            });
+        }
+    });
+});
+
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -315,41 +347,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
-
-<script>
-    document.getElementById('involved').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-
-    document.getElementById('owner').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-
-    document.getElementById('alarm-dec').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-
-    document.getElementById('fout-dec').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-
-    document.getElementById('ground').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-
-    document.getElementById('safety').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-
-    document.getElementById('sender').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-
-    document.getElementById('funder-dec').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-</script>
-
 
 <script>
 function copyModalContent() {

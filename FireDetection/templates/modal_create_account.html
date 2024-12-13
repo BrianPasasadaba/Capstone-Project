@@ -17,7 +17,7 @@
                         <div class="form-column">
                             <label for="modal-name" class="form-label">Name<i class="bi bi-asterisk"></i></label>
                             <input type="text" class="form-control" name="name" id="modal-name" placeholder="e.g. Juan Dela Cruz" 
-                                   maxlength="60" pattern="[A-Za-z\s]+" title="Only letters are allowed" required>
+                                   maxlength="60" required>
                         </div>
                     </div>
                     
@@ -26,7 +26,7 @@
                             <label for="modal-email" class="form-label">Email<i class="bi bi-asterisk"></i></label>
                             <input type="email" class="form-control" name="email" id="modal-email" placeholder="e.g. juandc@gmail.com" maxlength="100" required>
                         </div>
-                    </div>                    
+                    </div>                
 
                     <div class="form-row">
                         <div class="form-column">
@@ -59,6 +59,49 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Utility function to clean the input value based on allowed characters
+    const cleanInput = (event, allowedChars) => event.target.value = event.target.value.replace(new RegExp(`[^${allowedChars}]`, 'g'), '');
+
+    // Generic validation function for name and email fields
+    const validateFirstChar = (input, pattern, message) => {
+        const firstChar = input.value.charAt(0);
+        if (!pattern.test(firstChar)) {
+            input.setCustomValidity(message);
+            input.value = ''; // Optionally clear input or leave the value intact
+            return false;
+        }
+        input.setCustomValidity('');
+        return true;
+    };
+
+    // Name field validation
+    document.getElementById("modal-name").addEventListener("input", function(event) {
+        const input = event.target;
+        if (validateFirstChar(input, /^[A-Za-z]/, "First character must be an alphabet")) {
+            cleanInput(event, 'A-Za-z\\s.,-'); // Clean input if valid
+        }
+    });
+
+    // Email field validation
+    document.getElementById("modal-email").addEventListener('input', function(event) {
+        const input = event.target;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        // Remove spaces from email input
+        input.value = input.value.replace(/\s+/g, '');
+        
+        if (validateFirstChar(input, /^[A-Za-z]/, "First character must be an alphabet")) {
+            if (!emailPattern.test(input.value)) {
+                input.setCustomValidity("Please enter a valid email address.");
+            } else {
+                input.setCustomValidity(""); // Reset custom validity
+            }
+        }
+    });
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -205,21 +248,5 @@
     }
 });
 
-
-</script>
-
-<script>
-    document.getElementById('modal-name').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-
-    document.getElementById('modal-email').addEventListener('input', function() {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailPattern.test(this.value)) {
-        this.setCustomValidity("Please enter a valid email address.");
-    } else {
-        this.setCustomValidity("");
-    }
-});
 
 </script>
