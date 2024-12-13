@@ -333,11 +333,8 @@ def export_initial_report(request):
     ]
 
     header_font = Font(bold=True, color="000000")
-
     data_fill = PatternFill(start_color="DF4B40", end_color="DF4B40", fill_type="solid")
- 
     center_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-
     thick_border = Border(
         left=Side(border_style="thin", color="000000"),
         right=Side(border_style="thin", color="000000"),
@@ -372,15 +369,14 @@ def export_initial_report(request):
     for row_num, report in enumerate(reports, 4):
 
         no_value = row_num - 3  
-        
-        station_value = "Santa Rosa City"
-        
+        station_value = "Santa Rosa City"  
+
         no_cell = ws.cell(row=row_num, column=1, value=no_value)
         no_cell.fill = data_fill
         no_cell.alignment = center_alignment
         no_cell.border = thick_border  
-        
-        station_cell = ws.cell(row=row_num, column=2, value=station_value)  
+
+        station_cell = ws.cell(row=row_num, column=2, value=station_value)
         station_cell.fill = data_fill
         station_cell.alignment = center_alignment  
         station_cell.border = thick_border
@@ -388,9 +384,15 @@ def export_initial_report(request):
         for col_num, field in enumerate(fields, 3):
             value = report[field]
 
+            if value is None or (isinstance(value, str) and value.strip() == ""):
+                if field in ['no_of_fatality', 'no_of_injured', 'no_of_families_affected', 'no_of_establishments', 'no_of_fire_trucks']:
+                    value = 0
+                else:
+                    value = "None"  
+
             if isinstance(value, datetime):
-                value = value.replace(tzinfo=None)  
-            
+                value = value.replace(tzinfo=None)
+
             cell = ws.cell(row=row_num, column=col_num, value=value)
             cell.fill = data_fill
             cell.alignment = center_alignment
@@ -398,13 +400,13 @@ def export_initial_report(request):
 
     for col in range(2, len(headers) + 1):
         ws.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 20
-
     ws.column_dimensions['A'].width = 5  
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="initial_report_data.xlsx"'
     wb.save(response)
     return response
+
 
 
 @login_required
@@ -599,12 +601,12 @@ def logout_view(request):
 
 @login_required
 def reports_view(request):
-    reports = InitialReport.objects.order_by('-date_reported')
-
+    reports = InitialReport.objects.order_by('-date_reported', '-time_reported')
     context = {
         'reports': reports,
     }
     return render(request, 'reports.html', context)
+
 
 
 

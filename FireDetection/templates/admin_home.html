@@ -179,6 +179,25 @@
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/pagination.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('accountTable');
+        const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+        rows.sort((rowA, rowB) => {
+            const nameA = rowA.cells[1].textContent.trim().toLowerCase();
+            const nameB = rowB.cells[1].textContent.trim().toLowerCase();
+
+            return nameA.localeCompare(nameB);
+        });
+
+        rows.forEach(row => tableBody.appendChild(row));
+    });
+</script>
+
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const filterItems = document.querySelectorAll('.dropdown-filter .dropdown-item'); 

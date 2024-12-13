@@ -383,19 +383,48 @@ function customAlert(message) {
 
 function copyModalContent() {
     const form = document.getElementById('create-report-form');
+    const locationField = document.getElementById('crloc');
+    const detectField = document.getElementById('crdetect');
+    const dateField = document.getElementById('crdate');
     let contentToCopy = "";
 
-    // Ensure all input fields are blurred to update their values
+    let valid = true;
+    clearErrorMessages(); // Clear previous error messages
+
+    // Validation: Check required fields before proceeding
+    if (!locationField.value.trim()) {
+        showErrorMessage(locationField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Location is required.');
+        valid = false;
+    }
+
+    if (!detectField.value.trim()) {
+        showErrorMessage(detectField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Time Reported is required.');
+        valid = false;
+    }
+
+    if (!dateField.value.trim()) {
+        showErrorMessage(dateField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Date Reported is required.');
+        valid = false;
+    }
+
+    if (!valid) {
+        scrollToFirstInvalidField(); // Scroll to the first invalid field
+        return; // Stop the function if validation fails
+    }
+
+    // Proceed to copy if validation passes
     Array.from(form.elements).forEach(element => {
         if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
             element.blur(); // Update the field value by blurring
         }
     });
 
-    // Use a timeout to allow the blur event to process
+    // After validation passes, show the modal
+    customAlert("Content copied to the clipboard");
+
     setTimeout(() => {
         // Default header with 'None' for empty values
-        let crloc = document.getElementById('crloc').value.trim() || "None";
+        let crloc = locationField.value.trim() || "None";
         let crinvolved = document.getElementById('crinvolved').value.trim() || "None";
 
         // Add the default header to the content
@@ -403,7 +432,6 @@ function copyModalContent() {
 
         // Iterate over form elements and build content for non-empty fields
         Array.from(form.elements).forEach(element => {
-            // Exclude CSRF token, buttons, and file input fields
             if (
                 element.name && 
                 element.name !== "csrfmiddlewaretoken" && 
@@ -415,7 +443,7 @@ function copyModalContent() {
                 const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
                 const value = element.value.trim();
 
-                if (value) {  // Only include if the value is not empty
+                if (value) {
                     if (labelText === "Involved" && crinvolved === "None") {
                         contentToCopy += `INVOLVED: None\n`;
                     } else {
@@ -427,13 +455,48 @@ function copyModalContent() {
 
         // Copy the formatted content to the clipboard
         navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
-            customAlert("Content copied to clipboard!");
+            console.log("Content copied to clipboard!");
         }).catch((err) => {
             console.error("Could not copy text: ", err);
-            customAlert("Failed to copy content.");
         });
     }, 100); // Adjust the timeout duration if necessary
 }
+
+// Validation helper functions
+function showErrorMessage(field, message) {
+    const errorElement = document.createElement('small');
+    errorElement.innerHTML = message; // Use innerHTML to render the icon
+    errorElement.style.color = 'red';
+    errorElement.style.fontSize = '0.8rem';
+    errorElement.style.display = 'block';
+    errorElement.style.textAlign = 'left';
+    errorElement.style.paddingTop = '0.2rem';
+    field.parentNode.appendChild(errorElement); 
+    field.classList.add('is-invalid'); 
+}
+
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll('.is-invalid');
+    errorMessages.forEach(function (field) {
+        field.classList.remove('is-invalid');
+    });
+
+    const errorText = document.querySelectorAll('small');
+    errorText.forEach(function (msg) {
+        msg.remove(); 
+    });
+}
+
+function scrollToFirstInvalidField() {
+    const firstInvalidField = document.querySelector('.is-invalid');
+    if (firstInvalidField) {
+        firstInvalidField.scrollIntoView({
+            behavior: 'smooth', // Smooth scrolling
+            block: 'center' // Scroll the field to the center of the viewport
+        });
+    }
+}
+
 
 </script>
     
