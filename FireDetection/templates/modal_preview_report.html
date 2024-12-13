@@ -251,47 +251,46 @@
 <script src="{% static 'js/format_numbers.js' %}"></script>
 
 <script>
-function cleanInput(event, allowedChars) {
-    const input = event.target;
-    let value = input.value;
-
-    // Check if the first character is a space or special character
-    if (/[^A-Za-z0-9]/.test(value.charAt(0)) && value.length === 1) {
-        return; // Don't update if the first character is invalid
-    }
-
-    // If the first character is invalid but there are more characters, allow editing
-    if (value.length > 1 && /[^A-Za-z0-9]/.test(value.charAt(0))) {
-        // Remove the invalid first character and continue processing
-        value = value.slice(1);
+    function cleanInput(event, allowedChars) {
+        const input = event.target;
+        let value = input.value;
+    
+        // Remove leading and trailing spaces after typing is finished
+        if (event.inputType === "insertText" || event.inputType === "deleteContentBackward") {
+            // Replace invalid characters dynamically while allowing spaces
+            const regex = new RegExp(`[^${allowedChars}]`, "g");
+            value = value.replace(regex, '');
+        }
+    
+        // Replace multiple spaces with a single space
+        value = value.replace(/\s+/g, ' ');
+    
+        // Update the input value
+        input.value = value;
     }
     
-    // Replace invalid characters (except the first one if it's valid)
-    input.value = value.replace(new RegExp(`[^${allowedChars}]`, 'g'), '');
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    const fields = {
-        loc: 'A-Za-z0-9.,\\s-',
-        'involved-search': 'A-Za-z\\s.,/-',
-        owner: 'A-Za-z\\s.,-',
-        'alarm-dec-search': 'A-Za-z\\s.,-',
-        'funder-dec-search': 'A-Za-z\\s.,-',
-        'fout-dec-search': 'A-Za-z\\s.,-',
-        'ground-search': 'A-Za-z\\s.,-',
-        'safety-search': 'A-Za-z\\s.,-',
-        'sender-search': 'A-Za-z\\s.,-'
-    };
-
-    Object.keys(fields).forEach(id => {
-        const field = document.getElementById(id);
-        if (field) {
-            field.addEventListener("input", event => cleanInput(event, fields[id]));
-        }
+    document.addEventListener("DOMContentLoaded", function() {
+        const fields = {
+            loc: 'A-Za-z0-9.,\\s-',
+            'involved-search': 'A-Za-z\\s.,/-',
+            owner: 'A-Za-z\\s.,-',
+            'alarm-dec-search': 'A-Za-z\\s.,-',
+            'funder-dec-search': 'A-Za-z\\s.,-',
+            'fout-dec-search': 'A-Za-z\\s.,-',
+            'ground-search': 'A-Za-z\\s.,-',
+            'safety-search': 'A-Za-z\\s.,-',
+            'sender-search': 'A-Za-z\\s.,-'
+        };
+    
+        Object.keys(fields).forEach(id => {
+            const field = document.getElementById(id);
+            if (field) {
+                field.addEventListener("input", event => cleanInput(event, fields[id]));
+            }
+        });
     });
-});
-
-</script>
+    </script>
+    
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
