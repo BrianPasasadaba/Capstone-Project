@@ -180,8 +180,13 @@ header, .container, .container-fluid, .btn-group {
 
 /* Background color when hovered, clicked (active), or focused */
 .drop-profile .dropdown-item:focus {
-    background-color: #ED7027; /* Your custom background color */
-    color: white; /* Change text color for better contrast */
+    background-color: #ED7027;
+    color: white;
+}
+
+.drop-profile .dropdown-item.active {
+    background-color: black;
+    color: white;
 }
 
 .navigation-title{
@@ -405,6 +410,7 @@ input[type="password"]::-ms-clear {
 
 #terms-condition-modal .modal-dialog{
     max-width: 650px;
+    min-width: 250px;
 }
 #terms-condition-modal .modal-body{
     padding: 1.5rem 3rem;
@@ -2330,18 +2336,19 @@ input[type="password"]::-ms-clear {
     position: sticky;
     top: 0;
     background-color: var(--color-default);
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--color-sidebar);
 }
 
 .ab-table th,
 .ab-table td{
     
-    padding: 10px 8px;
+    padding: 10px 5px;
     border-bottom: 1px solid var(--color-placeholder);
     word-break: break-all;
     text-align: center;
+    font-size: 1rem;
 }
 
 .ab-table td:last-child h6{

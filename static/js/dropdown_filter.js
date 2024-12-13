@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const filterDropdown = document.querySelectorAll('.dropdown-menu .dropdown-item');
+    const filterDropdown = document.querySelectorAll('#dropdown-filter .dropdown-item');
     let previousSelected = null; // Keep track of the previously selected item
 
     filterDropdown.forEach(item => {

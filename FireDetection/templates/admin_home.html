@@ -63,7 +63,7 @@
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                               Filter
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <ul class="dropdown-menu dropdown-filter" aria-labelledby="dropdownMenuButton1" id="dropdown-filter">
                               <li><a class="dropdown-item" href="#">Verified</a></li>
                               <li><a class="dropdown-item" href="#">Unverified</a></li>
                             </ul>
@@ -181,7 +181,7 @@
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const filterItems = document.querySelectorAll('.dropdown-menu .dropdown-item'); 
+    const filterItems = document.querySelectorAll('.dropdown-filter .dropdown-item'); 
     const tableRows = document.querySelectorAll('#accountTable tr'); 
     filterItems.forEach(item => {
         item.addEventListener('click', function (e) {
