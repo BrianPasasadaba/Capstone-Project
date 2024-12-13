@@ -353,31 +353,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
 function copyModalContent() {
-    const form = document.getElementById('report-preview-form'); 
+    const form = document.getElementById('report-preview-form');
     const previewModal = document.getElementById('report-preview-modal');
     const customAlertModal = document.getElementById('customAlertModal');
-    const customAlertOkButton = customAlertModal.querySelector('.btn-disconfirm'); 
+    const customAlertOkButton = customAlertModal.querySelector('.btn-disconfirm');
     let contentToCopy = "";
 
-    // Ensure all input fields are blurred to update their values
+
+    const locationField = document.getElementById('loc');
+    const detectField = document.getElementById('detect');
+    const dateField = document.getElementById('date');
+    let valid = true;
+
+    clearErrorMessages();
+
+    if (!locationField.value.trim()) {
+        showErrorMessage(locationField, 'Location is required.');
+        valid = false;
+    }
+
+    if (!detectField.value.trim()) {
+        showErrorMessage(detectField, 'Time Reported is required.');
+        valid = false;
+    }
+
+    if (!dateField.value.trim()) {
+        showErrorMessage(dateField, 'Date is required.');
+        valid = false;
+    }
+
+    if (!valid) {
+        scrollToFirstInvalidField(); // Scroll to the first invalid field
+        return; // Stop the function if validation fails
+    }
+
     Array.from(form.elements).forEach(element => {
         if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
             element.blur(); // Update the field value by blurring
         }
     });
 
-    // Use a timeout to allow the blur event to process
+
     setTimeout(() => {
-        // Default header with 'None' for empty values
-        let loc = document.getElementById('loc')?.value.trim() || "None";
+        let loc = locationField?.value.trim() || "None";
         let involved = document.getElementById('involved')?.value.trim() || "None";
 
-        // Add the default header to the content
         contentToCopy += `SANTA ROSA CITY FIRE STATION reporting a 1070 (${involved}) at (${loc}), Santa Rosa City, Laguna, R4A\n`;
 
-        // Iterate over form elements and build content for non-empty fields
         Array.from(form.elements).forEach(element => {
-            // Exclude CSRF token, buttons, file input fields, and hidden fields like report-id
             if (
                 element.name && 
                 element.name !== "csrfmiddlewaretoken" && 
@@ -398,44 +421,40 @@ function copyModalContent() {
                     value = element.value.trim();
                 }
 
-                // Check value is not empty and not "None"
+                // Check if value is not empty and not "None"
                 if (value && value !== "None") {
-                    if (labelText === "Involved" && involved === "None") {
-                        contentToCopy += `INVOLVED: None\n`;
-                    } else {
-                        contentToCopy += `${labelText}: ${value}\n`;
-                    }
+                    contentToCopy += `${labelText}: ${value}\n`;
                 }
             }
         });
 
-    navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
-        console.log("Content copied to clipboard.");
+        navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
+            console.log("Content copied to clipboard.");
 
-        const previewModalInstance = bootstrap.Modal.getInstance(previewModal);
-        if (previewModalInstance) {
-            previewModal.addEventListener(
-                "hidden.bs.modal",
-                function () {
-                    console.log("Preview modal hidden. Showing custom alert modal...");
-                    const customAlertInstance = new bootstrap.Modal(customAlertModal);
-                    customAlertInstance.show();
-                },
-                { once: true }
-            );
-
-            previewModalInstance.hide(); 
-        } else {
-            console.log("No preview modal instance found. Showing custom alert modal directly...");
-            const customAlertInstance = new bootstrap.Modal(customAlertModal);
-            customAlertInstance.show();
-        }
-    }).catch((err) => {
-        console.error("Failed to copy content: ", err);
-        alert("Failed to copy content.");
-    });
+            const previewModalInstance = bootstrap.Modal.getInstance(previewModal);
+            if (previewModalInstance) {
+                previewModal.addEventListener(
+                    "hidden.bs.modal",
+                    function () {
+                        console.log("Preview modal hidden. Showing custom alert modal...");
+                        const customAlertInstance = new bootstrap.Modal(customAlertModal);
+                        customAlertInstance.show();
+                    },
+                    { once: true }
+                );
+                previewModalInstance.hide();
+            } else {
+                console.log("No preview modal instance found. Showing custom alert modal directly...");
+                const customAlertInstance = new bootstrap.Modal(customAlertModal);
+                customAlertInstance.show();
+            }
+        }).catch((err) => {
+            console.error("Failed to copy content: ", err);
+            alert("Failed to copy content.");
+        });
     }, 100);
 
+    // Custom alert button logic
     customAlertOkButton.addEventListener(
         "click",
         function () {
@@ -447,9 +466,45 @@ function copyModalContent() {
             const previewModalInstance = new bootstrap.Modal(previewModal);
             previewModalInstance.show();
         },
-        { once: true } 
+        { once: true }
     );
 }
+
+// Validation helper functions
+function showErrorMessage(field, message) {
+    const errorElement = document.createElement('small');
+    errorElement.innerHTML = message; // Use innerHTML to render the icon
+    errorElement.style.color = 'red';
+    errorElement.style.fontSize = '0.8rem';
+    errorElement.style.display = 'block';
+    errorElement.style.textAlign = 'left';
+    errorElement.style.paddingTop = '0.2rem';
+    field.parentNode.appendChild(errorElement); 
+    field.classList.add('is-invalid'); 
+}
+
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll('.is-invalid');
+    errorMessages.forEach(function (field) {
+        field.classList.remove('is-invalid');
+    });
+
+    const errorText = document.querySelectorAll('small');
+    errorText.forEach(function (msg) {
+        msg.remove(); 
+    });
+}
+
+function scrollToFirstInvalidField() {
+    const firstInvalidField = document.querySelector('.is-invalid');
+    if (firstInvalidField) {
+        firstInvalidField.scrollIntoView({
+            behavior: 'smooth', // Smooth scrolling
+            block: 'center' // Scroll the field to the center of the viewport
+        });
+    }
+}
+
 
 
 </script>
