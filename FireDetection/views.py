@@ -557,8 +557,10 @@ def register_view(request):
 
         return redirect('admin_home')
 
-    accounts = CustomUser.objects.all()
+        
+    accounts = CustomUser.objects.all().order_by('name') 
     return render(request, 'admin_home.html', {'accounts': accounts})
+
 
 
 def toggle_status(request, report_id):
