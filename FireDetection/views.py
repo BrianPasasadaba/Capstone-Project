@@ -81,22 +81,32 @@ def fetch_names(request):
 @csrf_protect
 @require_POST
 def transfer_report(request, temp_report_id):
-    try:
-        temp_report = tempReports.objects.get(id=temp_report_id)
+    cache_key = f'transfer_report_{temp_report_id}'
 
-        new_initial_report = InitialReport.objects.create(
-            where=temp_report.where,
-            date_reported=temp_report.date,
-            time_reported=temp_report.time_detected,
-            proof=temp_report.proof,
-        )
+    if cache.add(cache_key, 'true', timeout=60):
+        try:
+            temp_report = tempReports.objects.get(id=temp_report_id)
 
-        return JsonResponse({'status': 'success', 'report_id': new_initial_report.id})
+            new_initial_report = InitialReport.objects.create(
+                where=temp_report.where,
+                date_reported=temp_report.date,
+                time_reported=temp_report.time_detected,
+                proof=temp_report.proof,
+            )
 
-    except tempReports.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Temp report not found'}, status=404)
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            return JsonResponse({'status': 'success', 'report_id': new_initial_report.id})
+
+        except tempReports.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Temp report not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        finally:
+            cache.delete(cache_key)
+    else:
+        return JsonResponse({
+            'status': 'error', 
+            'message': 'Report transfer in progress. Please wait.'
+        }, status=409)
     
 @csrf_protect
 @require_POST
