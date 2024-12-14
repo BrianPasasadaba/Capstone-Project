@@ -1,6 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const filterDropdown = document.querySelectorAll('.dropdown-menu .dropdown-item');
+    const filterDropdown = document.querySelectorAll('#dropdown-filter .dropdown-item');
     let previousSelected = null; // Keep track of the previously selected item
+
+    // Automatically select the first item by default
+    if (filterDropdown.length > 0) {
+        const firstItem = filterDropdown[0];
+        firstItem.style.backgroundColor = 'rgb(237, 112, 39)'; // --color-secondary color
+        firstItem.style.color = 'white';  // Set text color to white
+        firstItem.style.pointerEvents = 'none'; // Disable the first item
+        previousSelected = firstItem; // Save the first item as the selected one
+    }
 
     filterDropdown.forEach(item => {
         item.addEventListener('click', function(event) {
