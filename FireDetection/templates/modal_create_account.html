@@ -116,96 +116,82 @@
 
 
 <script>
-    // Combined DOMContentLoaded event for better structure
     document.addEventListener('DOMContentLoaded', function () {
-        const addAccountButton = document.querySelector('.add-account'); 
+        const addAccountButton = document.querySelector('.add-account');
         const nameField = document.getElementById('modal-name');
         const emailField = document.getElementById('modal-email');
         const roleField = document.querySelector('select[name="role"]');
         const contactField = document.getElementById('modal-contact');
         const form = document.getElementById('add-account-form');
-
-        // Event listener for addAccountButton click (form validation)
-        addAccountButton.addEventListener('click', function (event) {
+    
+        // Event listener for Add Account button
+        addAccountButton?.addEventListener('click', function (event) {
             let valid = true;
-            clearErrorMessages(); 
-
-            // Validate Name
+            clearErrorMessages();
+    
             if (!nameField.value.trim()) {
-                showErrorMessage(nameField, 'Name is required.');
-                valid = false;
-            } else if (nameField.value.trim().length < 3) {
-                showErrorMessage(nameField, 'Name must be at least 3 characters long.');
+                showError(nameField, 'Name is required.');
                 valid = false;
             }
-
-            // Validate Email
+    
             if (!emailField.value.trim()) {
-                showErrorMessage(emailField, 'Email is required.');
+                showError(emailField, 'Email is required.');
                 valid = false;
             } else if (!validateEmail(emailField.value.trim())) {
-                showErrorMessage(emailField, 'Invalid email format. (example@gmail.com)');
+                showError(emailField, 'Invalid email format. (example@gmail.com)');
                 valid = false;
             }
-
-            // Validate Role
+    
             if (!roleField.value) {
-                showErrorMessage(roleField, 'Role is required.');
+                showError(roleField, 'Role is required.');
                 valid = false;
             }
-
-            // Validate Contact Number
+    
             if (!contactField.value.trim()) {
-                showErrorMessage(contactField, 'Contact number is required.');
-                valid = false;
-            } else if (!contactField.value.trim().startsWith("09")) {
-                showErrorMessage(contactField, 'Contact number must start with 09.');
+                showError(contactField, 'Contact number is required.');
                 valid = false;
             } else if (!/^\d{11}$/.test(contactField.value.trim())) {
-                showErrorMessage(contactField, 'Contact number must be exactly 11 digits.');
+                showError(contactField, 'Contact number must be 11 digits.');
                 valid = false;
             }
-
-            // If form is invalid, prevent form submission
+    
             if (!valid) {
                 event.preventDefault();
             }
         });
-
-        // Event listener for form submit (async validation for email and phone number)
-        form.addEventListener('submit', function (event) {
+    
+        // Event listener for form submission
+        form?.addEventListener('submit', function (event) {
             event.preventDefault();
             const email = emailField.value.trim();
             const phone_number = contactField.value.trim();
-
-            // Clear previous error messages
-            removeError(emailField);
-            removeError(contactField);
-
-            // Validate Email and Phone Number
+    
+            clearErrorMessages();
+    
             if (!email) {
                 showError(emailField, 'Email is required.');
                 return;
             }
+    
             if (!phone_number) {
                 showError(contactField, 'Phone number is required.');
                 return;
             }
-
-            // Check if email or phone number already exists
+    
+            // Check email and phone number uniqueness
             fetch(`/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.email_exists) {
                         showError(emailField, 'This email is already registered.');
                     }
-
+    
                     if (data.phone_exists) {
                         showError(contactField, 'This phone number is already registered.');
                     }
-
+    
                     if (!data.email_exists && !data.phone_exists) {
-                        form.submit();
+                        form.submit(); // Submit the form if no errors exist
                     }
                 })
                 .catch(error => {
@@ -214,43 +200,41 @@
                     showError(contactField, 'An error occurred while validating the phone number. Please try again.');
                 });
         });
-
-        // General function to show error messages
-        function showErrorMessage(field, message) {
-            const errorElement = document.createElement('small');
-            errorElement.textContent = message;
-            errorElement.style.color = 'red';
-            errorElement.style.fontSize = '0.75rem';
-            errorElement.className = 'error-message';
-            field.parentNode.appendChild(errorElement);
-            field.classList.add('is-invalid');
-        }
-
-        // Function to remove error messages
-        function removeError(field) {
-            const existingError = field.parentNode.querySelector('.error-message');
+    
+        // Helper function to show error messages
+        function showError(field, message) {
+            let existingError = field.parentNode.querySelector('.error-message');
             if (existingError) {
                 existingError.remove();
             }
-            field.classList.remove('is-invalid');
+    
+            const errorElement = document.createElement('small');
+            errorElement.className = 'error-message';
+            errorElement.textContent = message;
+            errorElement.style.color = 'red';
+            errorElement.style.fontSize = '0.8rem';
+            field.parentNode.appendChild(errorElement);
+            field.classList.add('is-invalid');
         }
-
-        // Function to validate email format
-        function validateEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        // Function to clear all error messages
+    
+        // Helper function to clear all error messages
         function clearErrorMessages() {
             const invalidFields = document.querySelectorAll('.is-invalid');
             invalidFields.forEach(function (field) {
                 field.classList.remove('is-invalid');
             });
+    
             const errorMessages = document.querySelectorAll('.error-message');
             errorMessages.forEach(function (msg) {
                 msg.remove();
             });
         }
+    
+        // Helper function to validate email
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
     });
-</script>
+    </script>
+    
