@@ -986,7 +986,6 @@ input[type="password"]::-ms-clear {
     border: var(--color-secondary) 0.5px solid;
     width: 100%;
     height: 100%;
-    min-width: 550px;
     border-radius:var(--border-radius-sidebar);
     padding: var(--padding-1);
     display: flex;
@@ -1013,7 +1012,7 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-1);
 }
 
-.chart-header h1{
+.chart-header h2{
     font-weight: 600;
 }
 
@@ -1515,7 +1514,7 @@ input[type="password"]::-ms-clear {
     border: var(--color-secondary) 0.5px solid;
     width: 100%;
     height: 100%;
-    min-width: 450px;
+    min-width: 400px;
     border-radius:var(--border-radius-sidebar);
     padding: var(--padding-1);
     display: flex;
@@ -1556,7 +1555,7 @@ input[type="password"]::-ms-clear {
     text-align: start;
 }
 
-.ld-table thead th h1{
+.ld-table thead th h2{
     font-weight: 600 !important;
 }
 
