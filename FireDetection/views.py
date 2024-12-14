@@ -943,7 +943,8 @@ def get_unresolved_reports(request):
             'date': report.date.strftime('%B %d, %Y'),
             'time': report.time_detected.strftime('%I:%M %p'),
             'proof': report.proof,
-            'status': report.status
+            'status': report.status,
+            'full_time': report.time_detected.isoformat(),
         })
     
     return JsonResponse(report_details, safe=False)

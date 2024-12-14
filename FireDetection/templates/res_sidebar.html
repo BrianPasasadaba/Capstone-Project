@@ -631,7 +631,7 @@ document.addEventListener('DOMContentLoaded', async function(){
             newToast.innerHTML = `
                 <div class="toast-header">
                     <strong class="me-auto">A Fire has been Detected!</strong>
-                    <small class="text-muted">${getTimeElapsed(reportDetails.time)}</small>
+                    <small class="text-muted">${getTimeElapsed(reportDetails.full_time)}</small>
                 </div>
                 <div class="toast-body">
                     <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#${modalId}"  aria-label="Close">
