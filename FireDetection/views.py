@@ -57,6 +57,8 @@ import mimetypes
 import os
 from asgiref.sync import sync_to_async
 import asyncio
+from django.db import transaction
+from django.db.models import F
 
 
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
@@ -78,35 +80,40 @@ def fetch_names(request):
         return JsonResponse({'names': list(users)}, safe=False)
 
 
+
 @csrf_protect
 @require_POST
+@transaction.atomic
 def transfer_report(request, temp_report_id):
-    cache_key = f'transfer_report_{temp_report_id}'
+    try:
+        # Use select_for_update to lock the row and prevent concurrent modifications
+        temp_report = tempReports.objects.select_for_update().get(id=temp_report_id)
+        
+        # Check if the report has already been transferred
+        if temp_report.is_transferred:
+            return JsonResponse({
+                'status': 'error', 
+                'message': 'Report has already been transferred'
+            }, status=400)
+        
+        # Create the new initial report
+        new_initial_report = InitialReport.objects.create(
+            where=temp_report.where,
+            date_reported=temp_report.date,
+            time_reported=temp_report.time_detected,
+            proof=temp_report.proof,
+        )
+        
+        # Mark the temp report as transferred
+        temp_report.is_transferred = True
+        temp_report.save()
 
-    if cache.add(cache_key, 'true', timeout=60):
-        try:
-            temp_report = tempReports.objects.get(id=temp_report_id)
+        return JsonResponse({'status': 'success', 'report_id': new_initial_report.id})
 
-            new_initial_report = InitialReport.objects.create(
-                where=temp_report.where,
-                date_reported=temp_report.date,
-                time_reported=temp_report.time_detected,
-                proof=temp_report.proof,
-            )
-
-            return JsonResponse({'status': 'success', 'report_id': new_initial_report.id})
-
-        except tempReports.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Temp report not found'}, status=404)
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-        finally:
-            cache.delete(cache_key)
-    else:
-        return JsonResponse({
-            'status': 'error', 
-            'message': 'Report transfer in progress. Please wait.'
-        }, status=409)
+    except tempReports.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Temp report not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
 @csrf_protect
 @require_POST
