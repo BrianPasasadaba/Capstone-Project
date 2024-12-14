@@ -560,8 +560,17 @@ document.addEventListener('DOMContentLoaded', async function(){
     
         async handleUpdate(data) {
             if (data.type === 'new_temp_report') {
-                location.reload();
-                
+                try {
+                    const response = await fetch(`/get-temp-report-details/${data.report_id}/`);
+                    const reportDetails = await response.json();
+                    
+                    if (reportDetails) {
+                        this.playNotificationSound();
+                        this.createToastAndModal(reportDetails);
+                    }
+                } catch (error) {
+                    console.error('Error fetching report details:', error);
+                }
             } else if (data.type === 'updated_record') {
                 try {
                     const response = await fetch(`/get-temp-report-details/${data.report_id}/`);
@@ -573,7 +582,19 @@ document.addEventListener('DOMContentLoaded', async function(){
                 } catch (error) {
                     console.error('Error fetching updated report details:', error);
                 }
+            } 
+        }
+
+        playNotificationSound() {
+            // Create audio element if it doesn't exist
+            if (!this.notificationAudio) {
+                this.notificationAudio = new Audio('{% static "sounds/alarm.mp3"}'); // Adjust path as needed
             }
+            
+            // Play the sound
+            this.notificationAudio.play().catch(error => {
+                console.warn('Error playing notification sound:', error);
+            });
         }
     
         updateExistingToastAndModal(reportId, reportDetails) {
