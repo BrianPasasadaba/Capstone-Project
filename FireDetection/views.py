@@ -945,3 +945,17 @@ def get_unresolved_reports(request):
         })
     
     return JsonResponse(report_details, safe=False)
+
+def broadcast_report_action(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        report_id = data.get('report_id')
+        
+        # Use your existing SSE mechanism to broadcast
+        cache.set('latest_update', {
+            'type': 'report_action',
+            'report_id': report_id
+        })
+        cache.set('last_update_time', time.time())
+        
+        return JsonResponse({'status': 'success'})

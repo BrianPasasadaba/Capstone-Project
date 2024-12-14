@@ -389,6 +389,8 @@ document.addEventListener('DOMContentLoaded', async function(){
                                 toast.remove();
                             }
 
+                            this.sendReportActionBroadcast(reportId);
+
                             // Reload the page to remove the dismissed report
                             location.reload();
                         } else {
@@ -456,6 +458,8 @@ document.addEventListener('DOMContentLoaded', async function(){
                                 toast.remove();
                             }
 
+                            this.sendReportActionBroadcast(reportId);
+
                             // Reload the page to remove the report
                             location.reload();
                         } else {
@@ -484,7 +488,23 @@ document.addEventListener('DOMContentLoaded', async function(){
                 }
             });
         }
-    
+        
+        sendReportActionBroadcast(reportId) {
+            // This depends on your SSE implementation
+            // You might use fetch, WebSocket, or your existing SSE method
+            fetch('/broadcast-report-action/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({ 
+                    type: 'report_action', 
+                    report_id: reportId 
+                })
+            });
+        }
+
         async handleUpdate(data) {
             if (data.type === 'new_temp_report') {
                 try {
@@ -508,6 +528,8 @@ document.addEventListener('DOMContentLoaded', async function(){
                 } catch (error) {
                     console.error('Error fetching updated report details:', error);
                 }
+            } else if (data.type === 'report_action') {
+                this.handleReportAction(data);
             }
         }
     
@@ -527,6 +549,30 @@ document.addEventListener('DOMContentLoaded', async function(){
                 if (dateElement) dateElement.textContent = reportDetails.date;
                 if (locationElement) locationElement.textContent = reportDetails.where;
                 if (timeElement) timeElement.textContent = reportDetails.time;
+            }
+        }
+
+        handleReportAction(data) {
+            // Remove toast and modal for the specific report
+            const toast = document.querySelector(`.toast[data-report-id="${data.report_id}"]`);
+            const modal = document.querySelector(`.modal[data-report-id="${data.report_id}"]`);
+        
+            // Hide and remove toast
+            if (toast) {
+                const toastInstance = bootstrap.Toast.getInstance(toast);
+                if (toastInstance) {
+                    toastInstance.hide();
+                }
+                toast.remove();
+            }
+        
+            // Hide and remove modal
+            if (modal) {
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+                modal.remove();
             }
         }
     
