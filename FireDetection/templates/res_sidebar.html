@@ -512,6 +512,7 @@ document.addEventListener('DOMContentLoaded', async function(){
                     const reportDetails = await response.json();
                     
                     if (reportDetails) {
+                        this.playNotificationSound();
                         this.createToastAndModal(reportDetails);
                     }
                 } catch (error) {
@@ -531,6 +532,18 @@ document.addEventListener('DOMContentLoaded', async function(){
             } else if (data.type === 'report_action') {
                 this.handleReportAction(data);
             }
+        }
+
+        playNotificationSound() {
+            // Create audio element if it doesn't exist
+            if (!this.notificationAudio) {
+                this.notificationAudio = new Audio('{% static "sounds/alarm.mp3"}'); // Adjust path as needed
+            }
+            
+            // Play the sound
+            this.notificationAudio.play().catch(error => {
+                console.warn('Error playing notification sound:', error);
+            });
         }
     
         updateExistingToastAndModal(reportId, reportDetails) {
