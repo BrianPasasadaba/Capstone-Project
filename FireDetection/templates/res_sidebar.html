@@ -464,6 +464,9 @@ document.addEventListener('DOMContentLoaded', async function(){
                             location.reload();
                         } else {
                             console.error('Failed to transfer report');
+                            // Optionally show a user-friendly error message
+                            alert(result.message || 'Failed to transfer report. It may have already been processed.');
+                            location.reload();
                         }
                     } catch (error) {
                         console.error('Error transferring report:', error);
