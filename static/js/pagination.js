@@ -56,20 +56,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const nextButton = document.querySelector('.pagination .next');
         const page2Button = document.getElementById('button2');
         const page3Button = document.getElementById('button3');
-
+    
+        // Enable or disable the "Previous" button
         prevButton.classList.toggle('disabled', currentPage === 1);
-
+    
+        // Enable or disable the "Next" button
         nextButton.classList.toggle('disabled', currentPage === totalPages);
-
-        page2Button.classList.toggle('disabled', rows.length < rowsPerPage); 
-        
-        page3Button.classList.toggle('disabled', rows.length < (rowsPerPage * 2)); 
-
+    
+        // Enable or disable the "Page 2" button based on row count
+        if (page2Button) {
+            page2Button.classList.toggle('disabled', rows.length < rowsPerPage + 1); // At least 11 rows required
+        }
+    
+        // Enable or disable the "Page 3" button based on row count
+        if (page3Button) {
+            page3Button.classList.toggle('disabled', rows.length < rowsPerPage * 2 + 1); // At least 21 rows required
+        }
+    
+        // Update active class for the current page
         document.querySelectorAll('.pagination .page-item').forEach((pageButton) => {
             pageButton.classList.remove('active');
         });
-        document.querySelector(`.pagination .page-item[data-page="${currentPage}"]`).classList.add('active');
+        document.querySelector(`.pagination .page-item[data-page="${currentPage}"]`)?.classList.add('active');
     }
+    
 
     document.querySelector('.pagination .prev').addEventListener('click', function(e) {
         e.preventDefault();
