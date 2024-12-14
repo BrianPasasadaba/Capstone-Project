@@ -125,40 +125,50 @@
         const form = document.getElementById('add-account-form');
     
         // Event listener for Add Account button
-        addAccountButton?.addEventListener('click', function (event) {
-            let valid = true;
-            clearErrorMessages();
-    
-            if (!nameField.value.trim()) {
-                showError(nameField, 'Name is required.');
-                valid = false;
-            }
-    
-            if (!emailField.value.trim()) {
-                showError(emailField, 'Email is required.');
-                valid = false;
-            } else if (!validateEmail(emailField.value.trim())) {
-                showError(emailField, 'Invalid email format. (example@gmail.com)');
-                valid = false;
-            }
-    
-            if (!roleField.value) {
-                showError(roleField, 'Role is required.');
-                valid = false;
-            }
-    
-            if (!contactField.value.trim()) {
-                showError(contactField, 'Contact number is required.');
-                valid = false;
-            } else if (!/^\d{11}$/.test(contactField.value.trim())) {
-                showError(contactField, 'Contact number must be 11 digits.');
-                valid = false;
-            }
-    
-            if (!valid) {
-                event.preventDefault();
-            }
-        });
+    addAccountButton?.addEventListener('click', function (event) {
+        let valid = true;
+        clearErrorMessages();
+
+        // Name validation: Ensure it has at least 3 characters
+        if (!nameField.value.trim()) {
+            showError(nameField, 'Name is required.');
+            valid = false;
+        } else if (nameField.value.trim().length < 3) {
+            showError(nameField, 'Name must be at least 3 characters long.');
+            valid = false;
+        }
+
+        // Email validation: Ensure it's not empty and valid format
+        if (!emailField.value.trim()) {
+            showError(emailField, 'Email is required.');
+            valid = false;
+        } else if (!validateEmail(emailField.value.trim())) {
+            showError(emailField, 'Invalid email format. (example@gmail.com)');
+            valid = false;
+        }
+
+        // Role validation: Ensure a role is selected
+        if (!roleField.value) {
+            showError(roleField, 'Role is required.');
+            valid = false;
+        }
+
+        // Contact number validation
+        if (!contactField.value.trim()) {
+            showError(contactField, 'Contact number is required.');
+            valid = false;
+        } else if (!/^\d{11}$/.test(contactField.value.trim())) {
+            showError(contactField, 'Contact number must be 11 digits.');
+            valid = false;
+        } else if (!/^09/.test(contactField.value.trim())) { // Ensure '09' at the start
+            showError(contactField, 'Contact number must start with 09.');
+            valid = false;
+        }
+
+        if (!valid) {
+            event.preventDefault();
+        }
+    });
     
         // Event listener for form submission
         form?.addEventListener('submit', function (event) {
