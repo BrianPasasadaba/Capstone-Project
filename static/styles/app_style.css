@@ -410,10 +410,11 @@ input[type="password"]::-ms-clear {
 
 #terms-condition-modal .modal-dialog{
     max-width: 650px;
-    min-width: 250px;
 }
 #terms-condition-modal .modal-body{
-    padding: 1.5rem 3rem;
+    padding: 0.5rem 3rem;
+    max-height: 90vh;
+    overflow: auto;
 }
 
 #terms-condition-modal .terms-text h4{
