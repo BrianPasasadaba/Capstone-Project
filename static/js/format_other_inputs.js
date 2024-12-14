@@ -1,7 +1,18 @@
-// Function to clean the input value (allow single spaces only)
-function cleanInput(event, allowedChars) {
+// Combined cleanInput function
+const cleanInput = (event, allowedChars) => {
     const input = event.target;
     let value = input.value;
+
+    // Check if the first character is invalid (not a letter or number)
+    if (/[^A-Za-z0-9]/.test(value.charAt(0)) && value.length === 1) {
+        return; // Don't update if the first character is invalid and it's the only character
+    }
+
+    // If the first character is invalid but there are more characters, allow editing
+    if (value.length > 1 && /[^A-Za-z0-9]/.test(value.charAt(0))) {
+        // Remove the invalid first character and continue processing
+        value = value.slice(1);
+    }
 
     // Dynamically allow only the defined characters (including spaces)
     const regex = new RegExp(`[^${allowedChars}]`, 'g');

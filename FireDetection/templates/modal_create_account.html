@@ -61,83 +61,74 @@
 </div>
 
 <script>
-    // Utility function to clean the input value based on allowed characters
-    const cleanInput = (event, allowedChars) => {
+    // Combined cleanInput function with email validation
+    const cleanInput = (event, allowedChars, pattern = null) => {
         const input = event.target;
         let value = input.value;
-
-        // Check if the first character is invalid (not a letter or number)
-        if (/[^A-Za-z0-9]/.test(value.charAt(0)) && value.length === 1) {
+    
+        // Only block the first character if it's an invalid non-alphabetic character for the 'name' field
+        if (input.id === "modal-name" && /[^A-Za-z]/.test(value.charAt(0)) && value.length === 1) {
             return; // Don't update if the first character is invalid and it's the only character
         }
-
+    
         // If the first character is invalid but there are more characters, allow editing
-        if (value.length > 1 && /[^A-Za-z0-9]/.test(value.charAt(0))) {
-            // Remove the invalid first character and continue processing
-            value = value.slice(1);
+        if (value.length > 1 && /[^A-Za-z]/.test(value.charAt(0)) && input.id === "modal-name") {
+            value = value.slice(1); // Remove the invalid first character
         }
-
-        // Replace all invalid characters except the first one if it's valid
-        input.value = value.replace(new RegExp(`[^${allowedChars}]`, 'g'), '');
+    
+        // Dynamically allow only the defined characters
+        const regex = new RegExp(`[^${allowedChars}]`, 'g');
+        value = value.replace(regex, ''); // Remove disallowed characters
+    
+        // Replace multiple spaces with a single space
+        value = value.replace(/\s+/g, ' ');
+    
+        // Allow leading space while typing but trim final input
+        input.value = value.trimStart();
+    
+        // Check if additional pattern validation is required (e.g., email format)
+        if (pattern) {
+            const isValid = pattern.test(input.value);
+            input.setCustomValidity(isValid ? "" : "Please enter a valid value.");
+        }
     };
-
-    // Generic validation function for name and email fields
-    const validateFirstChar = (input, pattern, message) => {
-        const firstChar = input.value.charAt(0);
-        if (!pattern.test(firstChar)) {
-            input.setCustomValidity(message);  // Set error message
-            input.value = ''; // Clear the input value if invalid
-            return false; // Invalid first character
-        }
-        input.setCustomValidity(''); // Reset custom validity if valid
-        return true; // First character is valid
-    };
-
-    // Name field validation
-    document.getElementById("modal-name").addEventListener("input", function(event) {
-        const input = event.target;
-        // Validate first character (must be alphabet or number)
-        if (!validateFirstChar(input, /^[A-Za-z]/, "First character must be an alphabet")) {
-            return; // Don't proceed if the first character is invalid
-        }
-        // Clean all non-alphabet characters (allow spaces, dots, commas, hyphens)
-        cleanInput(event, 'A-Za-z\\s.,-');
-    });
-
-    // Email field validation
-    document.getElementById("modal-email").addEventListener('input', function(event) {
-        const input = event.target;
+    
+    // Attach to specific input fields
+    document.addEventListener("DOMContentLoaded", function () {
+        // Updated email regex to allow numbers as the first character
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
-        // Validate first character (must be alphabet)
-        if (!validateFirstChar(input, /^[A-Za-z]/, "First character must be an alphabet")) {
-            return; // Don't proceed if the first character is invalid
-        }
-
-        // Clean spaces from the email input
-        input.value = input.value.replace(/\s+/g, '');
-
-        // Clean all invalid characters for email (only allow valid email characters)
-        cleanInput(event, 'A-Za-z0-9._%+-@.-');
-        
-        // Check if the email is valid
-        if (!emailPattern.test(input.value)) {
-            input.setCustomValidity("Please enter a valid email address.");
-        } else {
-            input.setCustomValidity(""); // Reset custom validity
-        }
+        const fields = [
+            { id: "modal-name", allowedChars: 'A-Za-z.,\\s-', pattern: null }, // Name validation without numbers
+            { id: "modal-email", allowedChars: 'A-Za-z0-9._%+-@.', pattern: emailPattern } // Updated email validation
+        ];
+    
+        fields.forEach(({ id, allowedChars, pattern }) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener("input", function (event) {
+                    cleanInput(event, allowedChars, pattern);
+                });
+            }
+        });
     });
 </script>
 
 
 <script>
+    // Combined DOMContentLoaded event for better structure
     document.addEventListener('DOMContentLoaded', function () {
+<<<<<<< HEAD
         const addAccountButton = document.querySelector('.add-account');
+=======
+        const addAccountButton = document.querySelector('.add-account'); 
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
         const nameField = document.getElementById('modal-name');
         const emailField = document.getElementById('modal-email');
         const roleField = document.querySelector('select[name="role"]');
         const contactField = document.getElementById('modal-contact');
         const form = document.getElementById('add-account-form');
+<<<<<<< HEAD
     
         // Event listener for Add Account button
         addAccountButton?.addEventListener('click', function (event) {
@@ -170,10 +161,56 @@
                 valid = false;
             }
     
+=======
+
+        // Event listener for addAccountButton click (form validation)
+        addAccountButton.addEventListener('click', function (event) {
+            let valid = true;
+            clearErrorMessages(); 
+
+            // Validate Name
+            if (!nameField.value.trim()) {
+                showErrorMessage(nameField, 'Name is required.');
+                valid = false;
+            } else if (nameField.value.trim().length < 3) {
+                showErrorMessage(nameField, 'Name must be at least 3 characters long.');
+                valid = false;
+            }
+
+            // Validate Email
+            if (!emailField.value.trim()) {
+                showErrorMessage(emailField, 'Email is required.');
+                valid = false;
+            } else if (!validateEmail(emailField.value.trim())) {
+                showErrorMessage(emailField, 'Invalid email format. (example@gmail.com)');
+                valid = false;
+            }
+
+            // Validate Role
+            if (!roleField.value) {
+                showErrorMessage(roleField, 'Role is required.');
+                valid = false;
+            }
+
+            // Validate Contact Number
+            if (!contactField.value.trim()) {
+                showErrorMessage(contactField, 'Contact number is required.');
+                valid = false;
+            } else if (!contactField.value.trim().startsWith("09")) {
+                showErrorMessage(contactField, 'Contact number must start with 09.');
+                valid = false;
+            } else if (!/^\d{11}$/.test(contactField.value.trim())) {
+                showErrorMessage(contactField, 'Contact number must be exactly 11 digits.');
+                valid = false;
+            }
+
+            // If form is invalid, prevent form submission
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             if (!valid) {
                 event.preventDefault();
             }
         });
+<<<<<<< HEAD
     
         // Event listener for form submission
         form?.addEventListener('submit', function (event) {
@@ -183,23 +220,47 @@
     
             clearErrorMessages();
     
+=======
+
+        // Event listener for form submit (async validation for email and phone number)
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const email = emailField.value.trim();
+            const phone_number = contactField.value.trim();
+
+            // Clear previous error messages
+            removeError(emailField);
+            removeError(contactField);
+
+            // Validate Email and Phone Number
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             if (!email) {
                 showError(emailField, 'Email is required.');
                 return;
             }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             if (!phone_number) {
                 showError(contactField, 'Phone number is required.');
                 return;
             }
+<<<<<<< HEAD
     
             // Check email and phone number uniqueness
+=======
+
+            // Check if email or phone number already exists
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             fetch(`/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.email_exists) {
                         showError(emailField, 'This email is already registered.');
                     }
+<<<<<<< HEAD
     
                     if (data.phone_exists) {
                         showError(contactField, 'This phone number is already registered.');
@@ -207,6 +268,15 @@
     
                     if (!data.email_exists && !data.phone_exists) {
                         form.submit(); // Submit the form if no errors exist
+=======
+
+                    if (data.phone_exists) {
+                        showError(contactField, 'This phone number is already registered.');
+                    }
+
+                    if (!data.email_exists && !data.phone_exists) {
+                        form.submit();
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
                     }
                 })
                 .catch(error => {
@@ -215,6 +285,7 @@
                     showError(contactField, 'An error occurred while validating the phone number. Please try again.');
                 });
         });
+<<<<<<< HEAD
     
         // Helper function to show error messages
         function showError(field, message) {
@@ -233,17 +304,52 @@
         }
     
         // Helper function to clear all error messages
+=======
+
+        // General function to show error messages
+        function showErrorMessage(field, message) {
+            const errorElement = document.createElement('small');
+            errorElement.textContent = message;
+            errorElement.style.color = 'red';
+            errorElement.style.fontSize = '0.75rem';
+            errorElement.className = 'error-message';
+            field.parentNode.appendChild(errorElement);
+            field.classList.add('is-invalid');
+        }
+
+        // Function to remove error messages
+        function removeError(field) {
+            const existingError = field.parentNode.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            field.classList.remove('is-invalid');
+        }
+
+        // Function to validate email format
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Function to clear all error messages
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
         function clearErrorMessages() {
             const invalidFields = document.querySelectorAll('.is-invalid');
             invalidFields.forEach(function (field) {
                 field.classList.remove('is-invalid');
             });
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             const errorMessages = document.querySelectorAll('.error-message');
             errorMessages.forEach(function (msg) {
                 msg.remove();
             });
         }
+<<<<<<< HEAD
     
         // Helper function to validate email
         function validateEmail(email) {
@@ -256,3 +362,7 @@
 
 
 
+=======
+    });
+</script>
+>>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
