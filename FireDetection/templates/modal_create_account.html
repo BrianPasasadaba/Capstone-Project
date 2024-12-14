@@ -118,50 +118,12 @@
 <script>
     // Combined DOMContentLoaded event for better structure
     document.addEventListener('DOMContentLoaded', function () {
-<<<<<<< HEAD
-        const addAccountButton = document.querySelector('.add-account');
-=======
         const addAccountButton = document.querySelector('.add-account'); 
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
         const nameField = document.getElementById('modal-name');
         const emailField = document.getElementById('modal-email');
         const roleField = document.querySelector('select[name="role"]');
         const contactField = document.getElementById('modal-contact');
         const form = document.getElementById('add-account-form');
-<<<<<<< HEAD
-    
-        // Event listener for Add Account button
-        addAccountButton?.addEventListener('click', function (event) {
-            let valid = true;
-            clearErrorMessages();
-    
-            if (!nameField.value.trim()) {
-                showError(nameField, 'Name is required.');
-                valid = false;
-            }
-    
-            if (!emailField.value.trim()) {
-                showError(emailField, 'Email is required.');
-                valid = false;
-            } else if (!validateEmail(emailField.value.trim())) {
-                showError(emailField, 'Invalid email format. (example@gmail.com)');
-                valid = false;
-            }
-    
-            if (!roleField.value) {
-                showError(roleField, 'Role is required.');
-                valid = false;
-            }
-    
-            if (!contactField.value.trim()) {
-                showError(contactField, 'Contact number is required.');
-                valid = false;
-            } else if (!/^\d{11}$/.test(contactField.value.trim())) {
-                showError(contactField, 'Contact number must be 11 digits.');
-                valid = false;
-            }
-    
-=======
 
         // Event listener for addAccountButton click (form validation)
         addAccountButton.addEventListener('click', function (event) {
@@ -205,22 +167,10 @@
             }
 
             // If form is invalid, prevent form submission
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             if (!valid) {
                 event.preventDefault();
             }
         });
-<<<<<<< HEAD
-    
-        // Event listener for form submission
-        form?.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const email = emailField.value.trim();
-            const phone_number = contactField.value.trim();
-    
-            clearErrorMessages();
-    
-=======
 
         // Event listener for form submit (async validation for email and phone number)
         form.addEventListener('submit', function (event) {
@@ -233,42 +183,22 @@
             removeError(contactField);
 
             // Validate Email and Phone Number
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             if (!email) {
                 showError(emailField, 'Email is required.');
                 return;
             }
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             if (!phone_number) {
                 showError(contactField, 'Phone number is required.');
                 return;
             }
-<<<<<<< HEAD
-    
-            // Check email and phone number uniqueness
-=======
 
             // Check if email or phone number already exists
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             fetch(`/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.email_exists) {
                         showError(emailField, 'This email is already registered.');
                     }
-<<<<<<< HEAD
-    
-                    if (data.phone_exists) {
-                        showError(contactField, 'This phone number is already registered.');
-                    }
-    
-                    if (!data.email_exists && !data.phone_exists) {
-                        form.submit(); // Submit the form if no errors exist
-=======
 
                     if (data.phone_exists) {
                         showError(contactField, 'This phone number is already registered.');
@@ -276,7 +206,6 @@
 
                     if (!data.email_exists && !data.phone_exists) {
                         form.submit();
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
                     }
                 })
                 .catch(error => {
@@ -285,26 +214,6 @@
                     showError(contactField, 'An error occurred while validating the phone number. Please try again.');
                 });
         });
-<<<<<<< HEAD
-    
-        // Helper function to show error messages
-        function showError(field, message) {
-            let existingError = field.parentNode.querySelector('.error-message');
-            if (existingError) {
-                existingError.remove();
-            }
-    
-            const errorElement = document.createElement('small');
-            errorElement.className = 'error-message';
-            errorElement.textContent = message;
-            errorElement.style.color = 'red';
-            errorElement.style.fontSize = '0.8rem';
-            field.parentNode.appendChild(errorElement);
-            field.classList.add('is-invalid');
-        }
-    
-        // Helper function to clear all error messages
-=======
 
         // General function to show error messages
         function showErrorMessage(field, message) {
@@ -333,36 +242,15 @@
         }
 
         // Function to clear all error messages
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
         function clearErrorMessages() {
             const invalidFields = document.querySelectorAll('.is-invalid');
             invalidFields.forEach(function (field) {
                 field.classList.remove('is-invalid');
             });
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
             const errorMessages = document.querySelectorAll('.error-message');
             errorMessages.forEach(function (msg) {
                 msg.remove();
             });
         }
-<<<<<<< HEAD
-    
-        // Helper function to validate email
-        function validateEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-    });
-    </script>
-    
-
-
-
-=======
     });
 </script>
->>>>>>> dafce9cf006465b6194fa8e6580e4ebbcde3e885
