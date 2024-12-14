@@ -66,13 +66,13 @@
         const input = event.target;
         let value = input.value;
     
-        // Check if the first character is invalid (not a letter)
-        if (/[^A-Za-z]/.test(value.charAt(0)) && value.length === 1) {
+        // Only block the first character if it's an invalid non-alphabetic character for the 'name' field
+        if (input.id === "modal-name" && /[^A-Za-z]/.test(value.charAt(0)) && value.length === 1) {
             return; // Don't update if the first character is invalid and it's the only character
         }
     
         // If the first character is invalid but there are more characters, allow editing
-        if (value.length > 1 && /[^A-Za-z]/.test(value.charAt(0))) {
+        if (value.length > 1 && /[^A-Za-z]/.test(value.charAt(0)) && input.id === "modal-name") {
             value = value.slice(1); // Remove the invalid first character
         }
     
@@ -95,10 +95,12 @@
     
     // Attach to specific input fields
     document.addEventListener("DOMContentLoaded", function () {
+        // Updated email regex to allow numbers as the first character
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
         const fields = [
             { id: "modal-name", allowedChars: 'A-Za-z.,\\s-', pattern: null }, // Name validation without numbers
-            { id: "modal-email", allowedChars: 'A-Za-z0-9._%+-@.', pattern: emailPattern } // Email validation
+            { id: "modal-email", allowedChars: 'A-Za-z0-9._%+-@.', pattern: emailPattern } // Updated email validation
         ];
     
         fields.forEach(({ id, allowedChars, pattern }) => {
@@ -110,7 +112,8 @@
             }
         });
     });
-    </script>
+</script>
+
 
 <script>
     // Combined DOMContentLoaded event for better structure
