@@ -345,6 +345,11 @@ editButton.addEventListener('click', function() {
             }
         });
 
+        // When entering edit mode, clear 'None' values in all fields
+        if (isEditable) {
+            clearNoneValues(); // This function will clear the 'None' values
+        }
+
         // When editing, pass the current value of original fields to the search fields
         originalFields.forEach((originalField, index) => {
             if (originalField && searchFields[index]) {
@@ -365,6 +370,7 @@ editButton.addEventListener('click', function() {
             }
         });
 
+        // Change edit button appearance when in edit mode
         if (isEditable) {
             icon.style.display = 'none'; 
             text.textContent = 'Editing';
@@ -380,9 +386,51 @@ editButton.addEventListener('click', function() {
             text.textContent = 'Edit';
         }
 
+        // Show or hide save button based on edit mode
         saveButton.style.display = isEditable ? 'inline-block' : 'none';
     }
 });
+// New function to clear 'None' values from all fields
+function clearNoneValues() {
+    const allFields = [
+        document.getElementById('involved'),
+        document.getElementById('alarm-dec'),
+        document.getElementById('funder-dec'),
+        document.getElementById('fout-dec'),
+        document.getElementById('ground'),
+        document.getElementById('safety'),
+        document.getElementById('sender'),
+        document.getElementById('loc'),
+        document.getElementById('team'),
+        document.getElementById('detect'),
+        document.getElementById('date'),
+        document.getElementById('owner'),
+        document.getElementById('alarm'),
+        document.getElementById('time-arrive'),
+        document.getElementById('time-under'),
+        document.getElementById('date-under'),
+        document.getElementById('time-out'),
+        document.getElementById('date-out'),
+        document.getElementById('damage'),
+        document.getElementById('fatality'),
+        document.getElementById('injured'),
+        document.getElementById('affected'),
+        document.getElementById('establishment'),
+        document.getElementById('truck'),
+        document.getElementById('ground-num'),
+        document.getElementById('safety-num'),
+        document.getElementById('sender-num'),
+        document.getElementById('proof'),
+        document.getElementById('modal-proof')
+    ];
+
+    // Loop through each field and clear 'None' value
+    allFields.forEach(field => {
+        if (field && field.value === 'None') {
+            field.value = ''; // Clear the value if it is 'None'
+        }
+    });
+}
 
 
 
