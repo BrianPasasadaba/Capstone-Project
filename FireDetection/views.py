@@ -802,6 +802,7 @@ def update_report(request, report_id):
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
+        report.alarm_status = data.get('alarm', report.alarm_status)
 
         report.name_of_owner = data.get('owner', None) if data.get('owner') != "None" else None
         report.alarm_declared_by = data.get('alarm-dec', None) if data.get('alarm-dec') != "None" else None
