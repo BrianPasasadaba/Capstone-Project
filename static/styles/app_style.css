@@ -180,12 +180,7 @@ header, .container, .container-fluid, .btn-group {
 
 /* Background color when hovered, clicked (active), or focused */
 .drop-profile .dropdown-item:focus {
-    background-color: #ED7027;
-    color: white;
-}
-
-.drop-profile .dropdown-item.active {
-    background-color: black;
+    background-color: #ED7027!important;
     color: white;
 }
 
@@ -3169,7 +3164,7 @@ input[type="password"]::-ms-clear {
         align-items: center;
     }
     .header-nav button{
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     .top-divider svg {
         display: none;
@@ -3352,6 +3347,18 @@ input[type="password"]::-ms-clear {
         flex-direction: column;
         justify-content: center;
     }
+    /* Background color when hovered, clicked (active), or focused */
+    .drop-profile .dropdown-item.active,
+    .drop-profile .dropdown-item:active {
+        color: #fff;
+        text-decoration: none;
+        background-color: #ED7027;
+    }
+
+    .drop-profile .dropdown-item {
+        padding-top: .25rem!important;
+    }
+
 /* ================================  <700-SIDEBAR ================================  */
     #sidebar-toggle{
         display: block;
