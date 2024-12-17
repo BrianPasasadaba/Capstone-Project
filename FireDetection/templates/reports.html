@@ -171,7 +171,33 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="export-icon"><i class="bi bi-file-earmark-arrow-down"></i>
                                 </span>
-                                <button class="btn btn-excel" value="1" id="exportButton"  onclick="handleExport()">Export to Excel</button>
+
+                                <button class="btn btn-excel dropdown-toggle" type="button" id="exportButton" data-bs-toggle="dropdown" aria-expanded="false">Export Options</button>
+
+                                <ul class="dropdown-menu" aria-labelledby="exportButton" id="yearDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('seventhYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('sixthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('fifthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('fourthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('thirdYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('secondYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('firstYear')">Export {} Reports</a>
+                                    </li>
+                                </ul>
+
                             </div>          
                             
                             <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
@@ -234,6 +260,44 @@
 <script src="{% static 'js/pagination.js' %}"></script>
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+    function populateYears() {
+        const currentYear = new Date().getFullYear();
+        const totalYears = 7;
+        const dropdown = document.getElementById("yearDropdown");
+
+        dropdown.innerHTML = ""; 
+
+        for (let i = 0; i < totalYears; i++) {
+            const year = currentYear - i; 
+            const ordinal = getOrdinalName(i + 1);
+
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `
+                <a class="dropdown-item" href="#" onclick="handleExport(${year})">
+                    Export ${year} Reports
+                </a>
+            `;
+            dropdown.appendChild(listItem);
+        }
+    }
+
+    function getOrdinalName(position) {
+        const ordinals = ["firstYear", "secondYear", "thirdYear", "fourthYear", "fifthYear", "sixthYear", "seventhYear"];
+        return ordinals[position - 1] || "";
+    }
+
+    function handleExport(year) {
+        window.location.href = `/export-initial-report/?value=${year}`;
+    }
+
+    window.onload = populateYears;
+</script>
+
+
+
+
 <script>
 document.getElementById('searchInput').addEventListener('input', function (e) {
     // Allow only alphanumeric characters, '.', '-', '/', and ':'
