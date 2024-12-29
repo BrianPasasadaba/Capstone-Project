@@ -630,7 +630,7 @@ aside{
     padding:var(--padding-half);
 
 }
-.sb-header img{
+.sb-header object{
     width: 110px;
     height: 110px;
 }
@@ -660,6 +660,8 @@ aside{
     height: 100%;
     display: flex;
     flex-direction: column; /* Stacks nav links in a column */
+    justify-content: center;
+    align-items: center;
     padding-bottom: var(--padding-1);
 }
 
@@ -670,7 +672,7 @@ aside{
     align-items: center;
     justify-content: start;
     width: 100%;
-    padding-left: var(--padding-1);
+    padding-left: 1.5rem;
     gap: var(--gap-1);
 }
 
@@ -679,13 +681,12 @@ aside{
     border-radius: var(--border-radius-input);
     margin-bottom: var(--margin-half);
     padding: 2px;
-    /* padding-left: var(--padding-2); */
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--gap-1);
-    width: 100%;
-    transition: var(--tran-05);
+    width: 95%;
+    transition: var(--tran-03);
 }
 
 .sb-body .nav-link:last-child {
@@ -3225,12 +3226,16 @@ input[type="password"]::-ms-clear {
     .sidebar{
         border-radius: var(--border-radius-button-half);
     }
-    .sb-header img {
+    .sb-header{
+        padding-top: var(--padding-half);
+    }
+    
+    .sb-header object{
         width: 60px;
         height: 60px;
     }
     .sb-header .sbheader-logo {
-        margin-bottom: var(--margin-1);
+        margin-bottom: 0;
     }
     .sb-body .description,
     .sb-header .sbheader-text {
@@ -3468,9 +3473,11 @@ input[type="password"]::-ms-clear {
         width: 60px;
         height: 60px;
     }
+    .sb-header{
+        padding-top: 0;
+    }
     .sb-header .sbheader-logo {
         display: none;
-        margin-bottom: var(--margin-1);
     }
     .sb-body .description,
     .sb-header .sbheader-text {
