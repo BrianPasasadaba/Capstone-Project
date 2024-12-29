@@ -2124,6 +2124,7 @@ input[type="password"]::-ms-clear {
 
 .rb-footer .btn-excel{
     border: var(--border-input);
+    border-left: none;
     transition: var(--tran-03);
 }
 
