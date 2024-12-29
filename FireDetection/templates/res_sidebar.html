@@ -220,9 +220,84 @@
     </div>
 
 </aside>
+<!-- Add this JavaScript to handle page reload -->
+<script>
+// Function to check if any other modal is visible
+function isAnyOtherModalVisible() {
+    const allModals = document.querySelectorAll('.modal');
+    for (const modal of allModals) {
+        if (modal.id !== 'animate-success-modal' && 
+            (modal.classList.contains('show') || 
+             getComputedStyle(modal).display === 'block')) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Modified show loader function with timeout tracking
+let loaderTimeout;
+let currentModal;  // Store the reference to the current modal to show after loader
+
+function showLoader() {
+    if (!isAnyOtherModalVisible()) {
+        clearTimeout(loaderTimeout);  // Clear any existing timeout
+        var modal = new bootstrap.Modal(document.getElementById('animate-success-modal'));
+        modal.show();
+
+        // Set the current modal to null (no modal is showing yet)
+        currentModal = null;
+    }
+}
+
+function hideLoader() {
+    clearTimeout(loaderTimeout);  // Clear timeout if hide is called manually
+    var modal = bootstrap.Modal.getInstance(document.getElementById('animate-success-modal'));
+    if (modal) {
+        modal.hide();
+    }
+
+    // If there's a modal that was previously waiting, show it now
+    if (currentModal) {
+        currentModal.show();
+    }
+}
+
+// Updated event listeners
+window.addEventListener('beforeunload', function(e) {
+    if (!isAnyOtherModalVisible()) {
+        var modal = new bootstrap.Modal(document.getElementById('animate-success-modal'));
+        modal.show();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // For form submissions
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            // Check if the form has data-no-loader attribute
+            if (!form.hasAttribute('data-no-loader') && !isAnyOtherModalVisible()) {
+                var modal = new bootstrap.Modal(document.getElementById('animate-success-modal'));
+                modal.show();
+            }
+        });
+    });
+
+    // Listen for other modals opening
+    document.body.addEventListener('show.bs.modal', function(e) {
+        if (e.target.id !== 'animate-success-modal') {
+            // When another modal is opened, hide the loader
+            // But make sure we show the loader again after the modal is hidden
+            hideLoader();
+        }
+    });
+});
+</script>
 
     {% include "modal_dismiss_confirm.html" %}
     {% include "modal_log_out.html" %}
+    {% include 'modal_animation.html' %}
     <!-- SVG Background -->
     <div class="top-divider">
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 308" fill="none">
