@@ -328,19 +328,31 @@
         </svg>
     </div>
     <script>
-        // Show loader when the DOM starts loading
-        document.addEventListener('DOMContentLoaded', function () {
+        // Show loader immediately before unload
+        window.addEventListener('beforeunload', function() {
             const loader = document.getElementById('loader');
-            loader.classList.add('show'); // Add 'show' class to display the loader
+            loader.style.display = 'flex';
+            
+            // Persist loader state across page reload
+            sessionStorage.setItem('showLoader', 'true');
         });
-    
-        // Hide loader when the page has fully loaded
-        window.addEventListener('load', function () {
+
+        // Check for loader state when page loads
+        window.addEventListener('load', function() {
             const loader = document.getElementById('loader');
-            setTimeout(function () {
-                loader.classList.remove('show'); // Remove 'show' class
-                loader.style.display = 'none'; // Ensure loader is hidden
-            }, 500); // Delay of 500ms
+            
+            if (sessionStorage.getItem('showLoader')) {
+                // Clear the loader state
+                sessionStorage.removeItem('showLoader');
+                
+                // Hide loader after a brief delay
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                }, 500);
+            } else {
+                // If no loader state, hide immediately
+                loader.style.display = 'none';
+            }
         });
     </script>
     
