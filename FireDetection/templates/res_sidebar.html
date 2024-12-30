@@ -297,6 +297,10 @@ document.addEventListener('DOMContentLoaded', async function(){
             this.notificationAudio = null;
             this.eventSource = new EventSource('{% url "event-stream" %}');
             this.toastCounter = 0;
+
+            if ("Notification" in window) {
+                Notification.requestPermission();
+            }
             
             this.eventSource.onmessage = async (event) => {
                 const data = JSON.parse(event.data);
@@ -558,6 +562,13 @@ document.addEventListener('DOMContentLoaded', async function(){
             this.notificationAudio.play().catch(error => {
                 console.warn('Error playing notification sound:', error);
             });
+
+            // Show browser notification
+            if (Notification.permission === "granted") {
+                new Notification("Fire Alert!", {
+                    body: "A fire has been detected",
+                });
+            }
         }
     
         updateExistingToastAndModal(reportId, reportDetails) {
