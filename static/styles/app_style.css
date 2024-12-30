@@ -2762,15 +2762,18 @@ input[type="password"]::-ms-clear {
     box-shadow: 0 0 5px .25rem var(--color-default)
 }
 
-/* ================================  MODAL REMOVE ================================  */
+/* ================================  MODAL REMOVE AND ARCHIVE ================================  */
 
 #remove-account-modal  .modal-header,
-#remove-account-modal .modal-footer{
+#remove-account-modal .modal-footer,
+#archive-report-modal .modal-header,
+#archive-report-modal .modal-footer{
     border-bottom: none;
     border-top: none;
 }
 
-#remove-account-modal .modal-dialog{
+#remove-account-modal .modal-dialog,
+#archive-report-modal .modal-dialog{
     margin-top: 0;
     margin-bottom: 0;
     /* border: #ED7027 1px solid; */
@@ -2782,7 +2785,8 @@ input[type="password"]::-ms-clear {
     align-items: center;
 }
 
-#remove-account-modal .modal-content{
+#remove-account-modal .modal-content,
+#archive-report-modal .modal-content{
     height: auto;
 }
 
@@ -2816,8 +2820,39 @@ input[type="password"]::-ms-clear {
     padding-right: var(--padding-3);
     color: var(--color-primary);
 }
+.archive-logo{
+    display: flex;
+    /* border: #ED7027 1px solid; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
 
-#remove-account-modal .modal-footer{
+.archive-logo i{
+    /* border: #ED7027 1px solid; */
+    font-size: 130px;
+    color: var(--color-secondary);
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    padding-top: var(--padding-1);
+    padding-bottom: var(--padding-half);
+    line-height: 1; /* Adjust line-height to minimize spacing */
+}
+
+.archive-logo h3{
+    text-align: center; /* Centers the text horizontally */
+    margin: 0; /* Optional: to remove default margins */
+    margin-top: var(--margin-half);
+    padding-bottom: var(--padding-half);
+    padding-left: var(--padding-3);
+    padding-right: var(--padding-3);
+    color: var(--color-primary);
+}
+
+#remove-account-modal .modal-footer,
+#archive-report-modal .modal-footer{
     /* border: #ED7027 1px solid; */
     display: flex;
     flex-direction: column;
@@ -2825,7 +2860,8 @@ input[type="password"]::-ms-clear {
     margin-top: var(--margin-1);
     padding: var(--padding-1);
 }
-#remove-account-modal .modal-footer .mf-button{
+#remove-account-modal .modal-footer .mf-button,
+#archive-report-modal .modal-footer .mf-button{
     /* border: #ED7027 1px solid; */
     display: flex;
     flex-direction: row;
@@ -2834,7 +2870,8 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-2);
 }
 
-#remove-account-modal .modal-footer .btn-confirm{
+#remove-account-modal .modal-footer .btn-confirm,
+#archive-report-modal .modal-footer .btn-confirm{
     background-color: var(--color-primary);
     color: white;
     font-weight: 600;
@@ -2843,7 +2880,8 @@ input[type="password"]::-ms-clear {
     border-radius: var(--border-radius-input)!important;
     transition: var(--tran-03);
 }
-#remove-account-modal .modal-footer .btn-cancel{
+#remove-account-modal .modal-footer .btn-cancel,
+#archive-report-modal .modal-footer .btn-cancel{
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 600;
@@ -2854,7 +2892,9 @@ input[type="password"]::-ms-clear {
 }
 
 #remove-account-modal .modal-footer .btn-confirm:hover,
-#remove-account-modal .modal-footer .btn-cancel:hover{
+#remove-account-modal .modal-footer .btn-cancel:hover,
+#archive-report-modal .modal-footer .btn-confirm:hover,
+#archive-report-modal .modal-footer .btn-cancel:hover{
     transform: scale(1.03);
 }
 
