@@ -3657,6 +3657,10 @@ input[type="password"]::-ms-clear {
     }
 
 /* ================================  <700-SIDEBAR ================================  */
+    .loader-svg{
+        width: 150px;
+        height: 150px;
+    }
     #sidebar-toggle{
         display: block;
     }
