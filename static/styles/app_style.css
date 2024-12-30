@@ -187,6 +187,11 @@ header {
     color: white;
 }
 
+.export-opt .dropdown-item:focus {
+    background-color: #ED7027!important;
+    color: white;
+}
+
 .navigation-title{
     width: 100%;
     white-space: nowrap; /* Keeps navigation items in a single line */
