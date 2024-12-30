@@ -561,18 +561,39 @@ input[type="password"]::-ms-clear {
     }
 }
 /* ============================== TERMS CONDITION MODAL ============================== */
-
 #terms-condition-modal .modal-dialog{
-    max-width: 650px;
+    max-width: 480px;
 }
-#terms-condition-modal .modal-body{
-    padding: 0.5rem 3rem;
-    max-height: 90vh;
-    overflow: auto;
+
+#terms-condition-modal .terms-box{
+    /* border: #ED7027 1px solid;  */
+    max-width: 480px;
+    font-family: "Montserrat";
+    padding: 30px 30px;
+}
+
+#terms-condition-modal .modal-dialog .terms-text{
+    padding: 0 10px;
+    height: 400px;
+    overflow-y: auto;
+    font-size: 14px;
+    padding: 0px 20px;
+}
+
+.terms-text::-webkit-scrollbar{
+    width: 5px;
+    background-color: var(--color-default);
+}
+
+.terms-text::-webkit-scrollbar-thumb{
+    border-radius: var(--border-radius-button-half);
+    background-color: var(--color-secondary);
 }
 
 #terms-condition-modal .terms-text h4{
     color: var(--color-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
 #terms-condition-modal .modal-dialog .terms-text p,
@@ -581,13 +602,27 @@ input[type="password"]::-ms-clear {
     text-align: justify;
 }
 
+#terms-condition-modal .modal-dialog .terms-text .text-contact{
+    font-size: 0.8rem;
+    text-align: center;
+}
+#terms-condition-modal .modal-dialog .terms-text .text-contact span{
+    font-size: 0.7rem;
+    text-decoration: underline;
+    color: blue;
+}
+
 #terms-condition-modal  .modal-footer{
     /* border: #ED7027 1px solid; */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 0;
-    padding-top: var(--padding-1);
+    border-top: none;
+}
+
+#terms-condition-modal  .modal-footer h6{
+    font-size: 1rem;
 }
 #terms-condition-modal .modal-footer .mf-button{
     /* border: #ED7027 1px solid; */
@@ -612,8 +647,8 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 500;
-    border: 0.5px solid var(--color-primary);
-    font-size:1rem;
+    border: none;
+    font-size: 1rem;
     transition: var(--tran-03);
     border-radius:var(--border-radius-input)!important;
 }
@@ -1145,7 +1180,7 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-default);
     border: var(--color-secondary) 0.5px solid;
     width: 100%;
-    height: 100%;
+    height: auto;
     border-radius:var(--border-radius-sidebar);
     padding: var(--padding-1);
     display: flex;
@@ -1562,11 +1597,11 @@ input[type="password"]::-ms-clear {
 /* ============================== ANALYTICS GRAPH ============================== */
 
 .chart-graph{
-    /* border: var(--color-secondary) 1px solid; */
+    border: var(--color-secondary) 1px solid;
     border-radius: var(--border-radius-button-half);
     background-color: var(--color-white);
     width: 100%;
-    min-height: 480px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1581,12 +1616,22 @@ input[type="password"]::-ms-clear {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100%;
-    padding: var(--padding-1);
-    padding-top: var(--padding-2);
+    min-height: 450px;
+    align-items: center;
     justify-content: start;
     gap:var(--gap-half);
     overflow-x: auto;
+}
+
+.chart::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-default);
+}
+
+.chart::-webkit-scrollbar-thumb{
+    border-radius: var(--border-radius-button-half);
+    background-color: var(--color-secondary);
 }
 
 .incident-count{
@@ -1620,7 +1665,7 @@ input[type="password"]::-ms-clear {
     padding:var(--padding-half);
     padding-top: 0;
     margin: 0;
-    align-items: start;
+    align-items: center;
     justify-content: space-evenly;
     gap: var(--gap-1);
 }
@@ -1730,6 +1775,17 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-half);
     padding: var(--padding-half);
     overflow-y: auto;
+}
+
+.ld-table tbody::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-default);
+}
+
+.ld-table tbody::-webkit-scrollbar-thumb{
+    border-radius: var(--border-radius-button-half);
+    background-color: var(--color-secondary);
 }
 
 .ld-table tbody tr{
