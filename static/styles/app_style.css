@@ -569,7 +569,8 @@ input[type="password"]::-ms-clear {
     /* border: #ED7027 1px solid;  */
     max-width: 480px;
     font-family: "Montserrat";
-    padding: 30px 30px;
+    padding: 30px 20px;
+    padding-bottom: 20px;
 }
 
 #terms-condition-modal .modal-dialog .terms-text{
@@ -619,6 +620,12 @@ input[type="password"]::-ms-clear {
     align-items: center;
     padding: 0;
     border-top: none;
+}
+
+#terms-condition-modal  .modal-footer span{
+    /* border: #ED7027 1px solid; */
+    font-weight: 700px!important;
+    color: var(--color-secondary);
 }
 
 #terms-condition-modal  .modal-footer h6{
