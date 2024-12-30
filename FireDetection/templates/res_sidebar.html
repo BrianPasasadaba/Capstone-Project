@@ -94,6 +94,11 @@
 
 -->
 
+<div id="notification-data" 
+     data-audio-url="{% static 'sounds/alarm.mp3' %}" 
+     style="display: none;">
+</div>
+
 <!--TOAST START-->
    <!-- Toast container -->
 {% if request.user.role == "Radio Operator" %}
@@ -287,6 +292,9 @@
 document.addEventListener('DOMContentLoaded', async function(){
     class DesktopUpdates {
         constructor() {
+            const audioElement = document.getElementById('notification-data');
+            this.audioUrl = audioElement ? audioElement.dataset.audioUrl : null;
+            this.notificationAudio = null;
             this.eventSource = new EventSource('{% url "event-stream" %}');
             this.toastCounter = 0;
             
@@ -536,12 +544,17 @@ document.addEventListener('DOMContentLoaded', async function(){
         }
 
         playNotificationSound() {
-            // Create audio element if it doesn't exist
+            if (!this.audioUrl) {
+                console.warn('Audio URL not found');
+                return;
+            }
+
             if (!this.notificationAudio) {
-                this.notificationAudio = new Audio('{% static "sounds/alarm.mp3"}'); // Adjust path as needed
+                this.notificationAudio = new Audio(this.audioUrl);
             }
             
-            // Play the sound
+            // Reset and play
+            this.notificationAudio.currentTime = 0;
             this.notificationAudio.play().catch(error => {
                 console.warn('Error playing notification sound:', error);
             });
