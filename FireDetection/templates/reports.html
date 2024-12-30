@@ -83,81 +83,162 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="rb-table">   
-                    <table>
-                        <thead>
-                            <tr  data-bs-toggle="modal" >
-                                <th>Report</th>
-                                <th>Location</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody id="reportTable">
-                            {% for report in reports %}
-                            <tr
-                                data-report-id="{{ report.id|default:0 }}"
-                                data-status="{{ report.status|default:'None' }}"
-                                data-location="{{ report.where|default:'None' }}" 
-                                data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
-                                data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
-                                data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
-                                data-owner="{{ report.name_of_owner|default:'None' }}"
-                                data-alarm="{{ report.alarm_status|default:'None' }}"
-                                data-damages="{{ report.estimated_damages|default:0 }}"
-                                data-establishments="{{ report.no_of_establishments|default:0 }}"
-                                data-casualties="{{ report.no_of_fatality|default:0 }}" 
-                                data-injured="{{ report.no_of_injured|default:0 }}"
-                                data-proof="{{ report.proof|default:'None' }}"
-                                data-involved="{{ report.involved|default:'None' }}"
-                                data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
-                                data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
-                                data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
-                                data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
-                                data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
-                                data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
-                                data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
-                                data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
-                                data-families-affected="{{ report.no_of_families_affected|default:0 }}"
-                                data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
-                                data-ground-commander="{{ report.ground_commander|default:'None' }}"
-                                data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
-                                data-safety-officer="{{ report.safety_officer|default:'None' }}"
-                                data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
-                                data-sender="{{ report.name_of_sender|default:'None' }}"
-                                data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
-                                data-team="{{ report.team|default:'None' }}" 
+                
+                <div class="rb-table">
+                    <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="true">REPORTS</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                              <button class="nav-link" id="archives-tab" data-bs-toggle="tab" data-bs-target="#archives" type="button" role="tab" aria-controls="archives" aria-selected="false">ARCHIVES</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="reportTabsContent">
+                        <!-- Reports Tab Content -->
+                        <div class="tab-pane fade show active" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+                            <table>
+                                <thead>
+                                    <tr  data-bs-toggle="modal" >
+                                        <th>Report</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
                                 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#report-preview-modal">
-                                <td>{{ report.fir_number|default:'None' }}</td>
-                                <td>{{ report.where|default:'None' }}</td>
-                                <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
-                                <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
-                                <td>
-                                    <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5">No reports available</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tr id="noResultsMessage" style="display: none;">
-                            <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
-                        </tr>      
+                                <tbody id="reportTable">
+                                    {% for report in reports %}
+                                    <tr
+                                        data-report-id="{{ report.id|default:0 }}"
+                                        data-status="{{ report.status|default:'None' }}"
+                                        data-location="{{ report.where|default:'None' }}" 
+                                        data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
+                                        data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
+                                        data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-owner="{{ report.name_of_owner|default:'None' }}"
+                                        data-alarm="{{ report.alarm_status|default:'None' }}"
+                                        data-damages="{{ report.estimated_damages|default:0 }}"
+                                        data-establishments="{{ report.no_of_establishments|default:0 }}"
+                                        data-casualties="{{ report.no_of_fatality|default:0 }}" 
+                                        data-injured="{{ report.no_of_injured|default:0 }}"
+                                        data-proof="{{ report.proof|default:'None' }}"
+                                        data-involved="{{ report.involved|default:'None' }}"
+                                        data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
+                                        data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
+                                        data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
+                                        data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
+                                        data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
+                                        data-families-affected="{{ report.no_of_families_affected|default:0 }}"
+                                        data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
+                                        data-ground-commander="{{ report.ground_commander|default:'None' }}"
+                                        data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
+                                        data-safety-officer="{{ report.safety_officer|default:'None' }}"
+                                        data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
+                                        data-sender="{{ report.name_of_sender|default:'None' }}"
+                                        data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
+                                        data-team="{{ report.team|default:'None' }}" 
+                                        
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#report-preview-modal">
+                                        <td>{{ report.fir_number|default:'None' }}</td>
+                                        <td>{{ report.where|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
+                                        <td>
+                                            <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5">No reports available</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr id="noResultsMessage" style="display: none;">
+                                    <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
+                                </tr>      
 
-                        <tr id="noFoundFilter" style="display: none;">
-                            <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
-                        </tr>       
-                                      
-                    </table>
-                    
+                                <tr id="noFoundFilter" style="display: none;">
+                                    <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                                </tr>           
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="archives" role="tabpanel" aria-labelledby="archives-tab">
+                            <table>
+                                <thead>
+                                    <tr  data-bs-toggle="modal" >
+                                        <th>Report</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody id="archiveTable">
+                                    {% for report in reports %}
+                                    <tr
+                                        data-report-id="{{ report.id|default:0 }}"
+                                        data-status="{{ report.status|default:'None' }}"
+                                        data-location="{{ report.where|default:'None' }}" 
+                                        data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
+                                        data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
+                                        data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-owner="{{ report.name_of_owner|default:'None' }}"
+                                        data-alarm="{{ report.alarm_status|default:'None' }}"
+                                        data-damages="{{ report.estimated_damages|default:0 }}"
+                                        data-establishments="{{ report.no_of_establishments|default:0 }}"
+                                        data-casualties="{{ report.no_of_fatality|default:0 }}" 
+                                        data-injured="{{ report.no_of_injured|default:0 }}"
+                                        data-proof="{{ report.proof|default:'None' }}"
+                                        data-involved="{{ report.involved|default:'None' }}"
+                                        data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
+                                        data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
+                                        data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
+                                        data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
+                                        data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
+                                        data-families-affected="{{ report.no_of_families_affected|default:0 }}"
+                                        data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
+                                        data-ground-commander="{{ report.ground_commander|default:'None' }}"
+                                        data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
+                                        data-safety-officer="{{ report.safety_officer|default:'None' }}"
+                                        data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
+                                        data-sender="{{ report.name_of_sender|default:'None' }}"
+                                        data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
+                                        data-team="{{ report.team|default:'None' }}" 
+                                        
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#report-preview-modal">
+                                        <td>{{ report.fir_number|default:'None' }}</td>
+                                        <td>{{ report.where|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
+                                        <td>
+                                            <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5">No reports available</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr id="noResultsMessage" style="display: none;">
+                                    <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
+                                </tr>      
 
+                                <tr id="noFoundFilter" style="display: none;">
+                                    <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                                </tr>           
+                            </table>
+                        </div>
                 </div>
                 <div class="rb-footer">
                     <div class="rb-group">
@@ -204,7 +285,6 @@
                                 No data available.
                             </div>
                             
-
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item prev disabled">

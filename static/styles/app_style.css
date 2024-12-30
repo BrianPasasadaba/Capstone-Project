@@ -1934,7 +1934,7 @@ input[type="password"]::-ms-clear {
 
 .rb-header{
     /* border: var(--color-secondary) 1px solid; */
-    border-bottom: var(--color-primary) 1.5px solid;
+    /* border-bottom: var(--color-primary) 1.5px solid; */
     width: 100%;
     height: 100px;
     display: flex;
@@ -2036,7 +2036,20 @@ input[type="password"]::-ms-clear {
     cursor: pointer;
 }
 
+#reportTabs .nav-link {
+    background-color: #f8f9fa; /* Light gray background for inactive tabs */
+    color: var(--color-primary); /* Text color for inactive tabs */
+    font-weight: 600;
+}
+
+#reportTabs .nav-link.active {
+    background-color: var(--color-default); /* Blue background for the active tab */
+    color: var(--color-secondary); /* White text color for the active tab */
+    border-bottom: var(--color-default) 1px solid;
+}
+
 .rb-table{
+    border: none;
     width: 100%;
     height: 100%;
     display: flex;
@@ -2134,10 +2147,11 @@ input[type="password"]::-ms-clear {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
     color: var(--color-primary);
     white-space:nowrap;
     padding: 0.5rem 2rem;
+    height: 100%;
 }
 
 .rb-group{
