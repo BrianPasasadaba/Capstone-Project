@@ -220,7 +220,6 @@ def monthly_report_summary(request):
     except ValueError:
         total_estimated_damages = 'Invalid data'
 
-    # Prepare the response data
     monthly_data = {
         'reported_count': reports.count(),
         'most_affected_location': most_affected_location,
@@ -232,44 +231,44 @@ def monthly_report_summary(request):
 
     
 def reports_count_for_years(request):
-    # Get counts for each year from 2018 to 2024
-    years_range = range(2018, 2025)
+    current_year = datetime.now().year
+    start_year = current_year - 6  
+    years_range = range(start_year, current_year + 1)
+
     counts = (
-        InitialReport.objects.filter(date_reported__year__in=years_range)
-        .annotate(year=ExtractYear('date_reported'))
+        InitialReport.objects
+        .filter(date_reported__year__in=years_range)
+        .annotate(year=ExtractYear('date_reported'))  
         .values('year')
-        .annotate(count=Count('id'))
+        .annotate(count=Count('id'))  
         .order_by('year')
     )
 
-    # Convert queryset to a dictionary
     data = {year['year']: year['count'] for year in counts}
-    
-    # Ensure all years in range are included, even if no reports exist
+
     for year in years_range:
         data.setdefault(year, 0)
 
     return JsonResponse({'yearly_data': data})
 
-def monthly_reports_for_2024(request):
-    # Group reports by month
+def monthly_reports_for_current_year(request):
+    current_year = datetime.now().year
+
     reports_by_month = (
-        InitialReport.objects.filter(date_reported__year=2024)
-        .annotate(month=TruncMonth('date_reported'))
+        InitialReport.objects.filter(date_reported__year=current_year)
+        .annotate(month=TruncMonth('date_reported'))  
         .values('month')
-        .annotate(count=Count('id'))
+        .annotate(count=Count('id'))  
         .order_by('month')
     )
     
-    # Initialize all months with a count of 0
-    all_months = {date(2024, month, 1).strftime('%b'): 0 for month in range(1, 13)}
+    all_months = {date(current_year, month, 1).strftime('%b'): 0 for month in range(1, 13)}
 
-    # Populate months with data from the query
     for report in reports_by_month:
-        month_name = report['month'].strftime('%b')
+        month_name = report['month'].strftime('%b')  
         all_months[month_name] = report['count']
 
-    return JsonResponse({'year': 2024, 'monthly_data': all_months})
+    return JsonResponse({'year': current_year, 'monthly_data': all_months})
 
 @login_required
 def analytics_view(request):
@@ -321,24 +320,24 @@ def remove_accounts(request):
 
     return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
 
-def export_initial_report(request):
-    button_value = request.GET.get('value', None)
 
-    print("Button value:", button_value)
+def export_initial_report(request):
+    selected_year = request.GET.get('value', None)  
+
+    print("Selected Year:", selected_year)
 
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Initial Report Data"
 
     headers = [
-        "No.", "Station", "Exact Location/ Address of Fire Incident", "Team", "Time Reported", "Date Reported", "Involved", "Name of Owner",
-        "Alarm Status", "Alarm Declared By", "Time of Arrival At Scene", "Time of Fire Under Control", 
-        "Date of Fire Under Control", "Fire Under Control Declared By", "Time of Fire Out", 
-        "Date of Fire Out", "Fire Out Declared By", "Estimated Damages", "No. of Fatalities",
-        "No. of Injured", "No. of Families Affected", "No. of Establishments", 
-        "No. of Fire Trucks", "Ground Commander", "Commander Contact Number", 
-        "Safety Officer", "Officer Contact Number", "Name of Sender", "Sender Contact Number", 
-        "Remarks"
+        "No.", "Station", "Exact Location/ Address of Fire Incident", "Team", "Time Reported", "Date Reported",
+        "Involved", "Name of Owner", "Alarm Status", "Alarm Declared By", "Time of Arrival At Scene",
+        "Time of Fire Under Control", "Date of Fire Under Control", "Fire Under Control Declared By",
+        "Time of Fire Out", "Date of Fire Out", "Fire Out Declared By", "Estimated Damages", "No. of Fatalities",
+        "No. of Injured", "No. of Families Affected", "No. of Establishments", "No. of Fire Trucks",
+        "Ground Commander", "Commander Contact Number", "Safety Officer", "Officer Contact Number",
+        "Name of Sender", "Sender Contact Number", "Remarks"
     ]
 
     fields = [
@@ -362,19 +361,19 @@ def export_initial_report(request):
     )
 
     for col_num, header_item in enumerate(headers, 1):
-        cell = ws.cell(row=1, column=col_num)
-        cell.value = header_item
+        cell = ws.cell(row=1, column=col_num, value=header_item)
         cell.font = header_font
         cell.alignment = center_alignment
         cell.border = thick_border
 
     ws.row_dimensions[1].height = 30
 
-    sy_text = ws.cell(row=2, column=1, value="S/Y 2024")
-    sy_text.font = Font(bold=True)
+    sy_text = f"S/Y {selected_year}" if selected_year else "S/Y All Years"
+    sy_cell = ws.cell(row=2, column=1, value=sy_text)
+    sy_cell.font = Font(bold=True)
     ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=len(headers))
-    sy_text.alignment = center_alignment  
-    sy_text.border = thick_border
+    sy_cell.alignment = center_alignment  
+    sy_cell.border = thick_border
 
     yellow_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
     for col_num in range(1, len(headers) + 1):
@@ -383,31 +382,32 @@ def export_initial_report(request):
         cell.alignment = center_alignment
         cell.border = thick_border
 
-    reports = InitialReport.objects.filter(status__in=['Case Closed', 'Ongoing']).values(*fields)
+    reports = InitialReport.objects.annotate(report_year=ExtractYear('date_reported'))
+    if selected_year:
+        reports = reports.filter(report_year=int(selected_year))
+    reports = reports.filter(status__in=['Case Closed', 'Ongoing']).values(*fields)
 
-    for row_num, report in enumerate(reports, 4):
-
+    for row_num, report in enumerate(reports, 4):  
         no_value = row_num - 3  
-        station_value = "Santa Rosa City"  
+        station_value = "Santa Rosa City"
 
         no_cell = ws.cell(row=row_num, column=1, value=no_value)
         no_cell.fill = data_fill
         no_cell.alignment = center_alignment
-        no_cell.border = thick_border  
+        no_cell.border = thick_border
 
         station_cell = ws.cell(row=row_num, column=2, value=station_value)
         station_cell.fill = data_fill
-        station_cell.alignment = center_alignment  
+        station_cell.alignment = center_alignment
         station_cell.border = thick_border
-        
-        for col_num, field in enumerate(fields, 3):
-            value = report[field]
 
-            if value is None or (isinstance(value, str) and value.strip() == ""):
-                if field in ['no_of_fatality', 'no_of_injured', 'no_of_families_affected', 'no_of_establishments', 'no_of_fire_trucks']:
-                    value = 0
-                else:
-                    value = "None"  
+        for col_num, field in enumerate(fields, 3):
+            value = report.get(field, "None")
+
+            if not value and field in ['no_of_fatality', 'no_of_injured', 'no_of_families_affected', 'no_of_establishments', 'no_of_fire_trucks']:
+                value = 0
+            elif not value:
+                value = "None"
 
             if isinstance(value, datetime):
                 value = value.replace(tzinfo=None)
@@ -421,11 +421,11 @@ def export_initial_report(request):
         ws.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 20
     ws.column_dimensions['A'].width = 5  
 
+    file_name = f"initial_report_{selected_year}.xlsx" if selected_year else "initial_report_all_years.xlsx"
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="initial_report_data.xlsx"'
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
     wb.save(response)
     return response
-
 
 
 @login_required
@@ -821,6 +821,7 @@ def update_report(request, report_id):
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
+        report.alarm_status = data.get('alarm', report.alarm_status)
 
         report.name_of_owner = data.get('owner', None) if data.get('owner') != "None" else None
         report.alarm_declared_by = data.get('alarm-dec', None) if data.get('alarm-dec') != "None" else None

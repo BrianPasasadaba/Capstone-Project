@@ -14,6 +14,9 @@
     --color-placeholder: #A7A8AF;
     --color-shadow: rgba(0, 0, 0, 0.2);
     --color-shadow-min: rgba(132, 139, 200, 0.18);
+    --color1 : #D62828;
+    --color2: #F77F00;
+    --color3: #003049;
 
     /* ======== Transition ======== */
     --tran-02: all 0.2s ease;
@@ -63,7 +66,7 @@
 }
 
 body{
-     margin: 0;
+    margin: 0;
     display: grid;
     min-height: 100vh;
     grid-template-columns: 250px 1fr; /* Adjust to account for the fixed sidebar */
@@ -91,9 +94,9 @@ header {
     background-color: var(--color-primary);
 }
 
-header, .container, .container-fluid, .btn-group {
+/* header, .container, .container-fluid, .btn-group {
     overflow: visible;
-}
+} */
 
 .header-content {
     /* border: green 3px solid; */
@@ -180,12 +183,12 @@ header, .container, .container-fluid, .btn-group {
 
 /* Background color when hovered, clicked (active), or focused */
 .drop-profile .dropdown-item:focus {
-    background-color: #ED7027;
+    background-color: #ED7027!important;
     color: white;
 }
 
-.drop-profile .dropdown-item.active {
-    background-color: black;
+.export-opt .dropdown-item:focus {
+    background-color: #ED7027!important;
     color: white;
 }
 
@@ -380,7 +383,22 @@ input[type="password"]::-ms-clear {
     border-top: none;
 }
 
-#forgot-success-modal .md-state{
+/* ============================== SUCCESS MODAL ============================== */
+.modal-success .modal-dialog,
+#forgot-success-modal .modal-dialog{
+    margin-top: 0;
+    margin-bottom: 0;
+    /* border: #ED7027 1px solid; */
+    padding: var(--padding-1);
+    max-width: 550px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#forgot-success-modal .md-state,
+.modal-success .md-state{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -388,7 +406,9 @@ input[type="password"]::-ms-clear {
     width: 100%;
 }
 
-#forgot-success-modal .success-logo{
+#forgot-success-modal .success-logo,
+#animate-success-modal .loader-logo,
+.modal-success .success-logo{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -396,29 +416,185 @@ input[type="password"]::-ms-clear {
     width: 100%;
     text-align: center;
     color: var(--color-primary);
+    margin-top: var(--margin-1);
 }
 
-#forgot-success-modal .success-logo i{
-    font-size: 100px;
+#forgot-success-modal .success-logo i,
+.modal-success .success-logo i{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 130px;
     color: green;
 }
 #forgot-success-modal .modal-footer{
     border: none;
 }
 
-/* ============================== TERMS CONDITION MODAL ============================== */
-
-#terms-condition-modal .modal-dialog{
-    max-width: 650px;
+#forgot-success-modal .mf-button .btn,
+.modal-success .mf-button .btn{ 
+    transition: var(--tran-03);
+    border-radius: var(--border-radius-input);
 }
-#terms-condition-modal .modal-body{
-    padding: 0.5rem 3rem;
-    max-height: 90vh;
-    overflow: auto;
+#forgot-success-modal .mf-button .btn:hover,
+.modal-success .mf-button .btn:hover{ 
+    transform: scale(1.03);
+}
+
+/* ============================== PRELOADER MODAL ============================== */
+#animate-success-modal .modal-dialog{
+    margin-top: 0;
+    margin-bottom: 0;
+    /* border: #ED7027 1px solid; */
+    padding: var(--padding-1);
+    max-width: 300px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    #animate-success-modal .modal-content{
+    background-color: transparent;
+    border: none;
+}
+#animate-success-modal .loader-logo{
+    margin-top: 0;
+}
+
+.loader {
+    position: fixed;
+    z-index: 1111;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: none;  /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+}
+
+.loader.show {
+    display: flex; /* Make visible */
+    animation: fadeIn 0.5s; /* Fade-in animation */
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.loader.hide {
+    display: none; /* Hide immediately without animation */
+}
+
+
+.rotating-circle {
+    transform-origin: center;
+    animation: rotateAnimation 5s infinite linear;
+  }
+  
+  /* Define the rotation animation */
+  @keyframes rotateAnimation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+/* Apply scale animation to the inner circle */
+#inner-circle-dark {
+    animation: scaleRotateShutterAnimation 6s infinite;  /* Total duration of the cycle (grow + hold + shrink + pause) */
+    transform-origin: center; /* Ensure scaling and rotation happen around the center */
+    transform-box: fill-box; /* Prevent shifting outside of the circle */
+}
+
+/* Shutter effect animation: Grow, rotate, hold, shrink, then pause */
+@keyframes scaleRotateShutterAnimation {
+    0% {
+        transform: scale(1) rotate(0deg); /* Start at original size and no rotation */
+    }
+    30% {
+        transform: scale(1.3) rotate(90deg); /* Grow to 1.3x size and rotate 90 degrees */
+    }
+    50% {
+        transform: scale(1.3) rotate(180deg); /* Hold at 1.3x size and rotate to 180 degrees */
+    }
+    70% {
+        transform: scale(1) rotate(360deg); /* Shrink back to original size and complete the rotation */
+    }
+    100% {
+        transform: scale(1) rotate(360deg); /* Stay at original size and no rotation */
+    }
+}
+
+.blinking-group {
+    animation: blinking 2s infinite, growing 2s infinite; /* Apply both animations */
+    transform-origin: center; /* Ensure the group grows/shrinks from the center */
+}
+
+/* Blinking keyframes: opacity goes from 100% to 40% and back */
+@keyframes blinking {
+    0%, 50% {
+        opacity: 1;  /* Full opacity while growing */
+    }
+    100% {
+        opacity: 0.6;  /* Reduced opacity only when shrinking */
+    }
+}
+
+/* Growing keyframes: scale from 1 to 1.1 and move up */
+@keyframes growing {
+    0%, 100% {
+        transform: scale(1) translateY(0); /* Original size and position */
+    }
+    50% {
+        transform: scale(1.1) translateY(-5px); /* Grow by 10% and move up by 5px */
+    }
+}
+/* ============================== TERMS CONDITION MODAL ============================== */
+#terms-condition-modal .modal-dialog{
+    max-width: 480px;
+}
+
+#terms-condition-modal .terms-box{
+    /* border: #ED7027 1px solid;  */
+    max-width: 480px;
+    font-family: "Montserrat";
+    padding: 30px 20px;
+    padding-bottom: 20px;
+}
+
+#terms-condition-modal .modal-dialog .terms-text{
+    padding: 0 10px;
+    height: 400px;
+    overflow-y: auto;
+    font-size: 14px;
+    padding: 0px 20px;
+}
+
+.terms-text::-webkit-scrollbar{
+    width: 5px;
+    background-color: var(--color-default);
+}
+
+.terms-text::-webkit-scrollbar-thumb{
+    border-radius: var(--border-radius-button-half);
+    background-color: var(--color-secondary);
 }
 
 #terms-condition-modal .terms-text h4{
     color: var(--color-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
 #terms-condition-modal .modal-dialog .terms-text p,
@@ -427,13 +603,33 @@ input[type="password"]::-ms-clear {
     text-align: justify;
 }
 
+#terms-condition-modal .modal-dialog .terms-text .text-contact{
+    font-size: 0.8rem;
+    text-align: center;
+}
+#terms-condition-modal .modal-dialog .terms-text .text-contact span{
+    font-size: 0.7rem;
+    text-decoration: underline;
+    color: blue;
+}
+
 #terms-condition-modal  .modal-footer{
     /* border: #ED7027 1px solid; */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 0;
-    padding-top: var(--padding-1);
+    border-top: none;
+}
+
+#terms-condition-modal  .modal-footer span{
+    /* border: #ED7027 1px solid; */
+    font-weight: 700px!important;
+    color: var(--color-secondary);
+}
+
+#terms-condition-modal  .modal-footer h6{
+    font-size: 1rem;
 }
 #terms-condition-modal .modal-footer .mf-button{
     /* border: #ED7027 1px solid; */
@@ -458,8 +654,8 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 500;
-    border: 0.5px solid var(--color-primary);
-    font-size:1rem;
+    border: none;
+    font-size: 1rem;
     transition: var(--tran-03);
     border-radius:var(--border-radius-input)!important;
 }
@@ -603,7 +799,7 @@ aside{
     padding:var(--padding-half);
 
 }
-.sb-header img{
+.sb-header object{
     width: 110px;
     height: 110px;
 }
@@ -633,6 +829,8 @@ aside{
     height: 100%;
     display: flex;
     flex-direction: column; /* Stacks nav links in a column */
+    justify-content: center;
+    align-items: center;
     padding-bottom: var(--padding-1);
 }
 
@@ -643,7 +841,7 @@ aside{
     align-items: center;
     justify-content: start;
     width: 100%;
-    padding-left: var(--padding-1);
+    padding-left: 1.5rem;
     gap: var(--gap-1);
 }
 
@@ -652,12 +850,12 @@ aside{
     border-radius: var(--border-radius-input);
     margin-bottom: var(--margin-half);
     padding: 2px;
-    /* padding-left: var(--padding-2); */
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--gap-1);
-    width: 100%;
+    width: 95%;
+    transition: var(--tran-03);
 }
 
 .sb-body .nav-link:last-child {
@@ -715,7 +913,8 @@ aside{
 #unsaved-warning-modal  .modal-header,
 #unsaved-warning-modal .modal-footer,
 #resolve-warning-modal  .modal-header,
-#resolve-warning-modal .modal-footer{
+#resolve-warning-modal .modal-footer,
+.modal-success .modal-footer{
     border-bottom: none;
     border-top: none;
 }
@@ -736,7 +935,9 @@ aside{
 
 #logout-modal .modal-content,
 #unsaved-warning-modal .modal-content,
-#resolve-warning-modal .modal-content{
+#resolve-warning-modal .modal-content,
+#forgot-success-modal .modal-content,
+.modal-success .modal-content{
     height: auto;
 }
 
@@ -815,8 +1016,9 @@ aside{
 
 main{
     /* border: purple 3px solid; */
-    width: calc(100vw - 250px);
+    width: calc(100vw - 280px);
     padding: var(--padding-half);
+    padding-right: 0;
     grid-area: mn;
     z-index: 2;
     color: var(--color-secondary);
@@ -985,7 +1187,7 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-default);
     border: var(--color-secondary) 0.5px solid;
     width: 100%;
-    height: 100%;
+    height: auto;
     border-radius:var(--border-radius-sidebar);
     padding: var(--padding-1);
     display: flex;
@@ -1402,11 +1604,11 @@ input[type="password"]::-ms-clear {
 /* ============================== ANALYTICS GRAPH ============================== */
 
 .chart-graph{
-    /* border: var(--color-secondary) 1px solid; */
+    border: var(--color-secondary) 1px solid;
     border-radius: var(--border-radius-button-half);
     background-color: var(--color-white);
     width: 100%;
-    min-height: 480px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1421,12 +1623,22 @@ input[type="password"]::-ms-clear {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100%;
-    padding: var(--padding-1);
-    padding-top: var(--padding-2);
+    min-height: 450px;
+    align-items: center;
     justify-content: start;
     gap:var(--gap-half);
     overflow-x: auto;
+}
+
+.chart::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-default);
+}
+
+.chart::-webkit-scrollbar-thumb{
+    border-radius: var(--border-radius-button-half);
+    background-color: var(--color-secondary);
 }
 
 .incident-count{
@@ -1460,7 +1672,7 @@ input[type="password"]::-ms-clear {
     padding:var(--padding-half);
     padding-top: 0;
     margin: 0;
-    align-items: start;
+    align-items: center;
     justify-content: space-evenly;
     gap: var(--gap-1);
 }
@@ -1468,7 +1680,7 @@ input[type="password"]::-ms-clear {
 .incident-bars li{
     /* border: green 1px solid; */
     display: table-cell;
-    width: 95px;
+    width: 75px;
     height: 370px;
     position: relative;
 }
@@ -1570,6 +1782,17 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-half);
     padding: var(--padding-half);
     overflow-y: auto;
+}
+
+.ld-table tbody::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-default);
+}
+
+.ld-table tbody::-webkit-scrollbar-thumb{
+    border-radius: var(--border-radius-button-half);
+    background-color: var(--color-secondary);
 }
 
 .ld-table tbody tr{
@@ -1774,7 +1997,7 @@ input[type="password"]::-ms-clear {
 
 .rb-header{
     /* border: var(--color-secondary) 1px solid; */
-    border-bottom: var(--color-primary) 1.5px solid;
+    /* border-bottom: var(--color-primary) 1.5px solid; */
     width: 100%;
     height: 100px;
     display: flex;
@@ -1826,6 +2049,7 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-1);
 }
 
+
 .rb-header input{
     width: 275px;
     height: 40px;
@@ -1876,7 +2100,63 @@ input[type="password"]::-ms-clear {
     cursor: pointer;
 }
 
+.rbt-header{
+    /* border: var(--color-secondary) solid 3px; */
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap-1);
+}
+
+.rbt-header .rbth-btns{
+    /* border: var(--color-secondary) solid 3px; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-half);
+    height: 100%;
+}
+
+.rbth-btns .btn-view,
+.rbth-btns .btn-archive{
+    border-radius: var(--border-radius-input);
+    background-color: var(--color-tertiary);
+    font-weight: 500;
+    height: 1.8rem;
+    padding: 0 var(--padding-half);
+    /* box-shadow: var(--box-shadow); */
+    transition: var(--tran-03);
+    color: var(--color-primary);
+}
+
+.rbth-btns .btn-view i,
+.rbth-btns .btn-archive i{
+     padding-right: var(--padding-half);
+}
+
+.rbth-btns .btn-view:hover,
+.rbth-btns .btn-archive:hover{
+    transform: scale(1.03);
+}
+
+#reportTabs .nav-link {
+    background-color: #f8f9fa; /* Light gray background for inactive tabs */
+    color: var(--color-primary); /* Text color for inactive tabs */
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#reportTabs .nav-link.active {
+    background-color: var(--color-default); /* Blue background for the active tab */
+    color: var(--color-secondary); /* White text color for the active tab */
+    border-bottom: var(--color-default) 1px solid;
+}
+
+#reportTabs .tab-content {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
 .rb-table{
+    border: none;
     width: 100%;
     height: 100%;
     display: flex;
@@ -1911,6 +2191,12 @@ input[type="password"]::-ms-clear {
     white-space: normal;
     word-break: break-word;
     text-align: center;
+}
+
+.rb-table th:first-child,
+.rb-table td:first-child {
+    /* border-right: 1px solid var(--color-primary); */
+    width: 85% !important;
 }
 
 .rb-table td:last-child h6{
@@ -1953,8 +2239,8 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-table .form-check-input{
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
     border: var(--color-secondary) 2px solid;
 }
 
@@ -1974,10 +2260,11 @@ input[type="password"]::-ms-clear {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
     color: var(--color-primary);
     white-space:nowrap;
     padding: 0.5rem 2rem;
+    height: 100%;
 }
 
 .rb-group{
@@ -2002,6 +2289,7 @@ input[type="password"]::-ms-clear {
 
 .rb-footer .btn-excel{
     border: var(--border-input);
+    border-left: none;
     transition: var(--tran-03);
 }
 
@@ -2474,15 +2762,18 @@ input[type="password"]::-ms-clear {
     box-shadow: 0 0 5px .25rem var(--color-default)
 }
 
-/* ================================  MODAL REMOVE ================================  */
+/* ================================  MODAL REMOVE AND ARCHIVE ================================  */
 
 #remove-account-modal  .modal-header,
-#remove-account-modal .modal-footer{
+#remove-account-modal .modal-footer,
+#archive-report-modal .modal-header,
+#archive-report-modal .modal-footer{
     border-bottom: none;
     border-top: none;
 }
 
-#remove-account-modal .modal-dialog{
+#remove-account-modal .modal-dialog,
+#archive-report-modal .modal-dialog{
     margin-top: 0;
     margin-bottom: 0;
     /* border: #ED7027 1px solid; */
@@ -2494,7 +2785,8 @@ input[type="password"]::-ms-clear {
     align-items: center;
 }
 
-#remove-account-modal .modal-content{
+#remove-account-modal .modal-content,
+#archive-report-modal .modal-content{
     height: auto;
 }
 
@@ -2528,8 +2820,39 @@ input[type="password"]::-ms-clear {
     padding-right: var(--padding-3);
     color: var(--color-primary);
 }
+.archive-logo{
+    display: flex;
+    /* border: #ED7027 1px solid; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
 
-#remove-account-modal .modal-footer{
+.archive-logo i{
+    /* border: #ED7027 1px solid; */
+    font-size: 130px;
+    color: var(--color-secondary);
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    padding-top: var(--padding-1);
+    padding-bottom: var(--padding-half);
+    line-height: 1; /* Adjust line-height to minimize spacing */
+}
+
+.archive-logo h3{
+    text-align: center; /* Centers the text horizontally */
+    margin: 0; /* Optional: to remove default margins */
+    margin-top: var(--margin-half);
+    padding-bottom: var(--padding-half);
+    padding-left: var(--padding-3);
+    padding-right: var(--padding-3);
+    color: var(--color-primary);
+}
+
+#remove-account-modal .modal-footer,
+#archive-report-modal .modal-footer{
     /* border: #ED7027 1px solid; */
     display: flex;
     flex-direction: column;
@@ -2537,7 +2860,8 @@ input[type="password"]::-ms-clear {
     margin-top: var(--margin-1);
     padding: var(--padding-1);
 }
-#remove-account-modal .modal-footer .mf-button{
+#remove-account-modal .modal-footer .mf-button,
+#archive-report-modal .modal-footer .mf-button{
     /* border: #ED7027 1px solid; */
     display: flex;
     flex-direction: row;
@@ -2546,7 +2870,8 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-2);
 }
 
-#remove-account-modal .modal-footer .btn-confirm{
+#remove-account-modal .modal-footer .btn-confirm,
+#archive-report-modal .modal-footer .btn-confirm{
     background-color: var(--color-primary);
     color: white;
     font-weight: 600;
@@ -2555,7 +2880,8 @@ input[type="password"]::-ms-clear {
     border-radius: var(--border-radius-input)!important;
     transition: var(--tran-03);
 }
-#remove-account-modal .modal-footer .btn-cancel{
+#remove-account-modal .modal-footer .btn-cancel,
+#archive-report-modal .modal-footer .btn-cancel{
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 600;
@@ -2566,7 +2892,9 @@ input[type="password"]::-ms-clear {
 }
 
 #remove-account-modal .modal-footer .btn-confirm:hover,
-#remove-account-modal .modal-footer .btn-cancel:hover{
+#remove-account-modal .modal-footer .btn-cancel:hover,
+#archive-report-modal .modal-footer .btn-confirm:hover,
+#archive-report-modal .modal-footer .btn-cancel:hover{
     transform: scale(1.03);
 }
 
@@ -3169,7 +3497,7 @@ input[type="password"]::-ms-clear {
         align-items: center;
     }
     .header-nav button{
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     .top-divider svg {
         display: none;
@@ -3179,7 +3507,7 @@ input[type="password"]::-ms-clear {
     }
     main{
         /* border: purple 3px solid; */
-        width: calc(100vw - 80px);
+        width: calc(100vw - 95px);
         padding: var(--padding-half);
     }
 
@@ -3193,12 +3521,16 @@ input[type="password"]::-ms-clear {
     .sidebar{
         border-radius: var(--border-radius-button-half);
     }
-    .sb-header img {
+    .sb-header{
+        padding-top: var(--padding-half);
+    }
+    
+    .sb-header object{
         width: 60px;
         height: 60px;
     }
     .sb-header .sbheader-logo {
-        margin-bottom: var(--margin-1);
+        margin-bottom: 0;
     }
     .sb-body .description,
     .sb-header .sbheader-text {
@@ -3352,7 +3684,23 @@ input[type="password"]::-ms-clear {
         flex-direction: column;
         justify-content: center;
     }
+    /* Background color when hovered, clicked (active), or focused */
+    .drop-profile .dropdown-item.active,
+    .drop-profile .dropdown-item:active {
+        color: #fff;
+        text-decoration: none;
+        background-color: #ED7027;
+    }
+
+    .drop-profile .dropdown-item {
+        padding-top: .25rem!important;
+    }
+
 /* ================================  <700-SIDEBAR ================================  */
+    .loader-svg{
+        width: 150px;
+        height: 150px;
+    }
     #sidebar-toggle{
         display: block;
     }
@@ -3424,9 +3772,11 @@ input[type="password"]::-ms-clear {
         width: 60px;
         height: 60px;
     }
+    .sb-header{
+        padding-top: 0;
+    }
     .sb-header .sbheader-logo {
         display: none;
-        margin-bottom: var(--margin-1);
     }
     .sb-body .description,
     .sb-header .sbheader-text {
@@ -3578,17 +3928,34 @@ input[type="password"]::-ms-clear {
         font-size: 1.2rem!important;
     }
     /* ================================  <700-REPORTS ================================  */
-
+    .rbt-header{
+        /* border: var(--color-secondary) solid 3px; */
+        display: flex;
+        flex-direction: row;
+        gap: var(--gap-1);
+    }
+    #reportTabs .nav-link {
+        font-size: 0.7rem;
+    }
+    .rbth-btns .btn-view,
+    .rbth-btns .btn-archive{
+        font-size: 0.7rem!important;
+    }
+    .rbth-btns .btn-view i,
+    .rbth-btns .btn-archive i{
+        font-size: 0.7rem;
+        padding-right: 5px !important;
+    }
     .rb-header{
-        border: var(--color-secondary) 1px solid;
+        /* border: var(--color-secondary) 1px solid; */
         height: auto;
         display: flex;
         flex-direction: column;
         align-items: start;
-        justify-content: space-between;
-        gap: var(--gap-half);
         padding-left: var(--padding-1);
+        gap: var(--gap-half);
     }
+    /* */
 
     .rbh-left{
         /* border: var(--color-secondary) 1px solid; */
@@ -3601,6 +3968,7 @@ input[type="password"]::-ms-clear {
     .rb-header input{
         width: 220px;
         height: 35px;
+        font-size: 0.8rem;
     }
     .rbh-left .create-button{
         /* border: var(--color-secondary) solid 3px; */

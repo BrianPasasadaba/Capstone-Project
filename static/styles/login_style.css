@@ -395,6 +395,181 @@ input:not(:placeholder-shown) + .input-label {
 #forgot-success-modal .modal-footer button{
     background-color: var(--color-primary);
     color: white;
+    transition: all 0.3s ease;
+}
+
+#forgot-success-modal .modal-footer button:hover{
+    transform: scale(1.03);
+    box-shadow: 4px 4px 8px var(--color-shadow);
+}
+
+/* ============================== SUCCESS MODAL ============================== */
+.modal-success .modal-dialog{
+    margin-top: 0;
+    margin-bottom: 0;
+    /* border: #ED7027 1px solid; */
+    padding: var(--padding-1);
+    max-width: 550px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.modal-success .md-state{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#animate-success-modal .loader-logo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    color: var(--color-primary);
+    margin-top: var(--margin-1);
+}
+
+.modal-success .success-logo i{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 130px;
+    color: green;
+}
+
+.modal-success .mf-button .btn{ 
+    transition: var(--tran-03);
+    border-radius: var(--border-radius-input);
+}
+
+.modal-success .mf-button .btn:hover{ 
+    transform: scale(1.03);
+}
+
+/* ============================== PRELOADER MODAL ============================== */
+#animate-success-modal .modal-dialog{
+    margin-top: 0;
+    margin-bottom: 0;
+    /* border: #ED7027 1px solid; */
+    padding: var(--padding-1);
+    max-width: 300px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+    #animate-success-modal .modal-content{
+        background-color: transparent;
+        border: none;
+    }
+#animate-success-modal .loader-logo{
+    margin-top: 0;
+}
+
+
+.loader{
+    position: fixed;
+    z-index: 1111;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);  /* 30% transparent black */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader.show {
+    display: flex; /* Make visible */
+    animation: fadeIn 0.5s; /* Fade-in animation */
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.loader.hide {
+    display: none; /* Hide immediately without animation */
+}
+
+.rotating-circle {
+    transform-origin: center;
+    animation: rotateAnimation 5s infinite linear;
+  }
+  
+  /* Define the rotation animation */
+  @keyframes rotateAnimation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+/* Apply scale animation to the inner circle */
+#inner-circle-dark {
+    animation: scaleRotateShutterAnimation 6s infinite;  /* Total duration of the cycle (grow + hold + shrink + pause) */
+    transform-origin: center; /* Ensure scaling and rotation happen around the center */
+    transform-box: fill-box; /* Prevent shifting outside of the circle */
+}
+
+/* Shutter effect animation: Grow, rotate, hold, shrink, then pause */
+@keyframes scaleRotateShutterAnimation {
+    0% {
+        transform: scale(1) rotate(0deg); /* Start at original size and no rotation */
+    }
+    30% {
+        transform: scale(1.3) rotate(90deg); /* Grow to 1.3x size and rotate 90 degrees */
+    }
+    50% {
+        transform: scale(1.3) rotate(180deg); /* Hold at 1.3x size and rotate to 180 degrees */
+    }
+    70% {
+        transform: scale(1) rotate(360deg); /* Shrink back to original size and complete the rotation */
+    }
+    100% {
+        transform: scale(1) rotate(360deg); /* Stay at original size and no rotation */
+    }
+}
+
+.blinking-group {
+    animation: blinking 2s infinite, growing 2s infinite; /* Apply both animations */
+    transform-origin: center; /* Ensure the group grows/shrinks from the center */
+}
+
+/* Blinking keyframes: opacity goes from 100% to 40% and back */
+@keyframes blinking {
+    0%, 50% {
+        opacity: 1;  /* Full opacity while growing */
+    }
+    100% {
+        opacity: 0.6;  /* Reduced opacity only when shrinking */
+    }
+}
+
+/* Growing keyframes: scale from 1 to 1.1 and move up */
+@keyframes growing {
+    0%, 100% {
+        transform: scale(1) translateY(0); /* Original size and position */
+    }
+    50% {
+        transform: scale(1.1) translateY(-5px); /* Grow by 10% and move up by 5px */
+    }
 }
 /* ======== Media Queries for Responsive Design ======== */
 

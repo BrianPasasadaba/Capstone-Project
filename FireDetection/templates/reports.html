@@ -54,7 +54,6 @@
 
                 <div class="rb-header">
                     <div class="rbh-left">
-
                         <div class="rbh-search">
                             <input type="text" id="searchInput" class="search-report" placeholder="Search" maxlength="30">
                             <ul id="suggestionsBox" class="dropdown-menu"></ul>
@@ -73,7 +72,7 @@
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                   Filter
                                 </button>
-                                <ul class="dropdown-menu .dropdown-filter" aria-labelledby="dropdownMenuButton1" id="dropdown-filter">
+                                <ul class="dropdown-menu .dropdown-filter" aria-labelledby="dropdownMenuButton1" id="dropdown-filter-rep">
                                   <li><a class="dropdown-item" href="#">Latest</a></li>
                                   <li><a class="dropdown-item" href="#">Oldest</a></li>
                                   <li><a class="dropdown-item" href="#">Ongoing</a></li>
@@ -83,81 +82,176 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="rb-table">   
-                    <table>
-                        <thead>
-                            <tr  data-bs-toggle="modal" >
-                                <th>Report</th>
-                                <th>Location</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody id="reportTable">
-                            {% for report in reports %}
-                            <tr
-                                data-report-id="{{ report.id|default:0 }}"
-                                data-status="{{ report.status|default:'None' }}"
-                                data-location="{{ report.where|default:'None' }}" 
-                                data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
-                                data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
-                                data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
-                                data-owner="{{ report.name_of_owner|default:'None' }}"
-                                data-alarm="{{ report.alarm_status|default:'None' }}"
-                                data-damages="{{ report.estimated_damages|default:0 }}"
-                                data-establishments="{{ report.no_of_establishments|default:0 }}"
-                                data-casualties="{{ report.no_of_fatality|default:0 }}" 
-                                data-injured="{{ report.no_of_injured|default:0 }}"
-                                data-proof="{{ report.proof|default:'None' }}"
-                                data-involved="{{ report.involved|default:'None' }}"
-                                data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
-                                data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
-                                data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
-                                data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
-                                data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
-                                data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
-                                data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
-                                data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
-                                data-families-affected="{{ report.no_of_families_affected|default:0 }}"
-                                data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
-                                data-ground-commander="{{ report.ground_commander|default:'None' }}"
-                                data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
-                                data-safety-officer="{{ report.safety_officer|default:'None' }}"
-                                data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
-                                data-sender="{{ report.name_of_sender|default:'None' }}"
-                                data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
-                                data-team="{{ report.team|default:'None' }}" 
+                
+                <div class="rb-table">
+                    <div class="rbt-header">
+                        <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="true">REPORTS</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                  <button class="nav-link" id="archives-tab" data-bs-toggle="tab" data-bs-target="#archives" type="button" role="tab" aria-controls="archives" aria-selected="false">ARCHIVES</button>
+                            </li>
+                        </ul>
+                        <div class="rbth-btns">
+                            <button type="button" class="btn btn-sm btn-view" disabled><i class="bi bi-eye-fill"></i>View</button>
+                            <button type="button" class="btn btn-sm btn-archive" disabled><i class="bi bi-archive-fill"></i>Archive</button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="reportTabsContent">
+                        <!-- Reports Tab Content -->
+                        <div class="tab-pane fade show active" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+                            <table>
+                                <thead>
+                                    <tr  data-bs-toggle="modal" >
+                                        <th>Select</th>
+                                        <th>Report</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
                                 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#report-preview-modal">
-                                <td>{{ report.fir_number|default:'None' }}</td>
-                                <td>{{ report.where|default:'None' }}</td>
-                                <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
-                                <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
-                                <td>
-                                    <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5">No reports available</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tr id="noResultsMessage" style="display: none;">
-                            <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
-                        </tr>      
+                                <tbody id="reportTable">
+                                    {% for report in reports %}
+                                    <tr
+                                        data-report-id="{{ report.id|default:0 }}"
+                                        data-status="{{ report.status|default:'None' }}"
+                                        data-location="{{ report.where|default:'None' }}" 
+                                        data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
+                                        data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
+                                        data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-owner="{{ report.name_of_owner|default:'None' }}"
+                                        data-alarm="{{ report.alarm_status|default:'None' }}"
+                                        data-damages="{{ report.estimated_damages|default:0 }}"
+                                        data-establishments="{{ report.no_of_establishments|default:0 }}"
+                                        data-casualties="{{ report.no_of_fatality|default:0 }}" 
+                                        data-injured="{{ report.no_of_injured|default:0 }}"
+                                        data-proof="{{ report.proof|default:'None' }}"
+                                        data-involved="{{ report.involved|default:'None' }}"
+                                        data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
+                                        data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
+                                        data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
+                                        data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
+                                        data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
+                                        data-families-affected="{{ report.no_of_families_affected|default:0 }}"
+                                        data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
+                                        data-ground-commander="{{ report.ground_commander|default:'None' }}"
+                                        data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
+                                        data-safety-officer="{{ report.safety_officer|default:'None' }}"
+                                        data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
+                                        data-sender="{{ report.name_of_sender|default:'None' }}"
+                                        data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
+                                        data-team="{{ report.team|default:'None' }}" 
+                                        
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#report-preview-modal">
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                        </td>
+                                        <td>{{ report.fir_number|default:'None' }}</td>
+                                        <td>{{ report.where|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
+                                        <td>
+                                            <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5">No reports available</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr id="noResultsMessage" style="display: none;">
+                                    <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
+                                </tr>      
 
-                        <tr id="noFoundFilter" style="display: none;">
-                            <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
-                        </tr>       
-                                      
-                    </table>
-                    
+                                <tr id="noFoundFilter" style="display: none;">
+                                    <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                                </tr>           
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="archives" role="tabpanel" aria-labelledby="archives-tab">
+                            <table>
+                                <thead>
+                                    <tr  data-bs-toggle="modal" >
+                                        <th>Select</th>
+                                        <th>Report</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody id="archiveTable">
+                                    {% for report in reports %}
+                                    <tr
+                                        data-report-id="{{ report.id|default:0 }}"
+                                        data-status="{{ report.status|default:'None' }}"
+                                        data-location="{{ report.where|default:'None' }}" 
+                                        data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
+                                        data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
+                                        data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-owner="{{ report.name_of_owner|default:'None' }}"
+                                        data-alarm="{{ report.alarm_status|default:'None' }}"
+                                        data-damages="{{ report.estimated_damages|default:0 }}"
+                                        data-establishments="{{ report.no_of_establishments|default:0 }}"
+                                        data-casualties="{{ report.no_of_fatality|default:0 }}" 
+                                        data-injured="{{ report.no_of_injured|default:0 }}"
+                                        data-proof="{{ report.proof|default:'None' }}"
+                                        data-involved="{{ report.involved|default:'None' }}"
+                                        data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
+                                        data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
+                                        data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
+                                        data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
+                                        data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
+                                        data-families-affected="{{ report.no_of_families_affected|default:0 }}"
+                                        data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
+                                        data-ground-commander="{{ report.ground_commander|default:'None' }}"
+                                        data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
+                                        data-safety-officer="{{ report.safety_officer|default:'None' }}"
+                                        data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
+                                        data-sender="{{ report.name_of_sender|default:'None' }}"
+                                        data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
+                                        data-team="{{ report.team|default:'None' }}" 
+                                        
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#report-preview-modal">
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                        </td>
+                                        <td>{{ report.fir_number|default:'None' }}</td>
+                                        <td>{{ report.where|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
+                                        <td>
+                                            <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5">No reports available</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr id="noResultsMessage" style="display: none;">
+                                    <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
+                                </tr>      
 
+                                <tr id="noFoundFilter" style="display: none;">
+                                    <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                                </tr>           
+                            </table>
+                        </div>
                 </div>
                 <div class="rb-footer">
                     <div class="rb-group">
@@ -171,14 +265,39 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="export-icon"><i class="bi bi-file-earmark-arrow-down"></i>
                                 </span>
-                                <button class="btn btn-excel" value="1" id="exportButton"  onclick="handleExport()">Export to Excel</button>
+
+                                <button class="btn btn-excel dropdown-toggle" type="button" id="exportButton" data-bs-toggle="dropdown" aria-expanded="false">Export Options</button>
+
+                                <ul class="dropdown-menu export-opt" aria-labelledby="exportButton" id="yearDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('seventhYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('sixthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('fifthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('fourthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('thirdYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('secondYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('firstYear')">Export {} Reports</a>
+                                    </li>
+                                </ul>
+
                             </div>          
                             
                             <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
                                 No data available.
                             </div>
                             
-
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item prev disabled">
@@ -234,6 +353,43 @@
 <script src="{% static 'js/pagination.js' %}"></script>
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+<script>
+    function populateYears() {
+        const currentYear = new Date().getFullYear();
+        const totalYears = 7;
+        const dropdown = document.getElementById("yearDropdown");
+
+        dropdown.innerHTML = ""; 
+
+        for (let i = 0; i < totalYears; i++) {
+            const year = currentYear - i; 
+            const ordinal = getOrdinalName(i + 1);
+
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `
+                <a class="dropdown-item" href="#" onclick="handleExport(${year})">
+                    Export ${year} Reports
+                </a>
+            `;
+            dropdown.appendChild(listItem);
+        }
+    }
+
+    function getOrdinalName(position) {
+        const ordinals = ["firstYear", "secondYear", "thirdYear", "fourthYear", "fifthYear", "sixthYear", "seventhYear"];
+        return ordinals[position - 1] || "";
+    }
+
+    function handleExport(year) {
+        window.location.href = `/export-initial-report/?value=${year}`;
+    }
+
+    window.onload = populateYears;
+</script>
+
+
+
+
 <script>
 document.getElementById('searchInput').addEventListener('input', function (e) {
     // Allow only alphanumeric characters, '.', '-', '/', and ':'
@@ -345,6 +501,11 @@ editButton.addEventListener('click', function() {
             }
         });
 
+        // When entering edit mode, clear 'None' values in all fields
+        if (isEditable) {
+            clearNoneValues(); // This function will clear the 'None' values
+        }
+
         // When editing, pass the current value of original fields to the search fields
         originalFields.forEach((originalField, index) => {
             if (originalField && searchFields[index]) {
@@ -365,6 +526,7 @@ editButton.addEventListener('click', function() {
             }
         });
 
+        // Change edit button appearance when in edit mode
         if (isEditable) {
             icon.style.display = 'none'; 
             text.textContent = 'Editing';
@@ -380,9 +542,51 @@ editButton.addEventListener('click', function() {
             text.textContent = 'Edit';
         }
 
+        // Show or hide save button based on edit mode
         saveButton.style.display = isEditable ? 'inline-block' : 'none';
     }
 });
+// New function to clear 'None' values from all fields
+function clearNoneValues() {
+    const allFields = [
+        document.getElementById('involved'),
+        document.getElementById('alarm-dec'),
+        document.getElementById('funder-dec'),
+        document.getElementById('fout-dec'),
+        document.getElementById('ground'),
+        document.getElementById('safety'),
+        document.getElementById('sender'),
+        document.getElementById('loc'),
+        document.getElementById('team'),
+        document.getElementById('detect'),
+        document.getElementById('date'),
+        document.getElementById('owner'),
+        document.getElementById('alarm'),
+        document.getElementById('time-arrive'),
+        document.getElementById('time-under'),
+        document.getElementById('date-under'),
+        document.getElementById('time-out'),
+        document.getElementById('date-out'),
+        document.getElementById('damage'),
+        document.getElementById('fatality'),
+        document.getElementById('injured'),
+        document.getElementById('affected'),
+        document.getElementById('establishment'),
+        document.getElementById('truck'),
+        document.getElementById('ground-num'),
+        document.getElementById('safety-num'),
+        document.getElementById('sender-num'),
+        document.getElementById('proof'),
+        document.getElementById('modal-proof')
+    ];
+
+    // Loop through each field and clear 'None' value
+    allFields.forEach(field => {
+        if (field && field.value === 'None') {
+            field.value = ''; // Clear the value if it is 'None'
+        }
+    });
+}
 
 
 

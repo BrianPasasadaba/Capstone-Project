@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
 psycopg2 = "*"
 pillow = "*"
 django-active-link = "*"
@@ -12,6 +11,7 @@ python-dotenv = "*"
 openpyxl = "*"
 whitenoise = "*"
 supabase = "*"
+django = "*"
 uvicorn = "*"
 gunicorn = "*"
 
