@@ -1986,6 +1986,7 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-1);
 }
 
+
 .rb-header input{
     width: 275px;
     height: 40px;
@@ -2036,16 +2037,59 @@ input[type="password"]::-ms-clear {
     cursor: pointer;
 }
 
+.rbt-header{
+    /* border: var(--color-secondary) solid 3px; */
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap-1);
+}
+
+.rbt-header .rbth-btns{
+    /* border: var(--color-secondary) solid 3px; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-half);
+    height: 100%;
+}
+
+.rbth-btns .btn-view,
+.rbth-btns .btn-archive{
+    border-radius: var(--border-radius-input);
+    background-color: var(--color-tertiary);
+    font-weight: 500;
+    height: 1.8rem;
+    padding: 0 var(--padding-half);
+    /* box-shadow: var(--box-shadow); */
+    transition: var(--tran-03);
+    color: var(--color-primary);
+}
+
+.rbth-btns .btn-view i,
+.rbth-btns .btn-archive i{
+     padding-right: var(--padding-half);
+}
+
+.rbth-btns .btn-view:hover,
+.rbth-btns .btn-archive:hover{
+    transform: scale(1.03);
+}
+
 #reportTabs .nav-link {
     background-color: #f8f9fa; /* Light gray background for inactive tabs */
     color: var(--color-primary); /* Text color for inactive tabs */
     font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #reportTabs .nav-link.active {
     background-color: var(--color-default); /* Blue background for the active tab */
     color: var(--color-secondary); /* White text color for the active tab */
     border-bottom: var(--color-default) 1px solid;
+}
+
+#reportTabs .tab-content {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .rb-table{
@@ -2084,6 +2128,12 @@ input[type="password"]::-ms-clear {
     white-space: normal;
     word-break: break-word;
     text-align: center;
+}
+
+.rb-table th:first-child,
+.rb-table td:first-child {
+    /* border-right: 1px solid var(--color-primary); */
+    width: 85% !important;
 }
 
 .rb-table td:last-child h6{
@@ -2126,8 +2176,8 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-table .form-check-input{
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
     border: var(--color-secondary) 2px solid;
 }
 
@@ -3771,17 +3821,34 @@ input[type="password"]::-ms-clear {
         font-size: 1.2rem!important;
     }
     /* ================================  <700-REPORTS ================================  */
-
+    .rbt-header{
+        /* border: var(--color-secondary) solid 3px; */
+        display: flex;
+        flex-direction: row;
+        gap: var(--gap-1);
+    }
+    #reportTabs .nav-link {
+        font-size: 0.7rem;
+    }
+    .rbth-btns .btn-view,
+    .rbth-btns .btn-archive{
+        font-size: 0.7rem!important;
+    }
+    .rbth-btns .btn-view i,
+    .rbth-btns .btn-archive i{
+        font-size: 0.7rem;
+        padding-right: 5px !important;
+    }
     .rb-header{
-        border: var(--color-secondary) 1px solid;
+        /* border: var(--color-secondary) 1px solid; */
         height: auto;
         display: flex;
         flex-direction: column;
         align-items: start;
-        justify-content: space-between;
-        gap: var(--gap-half);
         padding-left: var(--padding-1);
+        gap: var(--gap-half);
     }
+    /* */
 
     .rbh-left{
         /* border: var(--color-secondary) 1px solid; */
@@ -3794,6 +3861,7 @@ input[type="password"]::-ms-clear {
     .rb-header input{
         width: 220px;
         height: 35px;
+        font-size: 0.8rem;
     }
     .rbh-left .create-button{
         /* border: var(--color-secondary) solid 3px; */
