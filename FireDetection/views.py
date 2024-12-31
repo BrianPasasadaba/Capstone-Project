@@ -53,6 +53,9 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.timezone import make_aware, get_current_timezone
 from django.db.models.functions import ExtractYear
 from supabase import create_client, Client
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.utils.html import strip_tags
 import mimetypes
 import os
 
@@ -426,11 +429,24 @@ def change_password(request):
 
         update_session_auth_hash(request, user)
 
+        # Prepare email context
+        context = {
+            'user': user,
+            'date': timezone.now(),
+            'year': timezone.now().year,
+        }
+
+        # Render HTML email
+        html_message = render_to_string('emails/forgot_password_confirmation.html', context)
+        plain_message = strip_tags(html_message)  # Create plain text version
+
+        # Send email
         send_mail(
             'Password Reset Successful',
-            f'Hello {user.get_full_name() or user.name},\n\nYour password has been successfully changed.\n\nPlease keep it safe and secure.',
+            plain_message,
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
+            html_message=html_message,
             fail_silently=False,
         )
         
@@ -464,11 +480,24 @@ def forgot_password_view(request):
             user.set_password(new_password)
             user.save()
 
+            # Prepare email context
+            context = {
+                'user': user,
+                'date': timezone.now(),
+                'year': timezone.now().year,
+            }
+
+            # Render HTML email
+            html_message = render_to_string('emails/forgot_password_confirmation.html', context)
+            plain_message = strip_tags(html_message)  # Create plain text version
+
+            # Send email
             send_mail(
-                'Password Reset Successful',
-                f'Hello {user.name},\n\nYour password has been successfully changed.\n\nPlease keep it safe and secure.',
+                'Password Reset Confirmation',
+                plain_message,
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
+                html_message=html_message,
                 fail_silently=False,
             )
 
