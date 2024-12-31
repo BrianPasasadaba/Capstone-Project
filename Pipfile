@@ -12,8 +12,6 @@ openpyxl = "*"
 whitenoise = "*"
 supabase = "*"
 django = "*"
-uvicorn = "*"
-gunicorn = "*"
 
 [dev-packages]
 

@@ -55,10 +55,6 @@ from django.db.models.functions import ExtractYear
 from supabase import create_client, Client
 import mimetypes
 import os
-from asgiref.sync import sync_to_async
-import asyncio
-from django.db import transaction
-from django.db.models import F
 
 
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
@@ -80,33 +76,18 @@ def fetch_names(request):
         return JsonResponse({'names': list(users)}, safe=False)
 
 
-
 @csrf_protect
 @require_POST
-@transaction.atomic
 def transfer_report(request, temp_report_id):
     try:
-        # Use select_for_update to lock the row and prevent concurrent modifications
-        temp_report = tempReports.objects.select_for_update().get(id=temp_report_id)
-        
-        # Check if the report has already been transferred
-        if temp_report.is_transferred:
-            return JsonResponse({
-                'status': 'error', 
-                'message': 'Report has already been transferred'
-            }, status=400)
-        
-        # Create the new initial report
+        temp_report = tempReports.objects.get(id=temp_report_id)
+
         new_initial_report = InitialReport.objects.create(
             where=temp_report.where,
             date_reported=temp_report.date,
             time_reported=temp_report.time_detected,
             proof=temp_report.proof,
         )
-        
-        # Mark the temp report as transferred
-        temp_report.is_transferred = True
-        temp_report.save()
 
         return JsonResponse({'status': 'success', 'report_id': new_initial_report.id})
 
@@ -272,7 +253,7 @@ def monthly_reports_for_current_year(request):
 
 @login_required
 def analytics_view(request):
-    current_date = datetime.now()
+    current_date = localtime(now())
 
     latest_reports = tempReports.objects.filter(
         status__in=['Reported', 'Dismissed']
@@ -910,24 +891,24 @@ def desktop_notification(request):
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
-async def event_stream(request):
-    """Async SSE endpoint that clients connect to for updates"""
-    async def event_generator():
+def event_stream(request):
+    """SSE endpoint that clients connect to for updates"""
+    def event_generator():
         last_check = time.time()
         
         while True:
-            current_time = await sync_to_async(cache.get)('last_update_time')
+            current_time = cache.get('last_update_time')
             if current_time and current_time > last_check:
-                data = await sync_to_async(cache.get)('latest_update')
+                data = cache.get('latest_update')
                 if data:
                     yield f"data: {json.dumps(data)}\n\n"
                     last_check = current_time
             
-            await asyncio.sleep(1)
+            time.sleep(1)
 
     response = StreamingHttpResponse(event_generator(), content_type='text/event-stream')
     response['Cache-Control'] = 'no-cache'
-    response['X-Accel-Buffering'] = 'no'
+    response['Connection'] = 'keep-alive'
     return response
 
 def get_temp_report_details(report_id):
@@ -963,22 +944,7 @@ def get_unresolved_reports(request):
             'date': report.date.strftime('%B %d, %Y'),
             'time': report.time_detected.strftime('%I:%M %p'),
             'proof': report.proof,
-            'status': report.status,
-            'full_time': report.time_detected.isoformat(),
+            'status': report.status
         })
     
     return JsonResponse(report_details, safe=False)
-
-def broadcast_report_action(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        report_id = data.get('report_id')
-        
-        # Use your existing SSE mechanism to broadcast
-        cache.set('latest_update', {
-            'type': 'report_action',
-            'report_id': report_id
-        })
-        cache.set('last_update_time', time.time())
-        
-        return JsonResponse({'status': 'success'})
