@@ -88,10 +88,10 @@ reportRows.forEach(row => {
         const dateReported = row.getAttribute('data-date');
         const timeReported = row.getAttribute('data-time');
         const timeFireOut = row.getAttribute('data-fireout');
-        const occupancy = row.getAttribute('data-occupancy');
+        
         const owner = row.getAttribute('data-owner');
         const alarm = row.getAttribute('data-alarm');
-        const respondents = row.getAttribute('data-respondents');
+
         const damages = row.getAttribute('data-damages');
         const establishments = row.getAttribute('data-establishments');
         const casualties = row.getAttribute('data-casualties');
@@ -181,15 +181,17 @@ reportRows.forEach(row => {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
+    const tbody = document.querySelector('tbody'); // Parent element for event delegation
     const resolveButton = document.querySelector('.resolve-button');
     const previewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
     const resolveWarningModal = new bootstrap.Modal(document.getElementById('resolve-warning-modal'));
     const confirmResolveButton = document.getElementById('resconfirm');
     const cancelResolveButton = document.getElementById('rescancel');
 
-    reportRows.forEach(row => {
-        row.addEventListener('click', function () {
+    // Using event delegation to handle row clicks
+    tbody.addEventListener('click', function (event) {
+        const row = event.target.closest('tr[data-bs-toggle="modal"]');
+        if (row) {
             const reportId = row.getAttribute('data-report-id');
             const status = row.querySelector(`#status-text-${reportId}`).textContent.trim();
 
@@ -203,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 resolveButton.disabled = false;
                 resolveButton.textContent = 'Resolve';
             }
-        });
+        }
     });
 
     // Handle Resolve button click
@@ -215,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
         resolveWarningModal.show();
     });
 
-
+    // Handle the confirm button click in the resolve confirmation modal
     confirmResolveButton.addEventListener('click', function () {
         const reportId = resolveButton.getAttribute('data-report-id');
         const currentStatus = resolveButton.getAttribute('data-status');
@@ -234,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.status) {
                 const statusTextElement = document.querySelector(`#status-text-${reportId}`);
-
                 if (statusTextElement) {
                     statusTextElement.textContent = data.status;
                 }
@@ -266,7 +267,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -281,5 +281,6 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
   
         

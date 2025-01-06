@@ -576,6 +576,7 @@ def register_view(request):
 def toggle_status(request, report_id):
     if request.method == 'POST':
         report = get_object_or_404(InitialReport, id=report_id)
+        print("CSRF Token:", request.META.get("HTTP_X_CSRFTOKEN"))
         
         if report.status == 'Ongoing':
             report.status = 'Case Closed'
@@ -848,7 +849,7 @@ def update_report(request, report_id):
         report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
         report.time_of_arrival = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-arrive', '').strip()) or report.time_of_arrival
         report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-under', '').strip()) or report.time_of_fire_under_control
-        report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
+        report.time_of_fire_out = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
 
         def get_int_value(field_name, default=0):
             try:
