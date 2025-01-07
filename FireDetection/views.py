@@ -528,6 +528,7 @@ def check_email_exists(request):
 
 @login_required
 def register_view(request):
+    account_added = False  # Default value
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -559,17 +560,17 @@ def register_view(request):
                     fail_silently=False,
                 )
 
-                messages.success(request, 'Account has been added successfully, and the password has been sent to the user\'s email.')
+                account_added = True  # Set to True on success
+                messages.success(request, 'Account has been added successfully.')
+                # Reload the page to show the modal
+                return render(request, 'admin_home.html', {'accounts': CustomUser.objects.all(), 'account_added': account_added})
             except ValidationError as e:
                 messages.error(request, f'Validation error: {e.message}')
             except Exception as e:
                 messages.error(request, f'Error adding account: {str(e)}')
 
-        return redirect('admin_home')
-
-        
-    accounts = CustomUser.objects.all().order_by('name') 
-    return render(request, 'admin_home.html', {'accounts': accounts})
+    accounts = CustomUser.objects.all().order_by('name')
+    return render(request, 'admin_home.html', {'accounts': accounts, 'account_added': account_added})
 
 
 
@@ -686,7 +687,6 @@ def create_report_view(request):
 
             file_url = supabase.storage.from_('FireProof').get_public_url(file_path)
 
-
         def validate_date(date_str):
             if date_str:
                 try:
@@ -704,6 +704,7 @@ def create_report_view(request):
                 raise ValidationError(f"Invalid number format for field '{value}'. It must be a valid number.")
 
         try:
+            # Validate dates
             date_reported_valid = validate_date(date_reported)
             date_under_control_valid = validate_date(date_under_control)
             date_out_valid = validate_date(date_out)
@@ -715,12 +716,14 @@ def create_report_view(request):
             if date_out and not date_out_valid:
                 raise ValidationError("Invalid date format for 'Date Out'. It must be in YYYY-MM-DD format.")
 
+            # Validate numbers
             fatality_valid = validate_numeric(fatality)
             injured_valid = validate_numeric(injured)
             families_affected_valid = validate_numeric(families_affected)
             establishments_valid = validate_numeric(establishments)
             fire_trucks_valid = validate_numeric(fire_trucks)
 
+            # Combine date and time fields
             try:
                 time_reported_combined = datetime.strptime(f"{date_reported} {time_reported}", "%Y-%m-%d %H:%M")
             except ValueError:
@@ -754,9 +757,6 @@ def create_report_view(request):
 
             fir_number = f"FIR-{new_id:02d}"
 
-            # Generate FIR number manually
-
-
             # Create report with Supabase file URL
             new_report = InitialReport.objects.create(
                 fir_number=fir_number, 
@@ -772,7 +772,7 @@ def create_report_view(request):
                 time_of_fire_under_control=time_under_control_combined,
                 date_of_fire_under_control=date_under_control_valid,
                 fire_under_control_declared_by=under_control_declared_by,
-                time_of_fire_out=time_out_combined,
+                time_of_fire_out=time_out_combined,  
                 date_of_fire_out=date_out_valid,
                 fire_out_declared_by=out_declared_by,
                 estimated_damages=damages,
@@ -791,8 +791,10 @@ def create_report_view(request):
                 created_by=request.user
             )
             new_report.save()
+
+            # Add context variable to trigger the modal in template
             messages.success(request, 'Report has been submitted successfully.')
-            return redirect('reports')
+            return render(request, 'create_reports.html', {'report_added': True})  # Pass context variable
 
         except ValidationError as e:
             messages.error(request, f"Error submitting report: {e.message}")
@@ -802,8 +804,7 @@ def create_report_view(request):
             messages.error(request, f"Error submitting report: {str(e)}")
             return render(request, 'create_reports.html')
 
-    return render(request, "create_reports.html")
-
+    return render(request, "create_reports.html", {'report_added': False})  # Default value
         
 @login_required
 def faq_view(request):

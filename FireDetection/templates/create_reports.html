@@ -255,6 +255,7 @@
 {% include "modal_forgot_success.html" %}
 {% include "modal_copied_success.html" %}
 {% include "modal_terms_condi.html" %}
+{% include "modal_createrp_success.html" %}
 {% endblock %}
 
 {% block scripts %}
@@ -269,7 +270,21 @@
 <script src="{% static 'js/format_other_inputs.js' %}"></script>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Check if the report_added context variable is true
+        {% if report_added %}
+            const successModal = new bootstrap.Modal(document.getElementById('createrp-success-modal'));
+            successModal.show();
+        {% endif %}
 
+        // Handle the OK button click to redirect
+        const modalOkButton = document.getElementById('modal-ok-button');
+        modalOkButton.addEventListener('click', function () {
+            window.location.href = '{% url "reports" %}'; // Redirect to the reports page
+        });
+    });
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

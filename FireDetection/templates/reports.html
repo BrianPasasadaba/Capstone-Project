@@ -337,6 +337,7 @@
 {% include "modal_copied_success.html" %}
 {% include "modal_terms_condi.html" %}
 {% include "modal_resolve_confirm.html" %}
+{% include "modal_editrp_success.html" %}
 
 {% endblock %}
 
@@ -701,7 +702,20 @@ saveButton.addEventListener('click', function (event) {
         .then(data => {
             if (data.status === 'success') {
                 console.log('Report updated successfully.');
-                window.location.href = "/reports/";
+
+                // Close the report preview modal
+                const reportPreviewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
+                reportPreviewModal.hide();
+
+                // Show the success modal
+                const successModal = new bootstrap.Modal(document.getElementById('editrp-success-modal'));
+                successModal.show();
+
+                // Close the success modal after a short delay (e.g., 3 seconds) and redirect to reports
+                setTimeout(() => {
+                    successModal.hide();
+                    window.location.href = "/reports/";
+                }, 3000);
             } else {
                 console.error('Error updating report:', data.message);
                 alert('Error updating report: ' + data.message);
@@ -712,6 +726,7 @@ saveButton.addEventListener('click', function (event) {
             alert('An error occurred. Please try again.');
         });
 });
+
 
 
     });
