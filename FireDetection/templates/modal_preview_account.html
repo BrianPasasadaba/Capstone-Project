@@ -1,37 +1,40 @@
 <!-- create-account-modal -->
-<div class="modal fade" id="add-account-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="prev-account-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">Create Account</h3>
+                <h3 class="modal-title" id="modal-title">Account</h3>
+                <div class="edit-form">
+                    <button class="btn btn-edit">
+                        <i class="bi bi-pencil-square"></i>
+                        <span id="edit-text">Edit</span>
+                    </button>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                 aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
-                <form action="{% url 'admin_home' %}" method="POST"  id="add-account-form">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-
+                <form action="" method=""  id="prev-account-form">
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="modal-name" class="form-label">Name<i class="bi bi-asterisk"></i></label>
-                            <input type="text" class="form-control" name="name" id="modal-name" placeholder="e.g. Juan Dela Cruz" 
+                            <label for="prev-name" class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" id="prev-name" placeholder="e.g. Juan Dela Cruz" 
                                    maxlength="60" required>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="modal-email" class="form-label">Email<i class="bi bi-asterisk"></i></label>
-                            <input type="email" class="form-control" name="email" id="modal-email" placeholder="e.g. juandc@gmail.com" maxlength="100" required>
+                            <label for="prev-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="prev-email" placeholder="e.g. juandc@gmail.com" maxlength="100" required>
                         </div>
                     </div>                
 
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="modal-role" class="form-label">Role<i class="bi bi-asterisk"></i></label>
-                            <select class="form-select" aria-label="Default select example" name="role" id="modal-role">
+                            <label for="prev-role" class="form-label">Role</label>
+                            <select class="form-select" aria-label="Default select example" name="role" id="prev-role">
                                 <option value="Admin">Admin</option>
                                 <option value="Radio Operator">Radio Operator</option>
                                 <option value="Responder">Responder</option>
@@ -41,15 +44,15 @@
 
                     <div class="form-row">
                         <div class="form-column">
-                            <label for="modal-contact" class="form-label">Contact No.<i class="bi bi-asterisk"></i></label>
-                            <input type="text" class="form-control" name="contact_number" id="modal-contact" placeholder="e.g. 09123456789" maxlength="11" required pattern="[0-9]{11}"
+                            <label for="prev-contact" class="form-label">Contact No.</label>
+                            <input type="text" class="form-control" name="contact_number" id="prev-contact" placeholder="e.g. 09123456789" maxlength="11" required pattern="[0-9]{11}"
                             oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>  
 
                     <div class="modal-footer">
                         <div class="mf-button">
-                            <button class="btn btn-lg px-4 add-account" type="submit">Add Account</button>
+                            <button class="btn btn-lg px-4 add-account" type="submit" disabled>Save</button>
                         </div>                   
                     </div>
                 </form>
@@ -60,7 +63,6 @@
     </div>
 </div>
 
-
 <script>
     // Combined cleanInput function with email validation
     const cleanInput = (event, allowedChars, pattern = null) => {
@@ -68,17 +70,17 @@
         let value = input.value;
     
         // Only block the first character if it's an invalid non-alphabetic character for the 'name' field
-        if (input.id === "modal-name" && /[^A-Za-z]/.test(value.charAt(0)) && value.length === 1) {
+        if (input.id === "prev-name" && /[^A-Za-z]/.test(value.charAt(0)) && value.length === 1) {
             return; // Don't update if the first character is invalid and it's the only character
         }
     
         // If the first character is invalid but there are more characters, allow editing
-        if (value.length > 1 && /[^A-Za-z]/.test(value.charAt(0)) && input.id === "modal-name") {
+        if (value.length > 1 && /[^A-Za-z]/.test(value.charAt(0)) && input.id === "prev-name") {
             value = value.slice(1); // Remove the invalid first character
         }
     
         // Dynamically allow only the defined characters
-        const regex = new RegExp(`[^${allowedChars}]`, 'g');
+        const regex = new RegExp([^${allowedChars}], 'g');
         value = value.replace(regex, ''); // Remove disallowed characters
     
         // Replace multiple spaces with a single space
@@ -100,8 +102,8 @@
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
         const fields = [
-            { id: "modal-name", allowedChars: 'A-Za-z.,\\s-', pattern: null }, // Name validation without numbers
-            { id: "modal-email", allowedChars: 'A-Za-z0-9._%+-@.', pattern: emailPattern } // Updated email validation
+            { id: "prev-name", allowedChars: 'A-Za-z.,\\s-', pattern: null }, // Name validation without numbers
+            { id: "prev-email", allowedChars: 'A-Za-z0-9._%+-@.', pattern: emailPattern } // Updated email validation
         ];
     
         fields.forEach(({ id, allowedChars, pattern }) => {
@@ -115,61 +117,60 @@
     });
 </script>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const addAccountButton = document.querySelector('.add-account');
-        const nameField = document.getElementById('modal-name');
-        const emailField = document.getElementById('modal-email');
+        const nameField = document.getElementById('prev-name');
+        const emailField = document.getElementById('prev-email');
         const roleField = document.querySelector('select[name="role"]');
-        const contactField = document.getElementById('modal-contact');
-        const form = document.getElementById('add-account-form');
+        const contactField = document.getElementById('prev-contact');
+        const form = document.getElementById('prev-account-form');
     
         // Event listener for Add Account button
-    addAccountButton?.addEventListener('click', function (event) {
-        let valid = true;
-        clearErrorMessages();
+        addAccountButton?.addEventListener('click', function (event) {
+            let valid = true;
+            clearErrorMessages();
 
-        // Name validation: Ensure it has at least 3 characters
-        if (!nameField.value.trim()) {
-            showError(nameField, 'Name is required.');
-            valid = false;
-        } else if (nameField.value.trim().length < 3) {
-            showError(nameField, 'Name must be at least 3 characters long.');
-            valid = false;
-        }
+            // Name validation: Ensure it has at least 3 characters
+            if (!nameField.value.trim()) {
+                showError(nameField, 'Name is required.');
+                valid = false;
+            } else if (nameField.value.trim().length < 3) {
+                showError(nameField, 'Name must be at least 3 characters long.');
+                valid = false;
+            }
 
-        // Email validation: Ensure it's not empty and valid format
-        if (!emailField.value.trim()) {
-            showError(emailField, 'Email is required.');
-            valid = false;
-        } else if (!validateEmail(emailField.value.trim())) {
-            showError(emailField, 'Invalid email format. (example@gmail.com)');
-            valid = false;
-        }
+            // Email validation: Ensure it's not empty and valid format
+            if (!emailField.value.trim()) {
+                showError(emailField, 'Email is required.');
+                valid = false;
+            } else if (!validateEmail(emailField.value.trim())) {
+                showError(emailField, 'Invalid email format. (example@gmail.com)');
+                valid = false;
+            }
 
-        // Role validation: Ensure a role is selected
-        if (!roleField.value) {
-            showError(roleField, 'Role is required.');
-            valid = false;
-        }
+            // Role validation: Ensure a role is selected
+            if (!roleField.value) {
+                showError(roleField, 'Role is required.');
+                valid = false;
+            }
 
-        // Contact number validation
-        if (!contactField.value.trim()) {
-            showError(contactField, 'Contact number is required.');
-            valid = false;
-        } else if (!/^\d{11}$/.test(contactField.value.trim())) {
-            showError(contactField, 'Contact number must be 11 digits.');
-            valid = false;
-        } else if (!/^09/.test(contactField.value.trim())) { // Ensure '09' at the start
-            showError(contactField, 'Contact number must start with 09.');
-            valid = false;
-        }
+            // Contact number validation
+            if (!contactField.value.trim()) {
+                showError(contactField, 'Contact number is required.');
+                valid = false;
+            } else if (!/^\d{11}$/.test(contactField.value.trim())) {
+                showError(contactField, 'Contact number must be 11 digits.');
+                valid = false;
+            } else if (!/^09/.test(contactField.value.trim())) { // Ensure '09' at the start
+                showError(contactField, 'Contact number must start with 09.');
+                valid = false;
+            }
 
-        if (!valid) {
-            event.preventDefault();
-        }
-    });
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
     
         // Event listener for form submission
         form?.addEventListener('submit', function (event) {
@@ -190,7 +191,7 @@
             }
     
             // Check email and phone number uniqueness
-            fetch(`/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)}`)
+            fetch(/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)})
                 .then(response => response.json())
                 .then(data => {
                     if (data.email_exists) {
@@ -247,5 +248,4 @@
             return emailRegex.test(email);
         }
     });
-    </script>
-    
+</script>
