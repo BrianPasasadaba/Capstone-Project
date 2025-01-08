@@ -42,6 +42,7 @@ class InitialReport(models.Model):
     sender_contact_number = models.CharField(max_length=15, blank=True, null=True)
     proof = models.URLField(max_length=255, blank=True, null=True)
     status = models.CharField(max_length=20, choices=[('Ongoing', 'Ongoing'), ('Case Closed', 'Case Closed')], default='Ongoing')
+    is_archived = models.BooleanField(default=False)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 

@@ -94,7 +94,13 @@
                             </li>
                         </ul>
                         <div class="rbth-btns">
-                            <button type="button" class="btn btn-sm btn-view" disabled><i class="bi bi-eye-fill"></i>View</button>
+                            <button
+                            type="button"
+                            class="btn btn-sm btn-view"
+                            data-bs-toggle="modal"
+                            data-bs-target="#report-preview-modal"
+                            disabled><i class="bi bi-eye-fill" ></i> View</button>
+
                             <button type="button" class="btn btn-sm btn-archive" disabled><i class="bi bi-archive-fill"></i>Archive</button>
                         </div>
                     </div>
@@ -103,7 +109,7 @@
                         <div class="tab-pane fade show active" id="reports" role="tabpanel" aria-labelledby="reports-tab">
                             <table>
                                 <thead>
-                                    <tr  data-bs-toggle="modal" >
+                                    <tr >
                                         <th>Select</th>
                                         <th>Report</th>
                                         <th>Location</th>
@@ -148,8 +154,7 @@
                                         data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
                                         data-team="{{ report.team|default:'None' }}" 
                                         
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#report-preview-modal">
+                                        >
                                         <td>
                                             <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
                                         </td>
@@ -179,7 +184,7 @@
                         <div class="tab-pane fade" id="archives" role="tabpanel" aria-labelledby="archives-tab">
                             <table>
                                 <thead>
-                                    <tr  data-bs-toggle="modal" >
+                                    <tr   >
                                         <th>Select</th>
                                         <th>Report</th>
                                         <th>Location</th>
@@ -224,8 +229,7 @@
                                         data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
                                         data-team="{{ report.team|default:'None' }}" 
                                         
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#report-preview-modal">
+                                        >
                                         <td>
                                             <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
                                         </td>
@@ -354,6 +358,65 @@
 <script src="{% static 'js/pagination.js' %}"></script>
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const reportTable = document.getElementById('reportTable');
+    const archiveTable = document.getElementById('archiveTable');  // Archive table
+
+    // Function to enable or disable the "View" button for a row
+    function handleCheckboxChange(event, table) {
+        const checkbox = event.target;
+        const row = checkbox.closest('tr');
+        const viewButton = row.querySelector('.btn-view');
+
+        if (checkbox.checked) {
+            viewButton.removeAttribute('disabled');
+        } else {
+            viewButton.setAttribute('disabled', true);
+        }
+    }
+
+    // Event listener to enable/disable "View" button for both tables
+    reportTable.addEventListener('change', function (event) {
+        if (event.target.classList.contains('report-checkbox')) {
+            handleCheckboxChange(event, reportTable);
+        }
+    });
+
+    archiveTable.addEventListener('change', function (event) {
+        if (event.target.classList.contains('report-checkbox')) {
+            handleCheckboxChange(event, archiveTable);
+        }
+    });
+
+    // Prevent modal opening if the button is clicked but the checkbox is unchecked
+    function preventModalIfUnchecked(event, table) {
+        const button = event.target.closest('.btn-view');
+        const row = button.closest('tr');
+        const checkbox = row.querySelector('.report-checkbox');
+
+        if (!checkbox.checked) {
+            console.log('Checkbox not checked, preventing modal from opening.');
+            event.preventDefault(); // Prevent Bootstrap modal from triggering
+        }
+    }
+
+    // Event listener to prevent modal opening for both tables
+    reportTable.addEventListener('click', function (event) {
+        if (event.target.closest('.btn-view')) {
+            preventModalIfUnchecked(event, reportTable);
+        }
+    });
+
+    archiveTable.addEventListener('click', function (event) {
+        if (event.target.closest('.btn-view')) {
+            preventModalIfUnchecked(event, archiveTable);
+        }
+    });
+});
+</script>
+
 <script>
     function populateYears() {
         const currentYear = new Date().getFullYear();
@@ -403,23 +466,42 @@ document.getElementById('searchInput').addEventListener('input', function (e) {
     const reportTable = document.getElementById('reportTable');
     const hiddenReportIdInput = document.getElementById('report-id');
     const modal = document.getElementById('report-preview-modal');
+    let selectedReportId = null; // Store the selected report ID
 
+    // Click event for selecting a row
     reportTable.addEventListener('click', function (event) {
         const clickedRow = event.target.closest('tr');
+        
+        // Proceed only if the clicked row has the data-report-id attribute
         if (clickedRow && clickedRow.dataset.reportId) {
-            const reportId = clickedRow.dataset.reportId;
-            console.log('Clicked Report ID:', reportId);
+            selectedReportId = clickedRow.dataset.reportId; // Store the report ID
+            console.log('Row selected. Report ID:', selectedReportId);
 
-            hiddenReportIdInput.value = reportId;
-
+            // Update the hidden input with the selected report ID
+            hiddenReportIdInput.value = selectedReportId;
             console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
+        }
+    });
+
+    // "View" button click event
+    const viewButton = document.querySelector('.btn-view'); // Assuming there is only one "View" button
+    viewButton.addEventListener('click', function (event) {
+        // Only show modal if a report ID has been selected
+        if (selectedReportId) {
+            console.log('Opening preview modal for Report ID:', selectedReportId);
+            
+            // Populate the modal with the selected report ID (or any other data)
+            // You can add the functionality to populate the modal fields here if needed
             const bootstrapModal = new bootstrap.Modal(modal);
             bootstrapModal.show();
         } else {
-            console.error('No valid report ID found for the clicked row.');
+            console.log('No row selected. Preventing modal from opening.');
+            event.preventDefault(); // Prevent modal from opening if no row is selected
         }
     });
 });
+
+
 
 
     document.addEventListener('DOMContentLoaded', function () {
