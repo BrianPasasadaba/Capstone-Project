@@ -1,6 +1,6 @@
 <!-- create-account-modal -->
 {% load static %}
-<div class="modal fade terms-modal" id="terms-condition-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+<div class="modal fade terms-modal" id="terms-condition-modal-log" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- <div class="modal-header" style="border: none; margin-top: 1rem; margin-right: 0.5rem;">
@@ -148,7 +148,40 @@
                         <p class="text-contact">You may contact us at <span>truethefireauthors@gmail.com</span> for any concerns or inquiries.</p class="text-contact">
                     </div>
                 </div>
+                <div class="modal-footer">
+                    
+                    <div class="term-check"> 
+                        <input class="form-check-input" type="checkbox" value="" id="check-agree">
+                        <div class="term-agree"><h6>I Agree to the <span> Terms & Condition </span> and I read the <span> Privacy Policy </span>.</h6></div>
+                    </div>
+                    <div class="mf-button">
+                        <button class="btn btn-md px-4 btn-agree" type="button" id="agreeButton" disabled>Agree</button>
+                        <button class="btn btn-md px-4 btn-decline" type="button" data-bs-dismiss="modal" aria-label="Close">Decline</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- JavaScript to handle checkbox state with debugging -->
+<script>
+    // Wait for the DOM to load
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('terms-condition-modal');
+        const checkbox = document.getElementById('check-agree');
+        const agreeButton = document.getElementById('agreeButton');
+
+        // Event listener for when the modal is fully shown
+        modalElement.addEventListener('shown.bs.modal', function () {
+            // Ensure button starts off as disabled
+            agreeButton.disabled = !checkbox.checked;
+        });
+
+        // Event listener to track changes to the checkbox state
+        checkbox.addEventListener('change', function () {
+            // Enable the button if checkbox is checked
+            agreeButton.disabled = !checkbox.checked;
+        });
+    });
+</script>

@@ -561,21 +561,28 @@ input[type="password"]::-ms-clear {
     }
 }
 /* ============================== TERMS CONDITION MODAL ============================== */
-#terms-condition-modal .modal-dialog{
+.terms-modal .modal-dialog{
     max-width: 480px;
 }
 
-#terms-condition-modal .terms-box{
+.terms-modal .terms-box{
     /* border: #ED7027 1px solid;  */
     max-width: 480px;
     font-family: "Montserrat";
     padding: 30px 20px;
     padding-bottom: 20px;
 }
-
-#terms-condition-modal .modal-dialog .terms-text{
+.terms-modal .modal-dialog .terms-text{
     padding: 0 10px;
     height: 400px;
+    overflow-y: auto;
+    font-size: 14px;
+    padding: 0px 20px;
+}
+
+#terms-condition-modal  .modal-dialog .terms-text{
+    padding: 0 10px;
+    height: 60vh;
     overflow-y: auto;
     font-size: 14px;
     padding: 0px 20px;
@@ -591,29 +598,29 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-secondary);
 }
 
-#terms-condition-modal .terms-text h4{
+.terms-modal .terms-text h4{
     color: var(--color-secondary);
     text-transform: uppercase;
     font-weight: 600;
 }
 
-#terms-condition-modal .modal-dialog .terms-text p,
-#terms-condition-modal .modal-dialog .terms-text li{
+.terms-modal .modal-dialog .terms-text p,
+.terms-modal .modal-dialog .terms-text li{
     font-size: 0.9rem!important;
     text-align: justify;
 }
 
-#terms-condition-modal .modal-dialog .terms-text .text-contact{
+.terms-modal .modal-dialog .terms-text .text-contact{
     font-size: 0.8rem;
     text-align: center;
 }
-#terms-condition-modal .modal-dialog .terms-text .text-contact span{
+.terms-modal .modal-dialog .terms-text .text-contact span{
     font-size: 0.7rem;
     text-decoration: underline;
     color: blue;
 }
 
-#terms-condition-modal  .modal-footer{
+.terms-modal  .modal-footer{
     /* border: #ED7027 1px solid; */
     display: flex;
     flex-direction: column;
@@ -622,12 +629,12 @@ input[type="password"]::-ms-clear {
     border-top: none;
 }
 
-#terms-condition-modal  .modal-footer span{
+.terms-modal  .modal-footer span{
     /* border: #ED7027 1px solid; */
     font-weight: 700px!important;
     color: var(--color-secondary);
 }
-#terms-condition-modal  .modal-footer .term-agree{
+.terms-modal  .modal-footer .term-agree{
     /* border: #003049 1px solid; */
     padding-top: 12px;
     display: flex;
@@ -637,12 +644,12 @@ input[type="password"]::-ms-clear {
     word-break: break-word;
 }
 
-#terms-condition-modal  .modal-footer .term-agree h6{
+.terms-modal  .modal-footer .term-agree h6{
     font-size: .8rem;
 }
 
 
-#terms-condition-modal  .modal-footer .term-check{
+.terms-modal  .modal-footer .term-check{
     display: flex;
     flex-direction: row;
     justify-content: center !important;
@@ -651,7 +658,7 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-half);
 }
 
-#terms-condition-modal .form-check-input{
+.terms-modal .form-check-input{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -660,17 +667,17 @@ input[type="password"]::-ms-clear {
     border: var(--color-secondary) 2px solid;
 }
 
-#terms-condition-modal .form-check-input:checked {
+.terms-modal .form-check-input:checked {
     background-color: var(--color-tertiary);
     border-color: var(--color-tertiary);
 }
 
-#terms-condition-modal .form-check-input:focus {
+.terms-modal .form-check-input:focus {
     box-shadow: 0 0 5px 3px var(--color-shadow-min);
     border-color: var(--color-tertiary);
 }
 
-#terms-condition-modal .modal-footer .mf-button{
+.terms-modal .modal-footer .mf-button{
     /* border: #ED7027 1px solid; */
     display: flex;
     flex-direction: row;
@@ -680,7 +687,7 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-1);
 }
 
-#terms-condition-modal .modal-footer .btn-agree{
+.terms-modal .modal-footer .btn-agree{
     background-color: var(--color-primary);
     color: white!important;
     font-weight: 500;
@@ -690,7 +697,7 @@ input[type="password"]::-ms-clear {
     border-radius:var(--border-radius-input)!important;
 }
 
-#terms-condition-modal .modal-footer .btn-decline{
+.terms-modal .modal-footer .btn-decline{
     background-color: var(--color-default);
     color: var(--color-primary);
     font-weight: 500;
@@ -700,8 +707,8 @@ input[type="password"]::-ms-clear {
     border-radius:var(--border-radius-input)!important;
 }
 
-#terms-condition-modal .modal-footer .btn-decline:hover,
-#terms-condition-modal .modal-footer .btn-agree:hover{
+.terms-modal .modal-footer .btn-decline:hover,
+.terms-modal .modal-footer .btn-agree:hover{
     box-shadow: var(--box-shadow);
     transform: scale(1.03);
 }
@@ -3135,7 +3142,7 @@ input[type="password"]::-ms-clear {
 #report-preview-modal .modal-header .btn-close,
 .latest-detection .modal-header .btn-close,
 #customAlertModal .modal-header .btn-close,
-#terms-condition-modal .modal-header .btn-close{
+.terms-modal .modal-header .btn-close{
     margin-right: var(--margin-half);
 }
 
