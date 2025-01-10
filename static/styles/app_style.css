@@ -2128,9 +2128,12 @@ input[type="password"]::-ms-clear {
     color: var(--color-primary);
 }
 
-.rbth-btns .btn-view i,
+.rbth-btns .btn-view i{
+     padding-right: 2px;
+}
+
 .rbth-btns .btn-archive i{
-     padding-right: var(--padding-half);
+    padding-right: var(--gap-half);
 }
 
 .rbth-btns .btn-view:hover,
