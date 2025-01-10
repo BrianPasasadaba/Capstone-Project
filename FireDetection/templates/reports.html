@@ -107,7 +107,8 @@
                     <div class="tab-content" id="reportTabsContent">
                         <!-- Reports Tab Content -->
                         <div class="tab-pane fade show active" id="reports" role="tabpanel" aria-labelledby="reports-tab">
-                            <table>
+                            <div class ="table-responsive">
+                            <table id="reportsTable">
                                 <thead>
                                     <tr >
                                         <th>Select</th>
@@ -180,9 +181,11 @@
                                     <td colspan="6" style="color: red; text-align: center;">No Data to Display.</td>
                                 </tr>           
                             </table>
+                            </div>  
                         </div>
                         <div class="tab-pane fade" id="archives" role="tabpanel" aria-labelledby="archives-tab">
-                            <table>
+                            <div class="table-responsive">
+                            <table id="archivesTable">
                                 <thead>
                                     <tr   >
                                         <th>Select</th>
@@ -255,6 +258,7 @@
                                     <td colspan="6" style="color: red; text-align: center;">No Data to Display.</td>
                                 </tr>           
                             </table>
+                            </div>
                         </div>
                 </div>
                 <div class="rb-footer">
@@ -301,7 +305,7 @@
                             <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
                                 No data available.
                             </div>
-                            
+                            <!--
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item prev disabled">
@@ -314,7 +318,7 @@
                                         <a class="page-link" href="#">Next</a>
                                     </li>
                                 </ul>
-                            </nav>
+                            </nav>   -->
                         </div>
                             <!-- <button type="button" class="btn btn-lg btn">Export</button> -->
                         </div>
@@ -356,9 +360,59 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/preview.js' %}"></script>
-<script src="{% static 'js/pagination.js' %}"></script>
+<!-- <script src="{% static 'js/pagination.js' %}"></script> -->
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize DataTables
+        let table1 = new DataTable('#reportsTable', {
+            responsive: true,
+            searching: false,
+            lengthChange: false,
+            ordering: false,
+            paging: true,
+            columnDefs: [
+                // Center align the header content of column 1
+            { className: "dt-head-center", targets: "_all" },
+            ]  
+        });
+        let table2 = new DataTable('#archivesTable', {
+            responsive: true,
+            searching: false,
+            lengthChange: false,
+            ordering: false,
+            paging: true,
+            columnDefs: [
+                // Center align the header content of column 1
+            { className: "dt-head-center", targets: "_all" },
+            ] 
+        });
+
+        // Hide archive table initially
+        $('#archiveTable_wrapper').hide();
+
+        // Tab switching logic
+        document.querySelectorAll('#reportTabs button').forEach((tab) => {
+            tab.addEventListener('click', function () {
+                const target = this.getAttribute('data-bs-target');
+                
+                if (target === '#reports') {
+                    // Show report table
+                    $('#archiveTable_wrapper').hide();
+                    $('#reportTable_wrapper').show();
+                } else if (target === '#archives') {
+                    // Show archive table
+                    $('#reportTable_wrapper').hide();
+                    $('#archiveTable_wrapper').show();
+                }
+            });
+        });
+    });
+</script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
