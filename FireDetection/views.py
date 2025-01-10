@@ -528,12 +528,12 @@ def check_email_exists(request):
 
 @login_required
 def register_view(request):
-    account_added = False  # Default value
+    account_added = False
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
         role = request.POST.get('role')
-        contact_number = request.POST.get('contact_number')  
+        contact_number = request.POST.get('contact_number')
 
         if not all([name, email, role, contact_number]):
             messages.error(request, 'All fields are required.')
@@ -551,18 +551,34 @@ def register_view(request):
                     contact_number=contact_number,
                     password=generated_password
                 )
-                
+
+                # Prepare email context
+                context = {
+                    'name': name,
+                    'email': email,
+                    'role': role,
+                    'contact_number': contact_number,
+                    'password': generated_password,
+                    'date': timezone.now(),
+                    'year': timezone.now().year,
+                }
+
+                # Render email template
+                html_message = render_to_string('emails/registration_confirmation.html', context)
+                plain_message = strip_tags(html_message)
+
+                # Send email
                 send_mail(
-                    'Your Account Password',
-                    f'Hello {name},\n\nYour account has been created. Your password is: {generated_password}\nYou can change your password after logging in.',
+                    'Welcome to TruetheFire - Your Account Details',
+                    plain_message,
                     settings.DEFAULT_FROM_EMAIL,
                     [email],
+                    html_message=html_message,
                     fail_silently=False,
                 )
 
-                account_added = True  # Set to True on success
+                account_added = True
                 messages.success(request, 'Account has been added successfully.')
-                # Reload the page to show the modal
                 return render(request, 'admin_home.html', {'accounts': CustomUser.objects.all(), 'account_added': account_added})
             except ValidationError as e:
                 messages.error(request, f'Validation error: {e.message}')
@@ -571,7 +587,6 @@ def register_view(request):
 
     accounts = CustomUser.objects.all().order_by('name')
     return render(request, 'admin_home.html', {'accounts': accounts, 'account_added': account_added})
-
 
 
 def toggle_status(request, report_id):

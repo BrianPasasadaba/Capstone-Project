@@ -2,34 +2,43 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Password Reset Successful</title>
+    <title>Welcome to TruetheFire</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f6f9fc;">
+<body style="margin: 0; padding: 0; background: linear-gradient(145deg, #eef3f8 0%, #f6f9fc 100%);">
     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-family: Arial, sans-serif;">
         <tr>
             <td align="center" style="padding: 40px 0;">
                 <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                     <tr>
                         <td style="padding: 40px;">
-                            <h1 style="color: rgb(14, 30, 75); text-align: center; margin-bottom: 30px;">Password Reset Successful</h1>
+                            <h1 style="color: rgb(14, 30, 75); text-align: center; margin-bottom: 30px;">Welcome to TruetheFire</h1>
                             
                             <p style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px;">
-                                Hello {{ user.get_full_name|default:user.name }},
+                                Hello {{ name }},
                             </p>
                             
                             <p style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px;">
-                                This email confirms that your password was successfully changed on {{ date|date:"F j, Y" }} at {{ date|date:"g:i A" }}.
+                                Your account has been successfully created on {{ date|date:"F j, Y" }} at {{ date|date:"g:i A" }}.
                             </p>
-                            
+
                             <div style="background-color: rgb(14, 30, 75); color: white; padding: 15px; margin: 20px 0; border-radius: 4px; text-align: center;">
-                                If you did not make this change, please contact our support team immediately.
+                                <p style="margin: 0;">Your temporary password is:</p>
+                                <p style="margin: 10px 0;background-color: rgb(237, 112, 39); font-size: 18px; text-align: center; font-family: monospace;  font-weight: bold;">{{ password }}</p>
+                                <p style="margin: 0; color: white;">Please change your password after logging in for the first time.</p>
                             </div>
+                            
+                            <h3 style="color: rgb(237, 112, 39); margin-top: 30px;">Account Details:</h3>
+                            <ul style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px; padding-left: 20px;">
+                                <li style="margin-bottom: 10px;">Email: {{ email }}</li>
+                                <li style="margin-bottom: 10px;">Role: {{ role }}</li>
+                                <li style="margin-bottom: 10px;">Contact Number: {{ contact_number }}</li>
+                            </ul>
                             
                             <h3 style="color: rgb(237, 112, 39); margin-top: 30px;">For your security:</h3>
                             <ul style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px; padding-left: 20px;">
-                                <li style="margin-bottom: 10px;">Use a unique password for each of your online accounts</li>
-                                <li style="margin-bottom: 10px;">Enable two-factor authentication when available</li>
-                                <li style="margin-bottom: 10px;">Never share your password with anyone</li>
+                                <li style="margin-bottom: 10px;">Change your password immediately after logging in</li>
+                                <li style="margin-bottom: 10px;">Use a strong, unique password</li>
+                                <li style="margin-bottom: 10px;">Never share your credentials with anyone</li>
                             </ul>
                             
                             <p style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px; margin-top: 30px;">
