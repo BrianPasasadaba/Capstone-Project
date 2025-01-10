@@ -149,15 +149,39 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <h6 style="text-align: center;">I Agree to the <span>Terms & Condition</span> and I read the <span>Privacy Policy</span> Privacy Policy.</h6>
+                    
+                    <div class="term-check"> 
+                        <input class="form-check-input" type="checkbox" value="" id="check-agree">
+                        <div class="term-agree"><h6>I Agree to the <span> Terms & Condition </span> and I read the <span> Privacy Policy </span>.</h6></div>
+                    </div>
                     <div class="mf-button">
-                        <button class="btn btn-md px-4 btn-agree" type="button">Agree</button>
-                        <button class="btn btn-md px-4 btn-decline"  type="button" data-bs-dismiss="modal" aria-label="Close">Decline</button>
+                        <button class="btn btn-md px-4 btn-agree" type="button" id="agreeButton" disabled>Agree</button>
+                        <button class="btn btn-md px-4 btn-decline" type="button" data-bs-dismiss="modal" aria-label="Close">Decline</button>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
+
+<!-- JavaScript to handle checkbox state with debugging -->
+<script>
+    // Wait for the DOM to load
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('terms-condition-modal');
+        const checkbox = document.getElementById('check-agree');
+        const agreeButton = document.getElementById('agreeButton');
+
+        // Event listener for when the modal is fully shown
+        modalElement.addEventListener('shown.bs.modal', function () {
+            // Ensure button starts off as disabled
+            agreeButton.disabled = !checkbox.checked;
+        });
+
+        // Event listener to track changes to the checkbox state
+        checkbox.addEventListener('change', function () {
+            // Enable the button if checkbox is checked
+            agreeButton.disabled = !checkbox.checked;
+        });
+    });
+</script>

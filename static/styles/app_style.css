@@ -627,10 +627,49 @@ input[type="password"]::-ms-clear {
     font-weight: 700px!important;
     color: var(--color-secondary);
 }
-
-#terms-condition-modal  .modal-footer h6{
-    font-size: 1rem;
+#terms-condition-modal  .modal-footer .term-agree{
+    /* border: #003049 1px solid; */
+    padding-top: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center !important;
+    align-items: center !important;
+    word-break: break-word;
 }
+
+#terms-condition-modal  .modal-footer .term-agree h6{
+    font-size: .8rem;
+}
+
+
+#terms-condition-modal  .modal-footer .term-check{
+    display: flex;
+    flex-direction: row;
+    justify-content: center !important;
+    align-items: center !important;
+    font-weight: 500;
+    gap: var(--gap-half);
+}
+
+#terms-condition-modal .form-check-input{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.2rem!important;
+    height: 1.2rem!important;
+    border: var(--color-secondary) 2px solid;
+}
+
+#terms-condition-modal .form-check-input:checked {
+    background-color: var(--color-tertiary);
+    border-color: var(--color-tertiary);
+}
+
+#terms-condition-modal .form-check-input:focus {
+    box-shadow: 0 0 5px 3px var(--color-shadow-min);
+    border-color: var(--color-tertiary);
+}
+
 #terms-condition-modal .modal-footer .mf-button{
     /* border: #ED7027 1px solid; */
     display: flex;
@@ -643,13 +682,14 @@ input[type="password"]::-ms-clear {
 
 #terms-condition-modal .modal-footer .btn-agree{
     background-color: var(--color-primary);
-    color: white;
+    color: white!important;
     font-weight: 500;
     border: none;
     font-size:1rem;
     transition: var(--tran-03);
     border-radius:var(--border-radius-input)!important;
 }
+
 #terms-condition-modal .modal-footer .btn-decline{
     background-color: var(--color-default);
     color: var(--color-primary);
