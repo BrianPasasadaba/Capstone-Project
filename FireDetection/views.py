@@ -650,8 +650,10 @@ def logout_view(request):
 @login_required
 def reports_view(request):
     reports = InitialReport.objects.order_by('-date_reported', '-time_reported')
+    archived_Reports = InitialReport.objects.filter(is_archived = True).order_by('-date_reported', '-time-reported')
     context = {
         'reports': reports,
+        'archived_Reports':archived_Reports
     }
     return render(request, 'reports.html', context)
 

@@ -195,7 +195,7 @@
                                 </thead>
                                 
                                 <tbody id="archiveTable">
-                                    {% for report in reports %}
+                                    {% for report in archived_Reports %}
                                     <tr
                                         data-report-id="{{ report.id|default:0 }}"
                                         data-status="{{ report.status|default:'None' }}"
