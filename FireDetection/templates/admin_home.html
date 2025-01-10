@@ -85,8 +85,14 @@
                         </thead>
                         <tbody id="accountTable">
                             {% for account in accounts %}
-                            <tr>
-                                <td>
+                            <tr 
+                            data-account-id="{{ account.id }}" 
+                            data-name="{{ account.name }}" 
+                            data-email="{{ account.email }}" 
+                            data-role="{{ account.get_role_display }}" 
+                            data-contact="{{ account.contact_number }}" 
+                            data-status="{{ account.verified }}">
+                            <td>
                                     <div class="form-check">
                                         <input 
                                             class="form-check-input account-checkbox" 
@@ -169,6 +175,7 @@
 {% include "modal_forgot_success.html" %}
 {% include "modal_terms_condi.html" %}
 {% include "modal_addacc_success.html" %}
+{% include "modal_preview_account.html" %}
 
 {% endblock %}
 
@@ -179,6 +186,56 @@
 <script src="{% static 'js/filter.js' %}"></script>
 <script src="{% static 'js/pagination.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const accountTable = document.getElementById('accountTable');
+    const nameInput = document.getElementById('prev-name');
+    const emailInput = document.getElementById('prev-email');
+    const roleSelect = document.getElementById('prev-role');
+    const contactInput = document.getElementById('prev-contact');
+
+    // Prevent checkbox clicks from propagating to the row
+    accountTable.addEventListener('click', function (event) {
+        if (event.target.classList.contains('form-check-input')) {
+            console.log('Checkbox clicked. Preventing modal from opening.');
+            event.stopPropagation(); // Stop the event from propagating to the row
+            return; // Stop further execution
+        }
+
+        const row = event.target.closest('tr[data-account-id]');
+        if (row) {
+            // Fetch data from the row's data attributes
+            const accountId = row.getAttribute('data-account-id');
+            const name = row.getAttribute('data-name');
+            const email = row.getAttribute('data-email');
+            const role = row.getAttribute('data-role');
+            const contact = row.getAttribute('data-contact');
+            const status = row.getAttribute('data-status');
+
+            console.log('Selected Account:', { accountId, name, email, role, contact, status });
+
+            // Populate the modal fields
+            nameInput.value = name;
+            emailInput.value = email;
+            roleSelect.value = role;
+            contactInput.value = contact;
+
+            // Enable/disable fields or buttons if needed (e.g., based on status)
+            if (status === 'true') {
+                console.log('Account is verified');
+            }
+
+            // Open the modal
+            const modal = new bootstrap.Modal(document.getElementById('prev-account-modal'));
+            modal.show();
+        }
+    });
+});
+
+
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

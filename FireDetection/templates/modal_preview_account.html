@@ -5,7 +5,7 @@
             <div class="modal-header">
                 <h3 class="modal-title" id="modal-title">Account</h3>
                 <div class="edit-form">
-                    <button class="btn btn-edit">
+                    <button class="btn btn-edit" id="edit-button">
                         <i class="bi bi-pencil-square"></i>
                         <span id="edit-text">Edit</span>
                     </button>
@@ -15,7 +15,9 @@
             </div>
             <div class="modal-body">
 
-                <form action="" method=""  id="prev-account-form">
+                <form action="{% url 'update_account'  %}" method=""  id="prev-account-form">
+                    <input type="hidden" id="account-id" name="account_id" value="">
+                    {% csrf_token %}
                     <div class="form-row">
                         <div class="form-column">
                             <label for="prev-name" class="form-label">Name</label>
@@ -62,6 +64,104 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const accountForm = document.getElementById('prev-account-form');
+    const saveButton = accountForm.querySelector('.add-account');
+    const accountIdInput = document.getElementById('account-id'); // The hidden input for account ID
+    const accountTable = document.getElementById('accountTable'); // The table containing account rows
+
+    // Event listener for row clicks
+    accountTable.addEventListener('click', function (event) {
+        const row = event.target.closest('tr[data-account-id]'); // Find the closest row with account data
+
+        if (row) {
+            // Get the account ID from the row's data attribute
+            const accountId = row.getAttribute('data-account-id');
+                
+            // Set the account ID in the hidden input field
+            accountIdInput.value = accountId;
+
+            // Populate other fields in the form (if needed)
+            document.getElementById('prev-name').value = row.getAttribute('data-name');
+            document.getElementById('prev-email').value = row.getAttribute('data-email');
+            document.getElementById('prev-role').value = row.getAttribute('data-role');
+            document.getElementById('prev-contact').value = row.getAttribute('data-contact');
+        }
+    });
+
+    // Event listener for form submission
+    accountForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(accountForm);
+
+        // Send the form data via fetch
+        fetch('/update-account/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'), // Include CSRF token
+            },
+            body: formData,
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(data => {
+                // Disable the save button after success
+                saveButton.disabled = true;
+
+                // Refresh the page after a successful update (no alert)
+                window.location.reload();  // This will refresh the page
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Error:', error);
+            });
+    });
+});
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const editButton = document.getElementById('edit-button');
+        const form = document.getElementById('prev-account-form');
+        const formFields = form.querySelectorAll('input, select, button');
+
+        // Initially disable all fields
+        formFields.forEach(field => {
+            if (field.type !== 'submit') {
+                field.disabled = true;
+            }
+        });
+
+        // Toggle editing mode on "Edit" button click
+        editButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default behavior of button
+            const isEditable = formFields[0].disabled; // Check if fields are currently disabled
+            
+            formFields.forEach(field => {
+                if (field.type !== 'submit') {
+                    field.disabled = !isEditable; // Toggle the `disabled` attribute
+                }
+            });
+
+            // Change button text to reflect editing state
+            const editText = document.getElementById('edit-text');
+            editText.textContent = isEditable ? 'Editing' : 'Edit';
+
+            // Enable/disable the submit button
+            const submitButton = form.querySelector('.add-account');
+            submitButton.disabled = !isEditable;
+        });
+    });
+</script>
 
 <script>
     // Combined cleanInput function with email validation

@@ -58,6 +58,37 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 import mimetypes
 import os
+from .models import CustomUser
+
+@csrf_exempt
+def update_account(request):
+    if request.method == "POST":
+        # Get the account ID from the form
+        account_id = request.POST.get("account_id")
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        role = request.POST.get("role")
+        contact_number = request.POST.get("contact_number")
+
+        # Ensure all required fields are present
+        if not account_id or not name or not email or not role:
+            return JsonResponse({"error": "Missing required fields."}, status=400)
+
+        # Get the account object
+        account = get_object_or_404(CustomUser, id=account_id)
+
+        # Update the account object
+        account.name = name
+        account.email = email
+        account.role = role
+        account.contact_number = contact_number
+
+        account.save()
+
+        return JsonResponse({"message": "Account updated successfully!"}, status=200)
+
+    # If request method is not POST, return an error
+    return JsonResponse({"error": "Invalid request method."}, status=400)
 
 
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
