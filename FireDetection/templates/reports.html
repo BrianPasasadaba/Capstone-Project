@@ -4,6 +4,22 @@
 
 {% block content %}
 <header>
+    <style>
+        span.dt-column-order {
+            display: none !important;
+        }
+
+        table.dataTable thead > tr > th.dt-ordering-asc {
+            padding: 0px !important; 
+        }
+
+        table.dataTable thead > tr > th.dt-ordering-desc{
+            padding: 0px !important;
+        }
+        div.dt-container div.dt-paging {
+            margin: 8px;
+        }
+    </style>
     <div class="header-content">
         <div class="header-sb">
             <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
@@ -160,7 +176,7 @@
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
-                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
                                         <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
                                         <td>
                                             <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
@@ -235,7 +251,7 @@
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
-                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
                                         <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
                                         <td>
                                             <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
@@ -363,16 +379,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        let activeTable;
+    
+
+    
         // Initialize DataTables with custom configuration
         const reportTable = new DataTable('#reportsTable', {
             responsive: false,
             searching: true,  // Enable searching
             lengthChange: false,
-            ordering: true,   // Enable ordering
+            ordering: true,
             paging: true,
             pageLength: 10,
+            info: false, 
             columnDefs: [
-                { className: "dt-head-center", targets: "_all" }
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+
             ],
             language: {
                 emptyTable: "No data available",
@@ -380,7 +405,7 @@
             },
             layout: {
                 topEnd: null
-            } // Custom DOM positioning
+            }
         });
     
         const archiveTable = new DataTable('#archivesTable', {
@@ -390,8 +415,12 @@
             ordering: true,
             paging: true,
             pageLength: 10,
+            info: false,
             columnDefs: [
-                { className: "dt-head-center", targets: "_all" }
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
             ],
             language: {
                 emptyTable: "No data available",
@@ -400,13 +429,15 @@
             layout: {
                 topEnd: null
             }
-            
         });
+    
+        // Set initial active table
+        activeTable = reportTable;
     
         // Hide archive table initially
         $('#archiveTable_wrapper').hide();
     
-        // Tab switching logic
+        // Tab switching logic with filter reset
         document.querySelectorAll('#reportTabs button').forEach((tab) => {
             tab.addEventListener('click', function () {
                 const target = this.getAttribute('data-bs-target');
@@ -414,10 +445,21 @@
                 if (target === '#reports') {
                     $('#archiveTable_wrapper').hide();
                     $('#reportTable_wrapper').show();
+                    activeTable = reportTable;
                 } else if (target === '#archives') {
                     $('#reportTable_wrapper').hide();
                     $('#archiveTable_wrapper').show();
+                    activeTable = archiveTable;
                 }
+    
+                // Reset search input and filters for the new active table
+                searchInput.value = '';
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                const defaultDropdownItem = document.querySelector('.dropdown-item[data-filter="All"]');
+                if (defaultDropdownItem) defaultDropdownItem.classList.add('active');
+                
+                // Clear any existing filters and searches on the new active table
+                activeTable.search('').order([]).draw();
             });
         });
     
@@ -426,19 +468,23 @@
         const searchInput = document.getElementById('searchInput');
     
         // Function to apply filter based on criteria
-        function applyFilter(table, filterCriteria) {
-            table.column(5).search('').draw(); // Clear existing filters (adjust column index as needed)
+        function applyFilter(filterCriteria) {
+            activeTable.search('').columns().search('').draw(); // Clear existing filters
     
             if (filterCriteria === 'Latest') {
-                table.order([3, 'desc']).draw(); // Sort by date column (adjust index as needed)
+                activeTable
+                    .order([[3, 'desc'], [4, 'desc']])  // Sort by date desc, then time desc
+                    .draw();
             } else if (filterCriteria === 'Oldest') {
-                table.order([3, 'asc']).draw();
+                activeTable
+                    .order([[3, 'asc'], [4, 'asc']])   // Sort by date asc, then time asc
+                    .draw();
             } else if (filterCriteria === 'Ongoing') {
-                table.column(5).search('Ongoing').draw();
+                activeTable.column(5).search('Ongoing').draw();
             } else if (filterCriteria === 'Case Resolved') {
-                table.column(5).search('Case Closed').draw();
+                activeTable.column(5).search('Case Closed').draw();
             } else {
-                table.order([]).draw(); // Clear sorting
+                activeTable.order([]).draw();
             }
         }
     
@@ -446,27 +492,18 @@
         dropdownItems.forEach(item => {
             item.addEventListener('click', function (e) {
                 const filterCriteria = e.target.textContent.trim();
-                const activeTable = $('#archiveTable_wrapper').is(':visible') ? archiveTable : reportTable;
                 
                 // Update active state in dropdown
                 dropdownItems.forEach(item => item.classList.remove('active'));
                 e.target.classList.add('active');
     
-                applyFilter(activeTable, filterCriteria);
+                applyFilter(filterCriteria);
             });
         });
     
         // Event listener for search input
         searchInput.addEventListener('input', function () {
-            const activeTable = $('#archiveTable_wrapper').is(':visible') ? archiveTable : reportTable;
             activeTable.search(this.value).draw();
-        });
-    
-        // Custom search function for DataTables
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            const searchTerm = searchInput.value.toLowerCase();
-            const rowData = data.join(' ').toLowerCase();
-            return rowData.includes(searchTerm);
         });
     
         // Initialize with default view
