@@ -365,7 +365,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize DataTables with custom configuration
         const reportTable = new DataTable('#reportsTable', {
-            responsive: true,
+            responsive: false,
             searching: true,  // Enable searching
             lengthChange: false,
             ordering: true,   // Enable ordering
@@ -384,7 +384,7 @@
         });
     
         const archiveTable = new DataTable('#archivesTable', {
-            responsive: true,
+            responsive: false,
             searching: true,
             lengthChange: false,
             ordering: true,
