@@ -1,103 +1,80 @@
+    
+document.addEventListener('DOMContentLoaded', function () {
+    const reportTable = document.getElementById('reportTable');
+    const archiveTable = document.getElementById('archiveTable');  // Your archive table
+    const viewButton = document.querySelector('.btn-view'); // Your existing "View" button
+    const hiddenReportIdInput = document.getElementById('report-id'); // Hidden input for report ID
+    const modal = document.getElementById('report-preview-modal');
+    const modalStatus = document.querySelector('#modal-status');
+    const editButton = document.querySelector('.btn-edit');
+    
+    let selectedRow = null;
 
-document.addEventListener('DOMContentLoaded', function() {
-    const rowsPerPage = 10;
-    let currentPage = 1;
-    const tableBody = document.getElementById('reportTable');
-    const rows = tableBody.querySelectorAll('tr');
-    const totalPages = Math.ceil(rows.length / rowsPerPage);
-    const noDataMessage = document.getElementById('noDataMessage');
-    const page2Button = document.getElementById('button2');
-    const page3Button = document.getElementById('button3');
+    // Function to handle checkbox change in any table (main or archive)
+    function handleCheckboxChange(event) {
+        const checkbox = event.target;
+        const row = checkbox.closest('tr');
 
-    if (rows.length === 0) {
-        noDataMessage.style.display = 'block';  
-        page2Button.classList.add('disabled');
-        page3Button.classList.add('disabled');
-        document.querySelector('.pagination .prev').classList.add('disabled');
-        document.querySelector('.pagination .next').classList.add('disabled');
-        return;
-    }
+        if (checkbox.checked) {
+            selectedRow = row;
+            viewButton.removeAttribute('disabled');
 
-    function displayRowsForPage(page) {
-        const start = (page - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-        let rowsDisplayed = false;
+            // Optional: Set the report ID in a hidden input for tracking
+            if (hiddenReportIdInput) {
+                hiddenReportIdInput.value = row.dataset.reportId;
+            }
+        } else {
+            selectedRow = null;
+            viewButton.setAttribute('disabled', true);
 
-        rows.forEach((row, index) => {
-            if (index >= start && index < end) {
-                row.style.display = '';
-                rowsDisplayed = true;
-            } else {
-                row.style.display = 'none';
+            // Optional: Clear the hidden input
+            if (hiddenReportIdInput) {
+                hiddenReportIdInput.value = '';
+            }
+        }
+
+        // Uncheck all other checkboxes to allow single selection
+        document.querySelectorAll('.form-check-input').forEach((input) => {
+            if (input !== checkbox) {
+                input.checked = false;
             }
         });
-
-        noDataMessage.style.display = rowsDisplayed ? 'none' : 'block';
-        updatePaginationControls();
     }
 
-    function updatePaginationControls() {
-        const prevButton = document.querySelector('.pagination .prev');
-        const nextButton = document.querySelector('.pagination .next');
+    // Add event listener for checkbox changes in both tables
+    reportTable.addEventListener('change', handleCheckboxChange);
+    archiveTable.addEventListener('change', handleCheckboxChange);
 
-        prevButton.classList.toggle('disabled', currentPage === 1);
-        nextButton.classList.toggle('disabled', currentPage === totalPages);
-
-        // Disable page buttons based on available data
-        page2Button.classList.toggle('disabled', rows.length <= rowsPerPage);
-        page3Button.classList.toggle('disabled', rows.length <= rowsPerPage * 2);
-
-        document.querySelectorAll('.pagination .page-item').forEach((pageButton) => {
-            pageButton.classList.remove('active');
-        });
-        document.querySelector(`.pagination .page-item[data-page="${currentPage}"]`).classList.add('active');
-    }
-
-    document.querySelector('.pagination .prev').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (currentPage > 1) {
-            currentPage--;
-            displayRowsForPage(currentPage);
+    // Listen for the "View" button click
+    viewButton.addEventListener('click', function (event) {
+        if (!selectedRow) {
+            console.log('No row selected. Preventing modal from opening.');
+            event.preventDefault(); // Prevent modal from opening
+            return;
         }
+
+        // Populate the modal with selected row data
+        populateModal(selectedRow);
+
+        // Show the modal
+        const bootstrapModal = new bootstrap.Modal(modal);
+        bootstrapModal.show();
     });
 
-    document.querySelector('.pagination .next').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (currentPage < totalPages) {
-            currentPage++;
-            displayRowsForPage(currentPage);
-        }
-    });
-
-    
-
-    displayRowsForPage(currentPage);
-});
-
-
-    
-const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
-const modalStatus = document.querySelector('#modal-status');
-const editButton = document.querySelector('.btn-edit');
-
-reportRows.forEach(row => {
-    row.addEventListener('click', function () {
+    // Function to populate the modal with selected report row data
+    function populateModal(row) {
         const reportId = row.getAttribute('data-report-id');
-        
         const location = row.getAttribute('data-location');
         const dateReported = row.getAttribute('data-date');
         const timeReported = row.getAttribute('data-time');
         const timeFireOut = row.getAttribute('data-fireout');
-        const occupancy = row.getAttribute('data-occupancy');
         const owner = row.getAttribute('data-owner');
         const alarm = row.getAttribute('data-alarm');
-        const respondents = row.getAttribute('data-respondents');
         const damages = row.getAttribute('data-damages');
         const establishments = row.getAttribute('data-establishments');
         const casualties = row.getAttribute('data-casualties');
         const injured = row.getAttribute('data-injured');
         const proof = row.getAttribute('data-proof');
-
         const involved = row.getAttribute('data-involved');
         const alarmDec = row.getAttribute('data-alarm-declared-by');
         const timeArrive = row.getAttribute('data-time-arrival');
@@ -116,21 +93,21 @@ reportRows.forEach(row => {
         const sender = row.getAttribute('data-sender');
         const senderContact = row.getAttribute('data-sender-contact');
         const fireTeam = row.getAttribute('data-team');
+        const status = row.getAttribute('data-status');
 
-        const status = row.getAttribute('data-status'); 
-            
+        // Set the modal status text
         if (modalStatus) {
-            modalStatus.textContent = status; 
+            modalStatus.textContent = status;
         }
 
+        // Hide or show the edit button based on the status
         if (status === 'Case Closed') {
             editButton.style.display = 'none';
         } else {
-            editButton.style.display = ''; 
+            editButton.style.display = '';
         }
 
         // Populate the form fields in the modal
-        
         document.getElementById('loc').value = location;
         document.getElementById('team').value = fireTeam;
         document.getElementById('date').value = dateReported;
@@ -138,7 +115,7 @@ reportRows.forEach(row => {
         document.getElementById('time-out').value = timeOut;
         document.getElementById('involved').value = involved;
         document.getElementById('owner').value = owner;
-        document.getElementById('alarm').value = alarm; 
+        document.getElementById('alarm').value = alarm;
         document.getElementById('alarm-dec').value = alarmDec;
         document.getElementById('time-arrive').value = timeArrive;
         document.getElementById('time-under').value = timeUnder;
@@ -169,31 +146,36 @@ reportRows.forEach(row => {
             proofImg.style.display = 'none';
         }
 
-        // Resolve button handling
+        // Resolve button handling (if needed)
         const modalResolveButton = document.querySelector(`#resolve-button-${reportId}`);
         if (modalResolveButton) {
             modalResolveButton.addEventListener('click', function() {
                 modalResolveButton.click();
             });
         }
-    });
+    }
 });
 
 
+
 document.addEventListener('DOMContentLoaded', function () {
-    const reportRows = document.querySelectorAll("tbody tr[data-bs-toggle='modal']");
+    const tbody = document.querySelector('tbody'); // Parent element for event delegation
     const resolveButton = document.querySelector('.resolve-button');
     const previewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
     const resolveWarningModal = new bootstrap.Modal(document.getElementById('resolve-warning-modal'));
     const confirmResolveButton = document.getElementById('resconfirm');
     const cancelResolveButton = document.getElementById('rescancel');
+    let selectedReportId = null; // Store the selected report ID
 
-    reportRows.forEach(row => {
-        row.addEventListener('click', function () {
-            const reportId = row.getAttribute('data-report-id');
-            const status = row.querySelector(`#status-text-${reportId}`).textContent.trim();
+    // Using event delegation to handle row clicks
+    tbody.addEventListener('click', function (event) {
+        // Ensure the click target is within a row with data-report-id attribute
+        const row = event.target.closest('tr[data-report-id]');
+        if (row) {
+            selectedReportId = row.getAttribute('data-report-id'); // Store the report ID
+            const status = row.querySelector(`#status-text-${selectedReportId}`).textContent.trim();
 
-            resolveButton.setAttribute('data-report-id', reportId);
+            resolveButton.setAttribute('data-report-id', selectedReportId);
             resolveButton.setAttribute('data-status', status);
 
             if (status === 'Case Closed') {
@@ -203,59 +185,65 @@ document.addEventListener('DOMContentLoaded', function () {
                 resolveButton.disabled = false;
                 resolveButton.textContent = 'Resolve';
             }
-        });
+
+            console.log('Row clicked. Selected Report ID:', selectedReportId);
+        }
     });
 
     // Handle Resolve button click
     resolveButton.addEventListener('click', function (event) {
         event.preventDefault();
 
-        // Close the preview modal and show the resolve confirmation modal
-        previewModal.hide();
-        resolveWarningModal.show();
+        if (selectedReportId) {
+            // Close the preview modal and show the resolve confirmation modal
+            previewModal.hide();
+            resolveWarningModal.show();
+        } else {
+            console.log('No report selected. Preventing modal from opening.');
+        }
     });
 
-
+    // Handle the confirm button click in the resolve confirmation modal
     confirmResolveButton.addEventListener('click', function () {
-        const reportId = resolveButton.getAttribute('data-report-id');
-        const currentStatus = resolveButton.getAttribute('data-status');
-        const newStatus = currentStatus === 'Ongoing' ? 'Case Closed' : 'Ongoing';
-        const csrfToken = getCookie('csrftoken');
+        if (selectedReportId) {
+            const currentStatus = resolveButton.getAttribute('data-status');
+            const newStatus = currentStatus === 'Ongoing' ? 'Case Closed' : 'Ongoing';
+            const csrfToken = getCookie('csrftoken');
 
-        fetch(`/toggle-status/${reportId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-            },
-            body: JSON.stringify({ status: newStatus })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status) {
-                const statusTextElement = document.querySelector(`#status-text-${reportId}`);
+            fetch(`/toggle-status/${selectedReportId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    const statusTextElement = document.querySelector(`#status-text-${selectedReportId}`);
+                    if (statusTextElement) {
+                        statusTextElement.textContent = data.status;
+                    }
 
-                if (statusTextElement) {
-                    statusTextElement.textContent = data.status;
+                    resolveButton.setAttribute('data-status', data.status);
+                    if (data.status === 'Case Closed') {
+                        resolveButton.disabled = true;
+                        resolveButton.textContent = 'Status Closed';
+                    }
                 }
 
-                resolveButton.setAttribute('data-status', data.status);
-                if (data.status === 'Case Closed') {
-                    resolveButton.disabled = true;
-                    resolveButton.textContent = 'Status Closed';
+                if (data.message) {
+                    console.log(data.message);
                 }
-            }
 
-            if (data.message) {
-                console.log(data.message);
-            }
-
-            resolveWarningModal.hide();
-            window.location.href = '/reports/';
-        })
-        .catch(error => {
-            console.error('Error in status update:', error);
-        });
+                resolveWarningModal.hide();
+                window.location.href = '/reports/';
+            })
+            .catch(error => {
+                console.error('Error in status update:', error);
+            });
+        }
     });
 
     // Handle Cancel button in the confirmation modal
@@ -266,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
+// Get CSRF token from cookies for safe post requests
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -281,5 +269,3 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-  
-        

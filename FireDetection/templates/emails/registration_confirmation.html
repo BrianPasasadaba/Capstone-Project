@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to TruetheFire</title>
+</head>
+<body style="margin: 0; padding: 0; background: linear-gradient(145deg, #eef3f8 0%, #f6f9fc 100%);">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-family: Arial, sans-serif;">
+        <tr>
+            <td align="center" style="padding: 40px 0;">
+                <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td style="padding: 40px;">
+                            <h1 style="color: rgb(14, 30, 75); text-align: center; margin-bottom: 30px;">Welcome to TruetheFire</h1>
+                            
+                            <p style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px;">
+                                Hello {{ name }},
+                            </p>
+                            
+                            <p style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px;">
+                                Your account has been successfully created on {{ date|date:"F j, Y" }} at {{ date|date:"g:i A" }}.
+                            </p>
+
+                            <div style="background-color: rgb(14, 30, 75); color: white; padding: 15px; margin: 20px 0; border-radius: 4px; text-align: center;">
+                                <p style="margin: 0;">Your temporary password is:</p>
+                                <p style="margin: 10px 0;background-color: rgb(237, 112, 39); font-size: 18px; text-align: center; font-family: monospace;  font-weight: bold;">{{ password }}</p>
+                                <p style="margin: 0; color: white;">Please change your password after logging in for the first time.</p>
+                            </div>
+                            
+                            <h3 style="color: rgb(237, 112, 39); margin-top: 30px;">Account Details:</h3>
+                            <ul style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px; padding-left: 20px;">
+                                <li style="margin-bottom: 10px;">Email: {{ email }}</li>
+                                <li style="margin-bottom: 10px;">Role: {{ role }}</li>
+                                <li style="margin-bottom: 10px;">Contact Number: {{ contact_number }}</li>
+                            </ul>
+                            
+                            <h3 style="color: rgb(237, 112, 39); margin-top: 30px;">For your security:</h3>
+                            <ul style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px; padding-left: 20px;">
+                                <li style="margin-bottom: 10px;">Change your password immediately after logging in</li>
+                                <li style="margin-bottom: 10px;">Use a strong, unique password</li>
+                                <li style="margin-bottom: 10px;">Never share your credentials with anyone</li>
+                            </ul>
+                            
+                            <p style="color: rgb(14, 30, 75); font-size: 16px; line-height: 24px; margin-top: 30px;">
+                                Best regards,<br>
+                                Your TruetheFire Team
+                            </p>
+                            
+                            <div style="color: rgb(14, 30, 75); font-size: 12px; margin-top: 40px; text-align: center; border-top: 1px solid #eeeeee; padding-top: 20px;">
+                                <p>This is an automated message, please do not reply to this email.</p>
+                                <p>© {{ year }} TruetheFire. All rights reserved.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

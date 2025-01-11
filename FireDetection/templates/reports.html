@@ -4,6 +4,22 @@
 
 {% block content %}
 <header>
+    <style>
+        span.dt-column-order {
+            display: none !important;
+        }
+
+        table.dataTable thead > tr > th.dt-ordering-asc {
+            padding: 0px !important; 
+        }
+
+        table.dataTable thead > tr > th.dt-ordering-desc{
+            padding: 0px !important;
+        }
+        div.dt-container div.dt-paging {
+            margin: 8px;
+        }
+    </style>
     <div class="header-content">
         <div class="header-sb">
             <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
@@ -94,16 +110,22 @@
                             </li>
                         </ul>
                         <div class="rbth-btns">
-                            <button type="button" class="btn btn-sm btn-view" disabled><i class="bi bi-eye-fill"></i>View</button>
+                            <button
+                            type="button"
+                            class="btn btn-sm btn-view"
+                            data-bs-toggle="modal"
+                            data-bs-target="#report-preview-modal"
+                            disabled><i class="bi bi-eye-fill" ></i> View</button>
+
                             <button type="button" class="btn btn-sm btn-archive" disabled><i class="bi bi-archive-fill"></i>Archive</button>
                         </div>
                     </div>
                     <div class="tab-content" id="reportTabsContent">
                         <!-- Reports Tab Content -->
                         <div class="tab-pane fade show active" id="reports" role="tabpanel" aria-labelledby="reports-tab">
-                            <table>
+                            <table id="reportsTable">
                                 <thead>
-                                    <tr  data-bs-toggle="modal" >
+                                    <tr >
                                         <th>Select</th>
                                         <th>Report</th>
                                         <th>Location</th>
@@ -148,14 +170,13 @@
                                         data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
                                         data-team="{{ report.team|default:'None' }}" 
                                         
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#report-preview-modal">
+                                        >
                                         <td>
-                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <input class="form-check-input r-check" type="checkbox" value="" id="defaultCheck1">
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
-                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
                                         <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
                                         <td>
                                             <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
@@ -163,23 +184,23 @@
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                        <td colspan="5">No reports available</td>
+                                        <td colspan="6">No reports available</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
-                                <tr id="noResultsMessage" style="display: none;">
-                                    <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
+                                <tr id="noResultsMessage" style="display: none; width: 100%;">
+                                    <td colspan="6" style="color: red; text-align: center;">No results found. Try again.</td>
                                 </tr>      
 
-                                <tr id="noFoundFilter" style="display: none;">
-                                    <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                                <tr id="noFoundFilter" style="display: none; width: 100%;">
+                                    <td colspan="6" style="color: red; text-align: center;">No Data to Display.</td>
                                 </tr>           
                             </table>
                         </div>
                         <div class="tab-pane fade" id="archives" role="tabpanel" aria-labelledby="archives-tab">
-                            <table>
+                            <table id="archivesTable">
                                 <thead>
-                                    <tr  data-bs-toggle="modal" >
+                                    <tr   >
                                         <th>Select</th>
                                         <th>Report</th>
                                         <th>Location</th>
@@ -190,7 +211,7 @@
                                 </thead>
                                 
                                 <tbody id="archiveTable">
-                                    {% for report in reports %}
+                                    {% for report in archived_Reports %}
                                     <tr
                                         data-report-id="{{ report.id|default:0 }}"
                                         data-status="{{ report.status|default:'None' }}"
@@ -224,14 +245,13 @@
                                         data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
                                         data-team="{{ report.team|default:'None' }}" 
                                         
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#report-preview-modal">
+                                        >
                                         <td>
                                             <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
-                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
                                         <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
                                         <td>
                                             <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
@@ -239,16 +259,16 @@
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                        <td colspan="5">No reports available</td>
+                                        <td colspan="6">No reports available</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                                 <tr id="noResultsMessage" style="display: none;">
-                                    <td colspan="5" style="color: red; text-align: center;">No results found. Try again.</td>
+                                    <td colspan="6" style="color: red; text-align: center;">No results found. Try again.</td>
                                 </tr>      
 
                                 <tr id="noFoundFilter" style="display: none;">
-                                    <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                                    <td colspan="6" style="color: red; text-align: center;">No Data to Display.</td>
                                 </tr>           
                             </table>
                         </div>
@@ -297,7 +317,7 @@
                             <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
                                 No data available.
                             </div>
-                            
+                            <!--
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item prev disabled">
@@ -310,7 +330,7 @@
                                         <a class="page-link" href="#">Next</a>
                                     </li>
                                 </ul>
-                            </nav>
+                            </nav>   -->
                         </div>
                             <!-- <button type="button" class="btn btn-lg btn">Export</button> -->
                         </div>
@@ -336,7 +356,9 @@
 {% include "modal_remove_account.html" %}
 {% include "modal_copied_success.html" %}
 {% include "modal_terms_condi.html" %}
+{% include "modal_terms_condi_log.html" %}
 {% include "modal_resolve_confirm.html" %}
+{% include "modal_editrp_success.html" %}
 
 {% endblock %}
 
@@ -348,23 +370,219 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
-<script src="{% static 'js/filter.js' %}"></script>
+<!-- <script src="{% static 'js/filter.js' %}"></script> -->
 <script src="{% static 'js/preview.js' %}"></script>
-<script src="{% static 'js/pagination.js' %}"></script>
+<!-- <script src="{% static 'js/pagination.js' %}"></script> -->
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let activeTable;
+    
+
+    
+        // Initialize DataTables with custom configuration
+        const reportTable = new DataTable('#reportsTable', {
+            responsive: false,
+            searching: true,  // Enable searching
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pageLength: 10,
+            info: false, 
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found"
+            },
+            layout: {
+                topEnd: null
+            }
+        });
+    
+        const archiveTable = new DataTable('#archivesTable', {
+            responsive: false,
+            searching: true,
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pageLength: 10,
+            info: false,
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found"
+            },
+            layout: {
+                topEnd: null
+            }
+        });
+    
+        // Set initial active table
+        activeTable = reportTable;
+    
+        // Hide archive table initially
+        $('#archiveTable_wrapper').hide();
+    
+        // Tab switching logic with filter reset
+        document.querySelectorAll('#reportTabs button').forEach((tab) => {
+            tab.addEventListener('click', function () {
+                const target = this.getAttribute('data-bs-target');
+                
+                if (target === '#reports') {
+                    $('#archiveTable_wrapper').hide();
+                    $('#reportTable_wrapper').show();
+                    activeTable = reportTable;
+                } else if (target === '#archives') {
+                    $('#reportTable_wrapper').hide();
+                    $('#archiveTable_wrapper').show();
+                    activeTable = archiveTable;
+                }
+    
+                // Reset search input and filters for the new active table
+                searchInput.value = '';
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                const defaultDropdownItem = document.querySelector('.dropdown-item[data-filter="All"]');
+                if (defaultDropdownItem) defaultDropdownItem.classList.add('active');
+                
+                // Clear any existing filters and searches on the new active table
+                activeTable.search('').order([]).draw();
+            });
+        });
+    
+        // Custom filtering functionality
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const searchInput = document.getElementById('searchInput');
+    
+        // Function to apply filter based on criteria
+        function applyFilter(filterCriteria) {
+            activeTable.search('').columns().search('').draw(); // Clear existing filters
+    
+            if (filterCriteria === 'Latest') {
+                activeTable
+                    .order([[3, 'desc'], [4, 'desc']])  // Sort by date desc, then time desc
+                    .draw();
+            } else if (filterCriteria === 'Oldest') {
+                activeTable
+                    .order([[3, 'asc'], [4, 'asc']])   // Sort by date asc, then time asc
+                    .draw();
+            } else if (filterCriteria === 'Ongoing') {
+                activeTable.column(5).search('Ongoing').draw();
+            } else if (filterCriteria === 'Case Resolved') {
+                activeTable.column(5).search('Case Closed').draw();
+            } else {
+                activeTable.order([]).draw();
+            }
+        }
+    
+        // Event listener for dropdown filter
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                const filterCriteria = e.target.textContent.trim();
+                
+                // Update active state in dropdown
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                e.target.classList.add('active');
+    
+                applyFilter(filterCriteria);
+            });
+        });
+    
+        // Event listener for search input
+        searchInput.addEventListener('input', function () {
+            activeTable.search(this.value).draw();
+        });
+    
+        // Initialize with default view
+        reportTable.draw();
+        archiveTable.draw();
+    });
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const reportTable = document.getElementById('reportTable');
+    const archiveTable = document.getElementById('archiveTable');  // Archive table
+
+    // Function to enable or disable the "View" button for a row
+    function handleCheckboxChange(event, table) {
+        const checkbox = event.target;
+        const row = checkbox.closest('tr');
+        const viewButton = row.querySelector('.btn-view');
+
+        if (checkbox.checked) {
+            viewButton.removeAttribute('disabled');
+        } else {
+            viewButton.setAttribute('disabled', true);
+        }
+    }
+
+    // Event listener to enable/disable "View" button for both tables
+    reportTable.addEventListener('change', function (event) {
+        if (event.target.classList.contains('report-checkbox')) {
+            handleCheckboxChange(event, reportTable);
+        }
+    });
+
+    archiveTable.addEventListener('change', function (event) {
+        if (event.target.classList.contains('report-checkbox')) {
+            handleCheckboxChange(event, archiveTable);
+        }
+    });
+
+    // Prevent modal opening if the button is clicked but the checkbox is unchecked
+    function preventModalIfUnchecked(event, table) {
+        const button = event.target.closest('.btn-view');
+        const row = button.closest('tr');
+        const checkbox = row.querySelector('.report-checkbox');
+
+        if (!checkbox.checked) {
+            console.log('Checkbox not checked, preventing modal from opening.');
+            event.preventDefault(); // Prevent Bootstrap modal from triggering
+        }
+    }
+
+    // Event listener to prevent modal opening for both tables
+    reportTable.addEventListener('click', function (event) {
+        if (event.target.closest('.btn-view')) {
+            preventModalIfUnchecked(event, reportTable);
+        }
+    });
+
+    archiveTable.addEventListener('click', function (event) {
+        if (event.target.closest('.btn-view')) {
+            preventModalIfUnchecked(event, archiveTable);
+        }
+    });
+});
+</script>
+
 <script>
     function populateYears() {
         const currentYear = new Date().getFullYear();
         const totalYears = 7;
         const dropdown = document.getElementById("yearDropdown");
-
+    
         dropdown.innerHTML = ""; 
-
+    
         for (let i = 0; i < totalYears; i++) {
             const year = currentYear - i; 
             const ordinal = getOrdinalName(i + 1);
-
+    
             const listItem = document.createElement("li");
             listItem.innerHTML = `
                 <a class="dropdown-item" href="#" onclick="handleExport(${year})">
@@ -374,16 +592,50 @@
             dropdown.appendChild(listItem);
         }
     }
-
+    
     function getOrdinalName(position) {
         const ordinals = ["firstYear", "secondYear", "thirdYear", "fourthYear", "fifthYear", "sixthYear", "seventhYear"];
         return ordinals[position - 1] || "";
     }
-
-    function handleExport(year) {
-        window.location.href = `/export-initial-report/?value=${year}`;
+    
+    async function handleExport(year) {
+        try {
+            const response = await fetch(`/export-initial-report/?value=${year}`);
+            
+            if (response.ok) {
+                // Get the filename from the Content-Disposition header if available
+                const contentDisposition = response.headers.get('Content-Disposition');
+                const filename = contentDisposition
+                    ? contentDisposition.split('filename=')[1].replace(/["']/g, '')
+                    : `report-${year}.pdf`;
+    
+                // Create a blob from the response
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                
+                // Create a temporary link and trigger download
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Clean up the blob URL
+                window.URL.revokeObjectURL(url);
+    
+                // Reload the page after successful download
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000); // Wait 1 second to ensure download starts
+            } else {
+                console.error('Download failed:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error during download:', error);
+        }
     }
-
+    
     window.onload = populateYears;
 </script>
 
@@ -402,23 +654,42 @@ document.getElementById('searchInput').addEventListener('input', function (e) {
     const reportTable = document.getElementById('reportTable');
     const hiddenReportIdInput = document.getElementById('report-id');
     const modal = document.getElementById('report-preview-modal');
+    let selectedReportId = null; // Store the selected report ID
 
+    // Click event for selecting a row
     reportTable.addEventListener('click', function (event) {
         const clickedRow = event.target.closest('tr');
+        
+        // Proceed only if the clicked row has the data-report-id attribute
         if (clickedRow && clickedRow.dataset.reportId) {
-            const reportId = clickedRow.dataset.reportId;
-            console.log('Clicked Report ID:', reportId);
+            selectedReportId = clickedRow.dataset.reportId; // Store the report ID
+            console.log('Row selected. Report ID:', selectedReportId);
 
-            hiddenReportIdInput.value = reportId;
-
+            // Update the hidden input with the selected report ID
+            hiddenReportIdInput.value = selectedReportId;
             console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
+        }
+    });
+
+    // "View" button click event
+    const viewButton = document.querySelector('.btn-view'); // Assuming there is only one "View" button
+    viewButton.addEventListener('click', function (event) {
+        // Only show modal if a report ID has been selected
+        if (selectedReportId) {
+            console.log('Opening preview modal for Report ID:', selectedReportId);
+            
+            // Populate the modal with the selected report ID (or any other data)
+            // You can add the functionality to populate the modal fields here if needed
             const bootstrapModal = new bootstrap.Modal(modal);
             bootstrapModal.show();
         } else {
-            console.error('No valid report ID found for the clicked row.');
+            console.log('No row selected. Preventing modal from opening.');
+            event.preventDefault(); // Prevent modal from opening if no row is selected
         }
     });
 });
+
+
 
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -701,7 +972,20 @@ saveButton.addEventListener('click', function (event) {
         .then(data => {
             if (data.status === 'success') {
                 console.log('Report updated successfully.');
-                window.location.href = "/reports/";
+
+                // Close the report preview modal
+                const reportPreviewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
+                reportPreviewModal.hide();
+
+                // Show the success modal
+                const successModal = new bootstrap.Modal(document.getElementById('editrp-success-modal'));
+                successModal.show();
+
+                // Close the success modal after a short delay (e.g., 3 seconds) and redirect to reports
+                setTimeout(() => {
+                    successModal.hide();
+                    window.location.href = "/reports/";
+                }, 3000);
             } else {
                 console.error('Error updating report:', data.message);
                 alert('Error updating report: ' + data.message);
@@ -712,6 +996,7 @@ saveButton.addEventListener('click', function (event) {
             alert('An error occurred. Please try again.');
         });
 });
+
 
 
     });

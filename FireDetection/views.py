@@ -53,12 +53,46 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.timezone import make_aware, get_current_timezone
 from django.db.models.functions import ExtractYear
 from supabase import create_client, Client
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.utils.html import strip_tags
 import mimetypes
 import os
 from asgiref.sync import sync_to_async
 import asyncio
 from django.db import transaction
 from django.db.models import F
+from .models import CustomUser
+
+@csrf_exempt
+def update_account(request):
+    if request.method == "POST":
+        # Get the account ID from the form
+        account_id = request.POST.get("account_id")
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        role = request.POST.get("role")
+        contact_number = request.POST.get("contact_number")
+
+        # Ensure all required fields are present
+        if not account_id or not name or not email or not role:
+            return JsonResponse({"error": "Missing required fields."}, status=400)
+
+        # Get the account object
+        account = get_object_or_404(CustomUser, id=account_id)
+
+        # Update the account object
+        account.name = name
+        account.email = email
+        account.role = role
+        account.contact_number = contact_number
+
+        account.save()
+
+        return JsonResponse({"message": "Account updated successfully!"}, status=200)
+
+    # If request method is not POST, return an error
+    return JsonResponse({"error": "Invalid request method."}, status=400)
 
 
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
@@ -445,11 +479,24 @@ def change_password(request):
 
         update_session_auth_hash(request, user)
 
+        # Prepare email context
+        context = {
+            'user': user,
+            'date': timezone.now(),
+            'year': timezone.now().year,
+        }
+
+        # Render HTML email
+        html_message = render_to_string('emails/forgot_password_confirmation.html', context)
+        plain_message = strip_tags(html_message)  # Create plain text version
+
+        # Send email
         send_mail(
             'Password Reset Successful',
-            f'Hello {user.get_full_name() or user.name},\n\nYour password has been successfully changed.\n\nPlease keep it safe and secure.',
+            plain_message,
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
+            html_message=html_message,
             fail_silently=False,
         )
         
@@ -483,11 +530,24 @@ def forgot_password_view(request):
             user.set_password(new_password)
             user.save()
 
+            # Prepare email context
+            context = {
+                'user': user,
+                'date': timezone.now(),
+                'year': timezone.now().year,
+            }
+
+            # Render HTML email
+            html_message = render_to_string('emails/forgot_password_confirmation.html', context)
+            plain_message = strip_tags(html_message)  # Create plain text version
+
+            # Send email
             send_mail(
-                'Password Reset Successful',
-                f'Hello {user.name},\n\nYour password has been successfully changed.\n\nPlease keep it safe and secure.',
+                'Password Reset Confirmation',
+                plain_message,
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
+                html_message=html_message,
                 fail_silently=False,
             )
 
@@ -518,11 +578,12 @@ def check_email_exists(request):
 
 @login_required
 def register_view(request):
+    account_added = False
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
         role = request.POST.get('role')
-        contact_number = request.POST.get('contact_number')  
+        contact_number = request.POST.get('contact_number')
 
         if not all([name, email, role, contact_number]):
             messages.error(request, 'All fields are required.')
@@ -540,32 +601,48 @@ def register_view(request):
                     contact_number=contact_number,
                     password=generated_password
                 )
-                
+
+                # Prepare email context
+                context = {
+                    'name': name,
+                    'email': email,
+                    'role': role,
+                    'contact_number': contact_number,
+                    'password': generated_password,
+                    'date': timezone.now(),
+                    'year': timezone.now().year,
+                }
+
+                # Render email template
+                html_message = render_to_string('emails/registration_confirmation.html', context)
+                plain_message = strip_tags(html_message)
+
+                # Send email
                 send_mail(
-                    'Your Account Password',
-                    f'Hello {name},\n\nYour account has been created. Your password is: {generated_password}\nYou can change your password after logging in.',
+                    'Welcome to TruetheFire - Your Account Details',
+                    plain_message,
                     settings.DEFAULT_FROM_EMAIL,
                     [email],
+                    html_message=html_message,
                     fail_silently=False,
                 )
 
-                messages.success(request, 'Account has been added successfully, and the password has been sent to the user\'s email.')
+                account_added = True
+                messages.success(request, 'Account has been added successfully.')
+                return render(request, 'admin_home.html', {'accounts': CustomUser.objects.all(), 'account_added': account_added})
             except ValidationError as e:
                 messages.error(request, f'Validation error: {e.message}')
             except Exception as e:
                 messages.error(request, f'Error adding account: {str(e)}')
 
-        return redirect('admin_home')
-
-        
-    accounts = CustomUser.objects.all().order_by('name') 
-    return render(request, 'admin_home.html', {'accounts': accounts})
-
+    accounts = CustomUser.objects.all().order_by('name')
+    return render(request, 'admin_home.html', {'accounts': accounts, 'account_added': account_added})
 
 
 def toggle_status(request, report_id):
     if request.method == 'POST':
         report = get_object_or_404(InitialReport, id=report_id)
+        print("CSRF Token:", request.META.get("HTTP_X_CSRFTOKEN"))
         
         if report.status == 'Ongoing':
             report.status = 'Case Closed'
@@ -623,8 +700,10 @@ def logout_view(request):
 @login_required
 def reports_view(request):
     reports = InitialReport.objects.order_by('-date_reported', '-time_reported')
+    archived_Reports = InitialReport.objects.filter(is_archived = True).order_by('-date_reported', '-time_reported')
     context = {
         'reports': reports,
+        'archived_Reports':archived_Reports
     }
     return render(request, 'reports.html', context)
 
@@ -675,7 +754,6 @@ def create_report_view(request):
 
             file_url = supabase.storage.from_('FireProof').get_public_url(file_path)
 
-
         def validate_date(date_str):
             if date_str:
                 try:
@@ -693,6 +771,7 @@ def create_report_view(request):
                 raise ValidationError(f"Invalid number format for field '{value}'. It must be a valid number.")
 
         try:
+            # Validate dates
             date_reported_valid = validate_date(date_reported)
             date_under_control_valid = validate_date(date_under_control)
             date_out_valid = validate_date(date_out)
@@ -704,12 +783,14 @@ def create_report_view(request):
             if date_out and not date_out_valid:
                 raise ValidationError("Invalid date format for 'Date Out'. It must be in YYYY-MM-DD format.")
 
+            # Validate numbers
             fatality_valid = validate_numeric(fatality)
             injured_valid = validate_numeric(injured)
             families_affected_valid = validate_numeric(families_affected)
             establishments_valid = validate_numeric(establishments)
             fire_trucks_valid = validate_numeric(fire_trucks)
 
+            # Combine date and time fields
             try:
                 time_reported_combined = datetime.strptime(f"{date_reported} {time_reported}", "%Y-%m-%d %H:%M")
             except ValueError:
@@ -743,9 +824,6 @@ def create_report_view(request):
 
             fir_number = f"FIR-{new_id:02d}"
 
-            # Generate FIR number manually
-
-
             # Create report with Supabase file URL
             new_report = InitialReport.objects.create(
                 fir_number=fir_number, 
@@ -761,7 +839,7 @@ def create_report_view(request):
                 time_of_fire_under_control=time_under_control_combined,
                 date_of_fire_under_control=date_under_control_valid,
                 fire_under_control_declared_by=under_control_declared_by,
-                time_of_fire_out=time_out_combined,
+                time_of_fire_out=time_out_combined,  
                 date_of_fire_out=date_out_valid,
                 fire_out_declared_by=out_declared_by,
                 estimated_damages=damages,
@@ -780,8 +858,10 @@ def create_report_view(request):
                 created_by=request.user
             )
             new_report.save()
+
+            # Add context variable to trigger the modal in template
             messages.success(request, 'Report has been submitted successfully.')
-            return redirect('reports')
+            return render(request, 'create_reports.html', {'report_added': True})  # Pass context variable
 
         except ValidationError as e:
             messages.error(request, f"Error submitting report: {e.message}")
@@ -791,8 +871,7 @@ def create_report_view(request):
             messages.error(request, f"Error submitting report: {str(e)}")
             return render(request, 'create_reports.html')
 
-    return render(request, "create_reports.html")
-
+    return render(request, "create_reports.html", {'report_added': False})  # Default value
         
 @login_required
 def faq_view(request):
@@ -838,7 +917,7 @@ def update_report(request, report_id):
         report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
         report.time_of_arrival = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-arrive', '').strip()) or report.time_of_arrival
         report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-under', '').strip()) or report.time_of_fire_under_control
-        report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
+        report.time_of_fire_out = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
 
         def get_int_value(field_name, default=0):
             try:

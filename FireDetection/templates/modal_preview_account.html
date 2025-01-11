@@ -1,0 +1,360 @@
+<!-- create-account-modal -->
+<div class="modal fade" id="prev-account-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Account</h3>
+                <div class="edit-form">
+                    <button class="btn btn-edit" id="edit-button">
+                        <i class="bi bi-pencil-square"></i>
+                        <span id="edit-text">Edit</span>
+                    </button>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form action="{% url 'update_account'  %}" method=""  id="prev-account-form">
+                    <input type="hidden" id="account-id" name="account_id" value="">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="prev-name" class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" id="prev-name" placeholder="e.g. Juan Dela Cruz" 
+                                   maxlength="60" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="prev-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="prev-email" placeholder="e.g. juandc@gmail.com" maxlength="100" required>
+                        </div>
+                    </div>                
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="prev-role" class="form-label">Role</label>
+                            <select class="form-select" aria-label="Default select example" name="role" id="prev-role">
+                                <option value="Admin">Admin</option>
+                                <option value="Radio Operator">Radio Operator</option>
+                                <option value="Responder">Responder</option>
+                            </select>                            
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="prev-contact" class="form-label">Contact No.</label>
+                            <input type="text" class="form-control" name="contact_number" id="prev-contact" placeholder="e.g. 09123456789" maxlength="11" required pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                        </div>
+                    </div>  
+
+                    <div class="modal-footer">
+                        <div class="mf-button">
+                            <button class="btn btn-lg px-4 add-account" type="submit" disabled>Save</button>
+                        </div>                   
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const accountForm = document.getElementById('prev-account-form');
+    const saveButton = accountForm.querySelector('.add-account');
+    const accountIdInput = document.getElementById('account-id'); // The hidden input for account ID
+    const accountTable = document.getElementById('accountTable'); // The table containing account rows
+
+    // Event listener for row clicks
+    accountTable.addEventListener('click', function (event) {
+        const row = event.target.closest('tr[data-account-id]'); // Find the closest row with account data
+
+        if (row) {
+            // Get the account ID from the row's data attribute
+            const accountId = row.getAttribute('data-account-id');
+                
+            // Set the account ID in the hidden input field
+            accountIdInput.value = accountId;
+
+            // Populate other fields in the form (if needed)
+            document.getElementById('prev-name').value = row.getAttribute('data-name');
+            document.getElementById('prev-email').value = row.getAttribute('data-email');
+            document.getElementById('prev-role').value = row.getAttribute('data-role');
+            document.getElementById('prev-contact').value = row.getAttribute('data-contact');
+        }
+    });
+
+    // Event listener for form submission
+    accountForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(accountForm);
+
+        // Send the form data via fetch
+        fetch('/update-account/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'), // Include CSRF token
+            },
+            body: formData,
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(data => {
+                // Disable the save button after success
+                saveButton.disabled = true;
+
+                // Refresh the page after a successful update (no alert)
+                window.location.reload();  // This will refresh the page
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Error:', error);
+            });
+    });
+});
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const editButton = document.getElementById('edit-button');
+        const form = document.getElementById('prev-account-form');
+        const formFields = form.querySelectorAll('input, select, button');
+        const icon = editButton.querySelector('i'); // Get the icon element
+        const editText = document.getElementById('edit-text'); // Get the edit text
+
+        // Initially disable all fields
+        formFields.forEach(field => {
+            if (field.type !== 'submit') {
+                field.disabled = true;
+            }
+        });
+
+        // Toggle editing mode on "Edit" button click
+        editButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default behavior of button
+            const isEditable = formFields[0].disabled; // Check if fields are currently disabled
+            
+            formFields.forEach(field => {
+                if (field.type !== 'submit') {
+                    field.disabled = !isEditable; // Toggle the disabled attribute
+                }
+            });
+
+            // Change button text and handle icon visibility
+            if (isEditable) {
+                editText.textContent = 'Editing'; // Change text to 'Editing'
+                icon.style.display = 'none'; // Hide the icon
+                editButton.disabled = true; // Disable the edit button while editing
+            } else {
+                editText.textContent = 'Edit'; // Change text back to 'Edit'
+                icon.style.display = 'inline'; // Show the icon again
+                editButton.disabled = false; // Re-enable the edit button after editing
+            }
+
+            // Enable/disable the submit button
+            const submitButton = form.querySelector('.add-account');
+            submitButton.disabled = !isEditable;
+        });
+    });
+</script>
+
+<script>
+    // Combined cleanInput function with email validation
+    const cleanInput = (event, allowedChars, pattern = null) => {
+        const input = event.target;
+        let value = input.value;
+    
+        // Only block the first character if it's an invalid non-alphabetic character for the 'name' field
+        if (input.id === "prev-name" && /[^A-Za-z]/.test(value.charAt(0)) && value.length === 1) {
+            return; // Don't update if the first character is invalid and it's the only character
+        }
+    
+        // If the first character is invalid but there are more characters, allow editing
+        if (value.length > 1 && /[^A-Za-z]/.test(value.charAt(0)) && input.id === "prev-name") {
+            value = value.slice(1); // Remove the invalid first character
+        }
+    
+        // Dynamically allow only the defined characters
+        const regex = new RegExp([^${allowedChars}], 'g');
+        value = value.replace(regex, ''); // Remove disallowed characters
+    
+        // Replace multiple spaces with a single space
+        value = value.replace(/\s+/g, ' ');
+    
+        // Allow leading space while typing but trim final input
+        input.value = value.trimStart();
+    
+        // Check if additional pattern validation is required (e.g., email format)
+        if (pattern) {
+            const isValid = pattern.test(input.value);
+            input.setCustomValidity(isValid ? "" : "Please enter a valid value.");
+        }
+    };
+    
+    // Attach to specific input fields
+    document.addEventListener("DOMContentLoaded", function () {
+        // Updated email regex to allow numbers as the first character
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        const fields = [
+            { id: "prev-name", allowedChars: 'A-Za-z.,\\s-', pattern: null }, // Name validation without numbers
+            { id: "prev-email", allowedChars: 'A-Za-z0-9._%+-@.', pattern: emailPattern } // Updated email validation
+        ];
+    
+        fields.forEach(({ id, allowedChars, pattern }) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener("input", function (event) {
+                    cleanInput(event, allowedChars, pattern);
+                });
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addAccountButton = document.querySelector('.add-account');
+        const nameField = document.getElementById('prev-name');
+        const emailField = document.getElementById('prev-email');
+        const roleField = document.querySelector('select[name="role"]');
+        const contactField = document.getElementById('prev-contact');
+        const form = document.getElementById('prev-account-form');
+    
+        // Event listener for Add Account button
+        addAccountButton?.addEventListener('click', function (event) {
+            let valid = true;
+            clearErrorMessages();
+
+            // Name validation: Ensure it has at least 3 characters
+            if (!nameField.value.trim()) {
+                showError(nameField, 'Name is required.');
+                valid = false;
+            } else if (nameField.value.trim().length < 3) {
+                showError(nameField, 'Name must be at least 3 characters long.');
+                valid = false;
+            }
+
+            // Email validation: Ensure it's not empty and valid format
+            if (!emailField.value.trim()) {
+                showError(emailField, 'Email is required.');
+                valid = false;
+            } else if (!validateEmail(emailField.value.trim())) {
+                showError(emailField, 'Invalid email format. (example@gmail.com)');
+                valid = false;
+            }
+
+            // Role validation: Ensure a role is selected
+            if (!roleField.value) {
+                showError(roleField, 'Role is required.');
+                valid = false;
+            }
+
+            // Contact number validation
+            if (!contactField.value.trim()) {
+                showError(contactField, 'Contact number is required.');
+                valid = false;
+            } else if (!/^\d{11}$/.test(contactField.value.trim())) {
+                showError(contactField, 'Contact number must be 11 digits.');
+                valid = false;
+            } else if (!/^09/.test(contactField.value.trim())) { // Ensure '09' at the start
+                showError(contactField, 'Contact number must start with 09.');
+                valid = false;
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+    
+        // Event listener for form submission
+        form?.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const email = emailField.value.trim();
+            const phone_number = contactField.value.trim();
+    
+            clearErrorMessages();
+    
+            if (!email) {
+                showError(emailField, 'Email is required.');
+                return;
+            }
+    
+            if (!phone_number) {
+                showError(contactField, 'Phone number is required.');
+                return;
+            }
+    
+            // Check email and phone number uniqueness
+            fetch(/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.email_exists) {
+                        showError(emailField, 'This email is already registered.');
+                    }
+    
+                    if (data.phone_exists) {
+                        showError(contactField, 'This phone number is already registered.');
+                    }
+    
+                    if (!data.email_exists && !data.phone_exists) {
+                        form.submit(); // Submit the form if no errors exist
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError(emailField, 'An error occurred while validating the email. Please try again.');
+                    showError(contactField, 'An error occurred while validating the phone number. Please try again.');
+                });
+        });
+    
+        // Helper function to show error messages
+        function showError(field, message) {
+            let existingError = field.parentNode.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+    
+            const errorElement = document.createElement('small');
+            errorElement.className = 'error-message';
+            errorElement.textContent = message;
+            errorElement.style.color = 'red';
+            errorElement.style.fontSize = '0.8rem';
+            field.parentNode.appendChild(errorElement);
+            field.classList.add('is-invalid');
+        }
+    
+        // Helper function to clear all error messages
+        function clearErrorMessages() {
+            const invalidFields = document.querySelectorAll('.is-invalid');
+            invalidFields.forEach(function (field) {
+                field.classList.remove('is-invalid');
+            });
+    
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(function (msg) {
+                msg.remove();
+            });
+        }
+    
+        // Helper function to validate email
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+    });
+</script>

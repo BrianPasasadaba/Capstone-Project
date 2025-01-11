@@ -34,6 +34,7 @@ urlpatterns = [
     path('update-temp-report-status/<int:temp_report_id>/', views.update_temp_report_status, name='update_temp_report_status'),
     path('check-email/', views.check_email_exists, name='check_email'),
     path('fetch-names/', views.fetch_names, name='fetch_names'),
+    path('update-account/', views.update_account, name='update_account'),
     path('broadcast-report-action/', views.broadcast_report_action, name='broadcast_report_action'),
 
 
