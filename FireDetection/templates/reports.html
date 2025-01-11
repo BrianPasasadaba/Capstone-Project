@@ -4,6 +4,22 @@
 
 {% block content %}
 <header>
+    <style>
+        span.dt-column-order {
+            display: none !important;
+        }
+
+        table.dataTable thead > tr > th.dt-ordering-asc {
+            padding: 0px !important; 
+        }
+
+        table.dataTable thead > tr > th.dt-ordering-desc{
+            padding: 0px !important;
+        }
+        div.dt-container div.dt-paging {
+            margin: 8px;
+        }
+    </style>
     <div class="header-content">
         <div class="header-sb">
             <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
@@ -107,7 +123,7 @@
                     <div class="tab-content" id="reportTabsContent">
                         <!-- Reports Tab Content -->
                         <div class="tab-pane fade show active" id="reports" role="tabpanel" aria-labelledby="reports-tab">
-                            <table>
+                            <table id="reportsTable">
                                 <thead>
                                     <tr >
                                         <th>Select</th>
@@ -160,7 +176,7 @@
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
-                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
                                         <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
                                         <td>
                                             <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
@@ -182,7 +198,7 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="archives" role="tabpanel" aria-labelledby="archives-tab">
-                            <table>
+                            <table id="archivesTable">
                                 <thead>
                                     <tr   >
                                         <th>Select</th>
@@ -235,7 +251,7 @@
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
-                                        <td>{{ report.date_reported|date:"m/d/Y"|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
                                         <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
                                         <td>
                                             <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
@@ -301,7 +317,7 @@
                             <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
                                 No data available.
                             </div>
-                            
+                            <!--
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item prev disabled">
@@ -314,7 +330,7 @@
                                         <a class="page-link" href="#">Next</a>
                                     </li>
                                 </ul>
-                            </nav>
+                            </nav>   -->
                         </div>
                             <!-- <button type="button" class="btn btn-lg btn">Export</button> -->
                         </div>
@@ -354,11 +370,148 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
-<script src="{% static 'js/filter.js' %}"></script>
+<!-- <script src="{% static 'js/filter.js' %}"></script> -->
 <script src="{% static 'js/preview.js' %}"></script>
-<script src="{% static 'js/pagination.js' %}"></script>
+<!-- <script src="{% static 'js/pagination.js' %}"></script> -->
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let activeTable;
+    
+
+    
+        // Initialize DataTables with custom configuration
+        const reportTable = new DataTable('#reportsTable', {
+            responsive: false,
+            searching: true,  // Enable searching
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pageLength: 10,
+            info: false, 
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found"
+            },
+            layout: {
+                topEnd: null
+            }
+        });
+    
+        const archiveTable = new DataTable('#archivesTable', {
+            responsive: false,
+            searching: true,
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pageLength: 10,
+            info: false,
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found"
+            },
+            layout: {
+                topEnd: null
+            }
+        });
+    
+        // Set initial active table
+        activeTable = reportTable;
+    
+        // Hide archive table initially
+        $('#archiveTable_wrapper').hide();
+    
+        // Tab switching logic with filter reset
+        document.querySelectorAll('#reportTabs button').forEach((tab) => {
+            tab.addEventListener('click', function () {
+                const target = this.getAttribute('data-bs-target');
+                
+                if (target === '#reports') {
+                    $('#archiveTable_wrapper').hide();
+                    $('#reportTable_wrapper').show();
+                    activeTable = reportTable;
+                } else if (target === '#archives') {
+                    $('#reportTable_wrapper').hide();
+                    $('#archiveTable_wrapper').show();
+                    activeTable = archiveTable;
+                }
+    
+                // Reset search input and filters for the new active table
+                searchInput.value = '';
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                const defaultDropdownItem = document.querySelector('.dropdown-item[data-filter="All"]');
+                if (defaultDropdownItem) defaultDropdownItem.classList.add('active');
+                
+                // Clear any existing filters and searches on the new active table
+                activeTable.search('').order([]).draw();
+            });
+        });
+    
+        // Custom filtering functionality
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const searchInput = document.getElementById('searchInput');
+    
+        // Function to apply filter based on criteria
+        function applyFilter(filterCriteria) {
+            activeTable.search('').columns().search('').draw(); // Clear existing filters
+    
+            if (filterCriteria === 'Latest') {
+                activeTable
+                    .order([[3, 'desc'], [4, 'desc']])  // Sort by date desc, then time desc
+                    .draw();
+            } else if (filterCriteria === 'Oldest') {
+                activeTable
+                    .order([[3, 'asc'], [4, 'asc']])   // Sort by date asc, then time asc
+                    .draw();
+            } else if (filterCriteria === 'Ongoing') {
+                activeTable.column(5).search('Ongoing').draw();
+            } else if (filterCriteria === 'Case Resolved') {
+                activeTable.column(5).search('Case Closed').draw();
+            } else {
+                activeTable.order([]).draw();
+            }
+        }
+    
+        // Event listener for dropdown filter
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                const filterCriteria = e.target.textContent.trim();
+                
+                // Update active state in dropdown
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                e.target.classList.add('active');
+    
+                applyFilter(filterCriteria);
+            });
+        });
+    
+        // Event listener for search input
+        searchInput.addEventListener('input', function () {
+            activeTable.search(this.value).draw();
+        });
+    
+        // Initialize with default view
+        reportTable.draw();
+        archiveTable.draw();
+    });
+</script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
