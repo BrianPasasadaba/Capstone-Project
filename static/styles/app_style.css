@@ -3055,6 +3055,14 @@ input[type="password"]::-ms-clear {
     box-shadow: var(--box-shadow-min);
 }
 
+
+#report-preview-modal .btn-edit:disabled,
+#prev-account-modal .btn-edit:disabled{
+    background-color: transparent;
+    color: var(--color-secondary)!important;
+    border: 1px var(--color-secondary) solid!important;
+}
+
 #create-report-form,
 #report-preview-form{
     /* border: var(--color-secondary) solid 3px; */

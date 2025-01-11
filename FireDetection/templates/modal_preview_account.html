@@ -133,6 +133,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const editButton = document.getElementById('edit-button');
         const form = document.getElementById('prev-account-form');
         const formFields = form.querySelectorAll('input, select, button');
+        const icon = editButton.querySelector('i'); // Get the icon element
+        const editText = document.getElementById('edit-text'); // Get the edit text
 
         // Initially disable all fields
         formFields.forEach(field => {
@@ -148,13 +150,20 @@ document.addEventListener('DOMContentLoaded', function () {
             
             formFields.forEach(field => {
                 if (field.type !== 'submit') {
-                    field.disabled = !isEditable; // Toggle the `disabled` attribute
+                    field.disabled = !isEditable; // Toggle the disabled attribute
                 }
             });
 
-            // Change button text to reflect editing state
-            const editText = document.getElementById('edit-text');
-            editText.textContent = isEditable ? 'Editing' : 'Edit';
+            // Change button text and handle icon visibility
+            if (isEditable) {
+                editText.textContent = 'Editing'; // Change text to 'Editing'
+                icon.style.display = 'none'; // Hide the icon
+                editButton.disabled = true; // Disable the edit button while editing
+            } else {
+                editText.textContent = 'Edit'; // Change text back to 'Edit'
+                icon.style.display = 'inline'; // Show the icon again
+                editButton.disabled = false; // Re-enable the edit button after editing
+            }
 
             // Enable/disable the submit button
             const submitButton = form.querySelector('.add-account');
