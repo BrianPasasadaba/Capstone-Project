@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('FireDetection', '0010_alter_tempreports_status'),
+        ('FireDetection', '0011_tempreports_is_transferred'),
     ]
 
     operations = [
