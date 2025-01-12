@@ -72,7 +72,7 @@
                 </div>
                 <div class="ab-table">
 
-                    <table>
+                    <table id="accountsTable">
                         <thead>
                             <tr>
                                 <th>Select</th>
@@ -144,7 +144,7 @@
                         </button>
                     </div>
 
-                    <div class="ab-pagination">
+                    <!--<div class="ab-pagination">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-end">
                                 <li class="page-item prev disabled">
@@ -159,7 +159,7 @@
                             </ul>                            
                         </nav>
                         
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -183,9 +183,79 @@
 <!-- ADD SCRIPTS HERE -->
 <script src="{% static 'js/form_controls.js' %}"></script>
 <script src="{% static 'js/table_status.js' %}"></script>
-<script src="{% static 'js/filter.js' %}"></script>
-<script src="{% static 'js/pagination.js' %}"></script>
+<!-- <script src="{% static 'js/filter.js' %}"></script> -->
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    
+        // Initialize DataTables with custom configuration
+        const accountsTable = new DataTable('#accountsTable', {
+            responsive: false,
+            searching: true,  // Enable searching
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pageLength: 10,
+            info: false, 
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found"
+            },
+            layout: {
+                topEnd: null
+            }
+        });
+
+        // Custom filtering functionality
+        const dropdownItems = document.querySelectorAll('.dropdown-filter .dropdown-item');
+        const searchInput = document.getElementById('accountSearchInput');
+
+        function applyFilter(filterCriteria) {
+            accountsTable.search('').columns().search('').draw(); // Clear existing filters
+
+            $.fn.dataTable.ext.search = [];
+        
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const status = $(accountsTable.row(dataIndex).node()).find('td:eq(5) span').text().trim();
+                return filterCriteria === 'All' || status === filterCriteria;
+            });
+        
+            accountsTable.draw();
+        }
+        
+
+        // Event listener for dropdown filter
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                const filterCriteria = e.target.textContent.trim();
+                
+                // Update active state in dropdown
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                e.target.classList.add('active');
+    
+                applyFilter(filterCriteria);
+            });
+        });
+
+
+
+        // Event listener for search input
+        searchInput.addEventListener('input', function () {
+            accountsTable.search(this.value).draw();
+        });
+
+        accountsTable.draw(); // Draw the table
+    });
+
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -252,39 +322,8 @@
         });
     });
     </script>
-    
-    
-    
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const filterItems = document.querySelectorAll('.dropdown-filter .dropdown-item'); 
-    const tableRows = document.querySelectorAll('#accountTable tr'); 
-    filterItems.forEach(item => {
-        item.addEventListener('click', function (e) {
-            e.preventDefault(); 
-            const filterCriteria = e.target.textContent.trim(); 
 
-            tableRows.forEach(row => {
-                const statusCell = row.querySelector('td:nth-child(6) h6 span'); 
-                if (statusCell) {
-                    const rowStatus = statusCell.textContent.trim(); 
 
-                    if (filterCriteria === rowStatus) {
-                        row.style.display = ''; 
-                    } else {
-                        row.style.display = 'none'; 
-                    }
-                }
-            });
-        });
-    });
-});
-
-document.getElementById('accountSearchInput').addEventListener('input', function (e) {
-    // Replace invalid characters with an empty string
-    this.value = this.value.replace(/[^a-zA-Z0-9.\-\/_@]/g, '');
-});
-</script>
 <script>
     let selectedEmails = []; 
 
