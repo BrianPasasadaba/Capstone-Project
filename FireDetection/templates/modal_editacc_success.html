@@ -11,22 +11,10 @@
                 </div>
                 <div class="modal-footer">
                     <div class="mf-button">
-                        <button class="btn btn-lg px-4" id="modal-ok-button"  type="button">OK</button>
+                        <button class="btn btn-lg px-4" id="modal-ok-button" class="btn btn-default" data-bs-dismiss="modal"  type="button">OK</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const okButton = document.getElementById('modal-ok-button'); // "OK" button in the success modal
-
-    okButton.addEventListener('click', function () {
-        // Refresh the page when the "OK" button is clicked
-        window.location.reload();
-    });
-});
-
-</script>

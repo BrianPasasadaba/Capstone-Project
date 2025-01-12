@@ -656,16 +656,25 @@ def login_view(request):
 
             login(request, user)
 
+            # Check if the user has accepted the terms and conditions
+            if not user.terms_accepted:
+                # Send a JSON response indicating that the modal should show
+                return JsonResponse({'terms_modal': True})
+
+            # Continue with normal redirection after login
             if user.is_staff:
-                return redirect('admin_home')
+                return JsonResponse({'redirect_url': 'admin_home'})
             elif user.is_active:
-                return redirect('analytics')
+                return JsonResponse({'redirect_url': 'analytics'})
             else:
                 messages.error(request, "Your account is not active.")
+                return JsonResponse({'redirect_url': 'login'})  # Or handle accordingly
+
         else:
             messages.error(request, "Invalid email or incorrect password. Try again")
-    return render(request, 'login.html')
+            return JsonResponse({'error': 'Invalid credentials'})
 
+    return render(request, 'login.html')
 
 
 @login_required

@@ -170,6 +170,89 @@
 <!-- <script src="{% static 'js/filter.js' %}"></script> -->
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
 
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const accountForm = document.getElementById('prev-account-form');
+        const saveButton = accountForm.querySelector('.add-account');
+        const accountIdInput = document.getElementById('account-id'); // The hidden input for account ID
+        const accountTable = document.getElementById('accountTable'); // The table containing account rows
+        const editModal = new bootstrap.Modal(document.getElementById('prev-account-modal')); // Instance of the edit modal
+        const successModalElement = document.getElementById('editacc-success-modal'); // Success modal element
+        const successModal = new bootstrap.Modal(successModalElement, {
+            backdrop: 'static', 
+            keyboard: false 
+        }); 
+
+        const okButton = document.getElementById('modal-ok-button');
+        okButton.removeEventListener('click', handleOkButtonClick); // Ensure there are no pre-existing listeners
+        if (localStorage.getItem('showSuccessModal') === 'true') {
+            successModal.show();
+            localStorage.removeItem('showSuccessModal'); // Clear the flag after showing the modal
+
+            okButton.addEventListener('click', handleOkButtonClick);
+        }
+
+        accountTable.addEventListener('click', function (event) {
+            const row = event.target.closest('tr[data-account-id]'); // Find the closest row with account data
+
+            if (row) {
+                const accountId = row.getAttribute('data-account-id');
+
+                accountIdInput.value = accountId;
+
+                // Populate other fields in the form (if needed)
+                document.getElementById('prev-name').value = row.getAttribute('data-name');
+                document.getElementById('prev-email').value = row.getAttribute('data-email');
+                document.getElementById('prev-role').value = row.getAttribute('data-role');
+                document.getElementById('prev-contact').value = row.getAttribute('data-contact');
+
+                // Show the edit modal
+                editModal.show();
+            }
+        });
+
+        accountForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(accountForm);
+
+            fetch('/update-account/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'), // Include CSRF token
+                },
+                body: formData,
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Network response was not ok');
+                })
+                .then(data => {
+                    saveButton.disabled = true;
+
+                    editModal.hide();
+
+                    localStorage.setItem('showSuccessModal', 'true');
+
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        function handleOkButtonClick() {
+            console.log("OK button clicked. Redirecting to /admin_home/...");
+            window.location.href = '/admin_home/';
+        }
+    });
+</script>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     
@@ -316,6 +399,7 @@
         });
     });
     </script>
+
 
 
 <script>
