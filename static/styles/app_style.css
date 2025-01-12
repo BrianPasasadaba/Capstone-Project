@@ -2164,7 +2164,7 @@ input[type="password"]::-ms-clear {
     gap: var(--gap-1);
 }
 
-.rb-group .input-group>:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+.rb-group .btn-excel {
     border-radius: var(--border-radius-input);
     border: var(--border-input);
     transition: var(--tran-03);
