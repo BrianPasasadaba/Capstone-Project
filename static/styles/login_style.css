@@ -423,6 +423,7 @@ input:not(:placeholder-shown) + .input-label {
     justify-content: center;
     align-items: center;
     width: 100%;
+    text-align: center;
 }
 
 #animate-success-modal .loader-logo{
@@ -454,6 +455,36 @@ input:not(:placeholder-shown) + .input-label {
     transform: scale(1.03);
 }
 
+.terms-forgot{
+    gap: 0.5rem;
+}
+
+.terms-check {
+    /* border: #ED7027 1px solid; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 1rem; /* Adjust gap as needed */
+}
+
+.terms-check .form-check-input {
+    margin-right: 0.75rem; /* Increase margin to space out checkbox from label */
+    border: var(--color-secondary) 1.5px solid;
+    transform: scale(0.7);
+    margin-top: 2px!important;
+}
+
+.terms-check .form-check-input:checked {
+    background-color: var(--color-tertiary);
+    border-color: var(--color-tertiary);
+}
+
+.terms-check .form-check-input:focus {
+    box-shadow: 0 0 5px 3px var(--color-shadow-min);
+    border-color: var(--color-tertiary);
+}
 /* ============================== TERMS CONDITION MODAL ============================== */
 .terms-modal .modal-dialog{
     max-width: 480px;
