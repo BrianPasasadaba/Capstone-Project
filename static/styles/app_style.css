@@ -2234,6 +2234,11 @@ input[type="password"]::-ms-clear {
     transform: scale(1.03);
 }
 
+.rbth-btns .btn-view:focus,
+.rbth-btns .btn-archive:focus{
+    box-shadow: none;
+}
+
 #reportTabs .nav-link {
     background-color: #f8f9fa; /* Light gray background for inactive tabs */
     color: var(--color-primary); /* Text color for inactive tabs */
