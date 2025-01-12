@@ -196,6 +196,7 @@
             lengthChange: false,
             ordering: true,
             paging: true,
+            pagingType: 'full_numbers',
             pageLength: 10,
             info: false, 
             columnDefs: [
@@ -207,10 +208,19 @@
             ],
             language: {
                 emptyTable: "No data available",
-                zeroRecords: "No matching records found"
+                zeroRecords: "No matching records found",
+                paginate: {
+                    next: 'Next',
+                    previous: 'Previous'  
+                  }
             },
             layout: {
-                topEnd: null
+                topEnd: null,
+                bottomEnd: {
+                    paging: {
+                        buttons: 3
+                    }
+                }
             }
         });
 
