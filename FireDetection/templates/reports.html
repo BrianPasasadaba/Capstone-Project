@@ -156,7 +156,7 @@
                             data-bs-target="#report-preview-modal"
                             disabled><i class="bi bi-eye-fill" ></i> View</button>
 
-                            <button type="button" class="btn btn-sm btn-archive" disabled><i class="bi bi-archive-fill"></i>Archive</button>
+                            <button type="button" class="btn btn-sm btn-archive" id="archiveBtn" disabled><i class="bi bi-archive-fill"  data-report-id="{{ report.id }}" ></i>Archive</button>
                         </div>
                     </div>
                     <div class="tab-content" id="reportTabsContent">
@@ -211,7 +211,7 @@
                                         
                                         >
                                         <td>
-                                            <input class="form-check-input r-check" type="checkbox" value="" id="defaultCheck1">
+                                            <input class="form-check-input r-check" type="checkbox" value="{{ report.id }}" id="checkbox-{{ report.id }}">
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
@@ -286,7 +286,7 @@
                                         
                                         >
                                         <td>
-                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <input class="form-check-input r-check" type="checkbox" value="{{ report.id }}" id="checkbox-{{ report.id }}">
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
@@ -352,6 +352,95 @@
 <!-- <script src="{% static 'js/pagination.js' %}"></script> -->
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+document.querySelectorAll('.r-check').forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+        const selectedReports = [];
+        document.querySelectorAll('.r-check:checked').forEach((checkedCheckbox) => {
+            selectedReports.push(checkedCheckbox.value);
+        });
+        console.log('Selected Report IDs:', selectedReports);
+    });
+});
+
+</script>
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function () {
+    const reportTable = document.getElementById('reportTable');
+    const archiveButton = document.getElementById('archiveBtn'); // The Archive button
+    let selectedReportIds = []; // Array to store multiple selected report IDs
+
+    // Function to update the state of the Archive button
+    function updateArchiveButtonState() {
+        if (selectedReportIds.length > 0) {
+            archiveButton.removeAttribute('disabled');
+            archiveButton.style.opacity = '1'; // Make it visible
+            archiveButton.setAttribute('data-report-ids', selectedReportIds.join(',')); // Store the array of IDs as a comma-separated string
+        } else {
+            archiveButton.setAttribute('disabled', true);
+            archiveButton.style.opacity = '0.5'; // Make it appear disabled
+            archiveButton.removeAttribute('data-report-ids'); // Clear the data-report-ids
+        }
+    }
+
+    // Click event listener for rows in the report table
+    reportTable.addEventListener('click', function (event) {
+        const clickedRow = event.target.closest('tr');
+
+        // Ensure the clicked row has the data-report-id attribute
+        if (clickedRow && clickedRow.dataset.reportId) {
+            const reportId = clickedRow.dataset.reportId;
+
+            if (selectedReportIds.includes(reportId)) {
+                // If the report ID is already selected, deselect it
+                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
+            } else {
+                // If the report ID is not selected, add it
+                selectedReportIds.push(reportId);
+            }
+
+            console.log('Selected Report IDs:', selectedReportIds);
+            updateArchiveButtonState(); // Update the Archive button state
+        }
+    });
+
+    // Click event for the Archive button
+    archiveButton.addEventListener('click', function () {
+        const reportIds = archiveButton.getAttribute('data-report-ids');
+        if (reportIds) {
+            console.log('Archiving Report IDs:', reportIds);
+
+            // Send the archive request to the server with the array of report IDs
+            fetch('/archive-report/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `report_ids=${reportIds}` // Send the IDs as a comma-separated string
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Refresh the page immediately on success
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while archiving the reports.');
+            });
+        }
+    });
+});
+
+
+</script>
 
 
 <script>
@@ -491,61 +580,7 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const reportTable = document.getElementById('reportTable');
-    const archiveTable = document.getElementById('archiveTable');  // Archive table
 
-    // Function to enable or disable the "View" button for a row
-    function handleCheckboxChange(event, table) {
-        const checkbox = event.target;
-        const row = checkbox.closest('tr');
-        const viewButton = row.querySelector('.btn-view');
-
-        if (checkbox.checked) {
-            viewButton.removeAttribute('disabled');
-        } else {
-            viewButton.setAttribute('disabled', true);
-        }
-    }
-
-    // Event listener to enable/disable "View" button for both tables
-    reportTable.addEventListener('change', function (event) {
-        if (event.target.classList.contains('report-checkbox')) {
-            handleCheckboxChange(event, reportTable);
-        }
-    });
-
-    archiveTable.addEventListener('change', function (event) {
-        if (event.target.classList.contains('report-checkbox')) {
-            handleCheckboxChange(event, archiveTable);
-        }
-    });
-
-    // Prevent modal opening if the button is clicked but the checkbox is unchecked
-    function preventModalIfUnchecked(event, table) {
-        const button = event.target.closest('.btn-view');
-        const row = button.closest('tr');
-        const checkbox = row.querySelector('.report-checkbox');
-
-        if (!checkbox.checked) {
-            console.log('Checkbox not checked, preventing modal from opening.');
-            event.preventDefault(); // Prevent Bootstrap modal from triggering
-        }
-    }
-
-    // Event listener to prevent modal opening for both tables
-    reportTable.addEventListener('click', function (event) {
-        if (event.target.closest('.btn-view')) {
-            preventModalIfUnchecked(event, reportTable);
-        }
-    });
-
-    archiveTable.addEventListener('click', function (event) {
-        if (event.target.closest('.btn-view')) {
-            preventModalIfUnchecked(event, archiveTable);
-        }
-    });
-});
 </script>
 
 <script>

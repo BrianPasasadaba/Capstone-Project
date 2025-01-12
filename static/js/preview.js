@@ -1,4 +1,3 @@
-    
 document.addEventListener('DOMContentLoaded', function () {
     const reportTable = document.getElementById('reportTable');
     const archiveTable = document.getElementById('archiveTable');  // Your archive table
@@ -9,36 +8,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const editButton = document.querySelector('.btn-edit');
     
     let selectedRow = null;
+    let selectedCheckboxCount = 0;  // Track selected checkboxes
 
     // Function to handle checkbox change in any table (main or archive)
     function handleCheckboxChange(event) {
         const checkbox = event.target;
         const row = checkbox.closest('tr');
 
+        // Update the checkbox count
         if (checkbox.checked) {
-            selectedRow = row;
-            viewButton.removeAttribute('disabled');
+            selectedCheckboxCount++;
+        } else {
+            selectedCheckboxCount--;
+        }
 
-            // Optional: Set the report ID in a hidden input for tracking
+        // Enable the "View" button only if exactly one checkbox is selected
+        if (selectedCheckboxCount === 1) {
+            viewButton.removeAttribute('disabled');
+            selectedRow = row;
             if (hiddenReportIdInput) {
                 hiddenReportIdInput.value = row.dataset.reportId;
             }
         } else {
-            selectedRow = null;
             viewButton.setAttribute('disabled', true);
-
-            // Optional: Clear the hidden input
+            selectedRow = null;
             if (hiddenReportIdInput) {
                 hiddenReportIdInput.value = '';
             }
         }
-
-        // Uncheck all other checkboxes to allow single selection
-        document.querySelectorAll('.form-check-input').forEach((input) => {
-            if (input !== checkbox) {
-                input.checked = false;
-            }
-        });
     }
 
     // Add event listener for checkbox changes in both tables
@@ -47,9 +44,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Listen for the "View" button click
     viewButton.addEventListener('click', function (event) {
-        if (!selectedRow) {
-            console.log('No row selected. Preventing modal from opening.');
-            event.preventDefault(); // Prevent modal from opening
+        if (!selectedRow || selectedCheckboxCount !== 1) {
+            console.log('Either no row selected or more than one checkbox selected. Preventing modal from opening.');
+            event.preventDefault(); // Prevent modal from opening if more than one checkbox is selected
             return;
         }
 
@@ -155,6 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
 
 
 

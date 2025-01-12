@@ -35,6 +35,7 @@ urlpatterns = [
     path('check-email/', views.check_email_exists, name='check_email'),
     path('fetch-names/', views.fetch_names, name='fetch_names'),
     path('update-account/', views.update_account, name='update_account'),
+    path('archive-report/', views.archive_report, name='archive_report'),
 
 
 ]
