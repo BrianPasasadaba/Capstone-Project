@@ -637,7 +637,7 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                 // Reload the page after successful download
                 setTimeout(() => {
                     window.location.reload();
-                }, 1000); // Wait 1 second to ensure download starts
+                }); // Wait 1 second to ensure download starts
             } else {
                 console.error('Download failed:', response.statusText);
             }
@@ -995,7 +995,7 @@ saveButton.addEventListener('click', function (event) {
                 setTimeout(() => {
                     successModal.hide();
                     window.location.href = "/reports/";
-                }, 3000);
+                });
             } else {
                 console.error('Error updating report:', data.message);
                 alert('Error updating report: ' + data.message);
