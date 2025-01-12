@@ -66,11 +66,16 @@
 </div>
 
 <script>
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const accountForm = document.getElementById('prev-account-form');
     const saveButton = accountForm.querySelector('.add-account');
     const accountIdInput = document.getElementById('account-id'); // The hidden input for account ID
     const accountTable = document.getElementById('accountTable'); // The table containing account rows
+    const editModal = new bootstrap.Modal(document.getElementById('prev-account-modal')); // Instance of the edit modal
+    const successModal = new bootstrap.Modal(document.getElementById('editacc-success-modal')); // Instance of the success modal
+    const okButton = document.getElementById('modal-ok-button'); // "OK" button in the success modal
 
     // Event listener for row clicks
     accountTable.addEventListener('click', function (event) {
@@ -79,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (row) {
             // Get the account ID from the row's data attribute
             const accountId = row.getAttribute('data-account-id');
-                
+
             // Set the account ID in the hidden input field
             accountIdInput.value = accountId;
 
@@ -88,6 +93,9 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('prev-email').value = row.getAttribute('data-email');
             document.getElementById('prev-role').value = row.getAttribute('data-role');
             document.getElementById('prev-contact').value = row.getAttribute('data-contact');
+
+            // Show the edit modal
+            editModal.show();
         }
     });
 
@@ -115,15 +123,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Disable the save button after success
                 saveButton.disabled = true;
 
-                // Refresh the page after a successful update (no alert)
-                window.location.reload();  // This will refresh the page
+                // Close the edit modal first
+                editModal.hide();
+
+                // Show the success modal
+                successModal.show();
             })
             .catch(error => {
                 // Handle errors
                 console.error('Error:', error);
             });
     });
+
+    // Event listener for "OK" button in the success modal
+    okButton.addEventListener('click', function () {
+        // Refresh the page when the "OK" button is clicked
+        window.location.reload();
+    });
 });
+
 
 </script>
 
