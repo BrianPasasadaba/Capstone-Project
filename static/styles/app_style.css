@@ -2180,7 +2180,7 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-export .input-group-text{
-    display: none;
+    display: none!important;
 }
 
 .rb-export .input-group-text i{
