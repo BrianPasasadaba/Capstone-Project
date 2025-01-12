@@ -2044,19 +2044,17 @@ input[type="password"]::-ms-clear {
 
 .rb-header{
     /* border: var(--color-secondary) 1px solid; */
-    /* border-bottom: var(--color-primary) 1.5px solid; */
     width: 100%;
-    height: 100px;
+    height: auto;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
     justify-content: space-between;
     color: var(--color-primary);
     white-space:nowrap;
     padding: var(--padding-1);
-    padding-left: var(--padding-2);
-    padding-right: var(--padding-2);
-    gap: var(--gap-2);
+    padding-left: var(--padding-1);
+    padding-right: var(--padding-1);
 }
 
 .rb-header .btn{
@@ -2064,24 +2062,31 @@ input[type="password"]::-ms-clear {
     width: 140px;
     font-weight: 500;
     color: var(--color-primary);
-    border: var(--border-input);
+    border: var(--border-input)!important;
     box-shadow: var(--box-shadow-min);
+    transition: var(--tran-03);
 
 }
 
 .rb-header .btn:hover{
-    background-color: var(--color-tertiary);
+    background-color: var(--color-default);
     border: var(--border-input);
     font-weight: 400;
+    color: var(--color-primary);
 }
 
-.rb-header .btn:focus{
-    background-color: var(--color-secondary);
-    box-shadow: 1px 0.2px 5px var(--color-tertiary);
-    border: var(--border-input);
+.rb-header .btn:focus,
+.abh-filter .btn:focus{
+    background-color: var(--color-default);
+    box-shadow: var(--box-shadow-min)!important;
     font-weight: 400;
+    color: var(--color-primary);
 }
-
+.rb-header .btn-secondary:active:focus, .show>.btn-secondary.dropdown-toggle:focus,
+.abh-filter .btn-secondary:active:focus, .show>.btn-secondary.dropdown-toggle:focus{
+    box-shadow: none;
+    border: var(--border-input);
+}
 .rbh-filter .dropdown-item:focus {
     background-color: #ED7027; /* Your custom background color */
     color: white; /* Change text color for better contrast */
@@ -2108,7 +2113,7 @@ input[type="password"]::-ms-clear {
 }
 
 .rb-header input:focus{
-    box-shadow: 0.2px 0.2px 5px var(--color-tertiary);
+    border: var(--color-tertiary) 1px solid!important;
 }
 
 .rb-header input:focus-visible {
@@ -2130,21 +2135,62 @@ input[type="password"]::-ms-clear {
     background-color: var(--color-tertiary) !important;
     border: none;
     border-radius: var(--border-radius-input);
-    box-shadow: var(--box-shadow);
     transition: var(--tran-03);
     text-decoration: none;
     color: var(--color-primary);
     font-weight: 500;
     font-size: 1rem;
-    width: 160px;
-    padding: var(--padding-half);
-    padding-left: 0;
+    width: auto;
+    /* padding: var(--padding-half); */
+    padding-left: var(--padding-half);
 
 }
 
 .rbh-left .create-button .btn-create:hover{
     transform: scale(1.03);
     cursor: pointer;
+}
+
+.rb-group{
+    /* border: var(--color-primary) 1px solid; */
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: 100%;
+    justify-content: center!important;
+    align-items: center!important;
+    gap: var(--gap-1);
+}
+
+.rb-group .input-group>:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    border-radius: var(--border-radius-input);
+    border: var(--border-input);
+    transition: var(--tran-03);
+    font-size: 1rem;
+    border-radius: var(--border-radius-input);
+    width: auto;
+}
+
+.rb-group .btn-excel:hover{
+    border: 1px var(--color-primary) solid;
+    box-shadow: var(--box-shadow-min);
+    background-color: var(--color-default);
+}
+
+.rb-export .input-group-text{
+    display: none;
+}
+
+.rb-export .input-group-text i{
+    color: white;
+    font-weight: 700;
+}
+
+.rb-export .form-select:focus{
+    box-shadow: var(--box-shadow);
+    border: var(--color-secondary) 1px solid;
 }
 
 .rbt-header{
@@ -2337,73 +2383,6 @@ input[type="password"]::-ms-clear {
     border-color: var(--color-tertiary);
 }
 
-.rb-footer{
-    /* border: var(--color-primary) 1px solid; */
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: end;
-    color: var(--color-primary);
-    white-space:nowrap;
-    padding: 0.5rem 2rem;
-    height: 100%;
-}
-
-.rb-group{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    gap: var(--gap-3);
-}
-
-.rb-footer .rb-export {
-    width: 100%;
-    height: 100%;
-    /* border: var(--color-primary) 1px solid; */
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: var(--padding-1);
-    gap: var(--gap-half);
-}
-
-.rb-footer .btn-excel{
-    border: var(--border-input);
-    border-left: none;
-    transition: var(--tran-03);
-}
-
-.rb-footer .btn-excel:hover{
-    border: 1px var(--color-primary) solid;
-    box-shadow: var(--box-shadow-min);
-}
-
-
-.rb-footer .btn-excel:focus{
-    box-shadow: var(--box-shadow);
-}
-
-.rb-footer .rb-export .input-group{
-    width: 250px;
-}
-
-.rb-export .input-group-text{
-    border: var(--color-primary) 1px solid;
-    background-color: var(--color-primary);
-}
-
-.rb-export .input-group-text i{
-    color: white;
-    font-weight: 700;
-}
-
-.rb-export .form-select:focus{
-    box-shadow: var(--box-shadow);
-    border: var(--color-secondary) 1px solid;
-}
 .rb-footer .rb-pagination{
     display: flex;
     flex-direction: row;
@@ -2650,16 +2629,18 @@ input[type="password"]::-ms-clear {
 }
 
 .ab-header .btn:hover{
-    background-color: var(--color-tertiary);
+    background-color: var(--color-default);
     border: var(--border-input);
-    font-weight: 300;
+    font-weight: 400;
+    color: var(--color-primary);
 }
 
 .ab-header .btn:focus{
-    background-color: var(--color-secondary);
-    box-shadow: 1px 0.2px 5px var(--color-tertiary);
+    background-color: var(--color-default);
+    box-shadow: var(--box-shadow-min);
     border: var(--border-input);
-    font-weight: 300;
+    font-weight: 400;
+    color: var(--color-primary);
 }
 
 .abh-filter .dropdown-item:focus {
@@ -3565,6 +3546,13 @@ button:disabled{
     .detect-card{
         width: 60%;
     }
+    .rbh-left{
+        /* border: purple 1px solid; */
+        flex-direction: column;
+        align-items: start;
+        gap: var(--gap-half);
+    }
+    
 }
 
 /* ================================  Media Queries for FAQ Design ================================  */
@@ -3699,35 +3687,12 @@ button:disabled{
     }
 
     .rbh-left{
-        /* border: var(--color-secondary) 1px solid; */
-        flex-direction: row;
+        /* border: purple 1px solid; */
+        flex-direction: column;
         align-items: start;
-        justify-content: start;
         gap: var(--gap-half);
+        width: auto;
     }
-    
-    .rb-header input{
-        width: 220px;
-        height: 35px;
-    }
-    .rbh-left .create-button{
-        /* border: var(--color-secondary) solid 3px; */
-        align-items: start;
-        justify-content: center;
-    }
-    
-    .rbh-left .create-button .btn-create{
-        background-color: var(--color-tertiary) !important;
-        border: none;
-        border-radius: var(--border-radius-input);
-        font-weight: 500;
-        font-size: 0.8rem!important;
-        width: 120px;
-    }
-    .rb-header .btn{
-        width: 100px;
-    }
-
     .incident-bars li{
         width: 70px;
     }
@@ -4091,27 +4056,24 @@ button:disabled{
         border-radius: var(--border-radius-input);
         font-weight: 500;
         font-size: 0.8rem!important;
-        width: 120px;
+        width: auto;
     }
     .rb-header .btn{
         width: 100%;
         font-size: 0.8rem!important;
     }
-    .rb-footer{
-        padding: var(--padding-half);
-    }
     
     .rb-group{
         /* border: var(--color-secondary) solid 3px; */
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         width: 100%;
         height: auto;
         align-items: center;
-        gap: 0;
+        gap: var(--gap-half);
     }
-    
-    .rb-footer .rb-export {
+
+    .rb-group .rb-export {
         /* border: var(--color-secondary) solid 3px; */
         display: flex;
         flex-direction: column;
@@ -4121,11 +4083,8 @@ button:disabled{
         padding: 0;
         gap: 0;
     }
-    .rb-footer .rb-export .input-group{
-        width: 50%;
-    }
-    .rb-footer .pagination li .page-link ,
-    .rb-footer .btn-excel{
+    .rb-group .pagination li .page-link ,
+    .rb-group .btn-excel{
         font-size: 0.8rem!important;
     }
 

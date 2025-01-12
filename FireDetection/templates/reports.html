@@ -74,12 +74,51 @@
                             <input type="text" id="searchInput" class="search-report" placeholder="Search" maxlength="30">
                             <ul id="suggestionsBox" class="dropdown-menu"></ul>
                         </div>
-                        
+                    <div class="rb-group">
                         <div class="create-button">
                             <!-- <a class="btn-create btn-lg btn" data-bs-toggle="modal" data-bs-target="#create-report-modal"><i class="bi bi-plus-circle px-1"></i>Create Report</a> -->
                             <a class="btn-create btn-lg btn" href="{% url 'create_reports' %}"><i class="bi bi-plus-circle px-1"></i>Create Report</a>
                             
                         </div>
+                        <div class="rb-export">
+                            <div class="input-group">
+                                <span class="input-group-text" id="export-icon"><i class="bi bi-file-earmark-arrow-down"></i>
+                                </span>
+
+                                <button class="btn btn-excel dropdown-toggle" type="button" id="exportButton" data-bs-toggle="dropdown" aria-expanded="false">Export Options</button>
+
+                                <ul class="dropdown-menu export-opt" aria-labelledby="exportButton" id="yearDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('seventhYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('sixthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('fifthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('fourthYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('thirdYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('secondYear')">Export {} Reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="handleExport('firstYear')">Export {} Reports</a>
+                                    </li>
+                                </ul>
+
+                            </div>          
+                            
+                            <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
+                                No data available.
+                            </div>
+                        </div>
+                    </div>
+                        
                     </div>
                     
                     <div class="rbh-right">
@@ -273,68 +312,6 @@
                             </table>
                         </div>
                 </div>
-                <div class="rb-footer">
-                    <div class="rb-group">
-                        <div class="rb-export">
-                            <!-- <div class="input-group mb-3">
-                                <span class="input-group-text" id="export-icon" onclick="handleExport()"><i class="bi bi-file-earmark-arrow-down"></i></span>
-                                <select class="form-select" id="exportSelect" aria-label="Default select example">
-                                    <option value="1">Export to Excel</option>
-                                  </select>
-                            </div> -->
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="export-icon"><i class="bi bi-file-earmark-arrow-down"></i>
-                                </span>
-
-                                <button class="btn btn-excel dropdown-toggle" type="button" id="exportButton" data-bs-toggle="dropdown" aria-expanded="false">Export Options</button>
-
-                                <ul class="dropdown-menu export-opt" aria-labelledby="exportButton" id="yearDropdown">
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('seventhYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('sixthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('fifthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('fourthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('thirdYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('secondYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('firstYear')">Export {} Reports</a>
-                                    </li>
-                                </ul>
-
-                            </div>          
-                            
-                            <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
-                                No data available.
-                            </div>
-                            <!--
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-end">
-                                    <li class="page-item prev disabled">
-                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                    </li>
-                                    <li class="page-item" data-page="1"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item" id="button2" data-page="2"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item" id="button3" data-page="3"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item next">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>   -->
-                        </div>
-                            <!-- <button type="button" class="btn btn-lg btn">Export</button> -->
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
