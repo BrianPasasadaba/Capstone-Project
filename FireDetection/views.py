@@ -709,8 +709,6 @@ def reports_view(request):
     return render(request, 'reports.html', context)
 
 
-
-
 @login_required
 def create_report_view(request):
     if request.method == 'POST':
