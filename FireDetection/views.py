@@ -677,14 +677,34 @@ def logout_view(request):
     response['Pragma'] = 'no-cache'
     return response
 
+@csrf_exempt
+def archive_report(request):
+    if request.method == 'POST':
+        report_ids = request.POST.get('report_ids', '').split(',')
+
+        if not report_ids:
+            return JsonResponse({'success': False, 'message': 'No report IDs provided.'}, status=400)
+
+        try:
+            reports = InitialReport.objects.filter(id__in=report_ids)
+            reports.update(is_archived=True)
+
+            return JsonResponse({'success': True, 'message': 'Reports archived successfully.'})
+
+        except InitialReport.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'One or more reports not found.'}, status=404)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
+
 
 @login_required
 def reports_view(request):
-    reports = InitialReport.objects.order_by('-date_reported', '-time_reported')
-    archived_Reports = InitialReport.objects.filter(is_archived = True).order_by('-date_reported', '-time_reported')
+    reports = InitialReport.objects.filter(is_archived=False).order_by('-date_reported', '-time_reported')
+    archived_Reports = InitialReport.objects.filter(is_archived=True).order_by('-date_reported', '-time_reported')
+
     context = {
         'reports': reports,
-        'archived_Reports':archived_Reports
+        'archived_Reports': archived_Reports
     }
     return render(request, 'reports.html', context)
 
