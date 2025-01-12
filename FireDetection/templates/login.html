@@ -55,18 +55,18 @@
                             <span id="password-error" class="error-msg"></span>
                         </div>
                     </div>
-                    <div class="input-group mb-5 d-flex justify-content-around" style="margin-top: 1.3rem;">
+                    <div class="input-group mb-3 terms-forgot" style="margin-top: 0.5rem;">
+                        <div class="form-check terms-check">
+                            <input class="form-check-input" type="checkbox" id="check-agree">
+                            <label class="form-check-label" for="terms-conditions" style="font-size: 0.8rem;">
+                                I agree to the <a href="javascript:void(0);" id="terms-link" style="font-size: 0.7rem;">Terms and Conditions</a>.
+                            </label>
+                        </div>
                         <div class="forgot w-100 d-flex justify-content-end">
                             <small><a class="forgot-link {% active_link 'forgot_password' %}" href="{% url 'forgot_password' %}" style="color: #ED7027;">Forgot Password?</a></small>
                         </div>
                     </div>
-
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="check-agree">
-                        <label class="form-check-label" for="terms-conditions">
-                            I agree to the <a href="javascript:void(0);" id="terms-link">Terms and Conditions</a>.
-                        </label>
-                    </div>
+                    
                     <span id="terms-error" class="error-msg" style="display:none; color: red;">You must agree to the Terms and Conditions to proceed.</span>
                 
                     <div class="input-group mb-3">
