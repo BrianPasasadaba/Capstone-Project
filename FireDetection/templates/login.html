@@ -60,8 +60,17 @@
                             <small><a class="forgot-link {% active_link 'forgot_password' %}" href="{% url 'forgot_password' %}" style="color: #ED7027;">Forgot Password?</a></small>
                         </div>
                     </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="check-agree">
+                        <label class="form-check-label" for="terms-conditions">
+                            I agree to the <a href="javascript:void(0);" id="terms-link">Terms and Conditions</a>.
+                        </label>
+                    </div>
+                    <span id="terms-error" class="error-msg" style="display:none; color: red;">You must agree to the Terms and Conditions to proceed.</span>
+                
                     <div class="input-group mb-3">
-                        <button type="submit" class="btn btn-lg w-100 fs-5 btn-login">Login</button>
+                        <button type="submit" class="btn btn-lg w-100 fs-5 btn-login" id="login-button" disabled>Login</button>
                     </div>
                     <div id="login-error-message" style="display:none;">
                         {% for message in messages %}
@@ -76,6 +85,9 @@
         </div>
     </div>
 </div>
+
+
+{% include "modal_terms_condi.html" %}
 {% endblock %}
 
 {% block scripts %}
@@ -86,6 +98,50 @@
 <script src="{% static 'js/email_validation.js' %}"></script>
 <script src="{% static 'js/password_toggle.js' %}"></script>
 <script src="{% static 'js/error_handling.js' %}"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkbox = document.getElementById('check-agree');
+        const loginButton = document.getElementById('login-button');
+        
+        // Disable/Enable login button based on checkbox state
+        checkbox.addEventListener('change', function () {
+            loginButton.disabled = !checkbox.checked;
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Trigger the terms modal when clicking the link
+    const termsLink = document.getElementById('terms-link');  // Ensure this ID is correct
+    const termsModal = new bootstrap.Modal(document.getElementById('terms-condition-modal'));
+
+    // Show the modal when the terms link is clicked
+    termsLink.addEventListener('click', function () {
+        termsModal.show();
+    });
+
+    // Get the elements for checkbox and buttons
+    const checkbox = document.getElementById('check-agree');  // Ensure this ID is correct
+    const agreeButton = document.getElementById('agreeButton');  // Ensure this ID is correct
+    const loginButton = document.getElementById('login-button');  // Ensure this ID is correct
+
+    // Initially disable the login button
+    loginButton.disabled = true;
+
+    // Event listener for when the checkbox is clicked to toggle the button states
+    checkbox.addEventListener('change', function () {
+        // Toggle the 'Agree' button
+        agreeButton.disabled = !checkbox.checked;
+        
+        // Toggle the 'Login' button
+        loginButton.disabled = !checkbox.checked;
+    });
+});
+
+
+</script>
+
 <script>
 // Function to prevent spaces in input fields
 function preventSpaces(event) {
