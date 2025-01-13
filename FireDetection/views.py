@@ -400,7 +400,8 @@ def export_initial_report(request):
     reports = InitialReport.objects.annotate(report_year=ExtractYear('date_reported'))
     if selected_year:
         reports = reports.filter(report_year=int(selected_year))
-    reports = reports.filter(status__in=['Case Closed', 'Ongoing']).values(*fields)
+
+    reports = reports.filter(is_archived=False, status__in=['Case Closed', 'Ongoing']).values(*fields)
 
     for row_num, report in enumerate(reports, 4):  
         no_value = row_num - 3  
