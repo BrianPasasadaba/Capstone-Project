@@ -353,28 +353,8 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
 </script>
 
 <script>
-<<<<<<< HEAD
-    document.addEventListener('DOMContentLoaded', function () {
-        // Check if the report_added context variable is true
-        {% if report_added %}
-            const successModal = new bootstrap.Modal(document.getElementById('createrp-success-modal'));
-            successModal.show();
-        {% endif %}
-
-        // Handle the OK button click to redirect
-        const modalOkButton = document.getElementById('modal-ok-button');
-        modalOkButton.addEventListener('click', function () {
-            window.location.href = '{% url "reports" %}'; // Redirect to the reports page
-        });
-    });
-</script>
-
-<script>
-    
-=======
     var selectedReportIds = []; // Array to store multiple selected report IDs
 
->>>>>>> 931d2aec2a636dec3b080947c28960e3dedfdc1a
     document.addEventListener('DOMContentLoaded', function () {
     const reportTable = document.getElementById('reportTable');
     const archiveButton = document.getElementById('archiveBtn');
