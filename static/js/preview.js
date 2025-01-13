@@ -157,20 +157,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    const tbody = document.querySelector('tbody'); // Parent element for event delegation
+    const tbody = document.querySelector('tbody');
     const resolveButton = document.querySelector('.resolve-button');
     const previewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
     const resolveWarningModal = new bootstrap.Modal(document.getElementById('resolve-warning-modal'));
     const confirmResolveButton = document.getElementById('resconfirm');
     const cancelResolveButton = document.getElementById('rescancel');
-    let selectedReportId = null; // Store the selected report ID
+    let selectedReportId = null;
 
-    // Using event delegation to handle row clicks
+    // Check if the row data is complete
+    function isRowDataComplete(row) {
+        const requiredFields = [
+            'data-location', 'data-date', 'data-time', 'data-fireout', 
+            'data-owner', 'data-alarm', 'data-damages', 'data-establishments', 
+            'data-casualties', 'data-injured', 'data-proof', 'data-involved', 
+            'data-alarm-declared-by', 'data-time-arrival', 'data-time-under-control', 
+            'data-date-under-control', 'data-fire-under-declared-by', 'data-time-fire-out', 
+            'data-date-fire-out', 'data-fire-out-declared-by', 'data-families-affected', 
+            'data-trucks', 'data-ground-commander', 'data-ground-commander-contact', 
+            'data-safety-officer', 'data-safety-officer-contact', 'data-sender', 
+            'data-sender-contact', 'data-team'
+        ];
+
+        for (let field of requiredFields) {
+            if (!row.getAttribute(field) || row.getAttribute(field) === 'None') {
+                return false; 
+            }
+        }
+        return true; 
+    }
+
     tbody.addEventListener('click', function (event) {
-        // Ensure the click target is within a row with data-report-id attribute
         const row = event.target.closest('tr[data-report-id]');
         if (row) {
-            selectedReportId = row.getAttribute('data-report-id'); // Store the report ID
+            selectedReportId = row.getAttribute('data-report-id');
             const status = row.querySelector(`#status-text-${selectedReportId}`).textContent.trim();
 
             resolveButton.setAttribute('data-report-id', selectedReportId);
@@ -183,25 +203,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 resolveButton.disabled = false;
                 resolveButton.textContent = 'Resolve';
             }
-
-            console.log('Row clicked. Selected Report ID:', selectedReportId);
         }
     });
 
-    // Handle Resolve button click
     resolveButton.addEventListener('click', function (event) {
         event.preventDefault();
 
         if (selectedReportId) {
-            // Close the preview modal and show the resolve confirmation modal
-            previewModal.hide();
-            resolveWarningModal.show();
+            const row = document.querySelector(`tr[data-report-id="${selectedReportId}"]`);
+
+            if (isRowDataComplete(row)) {
+                previewModal.hide();
+                resolveWarningModal.hide();
+                confirmResolveButton.click();
+            } else {
+                previewModal.hide();
+                resolveWarningModal.show();
+            }
         } else {
-            console.log('No report selected. Preventing modal from opening.');
+            console.log('No report selected.');
         }
     });
 
-    // Handle the confirm button click in the resolve confirmation modal
     confirmResolveButton.addEventListener('click', function () {
         if (selectedReportId) {
             const currentStatus = resolveButton.getAttribute('data-status');
@@ -231,10 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
 
-                if (data.message) {
-                    console.log(data.message);
-                }
-
                 resolveWarningModal.hide();
                 window.location.href = '/reports/';
             })
@@ -244,15 +263,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Handle Cancel button in the confirmation modal
     cancelResolveButton.addEventListener('click', function () {
-        // Close the resolve confirmation modal and reopen the preview modal
         resolveWarningModal.hide();
         previewModal.show();
     });
+
 });
 
-// Get CSRF token from cookies for safe post requests
+// Get CSRF token for safe POST requests
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
