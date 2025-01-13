@@ -3924,9 +3924,11 @@ button:disabled{
 
     .accounts-box,
     .reports-box,
-    .creports-box{
+    .creports-box,
+    .faq-box{
         padding: var(--padding-half);
         gap: var(--gap-half);
+        border-radius: 0;
     }
     
     .accounts-header,
