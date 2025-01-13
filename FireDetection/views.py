@@ -702,9 +702,16 @@ def reports_view(request):
     reports = InitialReport.objects.filter(is_archived=False).order_by('-date_reported', '-time_reported')
     archived_Reports = InitialReport.objects.filter(is_archived=True).order_by('-date_reported', '-time_reported')
 
+    
+    report_added = request.session.get('report_added', False)
+
+    if 'report_added' in request.session:
+        del request.session['report_added']
+
     context = {
         'reports': reports,
-        'archived_Reports': archived_Reports
+        'archived_Reports': archived_Reports,
+        'report_added': report_added,
     }
     return render(request, 'reports.html', context)
 
@@ -870,7 +877,8 @@ def create_report_view(request):
 
             # Add context variable to trigger the modal in template
             messages.success(request, 'Report has been submitted successfully.')
-            return render(request, 'create_reports.html', {'report_added': True})  # Pass context variable
+            request.session['report_added'] = True
+            return redirect('reports') 
 
         except ValidationError as e:
             messages.error(request, f"Error submitting report: {e.message}")

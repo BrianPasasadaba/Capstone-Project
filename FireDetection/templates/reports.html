@@ -309,6 +309,7 @@
 
 </main>
 
+{% include "modal_createrp_success.html" %}
 {% include "modal_create_report.html" %}
 {% include "modal_preview_report.html" %}
 {% include "modal_change_password.html" %}
@@ -349,6 +350,22 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
     });
 });
 
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Check if the report_added context variable is true
+        {% if report_added %}
+            const successModal = new bootstrap.Modal(document.getElementById('createrp-success-modal'));
+            successModal.show();
+        {% endif %}
+
+        // Handle the OK button click to redirect
+        const modalOkButton = document.getElementById('modal-ok-button');
+        modalOkButton.addEventListener('click', function () {
+            window.location.href = '{% url "reports" %}'; // Redirect to the reports page
+        });
+    });
 </script>
 
 <script>
