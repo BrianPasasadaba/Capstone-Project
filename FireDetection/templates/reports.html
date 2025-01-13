@@ -1001,30 +1001,39 @@ saveButton.addEventListener('click', function (event) {
         })
         .then(data => {
             if (data.status === 'success') {
-                console.log('Report updated successfully.');
+            console.log('Report updated successfully.');
 
-                // Close the report preview modal
-                const reportPreviewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
+            // Close the report preview modal
+            const reportPreviewModalEl = document.getElementById('report-preview-modal');
+            const reportPreviewModal = bootstrap.Modal.getInstance(reportPreviewModalEl);
+            if (reportPreviewModal) {
                 reportPreviewModal.hide();
-
-                // Show the success modal
-                const successModal = new bootstrap.Modal(document.getElementById('editrp-success-modal'));
-                successModal.show();
-
-                // Close the success modal after a short delay (e.g., 3 seconds) and redirect to reports
-                setTimeout(() => {
-                    successModal.hide();
-                    window.location.href = "/reports/";
-                });
-            } else {
-                console.error('Error updating report:', data.message);
-                alert('Error updating report: ' + data.message);
             }
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-            alert('An error occurred. Please try again.');
-        });
+
+            sessionStorage.setItem('reportUpdatedSuccessfully', 'true');
+
+            window.location.reload(); // Refresh the page to load the updated content
+        } else {
+            console.error('Error updating report:', data.message);
+            alert('Error updating report: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+// Code to show the success modal after page reload
+window.addEventListener('load', () => {
+    const successModalEl = document.getElementById('editrp-success-modal');
+    if (successModalEl && sessionStorage.getItem('reportUpdatedSuccessfully') === 'true') {
+        const successModal = new bootstrap.Modal(successModalEl);
+        successModal.show();
+
+        // After showing the success modal, remove the flag to prevent it from showing again
+        sessionStorage.removeItem('reportUpdatedSuccessfully');
+    }
 });
 
 

@@ -610,6 +610,7 @@ def register_view(request):
 
                 account_added = True
                 messages.success(request, 'Account has been added successfully.')
+                accounts = CustomUser.objects.all().order_by('name')  # Alphabetical order
                 return render(request, 'admin_home.html', {'accounts': CustomUser.objects.all(), 'account_added': account_added})
             except ValidationError as e:
                 messages.error(request, f'Validation error: {e.message}')

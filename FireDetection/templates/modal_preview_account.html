@@ -15,7 +15,7 @@
             </div>
             <div class="modal-body">
 
-                <form action="{% url 'update_account'  %}" method=""  id="prev-account-form">
+                <form action="{% url 'update_account'  %}" method="POST"  id="prev-account-form">
                     <input type="hidden" id="account-id" name="account_id" value="">
                     {% csrf_token %}
                     <div class="form-row">
@@ -112,6 +112,7 @@
     });
 </script>
 
+
 <script>
     // Combined cleanInput function with email validation
     const cleanInput = (event, allowedChars, pattern = null) => {
@@ -129,7 +130,7 @@
         }
     
         // Dynamically allow only the defined characters
-        const regex = new RegExp([^${allowedChars}], 'g');
+        const regex = new RegExp(`[^${allowedChars}]`, 'g');
         value = value.replace(regex, ''); // Remove disallowed characters
     
         // Replace multiple spaces with a single space
@@ -166,60 +167,61 @@
     });
 </script>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const addAccountButton = document.querySelector('.add-account');
         const nameField = document.getElementById('prev-name');
         const emailField = document.getElementById('prev-email');
-        const roleField = document.querySelector('select[name="role"]');
+        const roleField = document.querySelector('select[name="prev-role"]');
         const contactField = document.getElementById('prev-contact');
         const form = document.getElementById('prev-account-form');
     
         // Event listener for Add Account button
-        addAccountButton?.addEventListener('click', function (event) {
-            let valid = true;
-            clearErrorMessages();
+    addAccountButton?.addEventListener('click', function (event) {
+        let valid = true;
+        clearErrorMessages();
 
-            // Name validation: Ensure it has at least 3 characters
-            if (!nameField.value.trim()) {
-                showError(nameField, 'Name is required.');
-                valid = false;
-            } else if (nameField.value.trim().length < 3) {
-                showError(nameField, 'Name must be at least 3 characters long.');
-                valid = false;
-            }
+        // Name validation: Ensure it has at least 3 characters
+        if (!nameField.value.trim()) {
+            showError(nameField, 'Name is required.');
+            valid = false;
+        } else if (nameField.value.trim().length < 3) {
+            showError(nameField, 'Name must be at least 3 characters long.');
+            valid = false;
+        }
 
-            // Email validation: Ensure it's not empty and valid format
-            if (!emailField.value.trim()) {
-                showError(emailField, 'Email is required.');
-                valid = false;
-            } else if (!validateEmail(emailField.value.trim())) {
-                showError(emailField, 'Invalid email format. (example@gmail.com)');
-                valid = false;
-            }
+        // Email validation: Ensure it's not empty and valid format
+        if (!emailField.value.trim()) {
+            showError(emailField, 'Email is required.');
+            valid = false;
+        } else if (!validateEmail(emailField.value.trim())) {
+            showError(emailField, 'Invalid email format. (example@gmail.com)');
+            valid = false;
+        }
 
-            // Role validation: Ensure a role is selected
-            if (!roleField.value) {
-                showError(roleField, 'Role is required.');
-                valid = false;
-            }
+        // Role validation: Ensure a role is selected
+        if (!roleField.value) {
+            showError(roleField, 'Role is required.');
+            valid = false;
+        }
 
-            // Contact number validation
-            if (!contactField.value.trim()) {
-                showError(contactField, 'Contact number is required.');
-                valid = false;
-            } else if (!/^\d{11}$/.test(contactField.value.trim())) {
-                showError(contactField, 'Contact number must be 11 digits.');
-                valid = false;
-            } else if (!/^09/.test(contactField.value.trim())) { // Ensure '09' at the start
-                showError(contactField, 'Contact number must start with 09.');
-                valid = false;
-            }
+        // Contact number validation
+        if (!contactField.value.trim()) {
+            showError(contactField, 'Contact number is required.');
+            valid = false;
+        } else if (!/^\d{11}$/.test(contactField.value.trim())) {
+            showError(contactField, 'Contact number must be 11 digits.');
+            valid = false;
+        } else if (!/^09/.test(contactField.value.trim())) { // Ensure '09' at the start
+            showError(contactField, 'Contact number must start with 09.');
+            valid = false;
+        }
 
-            if (!valid) {
-                event.preventDefault();
-            }
-        });
+        if (!valid) {
+            event.preventDefault();
+        }
+    });
     
         // Event listener for form submission
         form?.addEventListener('submit', function (event) {
@@ -240,7 +242,7 @@
             }
     
             // Check email and phone number uniqueness
-            fetch(/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)})
+            fetch(`/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.email_exists) {
@@ -297,4 +299,5 @@
             return emailRegex.test(email);
         }
     });
-</script>
+    </script>
+    
