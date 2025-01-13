@@ -709,6 +709,16 @@ def reports_view(request):
     return render(request, 'reports.html', context)
 
 
+def export_years_view(request):
+    # Fetch unique years from unarchived reports
+    years = (
+        InitialReport.objects.filter(is_archived=False)
+        .annotate(year=ExtractYear('date_reported'))
+        .values_list('year', flat=True)
+        .distinct()
+    )
+    return JsonResponse({'years': sorted(years, reverse=True)})
+
 @login_required
 def create_report_view(request):
     if request.method == 'POST':

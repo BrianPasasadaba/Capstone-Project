@@ -234,7 +234,7 @@
                             <button  type="submit" class="btn btn-lg px-4 resolve-button"  >
                                 Resolve
                             </button>
-                            <button  type="submit" class="btn btn-lg px-4 save-button"  style="display: none;">
+                            <button  type="submit" class="btn btn-lg px-4 save-button"  id="saveButton"  style="display: none;" >
                                 Save Changes
                             </button>
                         </div>
@@ -249,6 +249,25 @@
 {% endfor %}
 <script src="{% static 'js/prev_report_search.js' %}"></script>
 <script src="{% static 'js/format_numbers.js' %}"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const saveButton = document.getElementById('saveButton');
+
+    function handleClick() {
+        saveButton.classList.add('fade-out');
+
+        saveButton.disabled = true;
+
+        setTimeout(function () {
+            saveButton.style.display = 'none';
+        }); 
+    }
+    saveButton.addEventListener('click', handleClick);
+});
+
+</script>
 
 <script>
 // Combined cleanInput function

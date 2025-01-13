@@ -86,27 +86,13 @@
                                 <button class="btn btn-excel dropdown-toggle" type="button" id="exportButton" data-bs-toggle="dropdown" aria-expanded="false">Export Options</button>
 
                                 <ul class="dropdown-menu export-opt" aria-labelledby="exportButton" id="yearDropdown">
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('seventhYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('sixthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('fifthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('fourthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('thirdYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('secondYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('firstYear')">Export {} Reports</a>
-                                    </li>
+                                    {% for year in years %}
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="handleExport({{ year }})">
+                                                Export {{ year }} Reports
+                                            </a>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
 
                             </div>          
@@ -596,79 +582,29 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
     });
 </script>
 
-
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/export-years/') // Adjust URL to match your Django route
+            .then(response => response.json())
+            .then(data => {
+                const years = data.years;
+                const dropdown = document.getElementById("yearDropdown");
+                dropdown.innerHTML = ""; // Clear existing items
 
+                // Populate dropdown with unique years
+                years.forEach(year => {
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `
+                        <a class="dropdown-item" href="#" onclick="handleExport(${year})">
+                            Export ${year} Reports
+                        </a>
+                    `;
+                    dropdown.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching years:', error));
+    });
 </script>
-
-<script>
-    function populateYears() {
-        const currentYear = new Date().getFullYear();
-        const totalYears = 7;
-        const dropdown = document.getElementById("yearDropdown");
-    
-        dropdown.innerHTML = ""; 
-    
-        for (let i = 0; i < totalYears; i++) {
-            const year = currentYear - i; 
-            const ordinal = getOrdinalName(i + 1);
-    
-            const listItem = document.createElement("li");
-            listItem.innerHTML = `
-                <a class="dropdown-item" href="#" onclick="handleExport(${year})">
-                    Export ${year} Reports
-                </a>
-            `;
-            dropdown.appendChild(listItem);
-        }
-    }
-    
-    function getOrdinalName(position) {
-        const ordinals = ["firstYear", "secondYear", "thirdYear", "fourthYear", "fifthYear", "sixthYear", "seventhYear"];
-        return ordinals[position - 1] || "";
-    }
-    
-    async function handleExport(year) {
-        try {
-            const response = await fetch(`/export-initial-report/?value=${year}`);
-            
-            if (response.ok) {
-                // Get the filename from the Content-Disposition header if available
-                const contentDisposition = response.headers.get('Content-Disposition');
-                const filename = contentDisposition
-                    ? contentDisposition.split('filename=')[1].replace(/["']/g, '')
-                    : `report-${year}.pdf`;
-    
-                // Create a blob from the response
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                
-                // Create a temporary link and trigger download
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Clean up the blob URL
-                window.URL.revokeObjectURL(url);
-    
-                // Reload the page after successful download
-                setTimeout(() => {
-                    window.location.reload();
-                }); // Wait 1 second to ensure download starts
-            } else {
-                console.error('Download failed:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error during download:', error);
-        }
-    }
-    
-    window.onload = populateYears;
-</script>
-
 
 
 
