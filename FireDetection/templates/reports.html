@@ -582,29 +582,96 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
     });
 </script>
 
+
+<script>
+
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('/export-years/') // Adjust URL to match your Django route
-            .then(response => response.json())
-            .then(data => {
-                const years = data.years;
-                const dropdown = document.getElementById("yearDropdown");
-                dropdown.innerHTML = ""; // Clear existing items
+    const dropdown = document.getElementById("yearDropdown");
 
-                // Populate dropdown with unique years
-                years.forEach(year => {
-                    const listItem = document.createElement("li");
-                    listItem.innerHTML = `
-                        <a class="dropdown-item" href="#" onclick="handleExport(${year})">
-                            Export ${year} Reports
-                        </a>
-                    `;
-                    dropdown.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Error fetching years:', error));
-    });
+    // Function to fetch unique years from the backend
+    async function fetchUniqueYears() {
+        try {
+            const response = await fetch('/export-years/');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.years;
+        } catch (error) {
+            console.error('Error fetching unique years:', error);
+            return [];
+        }
+    }
+
+    // Function to populate the dropdown with fetched years
+    async function populateYears() {
+        const years = await fetchUniqueYears();
+        dropdown.innerHTML = ""; // Clear existing items
+
+        if (years.length === 0) {
+            const listItem = document.createElement("li");
+            listItem.textContent = "No available years";
+            dropdown.appendChild(listItem);
+            return;
+        }
+
+        years.forEach(year => {
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `
+                <a class="dropdown-item" href="#" onclick="handleExport(${year})">
+                    Export ${year} Reports
+                </a>
+            `;
+            dropdown.appendChild(listItem);
+        });
+    }
+
+    // Call populateYears on page load
+    populateYears();
+});
+
+async function handleExport(year) {
+    try {
+        const response = await fetch(`/export-initial-report/?value=${year}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Get the filename from the Content-Disposition header if available
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition
+            ? contentDisposition.split('filename=')[1].replace(/["']/g, '')
+            : `report-${year}.pdf`;
+
+        // Create a blob from the response
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary link and trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL
+        window.URL.revokeObjectURL(url);
+
+        // Optionally, reload the page after successful download
+        // setTimeout(() => {
+        //     window.location.reload();
+        // }, 1000); // Wait 1 second to ensure download starts
+    } catch (error) {
+        console.error('Error during download:', error);
+    }
+}
+
 </script>
+
 
 
 
@@ -948,6 +1015,8 @@ saveButton.addEventListener('click', function (event) {
 
             sessionStorage.setItem('reportUpdatedSuccessfully', 'true');
 
+
+            // Refresh the page
             window.location.reload(); // Refresh the page to load the updated content
         } else {
             console.error('Error updating report:', data.message);
