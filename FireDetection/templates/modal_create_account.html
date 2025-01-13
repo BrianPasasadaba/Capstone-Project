@@ -62,6 +62,82 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const saveButton = document.querySelector('.save-button'); 
+        const nameField = document.getElementById('modal-name');
+        const emailField = document.getElementById('modal-email');
+        const roleField = document.getElementById('modal-role');
+        const contactField = document.getElementById('modal-contact');
+
+
+        saveButton.addEventListener('click', function (event) {
+            let valid = true;
+            clearErrorMessages(); 
+
+            if (!nameField.value.trim()) {
+                showErrorMessage(locationField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Name is required.');
+                valid = false;
+            }
+
+            if (!emailField.value) {
+                showErrorMessage(detectField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Email is required.');
+                valid = false;
+            }
+
+            if (!roleField.value) {
+                showErrorMessage(dateField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> Role Field is required.');
+                valid = false;
+            }
+
+            if (!contactField.value) {
+                showErrorMessage(dateField, '<i class="bi bi-exclamation-circle" style="font-size: 0.8rem;"></i> ContactField is required.');
+                valid = false;
+            }
+
+            if (!valid) {
+                event.preventDefault(); 
+                scrollToFirstInvalidField(); // Scroll to the first invalid field
+            }
+        });
+
+        function showErrorMessage(field, message) {
+            const errorElement = document.createElement('small');
+            errorElement.innerHTML = message; // Use innerHTML to render the icon
+            errorElement.style.color = 'red';
+            errorElement.style.fontSize = '0.8rem'; // Set the same font size as the message
+            errorElement.style.display = 'block';
+            errorElement.style.textAlign = 'left';  // Align left
+            errorElement.style.paddingTop = '0.2rem';  // Add padding top
+            field.parentNode.appendChild(errorElement); 
+            field.classList.add('is-invalid'); 
+        }
+
+        function clearErrorMessages() {
+            const errorMessages = document.querySelectorAll('.is-invalid');
+            errorMessages.forEach(function (field) {
+                field.classList.remove('is-invalid');
+            });
+
+            const errorText = document.querySelectorAll('small');
+            errorText.forEach(function (msg) {
+                msg.remove(); 
+            });
+        }
+
+        function scrollToFirstInvalidField() {
+            const firstInvalidField = document.querySelector('.is-invalid');
+            if (firstInvalidField) {
+                firstInvalidField.scrollIntoView({
+                    behavior: 'smooth', // Smooth scrolling
+                    block: 'center' // Scroll the field to the center of the viewport
+                });
+            }
+        }
+    });
+</script>
+
+
+<script>
     // Combined cleanInput function with email validation
     const cleanInput = (event, allowedChars, pattern = null) => {
         const input = event.target;
