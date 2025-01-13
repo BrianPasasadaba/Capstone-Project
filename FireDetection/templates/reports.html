@@ -512,14 +512,24 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
         const archiveButton = document.getElementById('archiveBtn');
 
         function updateArchiveButton() {
+            // First check if we're on the archive table
+            if (activeTable === archiveTable) {
+                archiveButton.style.display = 'none'; // Hide the button completely
+                return; // Exit the function early
+            }
+            
+            // Show the button since we're on the report table
+            archiveButton.style.display = 'inline-block';
+            
+            // Then handle the enable/disable state
             if (selectedReportIds.length > 0) {
                 archiveButton.removeAttribute('disabled');
-                archiveButton.style.opacity = '1'; // Make it visible
-                archiveButton.setAttribute('data-report-ids', selectedReportIds.join(',')); // Store the array of IDs as a comma-separated string
+                archiveButton.style.opacity = '1';
+                archiveButton.setAttribute('data-report-ids', selectedReportIds.join(','));
             } else {
                 archiveButton.setAttribute('disabled', true);
-                archiveButton.style.opacity = '0.5'; // Make it appear disabled
-                archiveButton.removeAttribute('data-report-ids'); // Clear the data-report-ids
+                archiveButton.style.opacity = '0.5';
+                archiveButton.removeAttribute('data-report-ids');
             }
         }
     
