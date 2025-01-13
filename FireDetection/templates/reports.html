@@ -352,7 +352,8 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
 </script>
 
 <script>
-    
+    var selectedReportIds = []; // Array to store multiple selected report IDs
+
     document.addEventListener('DOMContentLoaded', function () {
     const reportTable = document.getElementById('reportTable');
     const archiveButton = document.getElementById('archiveBtn');
@@ -372,17 +373,21 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
     }
 
     // Click event listener for rows in the report table
-    reportTable.addEventListener('click', function (event) {
-        const clickedRow = event.target.closest('tr');
-        if (clickedRow && clickedRow.dataset.reportId) {
-            const reportId = clickedRow.dataset.reportId;
-            if (selectedReportIds.includes(reportId)) {
-                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
+    document.querySelectorAll('.r-check').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const reportId = checkbox.value;
+
+            if (checkbox.checked) {
+                // Add the report ID to the array if the checkbox is checked
+                if (!selectedReportIds.includes(reportId)) {
+                    selectedReportIds.push(reportId);
+                }
             } else {
-                selectedReportIds.push(reportId);
+                // Remove the report ID from the array if the checkbox is unchecked
+                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
             }
             updateArchiveButtonState();
-        }
+        });
     });
 
     // Click event for the Archive button to show the modal
@@ -503,6 +508,20 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
     
         // Hide archive table initially
         $('#archiveTable_wrapper').hide();
+
+        const archiveButton = document.getElementById('archiveBtn');
+
+        function updateArchiveButton() {
+            if (selectedReportIds.length > 0) {
+                archiveButton.removeAttribute('disabled');
+                archiveButton.style.opacity = '1'; // Make it visible
+                archiveButton.setAttribute('data-report-ids', selectedReportIds.join(',')); // Store the array of IDs as a comma-separated string
+            } else {
+                archiveButton.setAttribute('disabled', true);
+                archiveButton.style.opacity = '0.5'; // Make it appear disabled
+                archiveButton.removeAttribute('data-report-ids'); // Clear the data-report-ids
+            }
+        }
     
         // Tab switching logic with filter reset
         document.querySelectorAll('#reportTabs button').forEach((tab) => {
@@ -513,11 +532,30 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                     $('#archiveTable_wrapper').hide();
                     $('#reportTable_wrapper').show();
                     activeTable = reportTable;
+                    
+                    // Clear checkboxes in archive table
+                    document.querySelectorAll('#archiveTable .r-check').forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
                 } else if (target === '#archives') {
                     $('#reportTable_wrapper').hide();
                     $('#archiveTable_wrapper').show();
                     activeTable = archiveTable;
+                    
+                    // Clear checkboxes in report table
+                    document.querySelectorAll('#reportTable .r-check').forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
                 }
+        
+                // Reset the selected report ID and hidden input
+                selectedReportIds = [];
+                selectedReportId = null;
+                hiddenReportIdInput.value = '';
+                updateArchiveButton();
+                console.log("Report ID array after switching tabs:", selectedReportIds);
+                console.log("Selected Report ID after switching tabs:", selectedReportId);
+                console.log("Hidden Report ID after switching tabs:", hiddenReportIdInput.value);
     
                 // Reset search input and filters for the new active table
                 searchInput.value = '';
@@ -695,48 +733,6 @@ document.getElementById('searchInput').addEventListener('input', function (e) {
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const reportTable = document.getElementById('reportTable');
-    const hiddenReportIdInput = document.getElementById('report-id');
-    const modal = document.getElementById('report-preview-modal');
-    let selectedReportId = null; // Store the selected report ID
-
-    // Click event for selecting a row
-    reportTable.addEventListener('click', function (event) {
-        const clickedRow = event.target.closest('tr');
-        
-        // Proceed only if the clicked row has the data-report-id attribute
-        if (clickedRow && clickedRow.dataset.reportId) {
-            selectedReportId = clickedRow.dataset.reportId; // Store the report ID
-            console.log('Row selected. Report ID:', selectedReportId);
-
-            // Update the hidden input with the selected report ID
-            hiddenReportIdInput.value = selectedReportId;
-            console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
-        }
-    });
-
-    // "View" button click event
-    const viewButton = document.querySelector('.btn-view'); // Assuming there is only one "View" button
-    viewButton.addEventListener('click', function (event) {
-        // Only show modal if a report ID has been selected
-        if (selectedReportId) {
-            console.log('Opening preview modal for Report ID:', selectedReportId);
-            
-            // Populate the modal with the selected report ID (or any other data)
-            // You can add the functionality to populate the modal fields here if needed
-            const bootstrapModal = new bootstrap.Modal(modal);
-            bootstrapModal.show();
-        } else {
-            console.log('No row selected. Preventing modal from opening.');
-            event.preventDefault(); // Prevent modal from opening if no row is selected
-        }
-    });
-});
-
-
-
-
     document.addEventListener('DOMContentLoaded', function () {
     const editButton = document.querySelector('.edit-form .btn-edit');
     const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');

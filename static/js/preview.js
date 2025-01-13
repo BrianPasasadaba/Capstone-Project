@@ -1,14 +1,73 @@
+var selectedReportId = null; // Store the selected report ID
+var hiddenReportIdInput = document.getElementById('report-id'); // Hidden input for report ID
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const reportTable = document.getElementById('reportTable');
     const archiveTable = document.getElementById('archiveTable');  // Your archive table
     const viewButton = document.querySelector('.btn-view'); // Your existing "View" button
-    const hiddenReportIdInput = document.getElementById('report-id'); // Hidden input for report ID
     const modal = document.getElementById('report-preview-modal');
     const modalStatus = document.querySelector('#modal-status');
     const editButton = document.querySelector('.btn-edit');
     
     let selectedRow = null;
     let selectedCheckboxCount = 0;  // Track selected checkboxes
+
+
+
+    reportTable.addEventListener('click', function (event) {
+        const clickedRow = event.target.closest('tr');
+        
+        // Check if we clicked on a checkbox specifically
+        const checkbox = event.target.closest('input[type="checkbox"]');
+        
+        // Proceed only if we clicked a checkbox in a row with data-report-id
+        if (checkbox && clickedRow && clickedRow.dataset.reportId) {
+            if (checkbox.checked) {
+                // Checkbox was checked - store the ID
+                selectedReportId = clickedRow.dataset.reportId;
+                console.log('Row selected for view. Report ID:', selectedReportId);
+                
+                // Update the hidden input with the selected report ID
+                hiddenReportIdInput.value = selectedReportId;
+                console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
+            } else {
+                // Checkbox was unchecked - clear the selection if it was this row
+                if (selectedReportId === clickedRow.dataset.reportId) {
+                    selectedReportId = null;
+                    hiddenReportIdInput.value = '';
+                    console.log('Selection cleared');
+                }
+            }
+        }
+    });
+
+    archiveTable.addEventListener('click', function (event) {
+        const clickedRow = event.target.closest('tr');
+        
+        // Check if we clicked on a checkbox specifically
+        const checkbox = event.target.closest('input[type="checkbox"]');
+        
+        // Proceed only if we clicked a checkbox in a row with data-report-id
+        if (checkbox && clickedRow && clickedRow.dataset.reportId) {
+            if (checkbox.checked) {
+                // Checkbox was checked - store the ID
+                selectedReportId = clickedRow.dataset.reportId;
+                console.log('Row selected for view. Report ID:', selectedReportId);
+                
+                // Update the hidden input with the selected report ID
+                hiddenReportIdInput.value = selectedReportId;
+                console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
+            } else {
+                // Checkbox was unchecked - clear the selection if it was this row
+                if (selectedReportId === clickedRow.dataset.reportId) {
+                    selectedReportId = null;
+                    hiddenReportIdInput.value = '';
+                    console.log('Selection cleared');
+                }
+            }
+        }
+    });
 
     // Function to handle checkbox change in any table (main or archive)
     function handleCheckboxChange(event) {
@@ -44,18 +103,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Listen for the "View" button click
     viewButton.addEventListener('click', function (event) {
-        if (!selectedRow || selectedCheckboxCount !== 1) {
-            console.log('Either no row selected or more than one checkbox selected. Preventing modal from opening.');
-            event.preventDefault(); // Prevent modal from opening if more than one checkbox is selected
+        // Ensure exactly one row is selected
+        if (!selectedReportId) {
+            console.log('No report selected. Preventing modal from opening.');
+            event.preventDefault(); // Prevent modal from opening if no report is selected
             return;
         }
 
-        // Populate the modal with selected row data
-        populateModal(selectedRow);
+        // Find the row with the selected report ID
+        const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportId}"]`);
+        
+        if (selectedRow) {
+            // Populate the modal with selected row data
 
-        // Show the modal
-        const bootstrapModal = new bootstrap.Modal(modal);
-        bootstrapModal.show();
+            console.log('Selected row found:', selectedRow);
+            populateModal(selectedRow);
+
+            // Show the modal
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        } else {
+            console.log('Selected row not found.');
+        }
     });
 
     // Function to populate the modal with selected report row data
