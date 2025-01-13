@@ -4,6 +4,20 @@
 
 {% block content %}
 <header>
+    <style>
+    span.dt-column-order {
+        display: none !important;
+    }
+
+    table.dataTable thead > tr > th.dt-ordering-asc {
+        padding: 0px !important; 
+    }
+
+    table.dataTable thead > tr > th.dt-ordering-desc{
+        padding: 0px !important;
+    }
+    </style>
+
     <div class="header-content">
         <div class="header-sb" >
             <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
