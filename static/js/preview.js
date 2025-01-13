@@ -23,21 +23,25 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Proceed only if we clicked a checkbox in a row with data-report-id
         if (checkbox && clickedRow && clickedRow.dataset.reportId) {
+            const reportId = clickedRow.dataset.reportId;
+            
             if (checkbox.checked) {
-                // Checkbox was checked - store the ID
-                selectedReportId = clickedRow.dataset.reportId;
-                console.log('Row selected for view. Report ID:', selectedReportId);
+                // Add the ID to our array if it's not already there
+                if (!selectedReportIds.includes(reportId)) {
+                    selectedReportIds.push(reportId);
+                }
+                console.log('Row selected for view. Report IDs:', selectedReportIds);
                 
-                // Update the hidden input with the selected report ID
-                hiddenReportIdInput.value = selectedReportId;
+                // Update the hidden input with the comma-separated report IDs
+                hiddenReportIdInput.value = selectedReportIds.join(',');
                 console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
             } else {
-                // Checkbox was unchecked - clear the selection if it was this row
-                if (selectedReportId === clickedRow.dataset.reportId) {
-                    selectedReportId = null;
-                    hiddenReportIdInput.value = '';
-                    console.log('Selection cleared');
-                }
+                // Remove this specific ID from the array
+                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
+                
+                // Update the hidden input with the remaining IDs
+                hiddenReportIdInput.value = selectedReportIds.join(',');
+                console.log('Selection updated:', selectedReportIds);
             }
         }
     });
@@ -50,21 +54,25 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Proceed only if we clicked a checkbox in a row with data-report-id
         if (checkbox && clickedRow && clickedRow.dataset.reportId) {
+            const reportId = clickedRow.dataset.reportId;
+            
             if (checkbox.checked) {
-                // Checkbox was checked - store the ID
-                selectedReportId = clickedRow.dataset.reportId;
-                console.log('Row selected for view. Report ID:', selectedReportId);
+                // Add the ID to our array if it's not already there
+                if (!selectedReportIds.includes(reportId)) {
+                    selectedReportIds.push(reportId);
+                }
+                console.log('Row selected for view. Report IDs:', selectedReportIds);
                 
-                // Update the hidden input with the selected report ID
-                hiddenReportIdInput.value = selectedReportId;
+                // Update the hidden input with the comma-separated report IDs
+                hiddenReportIdInput.value = selectedReportIds.join(',');
                 console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
             } else {
-                // Checkbox was unchecked - clear the selection if it was this row
-                if (selectedReportId === clickedRow.dataset.reportId) {
-                    selectedReportId = null;
-                    hiddenReportIdInput.value = '';
-                    console.log('Selection cleared');
-                }
+                // Remove this specific ID from the array
+                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
+                
+                // Update the hidden input with the remaining IDs
+                hiddenReportIdInput.value = selectedReportIds.join(',');
+                console.log('Selection updated:', selectedReportIds);
             }
         }
     });
@@ -104,14 +112,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Listen for the "View" button click
     viewButton.addEventListener('click', function (event) {
         // Ensure exactly one row is selected
-        if (!selectedReportId) {
+        if (!selectedReportIds) {
             console.log('No report selected. Preventing modal from opening.');
             event.preventDefault(); // Prevent modal from opening if no report is selected
             return;
         }
 
         // Find the row with the selected report ID
-        const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportId}"]`);
+        const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportIds}"]`);
         
         if (selectedRow) {
             // Populate the modal with selected row data
@@ -205,11 +213,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Handle proof image
         const proofImg = document.getElementById('proof');
-        if (proof) {
+        if (proof !== 'None') {
             proofImg.src = proof;
             proofImg.style.display = 'block';
         } else {
             proofImg.style.display = 'none';
+
+            // Add a message or element when there's no proof
+            const noProofMessage = document.createElement('p');
+            noProofMessage.textContent = 'No proof image available';
+            noProofMessage.className = 'text-muted'; // Add styling class if needed
+            proofImg.parentNode.appendChild(noProofMessage);
+
         }
 
         // Resolve button handling (if needed)
