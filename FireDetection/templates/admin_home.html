@@ -350,50 +350,61 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const accountTable = document.getElementById('accountTable');
-    const nameInput = document.getElementById('prev-name');
-    const emailInput = document.getElementById('prev-email');
-    const roleSelect = document.getElementById('prev-role');
-    const contactInput = document.getElementById('prev-contact');
-
-    // Prevent checkbox clicks from propagating to the row
-    accountTable.addEventListener('click', function (event) {
-        if (event.target.classList.contains('form-check-input')) {
-            console.log('Checkbox clicked. Preventing modal from opening.');
-            event.stopPropagation(); // Stop the event from propagating to the row
-            return; // Stop further execution
-        }
-
-        const row = event.target.closest('tr[data-account-id]');
-        if (row) {
-            // Fetch data from the row's data attributes
-            const accountId = row.getAttribute('data-account-id');
-            const name = row.getAttribute('data-name');
-            const email = row.getAttribute('data-email');
-            const role = row.getAttribute('data-role');
-            const contact = row.getAttribute('data-contact');
-            const status = row.getAttribute('data-status');
-
-            console.log('Selected Account:', { accountId, name, email, role, contact, status });
-
-            // Populate the modal fields
-            nameInput.value = name;
-            emailInput.value = email;
-            roleSelect.value = role;
-            contactInput.value = contact;
-
-            // Enable/disable fields or buttons if needed (e.g., based on status)
-            if (status === 'true') {
-                console.log('Account is verified');
-            }
-
-            // Open the modal
-            const modal = new bootstrap.Modal(document.getElementById('prev-account-modal'));
-            modal.show();
-        }
+        const accountTable = document.getElementById('accountTable');
+        const nameInput = document.getElementById('prev-name');
+        const emailInput = document.getElementById('prev-email');
+        const roleSelect = document.getElementById('prev-role');
+        const contactInput = document.getElementById('prev-contact');
+    
+        // Handler for first column (checkbox column) for all rows
+        const checkboxCells = accountTable.querySelectorAll('tbody td:first-child');
+        checkboxCells.forEach(cell => {
+            cell.addEventListener('click', function(event) {
+                // If checkbox itself wasn't clicked, find and toggle the checkbox in this cell
+                if (!event.target.classList.contains('form-check-input')) {
+                    const checkbox = event.target.closest('td').querySelector('input[type="checkbox"]');
+                    if (checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                }
+                event.stopPropagation();
+            });
+        });
+    
+        // Handler for all other columns (modal opening) for all rows
+        const contentCells = accountTable.querySelectorAll('tbody td:not(:first-child)');
+        contentCells.forEach(cell => {
+            cell.addEventListener('click', function(event) {
+                const row = event.target.closest('tr[data-account-id]');
+                if (!row) return;
+    
+                // Fetch data from the row's data attributes
+                const accountId = row.getAttribute('data-account-id');
+                const name = row.getAttribute('data-name');
+                const email = row.getAttribute('data-email');
+                const role = row.getAttribute('data-role');
+                const contact = row.getAttribute('data-contact');
+                const status = row.getAttribute('data-status');
+    
+                console.log('Selected Account:', { accountId, name, email, role, contact, status });
+    
+                // Populate the modal fields
+                nameInput.value = name;
+                emailInput.value = email;
+                roleSelect.value = role;
+                contactInput.value = contact;
+    
+                // Enable/disable fields or buttons if needed (e.g., based on status)
+                if (status === 'true') {
+                    console.log('Account is verified');
+                }
+    
+                // Open the modal
+                const modal = new bootstrap.Modal(document.getElementById('prev-account-modal'));
+                modal.show();
+            });
+        });
     });
-});
-
 
 </script>
 
