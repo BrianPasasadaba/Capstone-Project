@@ -15,7 +15,7 @@
             </div>
             <div class="modal-body">
 
-                <form action="{% url 'update_account'  %}" method="POST"  id="prev-account-form">
+                <form action="{% url 'update_account'  %}" method="POST"  id="prev-account-form" novalidate>
                     <input type="hidden" id="account-id" name="account_id" value="">
                     {% csrf_token %}
                     <div class="form-row">
@@ -23,6 +23,7 @@
                             <label for="prev-name" class="form-label">Name</label>
                             <input type="text" class="form-control" name="name" id="prev-name" placeholder="e.g. Juan Dela Cruz" 
                                    maxlength="60" required>
+                            <span class="warning-text" id="name-warning" style="display:none; color:red;">Name is required</span>
                         </div>
                     </div>
                     
@@ -30,6 +31,7 @@
                         <div class="form-column">
                             <label for="prev-email" class="form-label">Email</label>
                             <input type="email" class="form-control" name="email" id="prev-email" placeholder="e.g. juandc@gmail.com" maxlength="100" required>
+                            <span class="warning-text" id="email-warning" style="display:none; color:red;">Email is required</span>
                         </div>
                     </div>                
 
@@ -49,12 +51,13 @@
                             <label for="prev-contact" class="form-label">Contact No.</label>
                             <input type="text" class="form-control" name="contact_number" id="prev-contact" placeholder="e.g. 09123456789" maxlength="11" required pattern="[0-9]{11}"
                             oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            <span class="warning-text" id="contact-warning" style="display:none; color:red;">Contact number is required</span>
                         </div>
                     </div>  
 
                     <div class="modal-footer">
                         <div class="mf-button">
-                            <button class="btn btn-lg px-4 add-account" id="add-account" type="submit" disabled>Save</button>
+                            <button class="btn btn-lg px-4 add-account" type="submit" disabled>Save</button>
                         </div>                   
                     </div>
                 </form>
@@ -64,6 +67,134 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('prev-account-form').addEventListener('submit', function(event) {
+        let isValid = true;
+    
+        // Reset all previous warnings
+        document.querySelectorAll('.warning-text').forEach(function(warning) {
+            warning.style.display = 'none';
+        });
+    
+        // Check if the name field is empty
+        const name = document.getElementById('prev-name');
+        if (!name.value.trim()) {
+            const nameWarning = document.getElementById('name-warning');
+            nameWarning.style.display = 'inline'; // Show the warning text
+            nameWarning.style.fontSize = '0.8rem';  // Optional: Set font size for the warning
+            nameWarning.style.color = 'red'; // Optional: Set warning color
+            isValid = false;
+        }
+    
+        // Check if the email field is empty
+        const email = document.getElementById('prev-email');
+        if (!email.value.trim()) {
+            const emailWarning = document.getElementById('email-warning');
+            emailWarning.style.display = 'inline'; // Show the warning text
+            emailWarning.style.fontSize = '0.8rem';  // Optional: Set font size for the warning
+            emailWarning.style.color = 'red'; // Optional: Set warning color
+            isValid = false;
+        }
+    
+        // Check if the contact field is empty
+        const contact = document.getElementById('prev-contact');
+        if (!contact.value.trim()) {
+            const contactWarning = document.getElementById('contact-warning');
+            contactWarning.style.display = 'inline'; // Show the warning text
+            contactWarning.style.fontSize = '0.8rem';  // Optional: Set font size for the warning
+            contactWarning.style.color = 'red'; // Optional: Set warning color
+            isValid = false;
+        }
+    
+        // If any field is invalid, prevent form submission
+        if (!isValid) {
+            event.preventDefault();
+            return; // Stop further execution to avoid the email/phone check
+        }
+    });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nameField = document.getElementById('prev-name');
+            const emailField = document.getElementById('prev-email');
+            const contactField = document.getElementById('prev-contact');
+            const form = document.getElementById('prev-account-form');
+        
+            // Store the initial values of email and contact number
+            const initialEmail = emailField.value.trim();
+            const initialContact = contactField.value.trim();
+        
+            // Function to show error messages
+            function showError(field, message) {
+                const warningText = field.parentNode.querySelector('.warning-text');
+                if (warningText) {
+                    warningText.innerText = message;
+                    warningText.style.display = 'inline';  // Show the error message
+                    warningText.style.fontSize = '0.8rem';  // Set font size for the warning
+                    warningText.style.color = 'red'; // Set warning color
+                }
+                field.style.border = '1px solid red';  // Red border for the input field
+            }
+        
+            // Function to clear error messages and reset input styles
+            function clearErrorMessages() {
+                document.querySelectorAll('.warning-text').forEach(function(warning) {
+                    warning.style.display = 'none';  // Hide all warning messages
+                });
+                document.querySelectorAll('input').forEach(function(field) {
+                    field.style.border = '';  // Reset input border to default
+                });
+            }
+        
+            // Event listener for form submission
+            form.addEventListener('submit', function (event) {
+                let isValid = true;
+        
+                // Clear previous error messages and reset styles
+                clearErrorMessages();
+        
+                // Check if the name field is empty
+                const name = nameField.value.trim();
+                if (!name) {
+                    showError(nameField, 'Name is required.');
+                    isValid = false;
+                }
+        
+                // Check if the email field is empty (if it's changed)
+                const email = emailField.value.trim();
+                if (!email) {
+                    showError(emailField, 'Email is required.');
+                    isValid = false;
+                } else if (email !== initialEmail) {
+                    // If email has changed, check for uniqueness
+                    fetch(`/check-email/?email=${encodeURIComponent(email)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.email_exists) {
+                                showError(emailField, 'This email is already registered.');
+                                isValid = false;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showError(emailField, 'Error. Already registered');
+                            isValid = false;
+                        });
+                }
+        
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+        </script>
+        
+        
+        
+        
+        
 
 <script>
     document.getElementById('closeButton').addEventListener('click', function() {
@@ -117,221 +248,3 @@
 </script>
 
 
-<script>
-    // Combined cleanInput function with email validation
-    const cleanInput = (event, allowedChars, pattern = null) => {
-        const input = event.target;
-        let value = input.value;
-    
-        // Only block the first character if it's an invalid non-alphabetic character for the 'name' field
-        if (input.id === "prev-name" && /[^A-Za-z]/.test(value.charAt(0)) && value.length === 1) {
-            return; // Don't update if the first character is invalid and it's the only character
-        }
-    
-        // If the first character is invalid but there are more characters, allow editing
-        if (value.length > 1 && /[^A-Za-z]/.test(value.charAt(0)) && input.id === "prev-name") {
-            value = value.slice(1); // Remove the invalid first character
-        }
-    
-        // Dynamically allow only the defined characters
-        const regex = new RegExp(`[^${allowedChars}]`, 'g');
-        value = value.replace(regex, ''); // Remove disallowed characters
-    
-        // Replace multiple spaces with a single space
-        value = value.replace(/\s+/g, ' ');
-    
-        // Allow leading space while typing but trim final input
-        input.value = value.trimStart();
-    
-        // Check if additional pattern validation is required (e.g., email format)
-        if (pattern) {
-            const isValid = pattern.test(input.value);
-            input.setCustomValidity(isValid ? "" : "Please enter a valid value.");
-        }
-    };
-    
-    // Attach to specific input fields
-    document.addEventListener("DOMContentLoaded", function () {
-        // Updated email regex to allow numbers as the first character
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        
-        const fields = [
-            { id: "prev-name", allowedChars: 'A-Za-z.,\\s-', pattern: null }, // Name validation without numbers
-            { id: "prev-email", allowedChars: 'A-Za-z0-9._%+-@.', pattern: emailPattern } // Updated email validation
-        ];
-    
-        fields.forEach(({ id, allowedChars, pattern }) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.addEventListener("input", function (event) {
-                    cleanInput(event, allowedChars, pattern);
-                });
-            }
-        });
-    });
-</script>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const addAccountButton = document.querySelector('.add-account');
-    const nameField = document.getElementById('prev-name');
-    const emailField = document.getElementById('prev-email');
-    const roleField = document.querySelector('select[name="role"]');
-    const contactField = document.getElementById('prev-contact');
-    const form = document.getElementById('prev-account-form');
-
-    // Store initial values
-    const initialValues = {
-        name: nameField.value.trim(),
-        email: emailField.value.trim(),
-        role: roleField.value,
-        contact: contactField.value.trim(),
-    };
-
-    // Function to check if any input has changed
-    function hasChanges() {
-        return (
-            initialValues.name !== nameField.value.trim() ||
-            initialValues.email !== emailField.value.trim() ||
-            initialValues.role !== roleField.value ||
-            initialValues.contact !== contactField.value.trim()
-        );
-    }
-
-    // Event listener for Add Account button
-    addAccountButton?.addEventListener('click', function (event) {
-        if (!hasChanges()) {
-            // If no changes, allow form submission
-            return;
-        }
-
-        let valid = true;
-        clearErrorMessages();
-
-        // Name validation: Ensure it has at least 3 characters
-        if (!nameField.value.trim()) {
-            showError(nameField, 'Name is required.');
-            valid = false;
-        } else if (nameField.value.trim().length < 3) {
-            showError(nameField, 'Name must be at least 3 characters long.');
-            valid = false;
-        }
-
-        // Email validation: Ensure it's not empty and valid format
-        if (!emailField.value.trim()) {
-            showError(emailField, 'Email is required.');
-            valid = false;
-        } else if (!validateEmail(emailField.value.trim())) {
-            showError(emailField, 'Invalid email format. (example@gmail.com)');
-            valid = false;
-        }
-
-        // Role validation: Ensure a role is selected
-        if (!roleField.value) {
-            showError(roleField, 'Role is required.');
-            valid = false;
-        }
-
-        // Contact number validation
-        if (!contactField.value.trim()) {
-            showError(contactField, 'Contact number is required.');
-            valid = false;
-        } else if (!/^\d{11}$/.test(contactField.value.trim())) {
-            showError(contactField, 'Contact number must be 11 digits.');
-            valid = false;
-        } else if (!/^09/.test(contactField.value.trim())) { // Ensure '09' at the start
-            showError(contactField, 'Contact number must start with 09.');
-            valid = false;
-        }
-
-        if (!valid) {
-            event.preventDefault();
-        }
-    });
-
-    // Event listener for form submission
-    form?.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const email = emailField.value.trim();
-        const phone_number = contactField.value.trim();
-
-        clearErrorMessages();
-
-        if (!hasChanges()) {
-            // If no changes, submit the form without further checks
-            form.submit();
-            return;
-        }
-
-        if (!email) {
-            showError(emailField, 'Email is required.');
-            return;
-        }
-
-        if (!phone_number) {
-            showError(contactField, 'Phone number is required.');
-            return;
-        }
-
-        // Check email and phone number uniqueness
-        fetch(`/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phone_number)}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.email_exists) {
-                    showError(emailField, 'This email is already registered.');
-                }
-
-                if (data.phone_exists) {
-                    showError(contactField, 'This phone number is already registered.');
-                }
-
-                if (!data.email_exists && !data.phone_exists) {
-                    form.submit(); // Submit the form if no errors exist
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError(emailField, 'An error occurred while validating the email. Please try again.');
-                showError(contactField, 'An error occurred while validating the phone number. Please try again.');
-            });
-    });
-
-    // Helper function to show error messages
-    function showError(field, message) {
-        let existingError = field.parentNode.querySelector('.error-message');
-        if (existingError) {
-            existingError.remove();
-        }
-
-        const errorElement = document.createElement('small');
-        errorElement.className = 'error-message';
-        errorElement.textContent = message;
-        errorElement.style.color = 'red';
-        errorElement.style.fontSize = '0.8rem';
-        field.parentNode.appendChild(errorElement);
-        field.classList.add('is-invalid');
-    }
-
-    // Helper function to clear all error messages
-    function clearErrorMessages() {
-        const invalidFields = document.querySelectorAll('.is-invalid');
-        invalidFields.forEach(function (field) {
-            field.classList.remove('is-invalid');
-        });
-
-        const errorMessages = document.querySelectorAll('.error-message');
-        errorMessages.forEach(function (msg) {
-            msg.remove();
-        });
-    }
-
-    // Helper function to validate email
-    function validateEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-});
-
-    </script>
-    
