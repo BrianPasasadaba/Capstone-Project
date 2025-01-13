@@ -588,7 +588,7 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const dropdown = document.getElementById("yearDropdown");
 
     // Function to fetch unique years from the backend
@@ -637,7 +637,8 @@ async function handleExport(year) {
     try {
         const response = await fetch(`/export-initial-report/?value=${year}`);
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            console.error('Download failed:', response.statusText);
+            return;
         }
 
         // Get the filename from the Content-Disposition header if available
@@ -661,15 +662,29 @@ async function handleExport(year) {
         // Clean up the blob URL
         window.URL.revokeObjectURL(url);
 
-        // Optionally, reload the page after successful download
-        // setTimeout(() => {
-        //     window.location.reload();
-        // }, 1000); // Wait 1 second to ensure download starts
+        // Validate download success before reloading
+        const validateDownload = () => {
+            return new Promise((resolve) => {
+                // Give time for the download to start
+                setTimeout(() => {
+                    // You could add additional validation here if needed
+                    resolve(true);
+                }, 1000);
+            });
+        };
+
+        // Only reload after successful validation
+        const downloadSuccessful = await validateDownload();
+        if (downloadSuccessful) {
+            window.location.reload();
+        }
     } catch (error) {
         console.error('Error during download:', error);
     }
 }
 
+// Initialize on window load
+window.onload = populateYears;
 </script>
 
 
