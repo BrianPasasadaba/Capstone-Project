@@ -320,6 +320,7 @@
 {% include "modal_terms_condi_log.html" %}
 {% include "modal_resolve_confirm.html" %}
 {% include "modal_editrp_success.html" %}
+{% include "modal_archive_report.html" %}
 
 {% endblock %}
 
@@ -354,75 +355,71 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
     
     document.addEventListener('DOMContentLoaded', function () {
     const reportTable = document.getElementById('reportTable');
-    const archiveButton = document.getElementById('archiveBtn'); // The Archive button
-    let selectedReportIds = []; // Array to store multiple selected report IDs
+    const archiveButton = document.getElementById('archiveBtn');
+    const archiveModalElement = document.getElementById('archive-report-modal');
+    const archiveModal = new bootstrap.Modal(archiveModalElement);
+    let selectedReportIds = [];
 
     // Function to update the state of the Archive button
     function updateArchiveButtonState() {
         if (selectedReportIds.length > 0) {
             archiveButton.removeAttribute('disabled');
-            archiveButton.style.opacity = '1'; // Make it visible
-            archiveButton.setAttribute('data-report-ids', selectedReportIds.join(',')); // Store the array of IDs as a comma-separated string
+            archiveButton.style.opacity = '1';
         } else {
             archiveButton.setAttribute('disabled', true);
-            archiveButton.style.opacity = '0.5'; // Make it appear disabled
-            archiveButton.removeAttribute('data-report-ids'); // Clear the data-report-ids
+            archiveButton.style.opacity = '0.5';
         }
     }
 
     // Click event listener for rows in the report table
     reportTable.addEventListener('click', function (event) {
         const clickedRow = event.target.closest('tr');
-
-        // Ensure the clicked row has the data-report-id attribute
         if (clickedRow && clickedRow.dataset.reportId) {
             const reportId = clickedRow.dataset.reportId;
-
             if (selectedReportIds.includes(reportId)) {
-                // If the report ID is already selected, deselect it
                 selectedReportIds = selectedReportIds.filter(id => id !== reportId);
             } else {
-                // If the report ID is not selected, add it
                 selectedReportIds.push(reportId);
             }
-
-            console.log('Selected Report IDs:', selectedReportIds);
-            updateArchiveButtonState(); // Update the Archive button state
+            updateArchiveButtonState();
         }
     });
 
-    // Click event for the Archive button
+    // Click event for the Archive button to show the modal
     archiveButton.addEventListener('click', function () {
-        const reportIds = archiveButton.getAttribute('data-report-ids');
-        if (reportIds) {
-            console.log('Archiving Report IDs:', reportIds);
+        if (selectedReportIds.length > 0) {
+            archiveModal.show();
+        }
+    });
 
-            // Send the archive request to the server with the array of report IDs
-            fetch('/archive-report/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `report_ids=${reportIds}` // Send the IDs as a comma-separated string
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Refresh the page immediately on success
-                    location.reload();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while archiving the reports.');
-            });
+    // Event delegation for the Confirm button in the modal
+    archiveModalElement.addEventListener('click', function (event) {
+        if (event.target && event.target.id === 'confirmRemoveButton') {
+            if (selectedReportIds.length > 0) {
+                fetch('/archive-report/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `report_ids=${selectedReportIds.join(',')}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while archiving the reports.');
+                });
+            }
         }
     });
 });
-
 
 </script>
 
