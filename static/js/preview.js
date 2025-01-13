@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('report-preview-modal');
     const modalStatus = document.querySelector('#modal-status');
     const editButton = document.querySelector('.btn-edit');
+    const resolveButtons = document.querySelectorAll('.resolve-button');
     
     let selectedRow = null;
     let selectedCheckboxCount = 0;  // Track selected checkboxes
@@ -160,6 +161,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const senderContact = row.getAttribute('data-sender-contact');
         const fireTeam = row.getAttribute('data-team');
         const status = row.getAttribute('data-status');
+        const isArchived = row.dataset.archive === 'true'; // Check 'true' as a string
+
 
         // Set the modal status text
         if (modalStatus) {
@@ -202,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('safety-num').value = safetyOfficerContact;
         document.getElementById('sender').value = sender;
         document.getElementById('sender-num').value = senderContact;
+        document.getElementById('is_archived').value = isArchived;
 
         // Handle proof image
         const proofImg = document.getElementById('proof');

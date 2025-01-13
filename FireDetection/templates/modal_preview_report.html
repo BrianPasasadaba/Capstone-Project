@@ -8,8 +8,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="modal-title">Initial Report</h3>
-                <div class="edit-form">
-                    <button class="btn btn-edit" id="edit-button-{{ report.id }}">
+                <div class="edit-form" id="edit-button">
+                    <button class="btn btn-edit" id="edit-button" >
                         <i class="bi bi-pencil-square" id="edit-icon-{{ report.id }}"></i>
                         <span id="edit-text-{{ report.id }}">Edit</span>
                     </button>
@@ -231,7 +231,7 @@
                             <button type="button" class="btn btn-lg px-4 copy-button" onclick="copyModalContent()">
                                 Copy
                             </button>                            
-                            <button  type="submit" class="btn btn-lg px-4 resolve-button"  >
+                            <button  type="submit" class="btn btn-lg px-4 resolve-button" id="resolve-button" >
                                 Resolve
                             </button>
                             <button  type="submit" class="btn btn-lg px-4 save-button"  id="saveButton"  style="display: none;" >
@@ -249,6 +249,41 @@
 {% endfor %}
 <script src="{% static 'js/prev_report_search.js' %}"></script>
 <script src="{% static 'js/format_numbers.js' %}"></script>
+
+<script>
+    // Add an event listener to all rows in the archive table
+document.querySelector('#archiveTable').addEventListener('click', function (event) {
+    // Find the closest row (tr) that was clicked
+    const row = event.target.closest('tr');
+    
+    if (row) {
+        // Get the `data-archive` attribute value
+        const isArchived = row.getAttribute('data-archive') === 'true';
+
+        if (isArchived) {
+            // Hide the Resolve button
+            document.querySelectorAll('.resolve-button').forEach(button => {
+                button.style.display = 'none';
+            });
+
+            // Hide the Edit button
+            document.querySelectorAll('.btn-edit').forEach(button => {
+                button.style.display = 'none';
+            });
+        } else {
+            // Show the buttons if the report is not archived
+            document.querySelectorAll('.resolve-button').forEach(button => {
+                button.style.display = 'block';
+            });
+
+            document.querySelectorAll('.btn-edit').forEach(button => {
+                button.style.display = 'block';
+            });
+        }
+    }
+});
+
+</script>
 
 
 <script>

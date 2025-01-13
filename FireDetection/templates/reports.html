@@ -267,7 +267,7 @@
                                         data-sender="{{ report.name_of_sender|default:'None' }}"
                                         data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
                                         data-team="{{ report.team|default:'None' }}" 
-                                        
+                                        data-archive="{{ report.is_archived|yesno:'true,false'}}"                   
                                         >
                                         <td>
                                             <input class="form-check-input r-check" type="checkbox" value="{{ report.id }}" id="checkbox-{{ report.id }}">
@@ -276,6 +276,7 @@
                                         <td>{{ report.where|default:'None' }}</td>
                                         <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
                                         <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
+                                        
                                         <td>
                                             <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
                                         </td>
@@ -338,6 +339,66 @@
 <!-- <script src="{% static 'js/pagination.js' %}"></script> -->
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const reportTable = document.getElementById('archiveTable'); // Main report table
+
+    reportTable.addEventListener('click', function (event) {
+        const clickedRow = event.target.closest('tr');
+
+        if (!clickedRow || !clickedRow.dataset.reportId) return;
+
+        const reportId = clickedRow.dataset.reportId;
+        const isArchived = clickedRow.dataset.archive === 'true'; // Check 'true' as a string
+        console.log(`Clicked row with Report ID: ${reportId}, isArchived: ${isArchived}`);
+
+        // Dynamically select the three elements based on reportId
+        const editButton = document.getElementById(`edit-button`);
+        const editIcon = document.getElementById(`edit-icon-${reportId}`);
+        const editText = document.getElementById(`edit-text-${reportId}`);
+        const resolveButtons = document.querySelectorAll('.resolve-button');
+
+        if (isArchived) {
+            console.log('Report is archived. Hiding edit button, icon, and text.');
+
+            // Hide the edit button, icon, and text
+            if (editButton) {
+                editButton.style.display = 'none';
+            }
+            if (editIcon) {
+                editIcon.style.display = 'none';
+            }
+            if (editText) {
+                editText.style.display = 'none';
+            }
+
+            resolveButtons.forEach((button) => {
+                button.style.display = 'none';
+            });
+        } else {
+            console.log('Report is not archived. Showing edit button, icon, and text.');
+
+            // Show the edit button, icon, and text
+            if (editButton) {
+                editButton.style.display = 'block';
+            }
+            if (editIcon) {
+                editIcon.style.display = 'inline'; // Ensure it is visible
+            }
+            if (editText) {
+                editText.style.display = 'inline'; // Ensure it is visible
+            }
+
+            resolveButtons.forEach((button) => {
+                button.style.display = 'block';
+            });
+        }
+    });
+});
+
+
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -563,6 +624,10 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                     // Clear checkboxes in archive table
                     document.querySelectorAll('#archiveTable .r-check').forEach(checkbox => {
                         checkbox.checked = false;
+                    document.querySelectorAll('.resolve-button, .btn-edit, .btn-archive').forEach(button => {
+                button.style.display = 'block'; // Show buttons in the reports tab
+            });
+            
                     });
                 } else if (target === '#archives') {
                     $('#reportTable_wrapper').hide();
