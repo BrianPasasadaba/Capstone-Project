@@ -326,7 +326,6 @@
 </aside>
     {% include "modal_dismiss_confirm.html" %}
     {% include "modal_log_out.html" %}
-    {% include "modal_createrp_success.html"%}
     <!-- SVG Background -->
     <div class="top-divider">
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 308" fill="none">
@@ -601,16 +600,7 @@ document.addEventListener('DOMContentLoaded', async function(){
 
                             this.sendReportActionBroadcast(reportId);
 
-                            // Show success modal
-                            const successModal = document.getElementById('createrp-success-modal');
-                            const successModalInstance = new bootstrap.Modal(successModal);
-                            successModalInstance.show();
-
-                            // Add event listener to OK button
-                            document.getElementById('modal-ok-button').addEventListener('click', () => {
-                                successModalInstance.hide();
-                                location.reload();
-                            });
+                            location.reload();
                         } else {
                             console.error('Failed to transfer report');
                             // Optionally show a user-friendly error message
