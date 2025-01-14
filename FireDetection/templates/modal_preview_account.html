@@ -231,14 +231,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Validate Contact Number
             const phoneNumber = contactField.value.trim();
-            if (!contactPattern.test(phoneNumber)) {
+            if (!phoneNumber) {
                 contactField.style.border = '1px solid red';
-                contactWarning.textContent = 'Phone number must be exactly 11 digits.';
+                contactWarning.textContent = 'Contact number is required.';
                 contactWarning.style.display = 'inline';
                 hasErrors = true;
-            } else if (!startsWith09Pattern.test(phoneNumber)) {
+            }
+            // Check if the contact number starts with "09"
+            else if (!startsWith09Pattern.test(phoneNumber)) {
                 contactField.style.border = '1px solid red';
                 contactWarning.textContent = 'Contact number must start with "09".';
+                contactWarning.style.display = 'inline';
+                hasErrors = true;
+            }
+            // Check if the contact number is exactly 11 digits
+            else if (!contactPattern.test(phoneNumber)) {
+                contactField.style.border = '1px solid red';
+                contactWarning.textContent = 'Phone number must be exactly 11 digits.';
                 contactWarning.style.display = 'inline';
                 hasErrors = true;
             }
