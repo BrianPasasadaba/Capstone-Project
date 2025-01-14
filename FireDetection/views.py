@@ -419,7 +419,8 @@ def export_initial_report(request):
     reports = InitialReport.objects.annotate(report_year=ExtractYear('date_reported'))
     if selected_year:
         reports = reports.filter(report_year=int(selected_year))
-    reports = reports.filter(status__in=['Case Closed', 'Ongoing']).values(*fields)
+
+    reports = reports.filter(is_archived=False, status__in=['Case Closed', 'Ongoing']).values(*fields)
 
     for row_num, report in enumerate(reports, 4):  
         no_value = row_num - 3  
@@ -469,26 +470,25 @@ def change_password(request):
         confirm_password = request.POST.get('confirm_password')
 
         if new_password != confirm_password:
-            messages.error(request, 'Passwords do not match.')
-            return redirect(request.META.get('HTTP_REFERER', 'analytics'))
+            return JsonResponse({'success': False, 'message': 'Passwords do not match.'})
 
         user = request.user
-
         user.set_password(new_password)
         user.save()
 
+        # Update session authentication hash
         update_session_auth_hash(request, user)
 
         # Prepare email context
         context = {
             'user': user,
-            'date': timezone.now(),
-            'year': timezone.now().year,
+            'date': now(),
+            'year': now().year,
         }
 
         # Render HTML email
         html_message = render_to_string('emails/forgot_password_confirmation.html', context)
-        plain_message = strip_tags(html_message)  # Create plain text version
+        plain_message = strip_tags(html_message)
 
         # Send email
         send_mail(
@@ -499,13 +499,11 @@ def change_password(request):
             html_message=html_message,
             fail_silently=False,
         )
-        
-        messages.success(request, 'Password reset successful! A confirmation email has been sent.')
 
-        return redirect(request.META.get('HTTP_REFERER', 'analytics'))
+        # Return success response
+        return JsonResponse({'success': True, 'message': 'Password reset successful!'})
 
-    return render(request, 'analytics.html')
-
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 def generate_random_password(length=10):
     """Generates a random password."""
@@ -564,16 +562,20 @@ def forgot_password_view(request):
 def check_email_exists(request):
     email = request.GET.get('email', None)
     phone = request.GET.get('phone_number', None)  # Get the phone number from the request
+    account_id = request.GET.get('account_id', None)  # Get the account ID from the request
 
     response_data = {}
 
     if email:
-        response_data['email_exists'] = CustomUser.objects.filter(email=email).exists()
+        # Exclude the current account from the email existence check
+        response_data['email_exists'] = CustomUser.objects.filter(email=email).exclude(id=account_id).exists()
 
     if phone:
-        response_data['phone_exists'] = CustomUser.objects.filter(contact_number=phone).exists()
+        # Exclude the current account from the phone existence check
+        response_data['phone_exists'] = CustomUser.objects.filter(contact_number=phone).exclude(id=account_id).exists()
 
     return JsonResponse(response_data)
+
 
 
 @login_required
@@ -629,6 +631,7 @@ def register_view(request):
 
                 account_added = True
                 messages.success(request, 'Account has been added successfully.')
+                accounts = CustomUser.objects.all().order_by('name')  # Alphabetical order
                 return render(request, 'admin_home.html', {'accounts': CustomUser.objects.all(), 'account_added': account_added})
             except ValidationError as e:
                 messages.error(request, f'Validation error: {e.message}')
@@ -686,7 +689,6 @@ def login_view(request):
     return render(request, 'login.html')
 
 
-
 @login_required
 def logout_view(request):
     logout(request)
@@ -696,19 +698,54 @@ def logout_view(request):
     response['Pragma'] = 'no-cache'
     return response
 
+@csrf_exempt
+def archive_report(request):
+    if request.method == 'POST':
+        report_ids = request.POST.get('report_ids', '').split(',')
+
+        if not report_ids:
+            return JsonResponse({'success': False, 'message': 'No report IDs provided.'}, status=400)
+
+        try:
+            reports = InitialReport.objects.filter(id__in=report_ids)
+            reports.update(is_archived=True)
+
+            return JsonResponse({'success': True, 'message': 'Reports archived successfully.'})
+
+        except InitialReport.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'One or more reports not found.'}, status=404)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
+
 
 @login_required
 def reports_view(request):
-    reports = InitialReport.objects.order_by('-date_reported', '-time_reported')
-    archived_Reports = InitialReport.objects.filter(is_archived = True).order_by('-date_reported', '-time_reported')
+    reports = InitialReport.objects.filter(is_archived=False).order_by('-date_reported', '-time_reported')
+    archived_Reports = InitialReport.objects.filter(is_archived=True).order_by('-date_reported', '-time_reported')
+
+    
+    report_added = request.session.get('report_added', False)
+
+    if 'report_added' in request.session:
+        del request.session['report_added']
+
     context = {
         'reports': reports,
-        'archived_Reports':archived_Reports
+        'archived_Reports': archived_Reports,
+        'report_added': report_added,
     }
     return render(request, 'reports.html', context)
 
 
-
+def export_years_view(request):
+    # Fetch unique years from unarchived reports
+    years = (
+        InitialReport.objects.filter(is_archived=False)
+        .annotate(year=ExtractYear('date_reported'))
+        .values_list('year', flat=True)
+        .distinct()
+    )
+    return JsonResponse({'years': sorted(years, reverse=True)})
 
 @login_required
 def create_report_view(request):
@@ -861,7 +898,8 @@ def create_report_view(request):
 
             # Add context variable to trigger the modal in template
             messages.success(request, 'Report has been submitted successfully.')
-            return render(request, 'create_reports.html', {'report_added': True})  # Pass context variable
+            request.session['report_added'] = True
+            return redirect('reports') 
 
         except ValidationError as e:
             messages.error(request, f"Error submitting report: {e.message}")

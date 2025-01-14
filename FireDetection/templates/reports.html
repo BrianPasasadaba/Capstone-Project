@@ -38,9 +38,24 @@
                         Hotline
                     </button>
                     <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
-                        <li class="dropdown-item">(610) 888-1111</li>
-                        <li class="dropdown-item">(610) 888-1111</li>
-                        <li class="dropdown-item">(610) 888-1111</li>
+                        <li class="dropdown-item"><span>Aplaya</span> 0905-566-6329</li>
+                        <li class="dropdown-item"><span>Balibago</span> 0945-757-8480</li>
+                        <li class="dropdown-item"><span>Caingin</span> 0927-950-0416</li>
+                        <li class="dropdown-item"><span>Dila</span> 0915-284-4003</li>
+                        <li class="dropdown-item"><span>Dita</span> 0949-766-6068</li>
+                        <li class="dropdown-item"><span>Don</span> Jose 0947-631-5504</li>
+                        <li class="dropdown-item"><span>Ibaba</span> 0923-744-0740</li>
+                        <li class="dropdown-item"><span>Kanluran</span> 0923-089-2694</li>
+                        <li class="dropdown-item"><span>Labas</span> 0923-089-2347</li>
+                        <li class="dropdown-item"><span>Macabling</span> 0915-945-1534</li>
+                        <li class="dropdown-item"><span>Malitlit</span> 0975-067-3385</li>
+                        <li class="dropdown-item"><span>Malusak</span> 0908-775-2302</li>
+                        <li class="dropdown-item"><span>Market</span> Area 0923-744-0847</li>
+                        <li class="dropdown-item"><span>Pooc</span> 0906-143-0029</li>
+                        <li class="dropdown-item"><span>P. Sta. Cruz</span> 502-0896</li>
+                        <li class="dropdown-item"><span>Sto. Domingo</span> 0919-932-9353</li>
+                        <li class="dropdown-item"><span>Sinalhan</span> 0943-129-7131</li>
+                        <li class="dropdown-item"><span>Tagapo</span> 0923-406-2704</li>
                     </ul>
                 </div>
                 <div class="dropdown">
@@ -74,12 +89,35 @@
                             <input type="text" id="searchInput" class="search-report" placeholder="Search" maxlength="30">
                             <ul id="suggestionsBox" class="dropdown-menu"></ul>
                         </div>
-                        
+                    <div class="rb-group">
                         <div class="create-button">
                             <!-- <a class="btn-create btn-lg btn" data-bs-toggle="modal" data-bs-target="#create-report-modal"><i class="bi bi-plus-circle px-1"></i>Create Report</a> -->
                             <a class="btn-create btn-lg btn" href="{% url 'create_reports' %}"><i class="bi bi-plus-circle px-1"></i>Create Report</a>
                             
                         </div>
+                        <div class="rb-export">
+                            <div class="input-group">
+
+                                <button class="btn btn-excel dropdown-toggle" type="button" id="exportButton" data-bs-toggle="dropdown" aria-expanded="false">Export Options</button>
+
+                                <ul class="dropdown-menu export-opt" aria-labelledby="exportButton" id="yearDropdown">
+                                    {% for year in years %}
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="handleExport({{ year }})">
+                                                Export {{ year }} Reports
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+
+                            </div>          
+                            
+                            <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
+                                No data available.
+                            </div>
+                        </div>
+                    </div>
+                        
                     </div>
                     
                     <div class="rbh-right">
@@ -117,7 +155,7 @@
                             data-bs-target="#report-preview-modal"
                             disabled><i class="bi bi-eye-fill" ></i> View</button>
 
-                            <button type="button" class="btn btn-sm btn-archive" disabled><i class="bi bi-archive-fill"></i>Archive</button>
+                            <button type="button" class="btn btn-sm btn-archive" id="archiveBtn" disabled><i class="bi bi-archive-fill"  data-report-id="{{ report.id }}" ></i>Archive</button>
                         </div>
                     </div>
                     <div class="tab-content" id="reportTabsContent">
@@ -172,7 +210,7 @@
                                         
                                         >
                                         <td>
-                                            <input class="form-check-input r-check" type="checkbox" value="" id="defaultCheck1">
+                                            <input class="form-check-input r-check" type="checkbox" value="{{ report.id }}" id="checkbox-{{ report.id }}">
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
@@ -244,15 +282,16 @@
                                         data-sender="{{ report.name_of_sender|default:'None' }}"
                                         data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
                                         data-team="{{ report.team|default:'None' }}" 
-                                        
+                                        data-archive="{{ report.is_archived|yesno:'true,false'}}"                   
                                         >
                                         <td>
-                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <input class="form-check-input r-check" type="checkbox" value="{{ report.id }}" id="checkbox-{{ report.id }}">
                                         </td>
                                         <td>{{ report.fir_number|default:'None' }}</td>
                                         <td>{{ report.where|default:'None' }}</td>
                                         <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
                                         <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
+                                        
                                         <td>
                                             <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
                                         </td>
@@ -273,68 +312,6 @@
                             </table>
                         </div>
                 </div>
-                <div class="rb-footer">
-                    <div class="rb-group">
-                        <div class="rb-export">
-                            <!-- <div class="input-group mb-3">
-                                <span class="input-group-text" id="export-icon" onclick="handleExport()"><i class="bi bi-file-earmark-arrow-down"></i></span>
-                                <select class="form-select" id="exportSelect" aria-label="Default select example">
-                                    <option value="1">Export to Excel</option>
-                                  </select>
-                            </div> -->
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="export-icon"><i class="bi bi-file-earmark-arrow-down"></i>
-                                </span>
-
-                                <button class="btn btn-excel dropdown-toggle" type="button" id="exportButton" data-bs-toggle="dropdown" aria-expanded="false">Export Options</button>
-
-                                <ul class="dropdown-menu export-opt" aria-labelledby="exportButton" id="yearDropdown">
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('seventhYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('sixthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('fifthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('fourthYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('thirdYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('secondYear')">Export {} Reports</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="handleExport('firstYear')">Export {} Reports</a>
-                                    </li>
-                                </ul>
-
-                            </div>          
-                            
-                            <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
-                                No data available.
-                            </div>
-                            <!--
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-end">
-                                    <li class="page-item prev disabled">
-                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                    </li>
-                                    <li class="page-item" data-page="1"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item" id="button2" data-page="2"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item" id="button3" data-page="3"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item next">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>   -->
-                        </div>
-                            <!-- <button type="button" class="btn btn-lg btn">Export</button> -->
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -348,6 +325,7 @@
 
 </main>
 
+{% include "modal_createrp_success.html" %}
 {% include "modal_create_report.html" %}
 {% include "modal_preview_report.html" %}
 {% include "modal_change_password.html" %}
@@ -359,6 +337,7 @@
 {% include "modal_terms_condi_log.html" %}
 {% include "modal_resolve_confirm.html" %}
 {% include "modal_editrp_success.html" %}
+{% include "modal_archive_report.html" %}
 
 {% endblock %}
 
@@ -376,11 +355,177 @@
 <script src="{% static 'js/editing.js' %}"></script>
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const reportTable = document.getElementById('archiveTable'); // Main report table
+
+    reportTable.addEventListener('click', function (event) {
+        const clickedRow = event.target.closest('tr');
+
+        if (!clickedRow || !clickedRow.dataset.reportId) return;
+
+        const reportId = clickedRow.dataset.reportId;
+        const isArchived = clickedRow.dataset.archive === 'true'; // Check 'true' as a string
+        console.log(`Clicked row with Report ID: ${reportId}, isArchived: ${isArchived}`);
+
+        // Dynamically select the three elements based on reportId
+        const editButton = document.getElementById(`edit-button`);
+        const editIcon = document.getElementById(`edit-icon-${reportId}`);
+        const editText = document.getElementById(`edit-text-${reportId}`);
+        const resolveButtons = document.querySelectorAll('.resolve-button');
+
+        if (isArchived) {
+            console.log('Report is archived. Hiding edit button, icon, and text.');
+
+            // Hide the edit button, icon, and text
+            if (editButton) {
+                editButton.style.display = 'none';
+            }
+            if (editIcon) {
+                editIcon.style.display = 'none';
+            }
+            if (editText) {
+                editText.style.display = 'none';
+            }
+
+            resolveButtons.forEach((button) => {
+                button.style.display = 'none';
+            });
+        } else {
+            console.log('Report is not archived. Showing edit button, icon, and text.');
+
+            // Show the edit button, icon, and text
+            if (editButton) {
+                editButton.style.display = 'block';
+            }
+            if (editIcon) {
+                editIcon.style.display = 'inline'; // Ensure it is visible
+            }
+            if (editText) {
+                editText.style.display = 'inline'; // Ensure it is visible
+            }
+
+            resolveButtons.forEach((button) => {
+                button.style.display = 'block';
+            });
+        }
+    });
+});
+
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Check if the report_added context variable is true
+        {% if report_added %}
+            const successModal = new bootstrap.Modal(document.getElementById('createrp-success-modal'));
+            successModal.show();
+        {% endif %}
+
+        // Handle the OK button click to redirect
+        const modalOkButton = document.getElementById('modal-ok-button');
+        modalOkButton.addEventListener('click', function () {
+            window.location.href = '{% url "reports" %}'; // Redirect to the reports page
+        });
+    });
+</script>
+
+<script>
+document.querySelectorAll('.r-check').forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+        const selectedReports = [];
+        document.querySelectorAll('.r-check:checked').forEach((checkedCheckbox) => {
+            selectedReports.push(checkedCheckbox.value);
+        });
+        console.log('Selected Report IDs:', selectedReports);
+    });
+});
+
+</script>
+
+<script>
+    var selectedReportIds = []; // Array to store multiple selected report IDs
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const reportTable = document.getElementById('reportTable');
+    const archiveButton = document.getElementById('archiveBtn');
+    const archiveModalElement = document.getElementById('archive-report-modal');
+    const archiveModal = new bootstrap.Modal(archiveModalElement);
+
+    // Function to update the state of the Archive button
+    function updateArchiveButtonState() {
+        if (selectedReportIds.length > 0) {
+            archiveButton.removeAttribute('disabled');
+            archiveButton.style.opacity = '1';
+        } else {
+            archiveButton.setAttribute('disabled', true);
+            archiveButton.style.opacity = '0.5';
+        }
+    }
+
+    // Click event listener for rows in the report table
+    document.querySelectorAll('.r-check').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const reportId = checkbox.value;
+
+            if (checkbox.checked) {
+                // Add the report ID to the array if the checkbox is checked
+                if (!selectedReportIds.includes(reportId)) {
+                    selectedReportIds.push(reportId);
+                }
+            } else {
+                // Remove the report ID from the array if the checkbox is unchecked
+                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
+            }
+            updateArchiveButtonState();
+        });
+    });
+
+    // Click event for the Archive button to show the modal
+    archiveButton.addEventListener('click', function () {
+        if (selectedReportIds.length > 0) {
+            archiveModal.show();
+        }
+    });
+
+    // Event delegation for the Confirm button in the modal
+    archiveModalElement.addEventListener('click', function (event) {
+        if (event.target && event.target.id === 'confirmRemoveButton') {
+            if (selectedReportIds.length > 0) {
+                fetch('/archive-report/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `report_ids=${selectedReportIds.join(',')}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while archiving the reports.');
+                });
+            }
+        }
+    });
+});
+
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let activeTable;
-    
+        const viewButton = document.querySelector('.btn-view');
+        const archiveButton = document.getElementById('archiveBtn');
 
     
         // Initialize DataTables with custom configuration
@@ -390,6 +535,7 @@
             lengthChange: false,
             ordering: true,
             paging: true,
+            pagingType: 'full_numbers',
             pageLength: 10,
             info: false, 
             columnDefs: [
@@ -397,14 +543,36 @@
                 { className: "dt-body-center", targets: "_all"},
                 { targets: "_all", orderable: false}
 
-
             ],
             language: {
                 emptyTable: "No data available",
-                zeroRecords: "No matching records found"
+                zeroRecords: "No matching records found",
+                paginate: {
+                    next: 'Next',
+                    previous: 'Previous'  
+                }
             },
             layout: {
-                topEnd: null
+                topEnd: null,
+                bottomEnd: {
+                    paging: {
+                        buttons: 3
+                    }
+                }
+            },
+            drawCallback: function() {
+                document.querySelectorAll('#reportsTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+
+                selectedReportIds = [];
+                console.log("Report ID array after draw:", selectedReportIds);
+                archiveButton.setAttribute('disabled', true);
+                archiveButton.style.opacity = '0.5';
+                archiveButton.removeAttribute('data-report-ids');
+                console.log("Archive Disabled")
+                viewButton.setAttribute('disabled', true);
+                selectedCheckboxCount = 0;
+
             }
         });
     
@@ -414,6 +582,7 @@
             lengthChange: false,
             ordering: true,
             paging: true,
+            pagingType: 'full_numbers',
             pageLength: 10,
             info: false,
             columnDefs: [
@@ -424,10 +593,27 @@
             ],
             language: {
                 emptyTable: "No data available",
-                zeroRecords: "No matching records found"
+                zeroRecords: "No matching records found",
+                paginate: {
+                    next: 'Next',
+                    previous: 'Previous'  
+                }
             },
             layout: {
-                topEnd: null
+                topEnd: null,
+                bottomEnd: {
+                    paging: {
+                        buttons: 3
+                    }
+                }
+            },
+            drawCallback: function() {
+                document.querySelectorAll('#archivesTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+
+                selectedReportIds = [];
+                viewButton.setAttribute('disabled', true);
+                selectedCheckboxCount = 0;
             }
         });
     
@@ -436,7 +622,29 @@
     
         // Hide archive table initially
         $('#archiveTable_wrapper').hide();
-    
+
+        function updateArchiveButton() {
+            // First check if we're on the archive table
+            if (activeTable === archiveTable) {
+                archiveButton.style.display = 'none'; // Hide the button completely
+                return; // Exit the function early
+            }
+            
+            // Show the button since we're on the report table
+            archiveButton.style.display = 'inline-block';
+            
+            // Then handle the enable/disable state
+            if (selectedReportIds.length > 0) {
+                archiveButton.removeAttribute('disabled');
+                archiveButton.style.opacity = '1';
+                archiveButton.setAttribute('data-report-ids', selectedReportIds.join(','));
+            } else {
+                archiveButton.setAttribute('disabled', true);
+                archiveButton.style.opacity = '0.5';
+                archiveButton.removeAttribute('data-report-ids');
+            }
+        }
+
         // Tab switching logic with filter reset
         document.querySelectorAll('#reportTabs button').forEach((tab) => {
             tab.addEventListener('click', function () {
@@ -446,11 +654,38 @@
                     $('#archiveTable_wrapper').hide();
                     $('#reportTable_wrapper').show();
                     activeTable = reportTable;
+                    
+                    // Clear checkboxes in archive table
+                    document.querySelectorAll('#archiveTable .r-check').forEach(checkbox => {
+                        checkbox.checked = false;
+                    document.querySelectorAll('.resolve-button, .btn-edit, .btn-archive').forEach(button => {
+                        button.style.display = 'block'; // Show buttons in the reports tab
+                    });
+                    viewButton.setAttribute('disabled', true); // Disable the view button
+                    selectedCheckboxCount = 0;
+            
+                    });
                 } else if (target === '#archives') {
                     $('#reportTable_wrapper').hide();
                     $('#archiveTable_wrapper').show();
                     activeTable = archiveTable;
+                    
+                    // Clear checkboxes in report table
+                    document.querySelectorAll('#reportTable .r-check').forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                    viewButton.setAttribute('disabled', true); // Disable the view button
+                    selectedCheckboxCount = 0;
                 }
+        
+                // Reset the selected report ID and hidden input
+                selectedReportIds = [];
+                selectedReportId = null;
+                hiddenReportIdInput.value = '';
+                updateArchiveButton();
+                console.log("Report ID array after switching tabs:", selectedReportIds);
+                console.log("Selected Report ID after switching tabs:", selectedReportId);
+                console.log("Hidden Report ID after switching tabs:", hiddenReportIdInput.value);
     
                 // Reset search input and filters for the new active table
                 searchInput.value = '';
@@ -514,75 +749,41 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const reportTable = document.getElementById('reportTable');
-    const archiveTable = document.getElementById('archiveTable');  // Archive table
 
-    // Function to enable or disable the "View" button for a row
-    function handleCheckboxChange(event, table) {
-        const checkbox = event.target;
-        const row = checkbox.closest('tr');
-        const viewButton = row.querySelector('.btn-view');
-
-        if (checkbox.checked) {
-            viewButton.removeAttribute('disabled');
-        } else {
-            viewButton.setAttribute('disabled', true);
-        }
-    }
-
-    // Event listener to enable/disable "View" button for both tables
-    reportTable.addEventListener('change', function (event) {
-        if (event.target.classList.contains('report-checkbox')) {
-            handleCheckboxChange(event, reportTable);
-        }
-    });
-
-    archiveTable.addEventListener('change', function (event) {
-        if (event.target.classList.contains('report-checkbox')) {
-            handleCheckboxChange(event, archiveTable);
-        }
-    });
-
-    // Prevent modal opening if the button is clicked but the checkbox is unchecked
-    function preventModalIfUnchecked(event, table) {
-        const button = event.target.closest('.btn-view');
-        const row = button.closest('tr');
-        const checkbox = row.querySelector('.report-checkbox');
-
-        if (!checkbox.checked) {
-            console.log('Checkbox not checked, preventing modal from opening.');
-            event.preventDefault(); // Prevent Bootstrap modal from triggering
-        }
-    }
-
-    // Event listener to prevent modal opening for both tables
-    reportTable.addEventListener('click', function (event) {
-        if (event.target.closest('.btn-view')) {
-            preventModalIfUnchecked(event, reportTable);
-        }
-    });
-
-    archiveTable.addEventListener('click', function (event) {
-        if (event.target.closest('.btn-view')) {
-            preventModalIfUnchecked(event, archiveTable);
-        }
-    });
-});
 </script>
 
 <script>
-    function populateYears() {
-        const currentYear = new Date().getFullYear();
-        const totalYears = 7;
-        const dropdown = document.getElementById("yearDropdown");
-    
-        dropdown.innerHTML = ""; 
-    
-        for (let i = 0; i < totalYears; i++) {
-            const year = currentYear - i; 
-            const ordinal = getOrdinalName(i + 1);
-    
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdown = document.getElementById("yearDropdown");
+
+    // Function to fetch unique years from the backend
+    async function fetchUniqueYears() {
+        try {
+            const response = await fetch('/export-years/');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.years;
+        } catch (error) {
+            console.error('Error fetching unique years:', error);
+            return [];
+        }
+    }
+
+    // Function to populate the dropdown with fetched years
+    async function populateYears() {
+        const years = await fetchUniqueYears();
+        dropdown.innerHTML = ""; // Clear existing items
+
+        if (years.length === 0) {
+            const listItem = document.createElement("li");
+            listItem.textContent = "No available years";
+            dropdown.appendChild(listItem);
+            return;
+        }
+
+        years.forEach(year => {
             const listItem = document.createElement("li");
             listItem.innerHTML = `
                 <a class="dropdown-item" href="#" onclick="handleExport(${year})">
@@ -590,53 +791,65 @@ document.addEventListener('DOMContentLoaded', function () {
                 </a>
             `;
             dropdown.appendChild(listItem);
+        });
+    }
+
+    // Call populateYears on page load
+    populateYears();
+});
+
+async function handleExport(year) {
+    try {
+        const response = await fetch(`/export-initial-report/?value=${year}`);
+        if (!response.ok) {
+            console.error('Download failed:', response.statusText);
+            return;
         }
-    }
-    
-    function getOrdinalName(position) {
-        const ordinals = ["firstYear", "secondYear", "thirdYear", "fourthYear", "fifthYear", "sixthYear", "seventhYear"];
-        return ordinals[position - 1] || "";
-    }
-    
-    async function handleExport(year) {
-        try {
-            const response = await fetch(`/export-initial-report/?value=${year}`);
-            
-            if (response.ok) {
-                // Get the filename from the Content-Disposition header if available
-                const contentDisposition = response.headers.get('Content-Disposition');
-                const filename = contentDisposition
-                    ? contentDisposition.split('filename=')[1].replace(/["']/g, '')
-                    : `report-${year}.pdf`;
-    
-                // Create a blob from the response
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                
-                // Create a temporary link and trigger download
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Clean up the blob URL
-                window.URL.revokeObjectURL(url);
-    
-                // Reload the page after successful download
+
+        // Get the filename from the Content-Disposition header if available
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition
+            ? contentDisposition.split('filename=')[1].replace(/["']/g, '')
+            : `report-${year}.pdf`;
+
+        // Create a blob from the response
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary link and trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL
+        window.URL.revokeObjectURL(url);
+
+        // Validate download success before reloading
+        const validateDownload = () => {
+            return new Promise((resolve) => {
+                // Give time for the download to start
                 setTimeout(() => {
-                    window.location.reload();
-                }, 1000); // Wait 1 second to ensure download starts
-            } else {
-                console.error('Download failed:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error during download:', error);
+                    // You could add additional validation here if needed
+                    resolve(true);
+                }, 1000);
+            });
+        };
+
+        // Only reload after successful validation
+        const downloadSuccessful = await validateDownload();
+        if (downloadSuccessful) {
+            window.location.reload();
         }
+    } catch (error) {
+        console.error('Error during download:', error);
     }
-    
-    window.onload = populateYears;
+}
+
+// Initialize on window load
+window.onload = populateYears;
 </script>
 
 
@@ -650,48 +863,6 @@ document.getElementById('searchInput').addEventListener('input', function (e) {
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const reportTable = document.getElementById('reportTable');
-    const hiddenReportIdInput = document.getElementById('report-id');
-    const modal = document.getElementById('report-preview-modal');
-    let selectedReportId = null; // Store the selected report ID
-
-    // Click event for selecting a row
-    reportTable.addEventListener('click', function (event) {
-        const clickedRow = event.target.closest('tr');
-        
-        // Proceed only if the clicked row has the data-report-id attribute
-        if (clickedRow && clickedRow.dataset.reportId) {
-            selectedReportId = clickedRow.dataset.reportId; // Store the report ID
-            console.log('Row selected. Report ID:', selectedReportId);
-
-            // Update the hidden input with the selected report ID
-            hiddenReportIdInput.value = selectedReportId;
-            console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
-        }
-    });
-
-    // "View" button click event
-    const viewButton = document.querySelector('.btn-view'); // Assuming there is only one "View" button
-    viewButton.addEventListener('click', function (event) {
-        // Only show modal if a report ID has been selected
-        if (selectedReportId) {
-            console.log('Opening preview modal for Report ID:', selectedReportId);
-            
-            // Populate the modal with the selected report ID (or any other data)
-            // You can add the functionality to populate the modal fields here if needed
-            const bootstrapModal = new bootstrap.Modal(modal);
-            bootstrapModal.show();
-        } else {
-            console.log('No row selected. Preventing modal from opening.');
-            event.preventDefault(); // Prevent modal from opening if no row is selected
-        }
-    });
-});
-
-
-
-
     document.addEventListener('DOMContentLoaded', function () {
     const editButton = document.querySelector('.edit-form .btn-edit');
     const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
@@ -971,30 +1142,41 @@ saveButton.addEventListener('click', function (event) {
         })
         .then(data => {
             if (data.status === 'success') {
-                console.log('Report updated successfully.');
+            console.log('Report updated successfully.');
 
-                // Close the report preview modal
-                const reportPreviewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
+            // Close the report preview modal
+            const reportPreviewModalEl = document.getElementById('report-preview-modal');
+            const reportPreviewModal = bootstrap.Modal.getInstance(reportPreviewModalEl);
+            if (reportPreviewModal) {
                 reportPreviewModal.hide();
-
-                // Show the success modal
-                const successModal = new bootstrap.Modal(document.getElementById('editrp-success-modal'));
-                successModal.show();
-
-                // Close the success modal after a short delay (e.g., 3 seconds) and redirect to reports
-                setTimeout(() => {
-                    successModal.hide();
-                    window.location.href = "/reports/";
-                }, 3000);
-            } else {
-                console.error('Error updating report:', data.message);
-                alert('Error updating report: ' + data.message);
             }
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-            alert('An error occurred. Please try again.');
-        });
+
+            sessionStorage.setItem('reportUpdatedSuccessfully', 'true');
+
+
+            // Refresh the page
+            window.location.reload(); // Refresh the page to load the updated content
+        } else {
+            console.error('Error updating report:', data.message);
+            alert('Error updating report: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+// Code to show the success modal after page reload
+window.addEventListener('load', () => {
+    const successModalEl = document.getElementById('editrp-success-modal');
+    if (successModalEl && sessionStorage.getItem('reportUpdatedSuccessfully') === 'true') {
+        const successModal = new bootstrap.Modal(successModalEl);
+        successModal.show();
+
+        // After showing the success modal, remove the flag to prevent it from showing again
+        sessionStorage.removeItem('reportUpdatedSuccessfully');
+    }
 });
 
 

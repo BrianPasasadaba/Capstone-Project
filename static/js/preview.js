@@ -1,44 +1,111 @@
-    
+var selectedReportId = null; // Store the selected report ID
+var hiddenReportIdInput = document.getElementById('report-id'); // Hidden input for report ID
+var selectedCheckboxCount = 0; // Track selected checkboxes
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const reportTable = document.getElementById('reportTable');
     const archiveTable = document.getElementById('archiveTable');  // Your archive table
     const viewButton = document.querySelector('.btn-view'); // Your existing "View" button
-    const hiddenReportIdInput = document.getElementById('report-id'); // Hidden input for report ID
     const modal = document.getElementById('report-preview-modal');
     const modalStatus = document.querySelector('#modal-status');
     const editButton = document.querySelector('.btn-edit');
+    const resolveButtons = document.querySelectorAll('.resolve-button');
     
     let selectedRow = null;
+
+
+
+    reportTable.addEventListener('click', function (event) {
+        const clickedRow = event.target.closest('tr');
+        
+        // Check if we clicked on a checkbox specifically
+        const checkbox = event.target.closest('input[type="checkbox"]');
+        
+        // Proceed only if we clicked a checkbox in a row with data-report-id
+        if (checkbox && clickedRow && clickedRow.dataset.reportId) {
+            const reportId = clickedRow.dataset.reportId;
+            
+            if (checkbox.checked) {
+                // Add the ID to our array if it's not already there
+                if (!selectedReportIds.includes(reportId)) {
+                    selectedReportIds.push(reportId);
+                }
+                console.log('Row selected for view. Report IDs:', selectedReportIds);
+                
+                // Update the hidden input with the comma-separated report IDs
+                hiddenReportIdInput.value = selectedReportIds.join(',');
+                console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
+            } else {
+                // Remove this specific ID from the array
+                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
+                
+                // Update the hidden input with the remaining IDs
+                hiddenReportIdInput.value = selectedReportIds.join(',');
+                console.log('Selection updated:', selectedReportIds);
+            }
+        }
+    });
+
+    archiveTable.addEventListener('click', function (event) {
+        const clickedRow = event.target.closest('tr');
+        
+        // Check if we clicked on a checkbox specifically
+        const checkbox = event.target.closest('input[type="checkbox"]');
+        
+        // Proceed only if we clicked a checkbox in a row with data-report-id
+        if (checkbox && clickedRow && clickedRow.dataset.reportId) {
+            const reportId = clickedRow.dataset.reportId;
+            
+            if (checkbox.checked) {
+                // Add the ID to our array if it's not already there
+                if (!selectedReportIds.includes(reportId)) {
+                    selectedReportIds.push(reportId);
+                }
+                console.log('Row selected for view. Report IDs:', selectedReportIds);
+                
+                // Update the hidden input with the comma-separated report IDs
+                hiddenReportIdInput.value = selectedReportIds.join(',');
+                console.log('Hidden Input Value Set:', hiddenReportIdInput.value);
+            } else {
+                // Remove this specific ID from the array
+                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
+                
+                // Update the hidden input with the remaining IDs
+                hiddenReportIdInput.value = selectedReportIds.join(',');
+                console.log('Selection updated:', selectedReportIds);
+            }
+        }
+    });
 
     // Function to handle checkbox change in any table (main or archive)
     function handleCheckboxChange(event) {
         const checkbox = event.target;
         const row = checkbox.closest('tr');
 
+        // Update the checkbox count
         if (checkbox.checked) {
-            selectedRow = row;
-            viewButton.removeAttribute('disabled');
+            selectedCheckboxCount++;
+        } else {
+            selectedCheckboxCount--;
+        }
 
-            // Optional: Set the report ID in a hidden input for tracking
+        // Enable the "View" button only if exactly one checkbox is selected
+        if (selectedCheckboxCount === 1) {
+            console.log('Single checkbox selected. Enabling "View" button.');
+            viewButton.removeAttribute('disabled');
+            selectedRow = row;
             if (hiddenReportIdInput) {
                 hiddenReportIdInput.value = row.dataset.reportId;
             }
         } else {
-            selectedRow = null;
             viewButton.setAttribute('disabled', true);
-
-            // Optional: Clear the hidden input
+            console.log('Multiple checkboxes selected. Disabling "View" button.');
+            selectedRow = null;
             if (hiddenReportIdInput) {
                 hiddenReportIdInput.value = '';
             }
         }
-
-        // Uncheck all other checkboxes to allow single selection
-        document.querySelectorAll('.form-check-input').forEach((input) => {
-            if (input !== checkbox) {
-                input.checked = false;
-            }
-        });
     }
 
     // Add event listener for checkbox changes in both tables
@@ -47,18 +114,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Listen for the "View" button click
     viewButton.addEventListener('click', function (event) {
-        if (!selectedRow) {
-            console.log('No row selected. Preventing modal from opening.');
-            event.preventDefault(); // Prevent modal from opening
+        // Ensure exactly one row is selected
+        if (!selectedReportIds) {
+            console.log('No report selected. Preventing modal from opening.');
+            event.preventDefault(); // Prevent modal from opening if no report is selected
             return;
         }
 
-        // Populate the modal with selected row data
-        populateModal(selectedRow);
+        // Find the row with the selected report ID
+        const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportIds}"]`);
+        
+        if (selectedRow) {
+            // Populate the modal with selected row data
 
-        // Show the modal
-        const bootstrapModal = new bootstrap.Modal(modal);
-        bootstrapModal.show();
+            console.log('Selected row found:', selectedRow);
+            populateModal(selectedRow);
+
+            // Show the modal
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        } else {
+            console.log('Selected row not found.');
+        }
     });
 
     // Function to populate the modal with selected report row data
@@ -94,6 +171,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const senderContact = row.getAttribute('data-sender-contact');
         const fireTeam = row.getAttribute('data-team');
         const status = row.getAttribute('data-status');
+        const isArchived = row.dataset.archive === 'true'; // Check 'true' as a string
+
 
         // Set the modal status text
         if (modalStatus) {
@@ -136,14 +215,22 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('safety-num').value = safetyOfficerContact;
         document.getElementById('sender').value = sender;
         document.getElementById('sender-num').value = senderContact;
+        document.getElementById('is_archived').value = isArchived;
 
         // Handle proof image
         const proofImg = document.getElementById('proof');
-        if (proof) {
+        if (proof !== 'None') {
             proofImg.src = proof;
             proofImg.style.display = 'block';
         } else {
             proofImg.style.display = 'none';
+
+            // Add a message or element when there's no proof
+            const noProofMessage = document.createElement('p');
+            noProofMessage.textContent = 'No proof image available';
+            noProofMessage.className = 'text-muted'; // Add styling class if needed
+            proofImg.parentNode.appendChild(noProofMessage);
+
         }
 
         // Resolve button handling (if needed)
@@ -158,21 +245,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
 document.addEventListener('DOMContentLoaded', function () {
-    const tbody = document.querySelector('tbody'); // Parent element for event delegation
+    const tbody = document.querySelector('tbody');
     const resolveButton = document.querySelector('.resolve-button');
     const previewModal = new bootstrap.Modal(document.getElementById('report-preview-modal'));
     const resolveWarningModal = new bootstrap.Modal(document.getElementById('resolve-warning-modal'));
     const confirmResolveButton = document.getElementById('resconfirm');
     const cancelResolveButton = document.getElementById('rescancel');
-    let selectedReportId = null; // Store the selected report ID
+    let selectedReportId = null;
 
-    // Using event delegation to handle row clicks
+    // Check if the row data is complete
+    function isRowDataComplete(row) {
+        const requiredFields = [
+            'data-location', 'data-date', 'data-time', 'data-fireout', 
+            'data-owner', 'data-alarm', 'data-damages', 'data-establishments', 
+            'data-casualties', 'data-injured', 'data-proof', 'data-involved', 
+            'data-alarm-declared-by', 'data-time-arrival', 'data-time-under-control', 
+            'data-date-under-control', 'data-fire-under-declared-by', 'data-time-fire-out', 
+            'data-date-fire-out', 'data-fire-out-declared-by', 'data-families-affected', 
+            'data-trucks', 'data-ground-commander', 'data-ground-commander-contact', 
+            'data-safety-officer', 'data-safety-officer-contact', 'data-sender', 
+            'data-sender-contact', 'data-team'
+        ];
+
+        for (let field of requiredFields) {
+            if (!row.getAttribute(field) || row.getAttribute(field) === 'None') {
+                return false; 
+            }
+        }
+        return true; 
+    }
+
     tbody.addEventListener('click', function (event) {
-        // Ensure the click target is within a row with data-report-id attribute
         const row = event.target.closest('tr[data-report-id]');
         if (row) {
-            selectedReportId = row.getAttribute('data-report-id'); // Store the report ID
+            selectedReportId = row.getAttribute('data-report-id');
             const status = row.querySelector(`#status-text-${selectedReportId}`).textContent.trim();
 
             resolveButton.setAttribute('data-report-id', selectedReportId);
@@ -185,25 +293,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 resolveButton.disabled = false;
                 resolveButton.textContent = 'Resolve';
             }
-
-            console.log('Row clicked. Selected Report ID:', selectedReportId);
         }
     });
 
-    // Handle Resolve button click
     resolveButton.addEventListener('click', function (event) {
         event.preventDefault();
 
         if (selectedReportId) {
-            // Close the preview modal and show the resolve confirmation modal
-            previewModal.hide();
-            resolveWarningModal.show();
+            const row = document.querySelector(`tr[data-report-id="${selectedReportId}"]`);
+
+            if (isRowDataComplete(row)) {
+                previewModal.hide();
+                resolveWarningModal.hide();
+                confirmResolveButton.click();
+            } else {
+                previewModal.hide();
+                resolveWarningModal.show();
+            }
         } else {
-            console.log('No report selected. Preventing modal from opening.');
+            console.log('No report selected.');
         }
     });
 
-    // Handle the confirm button click in the resolve confirmation modal
     confirmResolveButton.addEventListener('click', function () {
         if (selectedReportId) {
             const currentStatus = resolveButton.getAttribute('data-status');
@@ -233,10 +344,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
 
-                if (data.message) {
-                    console.log(data.message);
-                }
-
                 resolveWarningModal.hide();
                 window.location.href = '/reports/';
             })
@@ -246,15 +353,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Handle Cancel button in the confirmation modal
     cancelResolveButton.addEventListener('click', function () {
-        // Close the resolve confirmation modal and reopen the preview modal
         resolveWarningModal.hide();
         previewModal.show();
     });
+
 });
 
-// Get CSRF token from cookies for safe post requests
+// Get CSRF token for safe POST requests
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

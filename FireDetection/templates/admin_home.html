@@ -4,6 +4,20 @@
 
 {% block content %}
 <header>
+    <style>
+    span.dt-column-order {
+        display: none !important;
+    }
+
+    table.dataTable thead > tr > th.dt-ordering-asc {
+        padding: 0px !important; 
+    }
+
+    table.dataTable thead > tr > th.dt-ordering-desc{
+        padding: 0px !important;
+    }
+    </style>
+
     <div class="header-content">
         <div class="header-sb" >
             <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
@@ -22,9 +36,24 @@
                         Hotline
                     </button>
                     <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
-                        <li class="dropdown-item">(610) 888-1111</li>
-                        <li class="dropdown-item">(610) 888-1111</li>
-                        <li class="dropdown-item">(610) 888-1111</li>
+                        <li class="dropdown-item"><span>Aplaya</span> 0905-566-6329</li>
+                        <li class="dropdown-item"><span>Balibago</span> 0945-757-8480</li>
+                        <li class="dropdown-item"><span>Caingin</span> 0927-950-0416</li>
+                        <li class="dropdown-item"><span>Dila</span> 0915-284-4003</li>
+                        <li class="dropdown-item"><span>Dita</span> 0949-766-6068</li>
+                        <li class="dropdown-item"><span>Don</span> Jose 0947-631-5504</li>
+                        <li class="dropdown-item"><span>Ibaba</span> 0923-744-0740</li>
+                        <li class="dropdown-item"><span>Kanluran</span> 0923-089-2694</li>
+                        <li class="dropdown-item"><span>Labas</span> 0923-089-2347</li>
+                        <li class="dropdown-item"><span>Macabling</span> 0915-945-1534</li>
+                        <li class="dropdown-item"><span>Malitlit</span> 0975-067-3385</li>
+                        <li class="dropdown-item"><span>Malusak</span> 0908-775-2302</li>
+                        <li class="dropdown-item"><span>Market</span> Area 0923-744-0847</li>
+                        <li class="dropdown-item"><span>Pooc</span> 0906-143-0029</li>
+                        <li class="dropdown-item"><span>P. Sta. Cruz</span> 502-0896</li>
+                        <li class="dropdown-item"><span>Sto. Domingo</span> 0919-932-9353</li>
+                        <li class="dropdown-item"><span>Sinalhan</span> 0943-129-7131</li>
+                        <li class="dropdown-item"><span>Tagapo</span> 0923-406-2704</li>
                     </ul>
                 </div>
                 <div class="dropdown">
@@ -72,7 +101,7 @@
                 </div>
                 <div class="ab-table">
 
-                    <table>
+                    <table id="accountsTable">
                         <thead>
                             <tr>
                                 <th>Select</th>
@@ -143,23 +172,6 @@
                             Remove
                         </button>
                     </div>
-
-                    <div class="ab-pagination">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-end">
-                                <li class="page-item prev disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                </li>
-                                <li class="page-item" data-page="1"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item" id="button2" data-page="2"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item" id="button3" data-page="3"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item next">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
-                            </ul>                            
-                        </nav>
-                        
-                    </div>
                 </div>
             </div>
         </div>
@@ -176,6 +188,7 @@
 {% include "modal_terms_condi.html" %}
 {% include "modal_addacc_success.html" %}
 {% include "modal_preview_account.html" %}
+{% include "modal_editacc_success.html" %}
 
 {% endblock %}
 
@@ -183,56 +196,227 @@
 <!-- ADD SCRIPTS HERE -->
 <script src="{% static 'js/form_controls.js' %}"></script>
 <script src="{% static 'js/table_status.js' %}"></script>
-<script src="{% static 'js/filter.js' %}"></script>
-<script src="{% static 'js/pagination.js' %}"></script>
+<!-- <script src="{% static 'js/filter.js' %}"></script> -->
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
 
+
+
+
 <script>
+    let selectedEmails = [];
+
     document.addEventListener('DOMContentLoaded', function () {
-    const accountTable = document.getElementById('accountTable');
-    const nameInput = document.getElementById('prev-name');
-    const emailInput = document.getElementById('prev-email');
-    const roleSelect = document.getElementById('prev-role');
-    const contactInput = document.getElementById('prev-contact');
 
-    // Prevent checkbox clicks from propagating to the row
-    accountTable.addEventListener('click', function (event) {
-        if (event.target.classList.contains('form-check-input')) {
-            console.log('Checkbox clicked. Preventing modal from opening.');
-            event.stopPropagation(); // Stop the event from propagating to the row
-            return; // Stop further execution
+        const removeButton = document.getElementById("removeButton");
+    
+        // Initialize DataTables with custom configuration
+        const accountsTable = new DataTable('#accountsTable', {
+            responsive: false,
+            searching: true,  // Enable searching
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pagingType: 'full_numbers',
+            pageLength: 10,
+            info: false, 
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found",
+                paginate: {
+                    next: 'Next',
+                    previous: 'Previous'  
+                  }
+            },
+            layout: {
+                topEnd: null,
+                bottomEnd: {
+                    paging: {
+                        buttons: 3
+                    }
+                }
+            },
+            drawCallback: function() {
+                // Re-bind click handlers after each draw (page change, search, etc)
+                bindTableEvents();
+
+                // Clear all checkboxes on page change
+                document.querySelectorAll('#accountsTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+                
+                // Disable remove button
+                removeButton.disabled = true;
+            }
+        });
+
+        // Custom filtering functionality
+        const dropdownItems = document.querySelectorAll('.dropdown-filter .dropdown-item');
+        const searchInput = document.getElementById('accountSearchInput');
+
+        function applyFilter(filterCriteria) {
+            accountsTable.search('').columns().search('').draw(); // Clear existing filters
+
+            $.fn.dataTable.ext.search = [];
+        
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const status = $(accountsTable.row(dataIndex).node()).find('td:eq(5) span').text().trim();
+                return filterCriteria === 'All' || status === filterCriteria;
+            });
+        
+            accountsTable.draw();
         }
+        
 
-        const row = event.target.closest('tr[data-account-id]');
-        if (row) {
-            // Fetch data from the row's data attributes
-            const accountId = row.getAttribute('data-account-id');
-            const name = row.getAttribute('data-name');
-            const email = row.getAttribute('data-email');
-            const role = row.getAttribute('data-role');
-            const contact = row.getAttribute('data-contact');
-            const status = row.getAttribute('data-status');
+        // Event listener for dropdown filter
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                const filterCriteria = e.target.textContent.trim();
+                
+                // Update active state in dropdown
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                e.target.classList.add('active');
+    
+                applyFilter(filterCriteria);
+            });
+        });
 
-            console.log('Selected Account:', { accountId, name, email, role, contact, status });
+        function bindTableEvents() {
+            // Remove existing handlers first to prevent duplicates
+            $('#accountsTable tbody td').off('click');
+            
+            // Bind checkbox column clicks
+            $('#accountsTable tbody td:first-child').on('click', function(e) {
+                if (!$(e.target).hasClass('form-check-input')) {
+                    const checkbox = $(this).find('input[type="checkbox"]');
+                    if (checkbox.length) {
+                        checkbox.prop('checked', !checkbox.prop('checked'));
+                    }
+                }
+                e.stopPropagation();
+            });
+        
+            // Bind other column clicks
+            $('#accountsTable tbody td:not(:first-child)').on('click', function() {
+                const row = $(this).closest('tr');
+                
+                // Get data from row attributes
+                const accountId = row.attr('data-account-id');
+                const name = row.attr('data-name');
+                const email = row.attr('data-email');
+                const role = row.attr('data-role');
+                const contact = row.attr('data-contact');
+                const status = row.attr('data-status');
+        
+                // Populate modal
+                $('#prev-name').val(name || '');
+                $('#prev-email').val(email || '');
+                $('#prev-role').val(role || '');
+                $('#prev-contact').val(contact || '');
+        
+                console.log('Selected Account:', { accountId, name, email, role, contact, status });
+        
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('prev-account-modal'));
+                modal.show();
+            });
+        }
+        
 
-            // Populate the modal fields
-            nameInput.value = name;
-            emailInput.value = email;
-            roleSelect.value = role;
-            contactInput.value = contact;
+        // Event listener for search input
+        searchInput.addEventListener('input', function () {
+            accountsTable.search(this.value).draw();
+        });
+        
 
-            // Enable/disable fields or buttons if needed (e.g., based on status)
-            if (status === 'true') {
-                console.log('Account is verified');
+        const table = $('#accountsTable').DataTable();
+
+        // Initial disable
+        removeButton.disabled = true;
+
+        // Use event delegation for checkbox changes
+        $('#accountsTable tbody').on('change', '.account-checkbox', function() {
+            const checkboxes = document.querySelectorAll('#accountsTable .account-checkbox');
+            const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            removeButton.disabled = !anyChecked;
+        });
+
+        // Handle remove button click
+        removeButton.addEventListener("click", function () {
+            selectedEmails = []; 
+            document.querySelectorAll('#accountsTable .form-check-input:checked').forEach((checkbox) => {
+                selectedEmails.push(checkbox.value);
+            });
+
+            if (selectedEmails.length === 0) {
+                alert('Please select at least one account to remove.');
+                return;
             }
 
-            // Open the modal
-            const modal = new bootstrap.Modal(document.getElementById('prev-account-modal'));
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('remove-account-modal'));
             modal.show();
-        }
-    });
-});
+        });
 
+        // Handle confirm remove
+        document.getElementById('confirmRemoveButton').addEventListener("click", function () {
+            if (selectedEmails.length === 0) return;
+
+            fetch('/remove-accounts/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken() 
+                },
+                body: JSON.stringify({ emails: selectedEmails })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
+                    modal.hide();
+
+                    // Use DataTables API to remove rows
+                    table.rows((idx, data, node) => {
+                        return selectedEmails.includes($(node).find('td:nth-child(4)').text().trim());
+                    }).remove().draw();
+
+                    window.location.href = '/admin_home/';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while removing accounts.');
+            });
+        });
+
+        document.querySelector('.btn-cancel').addEventListener("click", function () {
+            window.location.href = '/admin_home/';
+        });
+
+        function getCsrfToken() {
+            const cookies = document.cookie.split(';');
+            for (const cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'csrftoken') {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        accountsTable.draw(); // Draw the table
+    });
+
+</script>
+
+<script>
 
 </script>
 
@@ -252,126 +436,9 @@
         });
     });
     </script>
-    
-    
-    
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const filterItems = document.querySelectorAll('.dropdown-filter .dropdown-item'); 
-    const tableRows = document.querySelectorAll('#accountTable tr'); 
-    filterItems.forEach(item => {
-        item.addEventListener('click', function (e) {
-            e.preventDefault(); 
-            const filterCriteria = e.target.textContent.trim(); 
-
-            tableRows.forEach(row => {
-                const statusCell = row.querySelector('td:nth-child(6) h6 span'); 
-                if (statusCell) {
-                    const rowStatus = statusCell.textContent.trim(); 
-
-                    if (filterCriteria === rowStatus) {
-                        row.style.display = ''; 
-                    } else {
-                        row.style.display = 'none'; 
-                    }
-                }
-            });
-        });
-    });
-});
-
-document.getElementById('accountSearchInput').addEventListener('input', function (e) {
-    // Replace invalid characters with an empty string
-    this.value = this.value.replace(/[^a-zA-Z0-9.\-\/_@]/g, '');
-});
-</script>
-<script>
-    let selectedEmails = []; 
-
-    document.addEventListener("DOMContentLoaded", () => {
-    const removeButton = document.getElementById("removeButton");
-    const checkboxes = document.querySelectorAll(".account-checkbox");
-
-    removeButton.disabled = true;
-    function toggleRemoveButton() {
-        const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-        removeButton.disabled = !anyChecked;
-    }
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", toggleRemoveButton);
-    });
-
-    removeButton.addEventListener("click", function () {
-        selectedEmails = []; 
-        document.querySelectorAll('#accountTable .form-check-input:checked').forEach((checkbox) => {
-            selectedEmails.push(checkbox.value);
-        });
-
-        if (selectedEmails.length === 0) {
-            alert('Please select at least one account to remove.');
-            return;
-        }
-
-        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('remove-account-modal'));
-        modal.show();
-    });
-
-    document.getElementById('confirmRemoveButton').addEventListener("click", function () {
-        if (selectedEmails.length === 0) {
-            return;
-        }
-
-        fetch('/remove-accounts/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken() 
-            },
-            body: JSON.stringify({ emails: selectedEmails })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
-                    modal.hide();
-
-                    selectedEmails.forEach(email => {
-                        const row = [...document.querySelectorAll('#accountTable tr')].find(tr =>
-                            tr.querySelector('td:nth-child(4)')?.textContent.trim() === email
-                        );
-                        if (row) row.remove();
-                    });
-
-                    window.location.href = '/admin_home/';
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while removing accounts.');
-            });
-    });
-
-    document.querySelector('.btn-cancel').addEventListener("click", function () {
-        window.location.href = '/admin_home/';
-    });
-
-    function getCsrfToken() {
-        const cookies = document.cookie.split(';');
-        for (const cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'csrftoken') {
-                return value;
-            }
-        }
-        return null;
-    }
-});
 
 
-</script>
+
 
 
 

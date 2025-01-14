@@ -30,14 +30,14 @@
                                 <option value="12">December</option>
                             </select>
                         </div>
-                        <div class="select-filter" id="year-filter" style="display: block;">  <!-- Initially visible -->
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="2024" selected>2024</option>
-                                <option value="2023">2023</option>
-                                <option value="2022">2022</option>
-                                <option value="2021">2021</option>
-                                <option value="2020">2020</option>
-                                <option value="2019">2019</option>
+                        <div class="select-filter" id="year-filter" style="display: block;">
+                            <select class="form-select" aria-label="Default select example" id="year-select">
+                                <option value="FirstYear" selected></option>
+                                <option value="SecondYear"></option>
+                                <option value="ThirdYear"></option>
+                                <option value="FourthYear"></option>
+                                <option value="FifthYear"></option>
+                                <option value="SixthYear"></option>
                             </select>
                         </div>
                     </div>
@@ -76,6 +76,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const yearSelect = document.getElementById('year-select');
+        const options = yearSelect.querySelectorAll('option');
+        const currentYear = new Date().getFullYear();
+
+        options.forEach((option, index) => {
+            const year = currentYear - index; // Calculate the year dynamically
+            option.value = year; // Set the value
+            option.textContent = year; // Set the visible text
+        });
+    });
+</script>
+
 
 <script src="{% static 'js/incident_preview_filter.js' %}"></script>
 <script>
