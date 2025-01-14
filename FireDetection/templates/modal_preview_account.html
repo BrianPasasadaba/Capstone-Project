@@ -82,6 +82,17 @@
         });
         const okButton = document.getElementById('modal-ok-button');
 
+        // Utility function to validate email format
+        function validateEmail(email) {
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailPattern.test(email);
+        }
+
+        // Utility function to clean up input (remove double spaces and trim)
+        function cleanInput(input) {
+            return input.replace(/\s{2,}/g, ' ').trim(); // Replace double spaces with single space and trim edges
+        }
+
         // Show success modal if triggered
         if (localStorage.getItem('showSuccessModal') === 'true') {
             successModal.show();
@@ -122,6 +133,11 @@
 
             let hasErrors = false;
 
+            // Clean up inputs to remove extra spaces
+            nameField.value = cleanInput(nameField.value);
+            emailField.value = cleanInput(emailField.value);
+            contactField.value = cleanInput(contactField.value);
+
             // Clear previous error styles and messages
             [nameField, emailField, contactField, roleField].forEach((field) => {
                 field.style.border = '';
@@ -130,16 +146,23 @@
                 warning.style.display = 'none';
             });
 
-            // Validate fields
+            // Validate Name
             if (!nameField.value.trim()) {
                 nameField.style.border = '1px solid red';
+                nameWarning.textContent = 'Name is required.';
                 nameWarning.style.display = 'inline';
                 hasErrors = true;
             }
 
+            // Validate Email
             if (!emailField.value.trim()) {
                 emailField.style.border = '1px solid red';
                 emailWarning.textContent = 'Email is required.';
+                emailWarning.style.display = 'inline';
+                hasErrors = true;
+            } else if (!validateEmail(emailField.value.trim())) {
+                emailField.style.border = '1px solid red';
+                emailWarning.textContent = 'Invalid email format. (example@gmail.com)';
                 emailWarning.style.display = 'inline';
                 hasErrors = true;
             }
@@ -158,6 +181,7 @@
                 hasErrors = true;
             }
 
+            // Validate Role
             if (!roleField.value.trim()) {
                 roleField.style.border = '1px solid red';
                 hasErrors = true;

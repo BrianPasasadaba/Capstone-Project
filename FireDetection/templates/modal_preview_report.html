@@ -286,23 +286,7 @@ document.querySelector('#archiveTable').addEventListener('click', function (even
 </script>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const saveButton = document.getElementById('saveButton');
 
-    function handleClick() {
-        saveButton.classList.add('fade-out');
-
-        saveButton.disabled = true;
-
-        setTimeout(function () {
-            saveButton.style.display = 'none';
-        }); 
-    }
-    saveButton.addEventListener('click', handleClick);
-});
-
-</script>
 
 <script>
 // Combined cleanInput function
