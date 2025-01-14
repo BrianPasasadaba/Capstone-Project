@@ -1,5 +1,6 @@
 var selectedReportId = null; // Store the selected report ID
 var hiddenReportIdInput = document.getElementById('report-id'); // Hidden input for report ID
+var selectedCheckboxCount = 0; // Track selected checkboxes
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -12,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const resolveButtons = document.querySelectorAll('.resolve-button');
     
     let selectedRow = null;
-    let selectedCheckboxCount = 0;  // Track selected checkboxes
 
 
 
@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Enable the "View" button only if exactly one checkbox is selected
         if (selectedCheckboxCount === 1) {
+            console.log('Single checkbox selected. Enabling "View" button.');
             viewButton.removeAttribute('disabled');
             selectedRow = row;
             if (hiddenReportIdInput) {
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } else {
             viewButton.setAttribute('disabled', true);
+            console.log('Multiple checkboxes selected. Disabling "View" button.');
             selectedRow = null;
             if (hiddenReportIdInput) {
                 hiddenReportIdInput.value = '';

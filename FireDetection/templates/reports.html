@@ -610,6 +610,8 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                 archiveButton.removeAttribute('data-report-ids');
             }
         }
+
+        const viewButton = document.querySelector('.btn-view');
     
         // Tab switching logic with filter reset
         document.querySelectorAll('#reportTabs button').forEach((tab) => {
@@ -625,8 +627,10 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                     document.querySelectorAll('#archiveTable .r-check').forEach(checkbox => {
                         checkbox.checked = false;
                     document.querySelectorAll('.resolve-button, .btn-edit, .btn-archive').forEach(button => {
-                button.style.display = 'block'; // Show buttons in the reports tab
-            });
+                        button.style.display = 'block'; // Show buttons in the reports tab
+                    });
+                    viewButton.setAttribute('disabled', true); // Disable the view button
+                    selectedCheckboxCount = 0;
             
                     });
                 } else if (target === '#archives') {
@@ -638,6 +642,8 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                     document.querySelectorAll('#reportTable .r-check').forEach(checkbox => {
                         checkbox.checked = false;
                     });
+                    viewButton.setAttribute('disabled', true); // Disable the view button
+                    selectedCheckboxCount = 0;
                 }
         
                 // Reset the selected report ID and hidden input
