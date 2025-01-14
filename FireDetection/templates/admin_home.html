@@ -188,6 +188,8 @@
 
 
 <script>
+    let selectedEmails = [];
+
     document.addEventListener('DOMContentLoaded', function () {
     
         // Initialize DataTables with custom configuration
@@ -306,6 +308,84 @@
         searchInput.addEventListener('input', function () {
             accountsTable.search(this.value).draw();
         });
+        
+        const removeButton = document.getElementById("removeButton");
+        const table = $('#accountsTable').DataTable();  // Get DataTable instance
+
+        // Initial disable
+        removeButton.disabled = true;
+
+        // Use event delegation for checkbox changes
+        $('#accountsTable tbody').on('change', '.account-checkbox', function() {
+            const checkboxes = document.querySelectorAll('#accountsTable .account-checkbox');
+            const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            removeButton.disabled = !anyChecked;
+        });
+
+        // Handle remove button click
+        removeButton.addEventListener("click", function () {
+            selectedEmails = []; 
+            document.querySelectorAll('#accountsTable .form-check-input:checked').forEach((checkbox) => {
+                selectedEmails.push(checkbox.value);
+            });
+
+            if (selectedEmails.length === 0) {
+                alert('Please select at least one account to remove.');
+                return;
+            }
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('remove-account-modal'));
+            modal.show();
+        });
+
+        // Handle confirm remove
+        document.getElementById('confirmRemoveButton').addEventListener("click", function () {
+            if (selectedEmails.length === 0) return;
+
+            fetch('/remove-accounts/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken() 
+                },
+                body: JSON.stringify({ emails: selectedEmails })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
+                    modal.hide();
+
+                    // Use DataTables API to remove rows
+                    table.rows((idx, data, node) => {
+                        return selectedEmails.includes($(node).find('td:nth-child(4)').text().trim());
+                    }).remove().draw();
+
+                    window.location.href = '/admin_home/';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while removing accounts.');
+            });
+        });
+
+        document.querySelector('.btn-cancel').addEventListener("click", function () {
+            window.location.href = '/admin_home/';
+        });
+
+        function getCsrfToken() {
+            const cookies = document.cookie.split(';');
+            for (const cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'csrftoken') {
+                    return value;
+                }
+            }
+            return null;
+        }
 
         accountsTable.draw(); // Draw the table
     });
@@ -335,93 +415,6 @@
 
 
 
-<script>
-    let selectedEmails = []; 
-
-    document.addEventListener("DOMContentLoaded", () => {
-    const removeButton = document.getElementById("removeButton");
-    const checkboxes = document.querySelectorAll(".account-checkbox");
-
-    removeButton.disabled = true;
-    function toggleRemoveButton() {
-        const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-        removeButton.disabled = !anyChecked;
-    }
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", toggleRemoveButton);
-    });
-
-    removeButton.addEventListener("click", function () {
-        selectedEmails = []; 
-        document.querySelectorAll('#accountTable .form-check-input:checked').forEach((checkbox) => {
-            selectedEmails.push(checkbox.value);
-        });
-
-        if (selectedEmails.length === 0) {
-            alert('Please select at least one account to remove.');
-            return;
-        }
-
-        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('remove-account-modal'));
-        modal.show();
-    });
-
-    document.getElementById('confirmRemoveButton').addEventListener("click", function () {
-        if (selectedEmails.length === 0) {
-            return;
-        }
-
-        fetch('/remove-accounts/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken() 
-            },
-            body: JSON.stringify({ emails: selectedEmails })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
-                    modal.hide();
-
-                    selectedEmails.forEach(email => {
-                        const row = [...document.querySelectorAll('#accountTable tr')].find(tr =>
-                            tr.querySelector('td:nth-child(4)')?.textContent.trim() === email
-                        );
-                        if (row) row.remove();
-                    });
-
-                    window.location.href = '/admin_home/';
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while removing accounts.');
-            });
-    });
-
-    document.querySelector('.btn-cancel').addEventListener("click", function () {
-        window.location.href = '/admin_home/';
-    });
-
-    function getCsrfToken() {
-        const cookies = document.cookie.split(';');
-        for (const cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'csrftoken') {
-                return value;
-            }
-        }
-        return null;
-    }
-});
-
-
-</script>
 
 
 
