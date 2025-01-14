@@ -116,7 +116,9 @@
             const nameWarning = document.getElementById('name-warning');
             const emailWarning = document.getElementById('email-warning');
             const contactWarning = document.getElementById('contact-warning');
-            const contactPattern = /^[0-9]{11}$/;
+
+            const contactPattern = /^[0-9]{11}$/; // Only allows exactly 11 digits
+            const startsWith09Pattern = /^09/; // Ensures the contact number starts with "09"
 
             let hasErrors = false;
 
@@ -142,10 +144,16 @@
                 hasErrors = true;
             }
 
-            if (!contactField.value.trim() || !contactPattern.test(contactField.value.trim())) {
+            // Validate Contact Number
+            const phoneNumber = contactField.value.trim();
+            if (!contactPattern.test(phoneNumber)) {
                 contactField.style.border = '1px solid red';
-                contactWarning.textContent =
-                    'Phone number must be 11 digits.';
+                contactWarning.textContent = 'Phone number must be exactly 11 digits.';
+                contactWarning.style.display = 'inline';
+                hasErrors = true;
+            } else if (!startsWith09Pattern.test(phoneNumber)) {
+                contactField.style.border = '1px solid red';
+                contactWarning.textContent = 'Contact number must start with "09".';
                 contactWarning.style.display = 'inline';
                 hasErrors = true;
             }
@@ -162,7 +170,6 @@
             // Check for email and contact uniqueness
             try {
                 const email = emailField.value.trim();
-                const phoneNumber = contactField.value.trim();
                 const accountId = accountIdInput.value;
 
                 const response = await fetch(
@@ -212,6 +219,7 @@
         });
     });
 </script>
+
 
         
         
