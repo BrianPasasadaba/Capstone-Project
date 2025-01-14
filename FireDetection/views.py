@@ -546,16 +546,20 @@ def forgot_password_view(request):
 def check_email_exists(request):
     email = request.GET.get('email', None)
     phone = request.GET.get('phone_number', None)  # Get the phone number from the request
+    account_id = request.GET.get('account_id', None)  # Get the account ID from the request
 
     response_data = {}
 
     if email:
-        response_data['email_exists'] = CustomUser.objects.filter(email=email).exists()
+        # Exclude the current account from the email existence check
+        response_data['email_exists'] = CustomUser.objects.filter(email=email).exclude(id=account_id).exists()
 
     if phone:
-        response_data['phone_exists'] = CustomUser.objects.filter(contact_number=phone).exists()
+        # Exclude the current account from the phone existence check
+        response_data['phone_exists'] = CustomUser.objects.filter(contact_number=phone).exclude(id=account_id).exists()
 
     return JsonResponse(response_data)
+
 
 
 @login_required
