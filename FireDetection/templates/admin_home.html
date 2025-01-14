@@ -206,6 +206,8 @@
     let selectedEmails = [];
 
     document.addEventListener('DOMContentLoaded', function () {
+
+        const removeButton = document.getElementById("removeButton");
     
         // Initialize DataTables with custom configuration
         const accountsTable = new DataTable('#accountsTable', {
@@ -243,6 +245,13 @@
             drawCallback: function() {
                 // Re-bind click handlers after each draw (page change, search, etc)
                 bindTableEvents();
+
+                // Clear all checkboxes on page change
+                document.querySelectorAll('#accountsTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+                
+                // Disable remove button
+                removeButton.disabled = true;
             }
         });
 
@@ -324,8 +333,8 @@
             accountsTable.search(this.value).draw();
         });
         
-        const removeButton = document.getElementById("removeButton");
-        const table = $('#accountsTable').DataTable();  // Get DataTable instance
+
+        const table = $('#accountsTable').DataTable();
 
         // Initial disable
         removeButton.disabled = true;

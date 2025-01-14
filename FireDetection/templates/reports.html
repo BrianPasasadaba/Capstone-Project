@@ -452,7 +452,6 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
     const archiveButton = document.getElementById('archiveBtn');
     const archiveModalElement = document.getElementById('archive-report-modal');
     const archiveModal = new bootstrap.Modal(archiveModalElement);
-    let selectedReportIds = [];
 
     // Function to update the state of the Archive button
     function updateArchiveButtonState() {
@@ -525,7 +524,8 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let activeTable;
-    
+        const viewButton = document.querySelector('.btn-view');
+        const archiveButton = document.getElementById('archiveBtn');
 
     
         // Initialize DataTables with custom configuration
@@ -543,7 +543,6 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                 { className: "dt-body-center", targets: "_all"},
                 { targets: "_all", orderable: false}
 
-
             ],
             language: {
                 emptyTable: "No data available",
@@ -560,6 +559,20 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                         buttons: 3
                     }
                 }
+            },
+            drawCallback: function() {
+                document.querySelectorAll('#reportsTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+
+                selectedReportIds = [];
+                console.log("Report ID array after draw:", selectedReportIds);
+                archiveButton.setAttribute('disabled', true);
+                archiveButton.style.opacity = '0.5';
+                archiveButton.removeAttribute('data-report-ids');
+                console.log("Archive Disabled")
+                viewButton.setAttribute('disabled', true);
+                selectedCheckboxCount = 0;
+
             }
         });
     
@@ -593,6 +606,14 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
                         buttons: 3
                     }
                 }
+            },
+            drawCallback: function() {
+                document.querySelectorAll('#archivesTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+
+                selectedReportIds = [];
+                viewButton.setAttribute('disabled', true);
+                selectedCheckboxCount = 0;
             }
         });
     
@@ -601,8 +622,6 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
     
         // Hide archive table initially
         $('#archiveTable_wrapper').hide();
-
-        const archiveButton = document.getElementById('archiveBtn');
 
         function updateArchiveButton() {
             // First check if we're on the archive table
@@ -626,8 +645,6 @@ document.querySelectorAll('.r-check').forEach((checkbox) => {
             }
         }
 
-        const viewButton = document.querySelector('.btn-view');
-    
         // Tab switching logic with filter reset
         document.querySelectorAll('#reportTabs button').forEach((tab) => {
             tab.addEventListener('click', function () {
