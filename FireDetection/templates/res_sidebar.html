@@ -193,6 +193,11 @@
 
 -->
 
+<div id="notification-data" 
+     data-audio-url="{% static 'sounds/alarm.mp3' %}" 
+     style="display: none;">
+</div>
+
 <!--TOAST START-->
    <!-- Toast container -->
 {% if request.user.role == "Radio Operator" %}
@@ -412,11 +417,20 @@
 
 <!-- DESKTOP UPDATE -->
 <script>
+const userRole = "{{ request.user.role }}";
+
 document.addEventListener('DOMContentLoaded', async function(){
     class DesktopUpdates {
         constructor() {
+            const audioElement = document.getElementById('notification-data');
+            this.audioUrl = audioElement ? audioElement.dataset.audioUrl : null;
+            this.notificationAudio = null;
             this.eventSource = new EventSource('{% url "event-stream" %}');
             this.toastCounter = 0;
+
+            if ("Notification" in window) {
+                Notification.requestPermission();
+            }
             
             this.eventSource.onmessage = async (event) => {
                 const data = JSON.parse(event.data);
@@ -515,6 +529,8 @@ document.addEventListener('DOMContentLoaded', async function(){
                                 toast.remove();
                             }
 
+                            this.sendReportActionBroadcast(reportId);
+
                             // Reload the page to remove the dismissed report
                             location.reload();
                         } else {
@@ -582,10 +598,14 @@ document.addEventListener('DOMContentLoaded', async function(){
                                 toast.remove();
                             }
 
-                            // Reload the page to remove the report
+                            this.sendReportActionBroadcast(reportId);
+
                             location.reload();
                         } else {
                             console.error('Failed to transfer report');
+                            // Optionally show a user-friendly error message
+                            alert(result.message || 'Failed to transfer report. It may have already been processed.');
+                            location.reload();
                         }
                     } catch (error) {
                         console.error('Error transferring report:', error);
@@ -610,7 +630,23 @@ document.addEventListener('DOMContentLoaded', async function(){
                 }
             });
         }
-    
+        
+        sendReportActionBroadcast(reportId) {
+            // This depends on your SSE implementation
+            // You might use fetch, WebSocket, or your existing SSE method
+            fetch('/broadcast-report-action/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({ 
+                    type: 'report_action', 
+                    report_id: reportId 
+                })
+            });
+        }
+
         async handleUpdate(data) {
             if (data.type === 'new_temp_report') {
                 try {
@@ -618,8 +654,10 @@ document.addEventListener('DOMContentLoaded', async function(){
                     const reportDetails = await response.json();
                     
                     if (reportDetails) {
-                        this.playNotificationSound();
-                        this.createToastAndModal(reportDetails);
+                        if (userRole === 'Radio Operator') {
+                            this.playNotificationSound();
+                            this.createToastAndModal(reportDetails);
+                        }
                     }
                 } catch (error) {
                     console.error('Error fetching report details:', error);
@@ -635,13 +673,33 @@ document.addEventListener('DOMContentLoaded', async function(){
                 } catch (error) {
                     console.error('Error fetching updated report details:', error);
                 }
-            } 
+            } else if (data.type === 'report_action') {
+                this.handleReportAction(data);
+            }
         }
 
         playNotificationSound() {
-            // Create audio element if it doesn't exist
+            if (!this.audioUrl) {
+                console.warn('Audio URL not found');
+                return;
+            }
+
             if (!this.notificationAudio) {
-                this.notificationAudio = new Audio('{% static "sounds/alarm.mp3"}'); // Adjust path as needed
+                this.notificationAudio = new Audio(this.audioUrl);
+            }
+            
+            // Reset and play
+            this.notificationAudio.currentTime = 0;
+            this.notificationAudio.play().catch(error => {
+                console.warn('Error playing notification sound:', error);
+            });
+
+            // Show browser notification
+            if (Notification.permission === "granted") {
+                new Notification("Fire Alert!", {
+                    body: "A fire has been detected",
+                    requireInteraction: true
+                });
             }
             
             // Play the sound
@@ -668,6 +726,32 @@ document.addEventListener('DOMContentLoaded', async function(){
                 if (timeElement) timeElement.textContent = reportDetails.time;
             }
         }
+
+        handleReportAction(data) {
+            // Remove toast and modal for the specific report
+            const toast = document.querySelector(`.toast[data-report-id="${data.report_id}"]`);
+            const modal = document.querySelector(`.modal[data-report-id="${data.report_id}"]`);
+        
+            // Hide and remove toast
+            if (toast) {
+                const toastInstance = bootstrap.Toast.getInstance(toast);
+                if (toastInstance) {
+                    toastInstance.hide();
+                }
+                toast.remove();
+            }
+        
+            // Hide and remove modal
+            if (modal) {
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+                modal.remove();
+            }
+
+            location.reload();
+        }
     
         createToastAndModal(reportDetails) {
             this.toastCounter++;
@@ -691,11 +775,27 @@ document.addEventListener('DOMContentLoaded', async function(){
             newToast.setAttribute('role', 'alert');
             newToast.setAttribute('aria-live', 'assertive');
             newToast.setAttribute('aria-atomic', 'true');
+
+            const getTimeElapsed = (timestamp) => {
+                const reportDate = new Date(timestamp);
+                const now = new Date();
+                const diffMs = now - reportDate;
+                
+                const seconds = Math.floor(diffMs / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
+        
+                if (days > 0) return `${days} day${days !== 1 ? 's' : ''} ago`;
+                if (hours > 0) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+                if (minutes > 0) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+                return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+            };
             
             newToast.innerHTML = `
                 <div class="toast-header">
                     <strong class="me-auto">A Fire has been Detected!</strong>
-                    <small class="text-muted">just now</small>
+                    <small class="text-muted">${getTimeElapsed(reportDetails.full_time)}</small>
                 </div>
                 <div class="toast-body">
                     <button class="btn tb-btn" data-bs-toggle="modal" data-bs-target="#${modalId}"  aria-label="Close">

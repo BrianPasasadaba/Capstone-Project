@@ -15,9 +15,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-3ie-9bx+39e+thj%2v+4k54y72y_4+-y4v+4r7n@t&e7gey9^g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 LOGIN_URL = '/'
 
@@ -72,6 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'CapstoneProject.wsgi.application'
+ASGI_APPLICATION = 'CapstoneProject.asgi.application'
 
 
 
@@ -105,12 +109,15 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_TZ = True
+USE_TZ = False
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 if not DEBUG:
     # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
