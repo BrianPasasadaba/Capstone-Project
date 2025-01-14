@@ -150,6 +150,28 @@ header {
     flex-wrap: nowrap; /* Prevents wrapping into multiple lines */
 }
 
+.drop-hotline{
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px!important;
+}
+
+.drop-hotline::-webkit-scrollbar{
+    width: 5px;
+    background-color: var(--color-default);
+}
+
+.drop-hotline::-webkit-scrollbar-thumb{
+    border-radius: var(--border-radius-button-half);
+    background-color: var(--color-secondary);
+}
+
+.drop-hotline span{
+    color: var(--color-secondary);
+    font-weight: 500;
+}
+
+
 .btn-profile {
     display: flex;
     flex-direction: row;
@@ -581,7 +603,6 @@ input[type="password"]::-ms-clear {
 }
 
 #terms-condition-modal  .modal-dialog .terms-text{
-    padding: 0 10px;
     height: 60vh;
     overflow-y: auto;
     font-size: 14px;
