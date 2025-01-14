@@ -70,175 +70,149 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const accountForm = document.getElementById('prev-account-form');
-    const saveButton = accountForm.querySelector('.add-account');
-    const accountIdInput = document.getElementById('account-id'); // The hidden input for account ID
-    const accountTable = document.getElementById('accountTable'); // The table containing account rows
-    const editModal = new bootstrap.Modal(document.getElementById('prev-account-modal')); // Instance of the edit modal
-    const successModalElement = document.getElementById('editacc-success-modal'); // Success modal element
-    const successModal = new bootstrap.Modal(successModalElement, {
-        backdrop: 'static', 
-        keyboard: false 
-    });
+        const accountForm = document.getElementById('prev-account-form');
+        const saveButton = accountForm.querySelector('.add-account');
+        const accountIdInput = document.getElementById('account-id');
+        const accountTable = document.getElementById('accountTable');
+        const editModal = new bootstrap.Modal(document.getElementById('prev-account-modal'));
+        const successModalElement = document.getElementById('editacc-success-modal');
+        const successModal = new bootstrap.Modal(successModalElement, {
+            backdrop: 'static',
+            keyboard: false,
+        });
+        const okButton = document.getElementById('modal-ok-button');
 
-    const okButton = document.getElementById('modal-ok-button');
-    okButton.removeEventListener('click', handleOkButtonClick); // Ensure there are no pre-existing listeners
-    if (localStorage.getItem('showSuccessModal') === 'true') {
-        successModal.show();
-        localStorage.removeItem('showSuccessModal'); // Clear the flag after showing the modal
-
-        okButton.addEventListener('click', handleOkButtonClick);
-    }
-
-    accountTable.addEventListener('click', function (event) {
-        const row = event.target.closest('tr[data-account-id]'); // Find the closest row with account data
-
-        if (row) {
-            const accountId = row.getAttribute('data-account-id');
-
-            accountIdInput.value = accountId;
-
-            // Populate other fields in the form (if needed)
-            document.getElementById('prev-name').value = row.getAttribute('data-name');
-            document.getElementById('prev-email').value = row.getAttribute('data-email');
-            document.getElementById('prev-role').value = row.getAttribute('data-role');
-            document.getElementById('prev-contact').value = row.getAttribute('data-contact');
-
-            // Show the edit modal
-            editModal.show();
+        // Show success modal if triggered
+        if (localStorage.getItem('showSuccessModal') === 'true') {
+            successModal.show();
+            localStorage.removeItem('showSuccessModal');
+            okButton.addEventListener('click', () => {
+                window.location.href = '/admin_home/';
+            });
         }
-    });
 
-    // Add event listener to check email existence on change
-    const emailField = document.getElementById('prev-email');
-    emailField.addEventListener('blur', async function () {
-        const email = emailField.value.trim();
-        const accountId = accountIdInput.value;
-
-        if (email) {
-            try {
-                const response = await fetch(`/check-email-exists/?email=${email}&account_id=${accountId}`);
-                const data = await response.json();
-                
-                if (data.email_exists) {
-                    emailField.style.border = '1px solid red';
-                    document.getElementById('email-warning').style.display = 'inline';
-                } else {
-                    emailField.style.border = '';
-                    document.getElementById('email-warning').style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Error checking email:', error);
+        // Handle account table row click
+        accountTable.addEventListener('click', function (event) {
+            const row = event.target.closest('tr[data-account-id]');
+            if (row) {
+                accountIdInput.value = row.getAttribute('data-account-id');
+                document.getElementById('prev-name').value = row.getAttribute('data-name');
+                document.getElementById('prev-email').value = row.getAttribute('data-email');
+                document.getElementById('prev-role').value = row.getAttribute('data-role');
+                document.getElementById('prev-contact').value = row.getAttribute('data-contact');
+                editModal.show();
             }
-        }
-    });
-
-    accountForm.addEventListener('submit', async function (event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        // Perform client-side validation
-        const nameField = document.getElementById('prev-name');
-        const contactField = document.getElementById('prev-contact');
-        const roleField = document.getElementById('prev-role');
-        const nameWarning = document.getElementById('name-warning');
-        const contactWarning = document.getElementById('contact-warning');
-        const emailWarning = document.getElementById('email-warning');
-
-        let hasErrors = false;
-
-        // Clear previous error styles and messages
-        [nameField, emailField, contactField, roleField].forEach(field => {
-            field.style.border = '';
-        });
-        [nameWarning, emailWarning, contactWarning].forEach(warning => {
-            warning.style.display = 'none';
         });
 
-        // Validate Name
-        if (!nameField.value.trim()) {
-            nameField.style.border = '1px solid red';
-            nameWarning.style.display = 'inline'; // Show the warning message
-            hasErrors = true;
-        }
+        // Form submission handler
+        accountForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
 
-        // Validate Email (already done via blur)
-        if (!emailField.value.trim()) {
-            emailField.style.border = '1px solid red';
-            emailWarning.style.display = 'inline'; // Show the warning message
-            hasErrors = true;
-        }
+            // Field references and error containers
+            const nameField = document.getElementById('prev-name');
+            const emailField = document.getElementById('prev-email');
+            const contactField = document.getElementById('prev-contact');
+            const roleField = document.getElementById('prev-role');
+            const nameWarning = document.getElementById('name-warning');
+            const emailWarning = document.getElementById('email-warning');
+            const contactWarning = document.getElementById('contact-warning');
+            const contactPattern = /^[0-9]{11}$/;
 
-        // Validate Contact (example: should be numeric and 10-15 characters)
-        const contactPattern = /^[0-9]{10,15}$/;
-        if (!contactField.value.trim() || !contactPattern.test(contactField.value.trim())) {
-            contactField.style.border = '1px solid red';
-            contactWarning.style.display = 'inline'; // Show the warning message
-            hasErrors = true;
-        }
+            let hasErrors = false;
 
-        // Validate Role
-        if (!roleField.value.trim()) {
-            roleField.style.border = '1px solid red';
-            hasErrors = true;
-        }
-
-        // If there are validation errors, do not proceed
-        if (hasErrors) {
-            console.error('Validation failed. Fix the errors before submitting.');
-            return;
-        }
-
-        // Perform asynchronous validation for email and contact uniqueness
-        try {
-            const formData = new FormData(accountForm);
-
-            const response = await fetch('/update-account/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'), // Include CSRF token
-                },
-                body: formData,
+            // Clear previous error styles and messages
+            [nameField, emailField, contactField, roleField].forEach((field) => {
+                field.style.border = '';
+            });
+            [nameWarning, emailWarning, contactWarning].forEach((warning) => {
+                warning.style.display = 'none';
             });
 
-            if (response.ok) {
+            // Validate fields
+            if (!nameField.value.trim()) {
+                nameField.style.border = '1px solid red';
+                nameWarning.style.display = 'inline';
+                hasErrors = true;
+            }
+
+            if (!emailField.value.trim()) {
+                emailField.style.border = '1px solid red';
+                emailWarning.textContent = 'Email is required.';
+                emailWarning.style.display = 'inline';
+                hasErrors = true;
+            }
+
+            if (!contactField.value.trim() || !contactPattern.test(contactField.value.trim())) {
+                contactField.style.border = '1px solid red';
+                contactWarning.textContent =
+                    'Phone number must be 11 digits.';
+                contactWarning.style.display = 'inline';
+                hasErrors = true;
+            }
+
+            if (!roleField.value.trim()) {
+                roleField.style.border = '1px solid red';
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                return;
+            }
+
+            // Check for email and contact uniqueness
+            try {
+                const email = emailField.value.trim();
+                const phoneNumber = contactField.value.trim();
+                const accountId = accountIdInput.value;
+
+                const response = await fetch(
+                    `/check-email/?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phoneNumber)}&account_id=${accountId}`
+                );
                 const data = await response.json();
-                if (data.errors) {
-                    console.error('Server validation failed:', data.errors);
-                    data.errors.forEach(error => {
-                        const field = document.getElementById(error.field);
-                        const warning = document.getElementById(`${error.field}-warning`);
-                        if (field) {
-                            field.style.border = '1px solid red';
-                        }
-                        if (warning) {
-                            warning.style.display = 'inline';
-                        }
-                    });
+
+                if (data.email_exists) {
+                    emailField.style.border = '1px solid red';
+                    emailWarning.textContent = 'This email is already registered.';
+                    emailWarning.style.display = 'inline';
+                    hasErrors = true;
+                }
+
+                if (data.phone_exists) {
+                    contactField.style.border = '1px solid red';
+                    contactWarning.textContent = 'This phone number is already registered.';
+                    contactWarning.style.display = 'inline';
+                    hasErrors = true;
+                }
+
+                // Stop submission if errors exist
+                if (hasErrors) {
                     return;
                 }
 
-                saveButton.disabled = true;
+                // Submit the form
+                const formData = new FormData(accountForm);
+                const saveResponse = await fetch('/update-account/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                    body: formData,
+                });
 
-                editModal.hide();
-
-                localStorage.setItem('showSuccessModal', 'true');
-
-                window.location.reload();
-            } else {
-                throw new Error('Network response was not ok');
+                if (saveResponse.ok) {
+                    localStorage.setItem('showSuccessModal', 'true');
+                    editModal.hide();
+                    window.location.reload();
+                } else {
+                    console.error('Server error during form submission.');
+                }
+            } catch (error) {
+                console.error('Error validating form:', error);
             }
-        } catch (error) {
-            console.error('Error submitting the form:', error);
-        }
+        });
     });
-
-    function handleOkButtonClick() {
-        console.log("OK button clicked. Redirecting to /admin_home/...");
-        window.location.href = '/admin_home/';
-    }
-});
-
 </script>
+
         
         
         

@@ -451,26 +451,25 @@ def change_password(request):
         confirm_password = request.POST.get('confirm_password')
 
         if new_password != confirm_password:
-            messages.error(request, 'Passwords do not match.')
-            return redirect(request.META.get('HTTP_REFERER', 'analytics'))
+            return JsonResponse({'success': False, 'message': 'Passwords do not match.'})
 
         user = request.user
-
         user.set_password(new_password)
         user.save()
 
+        # Update session authentication hash
         update_session_auth_hash(request, user)
 
         # Prepare email context
         context = {
             'user': user,
-            'date': timezone.now(),
-            'year': timezone.now().year,
+            'date': now(),
+            'year': now().year,
         }
 
         # Render HTML email
         html_message = render_to_string('emails/forgot_password_confirmation.html', context)
-        plain_message = strip_tags(html_message)  # Create plain text version
+        plain_message = strip_tags(html_message)
 
         # Send email
         send_mail(
@@ -481,13 +480,11 @@ def change_password(request):
             html_message=html_message,
             fail_silently=False,
         )
-        
-        messages.success(request, 'Password reset successful! A confirmation email has been sent.')
 
-        return redirect(request.META.get('HTTP_REFERER', 'analytics'))
+        # Return success response
+        return JsonResponse({'success': True, 'message': 'Password reset successful!'})
 
-    return render(request, 'analytics.html')
-
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 def generate_random_password(length=10):
     """Generates a random password."""
