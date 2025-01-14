@@ -69,6 +69,68 @@
 </div>
 
 <script>
+ 
+ document.addEventListener("DOMContentLoaded", function () {
+    const nameInput = document.getElementById("prev-name");
+    const nameWarning = document.getElementById("name-warning");
+
+    // Allow only letters, single spaces, periods, commas, apostrophes, and hyphens
+    const namePattern = /^[A-Za-z\s.,'-]*$/;
+
+    nameInput.addEventListener("input", function () {
+        let value = nameInput.value;
+
+        // Remove invalid characters immediately
+        if (!namePattern.test(value)) {
+            value = value.replace(/[^A-Za-z\s.,'-]/g, ''); // Remove invalid characters
+        }
+
+        // Replace multiple spaces with a single space
+        value = value.replace(/\s{2,}/g, ' ');
+
+        // Remove leading spaces
+        nameInput.value = value.trimStart();
+
+        // Show/hide warning if the field is empty or invalid
+        const isNameValid = namePattern.test(nameInput.value) && nameInput.value.trim().length > 0;
+        nameWarning.style.display = isNameValid ? "none" : "block";
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const emailInput = document.getElementById("prev-email");
+    const emailWarning = document.getElementById("email-warning");
+
+    // Email pattern to validate proper email format (without spaces)
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    emailInput.addEventListener("input", function () {
+        let value = emailInput.value;
+
+        // Remove leading spaces and spaces anywhere in the input
+        value = value.replace(/^\s+/g, ''); // Remove leading spaces
+        value = value.replace(/\s+/g, ''); // Remove all spaces in the middle
+
+        // Update the input value with spaces removed
+        emailInput.value = value;
+
+        // Validate email format without spaces
+        const isEmailValid = emailPattern.test(value);
+
+        // Show warning if the email is invalid or contains spaces
+        if (!isEmailValid || value.includes(" ")) {
+            emailWarning.style.display = "block"; // Show the warning
+        } else {
+            emailWarning.style.display = "none"; // Hide the warning
+        }
+    });
+});
+
+    
+</script>
+
+
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const accountForm = document.getElementById('prev-account-form');
         const saveButton = accountForm.querySelector('.add-account');
