@@ -50,7 +50,7 @@
                             </div>
                             <div class="info-detail ind-time">
                                 <div>Time</div>
-                                <span id="detection-time-{{ report.id }}">{{ report.time_detected }}</span>
+                                <span id="detection-time-{{ report.id }}">{{ report.time_detected|date:"h:i A" }}</span>
                             </div>
                         </div>
                     </div>
