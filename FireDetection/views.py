@@ -942,29 +942,35 @@ def update_report(request, report_id):
         report = get_object_or_404(InitialReport, id=report_id)
         data = request.POST
 
-
+        # Update basic fields
         report.where = data.get('where', report.where)
         report.team = data.get('team', report.team)
         report.date_reported = data.get('date', report.date_reported)
         report.alarm_status = data.get('alarm', report.alarm_status)
 
+        # Handle nullable fields
         report.name_of_owner = data.get('owner', None) if data.get('owner') != "None" else None
         report.alarm_declared_by = data.get('alarm-dec', None) if data.get('alarm-dec') != "None" else None
         report.fire_under_control_declared_by = data.get('funder-dec', None) if data.get('funder-dec') != "None" else None
         report.fire_out_declared_by = data.get('fout-dec', None) if data.get('fout-dec') != "None" else None
         report.involved = data.get('involved', None) if data.get('involved') != "None" else None
 
+        # Convert date and time to aware datetime
         def convert_to_aware_datetime(date_str, time_str):
             if date_str and time_str:
                 naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
                 return make_aware(naive_dt)
             return None
 
+        # Handle date and time fields
         report.time_reported = convert_to_aware_datetime(data.get('date', ''), data.get('detect', '')) or report.time_reported
         report.time_of_arrival = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-arrive', '').strip()) or report.time_of_arrival
-        report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-under', '').strip()) or report.time_of_fire_under_control
-        report.time_of_fire_out = convert_to_aware_datetime(data.get('date', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
+        report.time_of_fire_under_control = convert_to_aware_datetime(data.get('date-under', '').strip(), data.get('time-under', '').strip()) or report.time_of_fire_under_control
+        report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
 
+        # Convert standalone dates
+        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
+        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
         def get_int_value(field_name, default=0):
             try:
                 raw_value = data.get(field_name, '').replace(',', '').strip()  
