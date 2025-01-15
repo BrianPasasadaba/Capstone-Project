@@ -1070,7 +1070,8 @@ def get_temp_report_details(report_id):
             'date': report.date.strftime('%B %d, %Y'),
             'time': report.time_detected.strftime('%I:%M %p'),
             'proof': report.proof,
-            'status': report.status
+            'status': report.status,
+            'full_time': report.time_detected.isoformat(),
         }
     except tempReports.DoesNotExist:
         return None
