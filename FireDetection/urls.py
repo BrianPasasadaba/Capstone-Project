@@ -6,6 +6,8 @@ from .views import logout_view,change_password
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import toggle_status, update_report, create_report_view,export_initial_report,peak_report_summary
+from .views import months_count
+
 
 urlpatterns = [
     path('', views.login_view, name='login'),
@@ -24,8 +26,7 @@ urlpatterns = [
     path('api/events/', views.event_stream, name='event-stream'),
     path('export-initial-report/', export_initial_report, name='export_initial_report'),
     path('remove-accounts/', views.remove_accounts, name='remove_accounts'),
-    path('api/reports-years/', views.reports_count_for_years, name='reports_count_for_years'),
-    path('api/reports-monthly-2024/', views.monthly_reports_for_current_year, name='monthly_reports_for_2024'),
+    
     path('api/peak-report-summary/', peak_report_summary, name='peak_report_summary'),
     path('get-temp-report-details/<int:report_id>/', views.get_temp_report_details_view, name='get-temp-report-details'),
     path('api/monthly-report-summary/', views.monthly_report_summary, name='monthly_report_summary'),
@@ -38,6 +39,9 @@ urlpatterns = [
     path('archive-report/', views.archive_report, name='archive_report'),
     path('export-years/', views.export_years_view, name='export-years'),
     path('broadcast-report-action/', views.broadcast_report_action, name='broadcast_report_action'),
+    path('api/years/', views.reports_count, name='years'),
+    path('api/months/', views.months_count, name='months')
+
 
 
 ]
