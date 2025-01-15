@@ -169,7 +169,8 @@ def update_temp_report_status(request, temp_report_id):
 def peak_report_summary(request):
     year = int(request.GET.get('year', datetime.now().year))
     
-    reports = InitialReport.objects.filter(date_reported__year=year)
+    # Filter for unarchived reports only
+    reports = InitialReport.objects.filter(date_reported__year=year, is_archived=False)  # Add is_archived=False here
     
     month_counts = (
         reports
@@ -226,7 +227,8 @@ def monthly_report_summary(request):
     year = int(request.GET.get('year', datetime.now().year))
     month = int(request.GET.get('month', datetime.now().month))
 
-    reports = InitialReport.objects.filter(date_reported__year=year, date_reported__month=month)
+    # Filter for unarchived reports only
+    reports = InitialReport.objects.filter(date_reported__year=year, date_reported__month=month, is_archived=False)  # Add is_archived=False here
 
     # Calculate the most affected location
     location_counts = (
@@ -263,43 +265,49 @@ def monthly_report_summary(request):
 
     return JsonResponse(monthly_data)
 
-    
-def reports_count_for_years(request):
+def reports_count(request):
     current_year = datetime.now().year
-    start_year = current_year - 6  
+    start_year = current_year - 6
     years_range = range(start_year, current_year + 1)
 
+    # Filter reports that are not archived
     counts = (
         InitialReport.objects
-        .filter(date_reported__year__in=years_range)
-        .annotate(year=ExtractYear('date_reported'))  
+        .filter(date_reported__year__in=years_range, is_archived=False)
+        .annotate(year=ExtractYear('date_reported'))
         .values('year')
-        .annotate(count=Count('id'))  
+        .annotate(count=Count('id'))
         .order_by('year')
     )
 
     data = {year['year']: year['count'] for year in counts}
 
+    # Ensure all years in the range are represented
     for year in years_range:
         data.setdefault(year, 0)
 
     return JsonResponse({'yearly_data': data})
 
-def monthly_reports_for_current_year(request):
+
+def months_count(request):
     current_year = datetime.now().year
 
+    # Filter reports for the current year and exclude archived reports
     reports_by_month = (
-        InitialReport.objects.filter(date_reported__year=current_year)
-        .annotate(month=TruncMonth('date_reported'))  
+        InitialReport.objects
+        .filter(date_reported__year=current_year, is_archived=False)  # Exclude archived reports
+        .annotate(month=TruncMonth('date_reported'))  # Group by month
         .values('month')
-        .annotate(count=Count('id'))  
+        .annotate(count=Count('id'))  # Count reports per month
         .order_by('month')
     )
-    
+
+    # Initialize dictionary for all months in the current year with zero counts
     all_months = {date(current_year, month, 1).strftime('%b'): 0 for month in range(1, 13)}
 
+    # Populate the dictionary with the counts for each month
     for report in reports_by_month:
-        month_name = report['month'].strftime('%b')  
+        month_name = report['month'].strftime('%b')  # Convert month to abbreviated name
         all_months[month_name] = report['count']
 
     return JsonResponse({'year': current_year, 'monthly_data': all_months})
