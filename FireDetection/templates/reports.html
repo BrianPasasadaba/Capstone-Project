@@ -1068,6 +1068,8 @@ saveButton.addEventListener('click', function (event) {
     const alarmDecField = document.getElementById('alarm-dec');
     const funderDecField = document.getElementById('funder-dec');
     const foutDecField = document.getElementById('fout-dec');
+    const dateUnderField = document.getElementById('date-under'); // Date of Fire Under Control
+    const dateOutField = document.getElementById('date-out');
 
     let valid = true;
     clearErrorMessages();
@@ -1119,6 +1121,9 @@ saveButton.addEventListener('click', function (event) {
             formData.set(field, 'None'); // Default to "None"
         }
     });
+
+    formData.set('date-under', dateUnderField.value.trim() || ''); // Add Date of Fire Under Control
+    formData.set('date-out', dateOutField.value.trim() || '');
 
     for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);

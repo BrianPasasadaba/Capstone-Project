@@ -171,9 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const senderContact = row.getAttribute('data-sender-contact');
         const fireTeam = row.getAttribute('data-team');
         const status = row.getAttribute('data-status');
-        const isArchived = row.dataset.archive === 'true'; // Check 'true' as a string
-
-
+        
         // Set the modal status text
         if (modalStatus) {
             modalStatus.textContent = status;
@@ -215,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('safety-num').value = safetyOfficerContact;
         document.getElementById('sender').value = sender;
         document.getElementById('sender-num').value = senderContact;
-        document.getElementById('is_archived').value = isArchived;
 
         // Handle proof image
         const proofImg = document.getElementById('proof');
