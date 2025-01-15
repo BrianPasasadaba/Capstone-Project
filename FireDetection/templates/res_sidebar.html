@@ -777,11 +777,15 @@ document.addEventListener('DOMContentLoaded', async function(){
             newToast.setAttribute('aria-atomic', 'true');
 
             const getTimeElapsed = (timestamp) => {
+                console.log("TOAST DEBUG - Incoming Timestamp", timestamp)
                 const reportDate = new Date(timestamp);
+                console.log("TOAST DEBUG - reportDate value:", reportDate)
                 const now = new Date();
                 const diffMs = now - reportDate;
+                console.log("TOAST DEBUG - Time Difference", diffMs)
                 
                 const seconds = Math.floor(diffMs / 1000);
+                console.log('TOAST DEBUG - Calculated seconds:', seconds);
                 const minutes = Math.floor(seconds / 60);
                 const hours = Math.floor(minutes / 60);
                 const days = Math.floor(hours / 24);
