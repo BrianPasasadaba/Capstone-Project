@@ -1114,6 +1114,8 @@ function showErrorMessage(field, message) {
 saveButton.addEventListener('click', function (event) {
     event.preventDefault();
 
+    saveButton.disabled = true;
+
     const locationField = document.getElementById('loc');
     const detectField = document.getElementById('detect');
     const dateField = document.getElementById('date');
@@ -1222,7 +1224,10 @@ saveButton.addEventListener('click', function (event) {
     .catch(error => {
         console.error('Fetch error:', error);
         alert('An error occurred. Please try again.');
-    });
+    })
+    .finally(() => {
+            saveButton.disabled = false; // Re-enable the button after the request is complete
+        });
 });
 
 // Code to show the success modal after page reload
