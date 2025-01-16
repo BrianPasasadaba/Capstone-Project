@@ -356,10 +356,11 @@
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const reportTable = document.getElementById('archiveTable'); // Main report table
+document.addEventListener('DOMContentLoaded', function () {
+    const archiveTable = document.getElementById('archiveTable'); // Main report table
+    const reportTable = document.getElementById('reportTable'); // Archive report table
 
-    reportTable.addEventListener('click', function (event) {
+    archiveTable.addEventListener('click', function (event) {
         const clickedRow = event.target.closest('tr');
 
         if (!clickedRow || !clickedRow.dataset.reportId) return;
@@ -407,6 +408,58 @@
 
             resolveButtons.forEach((button) => {
                 button.style.display = 'block';
+            });
+        }
+    });
+
+    reportTable.addEventListener('click', function (event) {
+        const clickedRow = event.target.closest('tr');
+
+        if (!clickedRow || !clickedRow.dataset.reportId) return;
+
+        const reportId = clickedRow.dataset.reportId;
+        const isOngoing = clickedRow.dataset.status === 'Ongoing'; // Check 'true' as a string
+        console.log(`Clicked row with Report ID: ${reportId}, isOngoing: ${isOngoing}`);
+
+        // Dynamically select the three elements based on reportId
+        const editButton = document.getElementById(`edit-button`);
+        const editIcon = document.getElementById(`edit-icon-${reportId}`);
+        const editText = document.getElementById(`edit-text-${reportId}`);
+        const resolveButtons = document.querySelectorAll('.resolve-button');
+
+        if (isOngoing) {
+            console.log('Displaying edit button, icon, and text.');
+
+            // Hide the edit button, icon, and text
+            if (editButton) {
+                editButton.style.display = 'block';
+            }
+            if (editIcon) {
+                editIcon.style.display = 'block';
+            }
+            if (editText) {
+                editText.style.display = 'block';
+            }
+
+            resolveButtons.forEach((button) => {
+                button.style.display = 'block';
+            });
+        } else {
+            console.log('Report is resolved. Hiding edit button, icon, and text.');
+
+            // Show the edit button, icon, and text
+            if (editButton) {
+                editButton.style.display = 'none';
+            }
+            if (editIcon) {
+                editIcon.style.display = 'none'; // Ensure it is visible
+            }
+            if (editText) {
+                editText.style.display = 'none'; // Ensure it is visible
+            }
+
+            resolveButtons.forEach((button) => {
+                button.style.display = 'none';
             });
         }
     });
