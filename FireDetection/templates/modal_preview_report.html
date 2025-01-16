@@ -254,43 +254,6 @@
 <script src="{% static 'js/prev_report_search.js' %}"></script>
 <script src="{% static 'js/format_numbers.js' %}"></script>
 
-<script>
-    // Add an event listener to all rows in the archive table
-document.querySelector('#archiveTable').addEventListener('click', function (event) {
-    // Find the closest row (tr) that was clicked
-    const row = event.target.closest('tr');
-    
-    if (row) {
-        // Get the `data-archive` attribute value
-        const isArchived = row.getAttribute('data-archive') === 'true';
-
-        if (isArchived) {
-            // Hide the Resolve button
-            document.querySelectorAll('.resolve-button').forEach(button => {
-                button.style.display = 'none';
-            });
-
-            // Hide the Edit button
-            document.querySelectorAll('.btn-edit').forEach(button => {
-                button.style.display = 'none';
-            });
-        } else {
-            // Show the buttons if the report is not archived
-            document.querySelectorAll('.resolve-button').forEach(button => {
-                button.style.display = 'block';
-            });
-
-            document.querySelectorAll('.btn-edit').forEach(button => {
-                button.style.display = 'block';
-            });
-        }
-    }
-});
-
-</script>
-
-
-
 
 <script>
 // Combined cleanInput function

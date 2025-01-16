@@ -283,13 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
             resolveButton.setAttribute('data-report-id', selectedReportId);
             resolveButton.setAttribute('data-status', status);
 
-            if (status === 'Case Closed') {
-                resolveButton.disabled = true;
-                resolveButton.textContent = 'Status Closed';
-            } else {
-                resolveButton.disabled = false;
-                resolveButton.textContent = 'Resolve';
-            }
+
         }
     });
 
