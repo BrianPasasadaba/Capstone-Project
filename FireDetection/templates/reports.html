@@ -368,7 +368,7 @@
             resolveButtons.forEach(button => button.style.display = 'none');
             return;
         }
-
+    
         // Find the selected row from either table
         const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportIds}"]`);
         
@@ -376,15 +376,18 @@
             console.log('Selected row not found');
             return;
         }
-
-        // Check if the selected report is archived or resolved
+    
+        // Get the status from the row's dataset
         const isArchived = selectedRow.dataset.archive === 'true';
-        const isResolved = selectedRow.dataset.status !== 'Ongoing';
+        const isOngoing = selectedRow.dataset.status === 'Ongoing';
         
-        // Hide elements if the selected report is archived or resolved
-        const shouldHide = isArchived || isResolved;
-        const displayMode = shouldHide ? 'none' : 'block';
-
+        // Show buttons only if report is ongoing AND not archived
+        const shouldShow = isOngoing && !isArchived;
+        
+        // Set display based on shouldShow condition
+        const displayMode = shouldShow ? 'block' : 'none';
+    
+        // Update butto n visibility
         if (editButton) editButton.style.display = displayMode;
         resolveButtons.forEach(button => button.style.display = displayMode);
     }
@@ -402,6 +405,8 @@
         
         if (selectedRow) {
             console.log('Selected row found:', selectedRow);
+            console.log('Selected report archive:',selectedRow.dataset.archive);
+            console.log('Selected report status:', selectedRow.dataset.status);
             updateUIElements(); // Update UI elements based on selected row
             populateModal(selectedRow);
 
