@@ -43,14 +43,14 @@
                         <li class="dropdown-item"><span>Caingin</span> 0927-950-0416</li>
                         <li class="dropdown-item"><span>Dila</span> 0915-284-4003</li>
                         <li class="dropdown-item"><span>Dita</span> 0949-766-6068</li>
-                        <li class="dropdown-item"><span>Don</span> Jose 0947-631-5504</li>
+                        <li class="dropdown-item"><span>Don Jose</span> 0947-631-5504</li>
                         <li class="dropdown-item"><span>Ibaba</span> 0923-744-0740</li>
                         <li class="dropdown-item"><span>Kanluran</span> 0923-089-2694</li>
                         <li class="dropdown-item"><span>Labas</span> 0923-089-2347</li>
                         <li class="dropdown-item"><span>Macabling</span> 0915-945-1534</li>
                         <li class="dropdown-item"><span>Malitlit</span> 0975-067-3385</li>
                         <li class="dropdown-item"><span>Malusak</span> 0908-775-2302</li>
-                        <li class="dropdown-item"><span>Market</span> Area 0923-744-0847</li>
+                        <li class="dropdown-item"><span>Market Area</span> 0923-744-0847</li>
                         <li class="dropdown-item"><span>Pooc</span> 0906-143-0029</li>
                         <li class="dropdown-item"><span>P. Sta. Cruz</span> 502-0896</li>
                         <li class="dropdown-item"><span>Sto. Domingo</span> 0919-932-9353</li>
@@ -356,10 +356,72 @@
 <script src="{% static 'js/dropdown_filter.js' %}"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const reportTable = document.getElementById('archiveTable'); // Main report table
+    
+    
+    function updateUIElements() {
+        const editButton = document.getElementById('edit-button');
+        const resolveButtons = document.querySelectorAll('.resolve-button');
+        
+        // If no report is selected, hide the elements
+        if (!selectedReportIds) {
+            if (editButton) editButton.style.display = 'none';
+            resolveButtons.forEach(button => button.style.display = 'none');
+            return;
+        }
 
-    reportTable.addEventListener('click', function (event) {
+        // Find the selected row from either table
+        const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportIds}"]`);
+        
+        if (!selectedRow) {
+            console.log('Selected row not found');
+            return;
+        }
+
+        // Check if the selected report is archived or resolved
+        const isArchived = selectedRow.dataset.archive === 'true';
+        const isResolved = selectedRow.dataset.status !== 'Ongoing';
+        
+        // Hide elements if the selected report is archived or resolved
+        const shouldHide = isArchived || isResolved;
+        const displayMode = shouldHide ? 'none' : 'block';
+
+        if (editButton) editButton.style.display = displayMode;
+        resolveButtons.forEach(button => button.style.display = displayMode);
+    }
+
+    viewButton.addEventListener('click', function (event) {
+        // Ensure exactly one row is selected
+        if (!selectedReportIds) {
+            console.log('No report selected. Preventing modal from opening.');
+            event.preventDefault();
+            return;
+        }
+
+        // Find the row with the selected report ID
+        const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportIds}"]`);
+        
+        if (selectedRow) {
+            console.log('Selected row found:', selectedRow);
+            updateUIElements(); // Update UI elements based on selected row
+            populateModal(selectedRow);
+
+            // Show the modal
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        } else {
+            console.log('Selected row not found.');
+        }
+    });
+
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const archiveTable = document.getElementById('archiveTable'); // Main report table
+    const reportTable = document.getElementById('reportTable'); // Archive report table
+
+    archiveTable.addEventListener('click', function (event) {
         const clickedRow = event.target.closest('tr');
 
         if (!clickedRow || !clickedRow.dataset.reportId) return;
@@ -410,6 +472,69 @@
             });
         }
     });
+
+    reportTable.addEventListener('change', function (event) {
+    const clickedRow = event.target.closest('tr');
+
+    // Ensure the event comes from a checkbox within a row
+    if (!clickedRow || !clickedRow.dataset.reportId || !event.target.classList.contains('status-checkbox')) {
+        return;
+    }
+
+    const reportId = clickedRow.dataset.reportId;
+    const checkbox = event.target; // The currently clicked checkbox
+    const isOngoing = checkbox.checked; // Get the updated checkbox state
+    const reportStatus = clickedRow.dataset.status; // Fetch the report status (e.g., 'Ongoing' or 'Case Closed')
+
+    console.log(`Checkbox changed for Report ID: ${reportId}, isOngoing: ${isOngoing}, Status: ${reportStatus}`);
+
+    // Dynamically select elements based on the clicked report ID
+    const editButton = document.getElementById(`edit-button-${reportId}`);
+    const editIcon = document.getElementById(`edit-icon-${reportId}`);
+    const editText = document.getElementById(`edit-text-${reportId}`);
+    const resolveButtons = document.querySelectorAll(`.resolve-button-${reportId}`);
+
+    // Validate both the checkbox state and the report status
+    if (isOngoing && reportStatus === 'Ongoing') {
+        console.log('Displaying edit button, icon, and text.');
+
+        // Show the edit button, icon, and text
+        if (editButton) {
+            editButton.style.display = 'block';
+        }
+        if (editIcon) {
+            editIcon.style.display = 'block';
+        }
+        if (editText) {
+            editText.style.display = 'block';
+        }
+
+        // Show resolve buttons for this report
+        resolveButtons.forEach((button) => {
+            button.style.display = 'block';
+        });
+    } else if (!isOngoing || reportStatus === 'Case Closed') {
+        console.log('Hiding edit button, icon, and text.');
+
+        // Hide the edit button, icon, and text
+        if (editButton) {
+            editButton.style.display = 'none';
+        }
+        if (editIcon) {
+            editIcon.style.display = 'none';
+        }
+        if (editText) {
+            editText.style.display = 'none';
+        }
+
+        // Hide resolve buttons for this report
+        resolveButtons.forEach((button) => {
+            button.style.display = 'none';
+        });
+    }
+});
+
+
 });
 
 
@@ -1061,6 +1186,8 @@ function showErrorMessage(field, message) {
 saveButton.addEventListener('click', function (event) {
     event.preventDefault();
 
+    saveButton.disabled = true;
+
     const locationField = document.getElementById('loc');
     const detectField = document.getElementById('detect');
     const dateField = document.getElementById('date');
@@ -1169,7 +1296,10 @@ saveButton.addEventListener('click', function (event) {
     .catch(error => {
         console.error('Fetch error:', error);
         alert('An error occurred. Please try again.');
-    });
+    })
+    .finally(() => {
+            saveButton.disabled = false; // Re-enable the button after the request is complete
+        });
 });
 
 // Code to show the success modal after page reload
