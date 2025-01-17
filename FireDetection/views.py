@@ -969,8 +969,9 @@ def update_report(request, report_id):
         report.time_of_fire_out = convert_to_aware_datetime(data.get('date-out', '').strip(), data.get('time-out', '').strip()) or report.time_of_fire_out
 
         # Convert standalone dates
-        report.date_of_fire_under_control = data.get('date-under', report.date_of_fire_under_control)
-        report.date_of_fire_out = data.get('date-out', report.date_of_fire_out)
+        # Convert standalone dates
+        report.date_of_fire_under_control = data.get('date-under').strip() or None if data.get('date-under') else report.date_of_fire_under_control
+        report.date_of_fire_out = data.get('date-out').strip() or None if data.get('date-out') else report.date_of_fire_out
         def get_int_value(field_name, default=0):
             try:
                 raw_value = data.get(field_name, '').replace(',', '').strip()  

@@ -1249,8 +1249,13 @@ saveButton.addEventListener('click', function (event) {
         }
     });
 
-    formData.set('date-under', dateUnderField.value.trim() || ''); // Add Date of Fire Under Control
-    formData.set('date-out', dateOutField.value.trim() || '');
+    const dateFields = ['date-under', 'date-out'];
+    dateFields.forEach(field => {
+        const fieldElement = document.getElementById(field);
+        if (!fieldElement.value.trim()) {
+            formData.set(field, ''); // Default to "None" for empty date fields
+        }
+    });
 
     for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
