@@ -125,11 +125,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportIds}"]`);
         
         if (selectedRow) {
-            // Populate the modal with selected row data
-
             console.log('Selected row found:', selectedRow);
+    
+            // Get the status of the selected report
+            const status = selectedRow.dataset.status; 
+            console.log('Selected report status:', status);
+    
+            // Hide the resolve button if status is "Case Closed"
+            if (status === 'Case Closed') {
+                resolveButtons.forEach(button => button.style.display = 'none');
+            } else {
+                resolveButtons.forEach(button => button.style.display = 'block');
+            }
+    
+            // Populate the modal with selected row data
             populateModal(selectedRow);
-
+    
             // Show the modal
             const bootstrapModal = new bootstrap.Modal(modal);
             bootstrapModal.show();
