@@ -99,10 +99,12 @@
                             <label for="time-under" class="form-label">Time of Fire Under Control</label>
                             <input type="time" class="form-control" name="time-under" id="time-under" >
                         </div>
+
                         <div class="form-column">
                             <label for="date-under" class="form-label">Date of Fire Under Control</label>
                             <input type="date" name="date-under" class="form-control" id="date-under" > 
                         </div>
+
                         <div class="form-column" style="position: relative;">
                             <label for="funder-dec" class="form-label">Fire Under Control Declared by</label>
                             <input type="text" class="form-control" id="funder-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
@@ -118,10 +120,12 @@
                             <label for="time-out" class="form-label">Time of Fire Out</label>
                             <input type="time" class="form-control" name="time-out" id="time-out" >
                         </div>
+                        
                         <div class="form-column">
                             <label for="date-out" class="form-label">Date of Fire Out</label>
                             <input type="date" name="date-out" class="form-control" id="date-out" > 
                         </div>
+
                         <div class="form-column" style="position: relative;">
                             <label for="fout-dec" class="form-label">Fire Out Declared by</label>
                             <input type="text" class="form-control" id="fout-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
@@ -249,43 +253,6 @@
 {% endfor %}
 <script src="{% static 'js/prev_report_search.js' %}"></script>
 <script src="{% static 'js/format_numbers.js' %}"></script>
-
-<script>
-    // Add an event listener to all rows in the archive table
-document.querySelector('#archiveTable').addEventListener('click', function (event) {
-    // Find the closest row (tr) that was clicked
-    const row = event.target.closest('tr');
-    
-    if (row) {
-        // Get the `data-archive` attribute value
-        const isArchived = row.getAttribute('data-archive') === 'true';
-
-        if (isArchived) {
-            // Hide the Resolve button
-            document.querySelectorAll('.resolve-button').forEach(button => {
-                button.style.display = 'none';
-            });
-
-            // Hide the Edit button
-            document.querySelectorAll('.btn-edit').forEach(button => {
-                button.style.display = 'none';
-            });
-        } else {
-            // Show the buttons if the report is not archived
-            document.querySelectorAll('.resolve-button').forEach(button => {
-                button.style.display = 'block';
-            });
-
-            document.querySelectorAll('.btn-edit').forEach(button => {
-                button.style.display = 'block';
-            });
-        }
-    }
-});
-
-</script>
-
-
 
 
 <script>
