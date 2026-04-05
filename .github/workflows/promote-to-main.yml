@@ -1,0 +1,37 @@
+name: Promote ForDeployment to Main
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Docker Build"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'ForDeployment') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge ForDeployment into main
+        run: |
+          git fetch origin main ForDeployment
+          git checkout main
+          git merge origin/ForDeployment --no-ff -m "chore: auto-promote ForDeployment to main"
+
+      - name: Push main
+        run: git push origin main
