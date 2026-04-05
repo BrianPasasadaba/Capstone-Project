@@ -1,0 +1,445 @@
+{% extends "res_sidebar.html" %}
+{% load static %}
+{% block title %} True the Fire {% endblock %}
+
+{% block content %}
+<header>
+    <style>
+    span.dt-column-order {
+        display: none !important;
+    }
+
+    table.dataTable thead > tr > th.dt-ordering-asc {
+        padding: 0px !important; 
+    }
+
+    table.dataTable thead > tr > th.dt-ordering-desc{
+        padding: 0px !important;
+    }
+    </style>
+
+    <div class="header-content">
+        <div class="header-sb" >
+            <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="header-nav">
+            <span class="navigation-title">
+                <h1>Accounts</h1>
+            </span>
+            <ul class="navigation-list">
+                <div class="dropdown">
+                    <button class="btn-hotline dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        Hotline
+                    </button>
+                    <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
+                        <li class="dropdown-item"><span>Aplaya</span> 0905-566-6329</li>
+                        <li class="dropdown-item"><span>Balibago</span> 0945-757-8480</li>
+                        <li class="dropdown-item"><span>Caingin</span> 0927-950-0416</li>
+                        <li class="dropdown-item"><span>Dila</span> 0915-284-4003</li>
+                        <li class="dropdown-item"><span>Dita</span> 0949-766-6068</li>
+                        <li class="dropdown-item"><span>Don Jose</span> 0947-631-5504</li>
+                        <li class="dropdown-item"><span>Ibaba</span> 0923-744-0740</li>
+                        <li class="dropdown-item"><span>Kanluran</span> 0923-089-2694</li>
+                        <li class="dropdown-item"><span>Labas</span> 0923-089-2347</li>
+                        <li class="dropdown-item"><span>Macabling</span> 0915-945-1534</li>
+                        <li class="dropdown-item"><span>Malitlit</span> 0975-067-3385</li>
+                        <li class="dropdown-item"><span>Malusak</span> 0908-775-2302</li>
+                        <li class="dropdown-item"><span>Market Area</span> 0923-744-0847</li>
+                        <li class="dropdown-item"><span>Pooc</span> 0906-143-0029</li>
+                        <li class="dropdown-item"><span>P. Sta. Cruz</span> 502-0896</li>
+                        <li class="dropdown-item"><span>Sto. Domingo</span> 0919-932-9353</li>
+                        <li class="dropdown-item"><span>Sinalhan</span> 0943-129-7131</li>
+                        <li class="dropdown-item"><span>Tagapo</span> 0923-406-2704</li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn-profile dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">
+                            <i class="bi bi-person-circle"></i>
+                        </span>
+                        <div class="drop-user">{{ user.name }}</div>
+                    </button>
+
+                    <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#terms-condition-modal">Terms & Condition</button></li>
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
+                    </ul>
+
+                </div>
+            </ul>
+        </div>
+    </div>
+</header>
+
+
+<main>
+    <div class="mn-content-area">
+        <div class="accounts-box">
+            <div class="accounts-header">
+                <h1>List of Accounts</h1>
+            </div>
+            <div class="accounts-body">
+                <div class="ab-header">
+                    <div class="abh-search">
+                        <input type="text" id="accountSearchInput" class="search-report" placeholder="Search">
+                    </div>
+                    <div class="abh-filter">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                              Filter
+                            </button>
+                            <ul class="dropdown-menu dropdown-filter" aria-labelledby="dropdownMenuButton1" id="dropdown-filter-acc">
+                              <li><a class="dropdown-item" href="#">Verified</a></li>
+                              <li><a class="dropdown-item" href="#">Unverified</a></li>
+                            </ul>
+                          </div>
+                    </div>
+                </div>
+                <div class="ab-table">
+
+                    <table id="accountsTable">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accountTable">
+                            {% for account in accounts %}
+                            <tr 
+                            data-account-id="{{ account.id }}" 
+                            data-name="{{ account.name }}" 
+                            data-email="{{ account.email }}" 
+                            data-role="{{ account.get_role_display }}" 
+                            data-contact="{{ account.contact_number }}" 
+                            data-status="{{ account.verified }}">
+                            <td>
+                                    <div class="form-check">
+                                        <input 
+                                            class="form-check-input account-checkbox" 
+                                            type="checkbox" 
+                                            value="{{ account.email }}" 
+                                            id="flexCheckDefault-{{ account.id }}">
+                                        <label class="form-check-label" for="flexCheckDefault-{{ account.id }}"></label>
+                                    </div>
+                                </td>
+                                <td>{{ account.name }}</td>
+                                <td>{{ account.get_role_display }}</td>
+                                <td>{{ account.contact_number }}</td>
+                                <td>{{ account.email }}</td>
+                                <td>
+                                    <div>
+                                        <h6>
+                                            {% if account.verified %}
+                                            <span>Verified</span>
+                                            {% else %}
+                                            <span>Unverified</span>
+                                            {% endif %}
+                                        </h6>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6">No accounts available.</td>
+                            </tr>
+                            {% endfor %}
+ 
+                        </tbody>
+                        <tr id="noFoundFilter" style="display: none;">
+                            <td colspan="5" style="color: red; text-align: center;">No Data to Display.</td>
+                        </tr>  
+                    </table>         
+
+                </div>
+                <div class="ab-buttons">
+                    <div class="ab-add">
+                        <button type="button" class="btn btn-lg btn" data-bs-toggle="modal" data-bs-target="#add-account-modal">Add</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-lg btn" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#remove-account-modal" 
+                            id="removeButton"  disabled>
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                    
+                    
+</main>
+
+<!-- Include the modal -->
+{% include "modal_create_account.html" %}
+{% include "modal_remove_account.html" %}
+{% include "modal_change_password.html" %}
+{% include "modal_forgot_success.html" %}
+{% include "modal_terms_condi.html" %}
+{% include "modal_addacc_success.html" %}
+{% include "modal_preview_account.html" %}
+{% include "modal_editacc_success.html" %}
+
+{% endblock %}
+
+{% block scripts %}
+<!-- ADD SCRIPTS HERE -->
+<script src="{% static 'js/form_controls.js' %}"></script>
+<script src="{% static 'js/table_status.js' %}"></script>
+<!-- <script src="{% static 'js/filter.js' %}"></script> -->
+<script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+
+
+
+<script>
+    let selectedEmails = [];
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const removeButton = document.getElementById("removeButton");
+    
+        // Initialize DataTables with custom configuration
+        const accountsTable = new DataTable('#accountsTable', {
+            responsive: false,
+            searching: true,  // Enable searching
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pagingType: 'full_numbers',
+            pageLength: 10,
+            info: false, 
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found",
+                paginate: {
+                    next: 'Next',
+                    previous: 'Previous'  
+                  }
+            },
+            layout: {
+                topEnd: null,
+                bottomEnd: {
+                    paging: {
+                        buttons: 3
+                    }
+                }
+            },
+            drawCallback: function() {
+                // Re-bind click handlers after each draw (page change, search, etc)
+                bindTableEvents();
+
+                // Clear all checkboxes on page change
+                document.querySelectorAll('#accountsTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+                
+                // Disable remove button
+                removeButton.disabled = true;
+            }
+        });
+
+        // Custom filtering functionality
+        const dropdownItems = document.querySelectorAll('.dropdown-filter .dropdown-item');
+        const searchInput = document.getElementById('accountSearchInput');
+
+        function applyFilter(filterCriteria) {
+            accountsTable.search('').columns().search('').draw(); // Clear existing filters
+
+            $.fn.dataTable.ext.search = [];
+        
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const status = $(accountsTable.row(dataIndex).node()).find('td:eq(5) span').text().trim();
+                return filterCriteria === 'All' || status === filterCriteria;
+            });
+        
+            accountsTable.draw();
+        }
+        
+
+        // Event listener for dropdown filter
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                const filterCriteria = e.target.textContent.trim();
+                
+                // Update active state in dropdown
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                e.target.classList.add('active');
+    
+                applyFilter(filterCriteria);
+            });
+        });
+
+        function bindTableEvents() {
+            // Remove existing handlers first to prevent duplicates
+            $('#accountsTable tbody td').off('click');
+            
+            // Bind checkbox column clicks
+            $('#accountsTable tbody td:first-child').on('click', function(e) {
+                if (!$(e.target).hasClass('form-check-input')) {
+                    const checkbox = $(this).find('input[type="checkbox"]');
+                    if (checkbox.length) {
+                        checkbox.prop('checked', !checkbox.prop('checked'));
+                    }
+                }
+                e.stopPropagation();
+            });
+        
+            // Bind other column clicks
+            $('#accountsTable tbody td:not(:first-child)').on('click', function() {
+                const row = $(this).closest('tr');
+                
+                // Get data from row attributes
+                const accountId = row.attr('data-account-id');
+                const name = row.attr('data-name');
+                const email = row.attr('data-email');
+                const role = row.attr('data-role');
+                const contact = row.attr('data-contact');
+                const status = row.attr('data-status');
+        
+                // Populate modal
+                $('#prev-name').val(name || '');
+                $('#prev-email').val(email || '');
+                $('#prev-role').val(role || '');
+                $('#prev-contact').val(contact || '');
+        
+                console.log('Selected Account:', { accountId, name, email, role, contact, status });
+        
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('prev-account-modal'));
+                modal.show();
+            });
+        }
+        
+
+        // Event listener for search input
+        searchInput.addEventListener('input', function () {
+            accountsTable.search(this.value).draw();
+        });
+        
+
+        const table = $('#accountsTable').DataTable();
+
+        // Initial disable
+        removeButton.disabled = true;
+
+        // Use event delegation for checkbox changes
+        $('#accountsTable tbody').on('change', '.account-checkbox', function() {
+            const checkboxes = document.querySelectorAll('#accountsTable .account-checkbox');
+            const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            removeButton.disabled = !anyChecked;
+        });
+
+        // Handle remove button click
+        removeButton.addEventListener("click", function () {
+            selectedEmails = []; 
+            document.querySelectorAll('#accountsTable .form-check-input:checked').forEach((checkbox) => {
+                selectedEmails.push(checkbox.value);
+            });
+
+            if (selectedEmails.length === 0) {
+                alert('Please select at least one account to remove.');
+                return;
+            }
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('remove-account-modal'));
+            modal.show();
+        });
+
+        // Handle confirm remove
+        document.getElementById('confirmRemoveButton').addEventListener("click", function () {
+            if (selectedEmails.length === 0) return;
+
+            fetch('/remove-accounts/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken() 
+                },
+                body: JSON.stringify({ emails: selectedEmails })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('remove-account-modal'));
+                    modal.hide();
+
+                    // Use DataTables API to remove rows
+                    table.rows((idx, data, node) => {
+                        return selectedEmails.includes($(node).find('td:nth-child(4)').text().trim());
+                    }).remove().draw();
+
+                    window.location.href = '/admin_home/';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while removing accounts.');
+            });
+        });
+
+        document.querySelector('.btn-cancel').addEventListener("click", function () {
+            window.location.href = '/admin_home/';
+        });
+
+        function getCsrfToken() {
+            const cookies = document.cookie.split(';');
+            for (const cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'csrftoken') {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        accountsTable.draw(); // Draw the table
+    });
+
+</script>
+
+<script>
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Check if the account_added context variable is passed and true
+        {% if account_added %}
+            const successModal = new bootstrap.Modal(document.getElementById('addacc-success-modal'));
+            successModal.show();
+        {% endif %}
+    
+        // Handle the OK button click to redirect
+        const modalOkButton = document.getElementById('modal-ok-button');
+        modalOkButton.addEventListener('click', function() {
+            window.location.href = '/admin_home/'; // Redirect to the admin home page
+        });
+    });
+    </script>
+
+
+
+
+
+
+{% endblock %}

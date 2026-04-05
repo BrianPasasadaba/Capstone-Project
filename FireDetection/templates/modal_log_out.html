@@ -1,0 +1,55 @@
+
+{% load active_link_tags %}
+<div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="out-logo">
+                    <i class="bi bi-box-arrow-in-left"></i>
+                    <h3>Are you sure you want to 
+                        leave this site?</h3>
+                </div>
+                <div class="modal-footer">
+                    <div class="mf-button">
+                        <button class="btn btn-lg px-4 btn-cancel"  type="button" class="btn-close" data-bs-dismiss="modal">Cancel</button>
+                        <button id="logout-confirm-btn" class="btn btn-lg px-4 btn-confirm" type="button">Confirm</button>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('logout-confirm-btn').addEventListener('click', function () {
+        sessionStorage.setItem('logout-confirmed', 'true');
+
+        history.pushState(null, null, window.location.href);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, window.location.href); 
+        });
+
+        window.location.href = "{% url 'logout' %}";
+    });
+
+</script>
+
+<script type="text/javascript">
+    // Prevent back navigation
+    window.history.forward();
+
+    function noBack() {
+        window.history.forward();
+    }
+
+    window.onload = noBack;
+    window.onpageshow = function (event) {
+        if (event.persisted) {
+            noBack();
+        }
+    };
+</script>
+

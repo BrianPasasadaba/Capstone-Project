@@ -1,0 +1,534 @@
+
+{% load static %}
+{% for report in reports %}
+{% csrf_token %}
+
+<div class="modal fade" id="report-preview-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Initial Report</h3>
+                <div class="edit-form" id="edit-button">
+                    <button class="btn btn-edit" id="edit-button" >
+                        <i class="bi bi-pencil-square" id="edit-icon-{{ report.id }}"></i>
+                        <span id="edit-text-{{ report.id }}">Edit</span>
+                    </button>
+                </div>
+                <button type="button" id="close-button" class="btn-close"  aria-label="Close"></button>
+                
+            </div>
+
+            <div class="modal-body">
+                <div id="hide_status" style="display: none;">
+                    <strong>Status:</strong> <span id="modal-status"></span>
+                </div>
+
+                <form  action="{% url 'update_report' report.id  %}" enctype="multipart/form-data" method="post" id="report-preview-form">
+                    <input type="hidden" id="report-id" name="report_id" value="">
+                    {% csrf_token %}
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="loc" class="form-label">Location</label>
+                            <input type="text" name="where" maxlength="100"  class="form-control" id="loc" required>
+                        </div>
+
+                        <div class="form-column">
+                            <label for="team" class="form-label">Responding Team</label>
+                            <select class="form-select" aria-label="Default select example" name="team" id="team">
+                                <option value="Shift A">Shift A</option>
+                                <option value="Shift B">Shift B</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-column">
+                            <label for="detect" class="form-label">Time Reported</label>
+                            <input type="time" name="detect" class="form-control" id="detect" required> 
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="date" class="form-label">Date Reported</label>
+                            <input type="date" name="date" class="form-control" id="date" required>
+                        </div>
+                        
+                        <div class="form-column" style="position: relative;">
+                            <label for="involved" class="form-label">Involved</label>
+                            <input type="text" class="form-control" id="involved-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
+                            <input type="text" class="form-control" name="involved" id="involved">
+                            <ul class="dropdown-menu" id="involved-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
+                                <!-- Options will be populated here dynamically -->
+                            </ul>
+                        </div>
+                        
+                        <div class="form-column">
+                            <label for="owner" class="form-label">Name of Owner</label>
+                            <input type="text" class="form-control" name="owner" id="owner" placeholder="e.g. Juan Dela Cruz" maxlength="60" >
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="alarm" class="form-label">Alarm Status</label>
+                            <select class="form-select" aria-label="Default select example" name="alarm" id="alarm" >
+                                <option value="1st Alarm">1st Alarm</option>
+                                <option value="2nd Alarm">2nd Alarm</option>
+                                <option value="3rd Alarm">3rd Alarm</option>
+                                <option value="4th Alarm">4th Alarm</option>
+                                <option value="5th Alarm">5th Alarm</option>
+                            </select>
+                        </div>
+
+                        <div class="form-column" style="position: relative;">
+                            <label for="alarm-dec" class="form-label">Alarm Status Declared by</label>
+                            <input type="text" class="form-control" id="alarm-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
+                            <input type="text" class="form-control" name="alarm-dec" id="alarm-dec">
+                            <ul class="dropdown-menu" id="alarm-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
+                                <!-- Options will be populated here dynamically -->
+                            </ul>
+                        </div>
+                        <div class="form-column">
+                            <label for="time-arrive" class="form-label">Time of Arrival</label>
+                            <input type="time" class="form-control" id="time-arrive" name="time-arrive" >
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="time-under" class="form-label">Time of Fire Under Control</label>
+                            <input type="time" class="form-control" name="time-under" id="time-under" >
+                        </div>
+
+                        <div class="form-column">
+                            <label for="date-under" class="form-label">Date of Fire Under Control</label>
+                            <input type="date" name="date-under" class="form-control" id="date-under" > 
+                        </div>
+
+                        <div class="form-column" style="position: relative;">
+                            <label for="funder-dec" class="form-label">Fire Under Control Declared by</label>
+                            <input type="text" class="form-control" id="funder-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
+                            <input type="text" class="form-control" name="funder-dec" id="funder-dec">
+                            <ul class="dropdown-menu" id="funder-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
+                                <!-- Options will be populated here dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="time-out" class="form-label">Time of Fire Out</label>
+                            <input type="time" class="form-control" name="time-out" id="time-out" >
+                        </div>
+                        
+                        <div class="form-column">
+                            <label for="date-out" class="form-label">Date of Fire Out</label>
+                            <input type="date" name="date-out" class="form-control" id="date-out" > 
+                        </div>
+
+                        <div class="form-column" style="position: relative;">
+                            <label for="fout-dec" class="form-label">Fire Out Declared by</label>
+                            <input type="text" class="form-control" id="fout-dec-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
+                            <input type="text" class="form-control" name="fout-dec" id="fout-dec">
+                            <ul class="dropdown-menu" id="fout-dec-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
+                                <!-- Options will be populated here dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="damage" class="form-label">Estimated Damages</label>
+                            <input type="text" class="form-control" name="damage" id="damage" placeholder="e.g. P1,000,000" maxlength="12" inputmode="decimal" oninput="formatNumber(this)">
+                        </div>
+                        <div class="form-column">
+                            <label for="fatality" class="form-label">No. of Fatality</label>
+                            <input type="text" class="form-control" id="fatality" placeholder="e.g. 11" name="fatality" maxlength="12" inputmode="numeric" oninput="formatNumber(this)" data-raw-value="">
+                        </div>
+                        <div class="form-column">
+                            <label for="injured" class="form-label">No. of Injured</label>
+                            <input type="text" class="form-control" id="injured" placeholder="e.g. 11" name="injured" maxlength="12" inputmode="numeric" oninput="formatNumber(this)" data-raw-value="">
+                        </div>
+                    </div>
+                
+                    <div class="form-row">
+                        <div class="form-column">
+                            <label for="affected" class="form-label">No. of Families Affected</label>
+                            <input type="text" class="form-control" id="affected" placeholder="e.g. 11" name="affected" maxlength="12" inputmode="numeric" oninput="formatNumber(this)" data-raw-value="">
+                        </div>
+                        <div class="form-column">
+                            <label for="establishment" class="form-label">No. of Establishment</label>
+                            <input type="text" class="form-control" id="establishment" placeholder="e.g. 11" name="establishment" maxlength="12" inputmode="numeric" oninput="formatNumber(this)" data-raw-value="">
+                        </div>
+                        <div class="form-column">
+                            <label for="truck" class="form-label">No. of Fire Trucks Responded</label>
+                            <input type="text" class="form-control" id="truck" placeholder="e.g. 11" name="truck" maxlength="12" inputmode="numeric" oninput="formatNumber(this)" data-raw-value="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-column" style="position: relative;">
+                            <label for="ground" class="form-label">Ground Commander</label>
+                            <input type="text" class="form-control" id="ground-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
+                            <input type="text" class="form-control" name="ground" id="ground">
+                            <ul class="dropdown-menu" id="ground-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
+                                <!-- Options will be populated here dynamically -->
+                            </ul>
+                        </div>
+
+                        <div class="form-column">
+                            <label for="ground-num" class="form-label">Ground Commander Contact:</label>
+                            <input type="text" class="form-control" name="ground-num" id="ground-num" placeholder="e.g. 09227807570" maxlength="11" pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-column" style="position: relative;">
+                            <label for="safety" class="form-label">Safety Officer</label>
+                            <input type="text" class="form-control" id="safety-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
+                            <input type="text" class="form-control" name="safety" id="safety">
+                            <ul class="dropdown-menu" id="safety-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
+                                <!-- Options will be populated here dynamically -->
+                            </ul>
+                        </div>
+
+                        <div class="form-column">
+                            <label for="safety-num" class="form-label">Safety Officer Contact:</label>
+                            <input type="text" class="form-control" name="safety-num" id="safety-num" placeholder="e.g. 09227807570" maxlength="11" pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-column" style="position: relative;">
+                            <label for="sender" class="form-label">Name of Sender</label>
+                            <input type="text" class="form-control" id="sender-search" placeholder="Search..." autocomplete="off" maxlength="30" style="display:none;">
+                            <input type="text" class="form-control" name="sender" id="sender">
+                            <ul class="dropdown-menu" id="sender-options" style="display: none; position: absolute; z-index: 1; width: 100%;">
+                                <!-- Options will be populated here dynamically -->
+                            </ul>
+                        </div>
+
+                        <div class="form-column">
+                            <label for="sender-num" class="form-label">Name of Sender Contact:</label>
+                            <input type="text" class="form-control" name="sender-num" id="sender-num" placeholder="e.g. 09227807570" maxlength="11" pattern="[0-9]{11}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                        </div>
+                        
+                    </div>
+                    <div class="form-row"></div>
+                        <div class="form-column">
+                            <div class="proof-image" style="gap: 0.5rem;">
+                                <label for="proof" class="form-label">Proof of Fire Incident</label>
+
+                                <div id="proofs">
+                                    <img id="proof"  name="proof" class="img-fluid" style="max-width: 500px;" alt="No Proof to Show" >
+                                </div>
+
+                                <input type="file" class="form-control" id="modal-proof" name="input-proof" accept="image/jpeg, image/jpg, image/png, image/gif" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <div class="mf-button">
+                            <button type="button" class="btn btn-lg px-4 copy-button" onclick="copyModalContent()">
+                                Copy
+                            </button>                            
+                            <button  type="submit" class="btn btn-lg px-4 resolve-button" id="resolve-button" >
+                                Resolve
+                            </button>
+                            <button  type="submit" class="btn btn-lg px-4 save-button"  id="saveButton"  style="display: none;" >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endfor %}
+<script src="{% static 'js/prev_report_search.js' %}"></script>
+<script src="{% static 'js/format_numbers.js' %}"></script>
+
+
+<script>
+// Combined cleanInput function
+function cleanInput(event, allowedChars) {
+    const input = event.target;
+    let value = input.value;
+
+    // Check if the first character is invalid (not a letter or number)
+    if (/[^A-Za-z0-9]/.test(value.charAt(0)) && value.length === 1) {
+        return; // Don't update if the first character is invalid and it's the only character
+    }
+
+    // If the first character is invalid but there are more characters, allow editing
+    if (value.length > 1 && /[^A-Za-z0-9]/.test(value.charAt(0))) {
+        // Remove the invalid first character and continue processing
+        value = value.slice(1);
+    }
+
+    // Remove invalid characters dynamically while allowing spaces
+    const regex = new RegExp(`[^${allowedChars}]`, "g");
+    value = value.replace(regex, ''); // Remove disallowed characters
+
+    // Replace multiple spaces with a single space
+    value = value.replace(/\s+/g, ' ');
+
+    // Trim leading spaces while typing but allow it when input is still being typed
+    input.value = value.trimStart(); // Keep leading spaces when typing, trim at the end
+}
+
+// Attach to specific input fields
+document.addEventListener("DOMContentLoaded", function() {
+    const fields = {
+        loc: 'A-Za-z0-9.,\\s-',
+        'involved-search': 'A-Za-z\\s.,/-',
+        owner: 'A-Za-z\\s.,-',
+        'alarm-dec-search': 'A-Za-z\\s.,-',
+        'funder-dec-search': 'A-Za-z\\s.,-',
+        'fout-dec-search': 'A-Za-z\\s.,-',
+        'ground-search': 'A-Za-z\\s.,-',
+        'safety-search': 'A-Za-z\\s.,-',
+        'sender-search': 'A-Za-z\\s.,-'
+    };
+
+    Object.keys(fields).forEach(id => {
+        const field = document.getElementById(id);
+        if (field) {
+            field.addEventListener("input", event => cleanInput(event, fields[id]));
+        }
+    });
+});
+
+    </script>
+    
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const editButtons = document.querySelectorAll(".btn.btn-edit");
+
+    editButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            const reportId = button.id.split("-").pop();
+
+            const proofImage = document.querySelector(`#proof[name="proof"]`);
+            const proofInput = document.querySelector(`#modal-proof[name="input-proof"]`);
+
+            if (proofImage) {
+                proofImage.style.display = "none";
+            } else {
+                console.error(`Proof image not found for report ID ${reportId}`);
+            }
+
+            if (proofInput) {
+                proofInput.style.display = "block";
+            } else {
+                console.error(`Proof input not found for report ID ${reportId}`);
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const imageUrl = "{{ report.proof }}"; 
+
+    const proofContainer = document.querySelector("div[style='display: none;']");
+    const proofImage = document.querySelector("#proof");
+
+    if (imageUrl) {
+        proofImage.src = imageUrl;
+
+        proofContainer.style.display = "flex"; 
+        proofContainer.style.justifyContent = "center"; 
+        proofContainer.style.alignItems = "center"; 
+    } else {
+        console.warn("No proof data available to display.");
+    }
+});
+
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const reportRows = document.querySelectorAll('#reportTable tr[data-bs-toggle="modal"]');
+    const teamSelect = document.getElementById('team'); 
+    reportRows.forEach(row => {
+        row.addEventListener('click', function () {
+            const fireTeam = row.getAttribute('data-team');
+            if (fireTeam && teamSelect) {
+                Array.from(teamSelect.options).forEach(option => {
+                    if (option.textContent.trim() === fireTeam.trim()) {
+                        teamSelect.value = option.value;
+                    }
+                });
+            }
+        });
+    });
+});
+
+</script>
+
+<script>
+function copyModalContent() {
+    const form = document.getElementById('report-preview-form');
+    const previewModal = document.getElementById('report-preview-modal');
+    const customAlertModal = document.getElementById('customAlertModal');
+    const customAlertOkButton = customAlertModal.querySelector('.btn-disconfirm');
+    let contentToCopy = "";
+
+
+    const locationField = document.getElementById('loc');
+    const detectField = document.getElementById('detect');
+    const dateField = document.getElementById('date');
+    let valid = true;
+
+    clearErrorMessages();
+
+    if (!locationField.value.trim()) {
+        showErrorMessage(locationField, 'Location is required.');
+        valid = false;
+    }
+
+    if (!detectField.value.trim()) {
+        showErrorMessage(detectField, 'Time Reported is required.');
+        valid = false;
+    }
+
+    if (!dateField.value.trim()) {
+        showErrorMessage(dateField, 'Date is required.');
+        valid = false;
+    }
+
+    if (!valid) {
+        scrollToFirstInvalidField(); // Scroll to the first invalid field
+        return; // Stop the function if validation fails
+    }
+
+    Array.from(form.elements).forEach(element => {
+        if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
+            element.blur(); // Update the field value by blurring
+        }
+    });
+
+
+    setTimeout(() => {
+        let loc = locationField?.value.trim() || "None";
+        let involved = document.getElementById('involved')?.value.trim() || "None";
+
+        contentToCopy += `SANTA ROSA CITY FIRE STATION reporting a 1070 (${involved}) at (${loc}), Santa Rosa City, Laguna, R4A\n`;
+
+        Array.from(form.elements).forEach(element => {
+            if (
+                element.name && 
+                element.name !== "csrfmiddlewaretoken" && 
+                element.type !== "submit" && 
+                element.type !== "button" && 
+                element.type !== "hidden" && // Exclude all hidden fields
+                element.name !== "proof"
+            ) {
+                const label = document.querySelector(`label[for="${element.id}"]`);
+                const labelText = label ? label.innerText.replace(/<i.*<\/i>/, '').trim() : element.name;
+
+                let value;
+                if (element.type === "select-one") {
+                    value = element.options[element.selectedIndex]?.text.trim();
+                } else if (element.type === "checkbox" || element.type === "radio") {
+                    value = element.checked ? "Yes" : "No";
+                } else {
+                    value = element.value.trim();
+                }
+
+                // Check if value is not empty and not "None"
+                if (value && value !== "None") {
+                    contentToCopy += `${labelText}: ${value}\n`;
+                }
+            }
+        });
+
+        navigator.clipboard.writeText(contentToCopy.trim()).then(() => {
+            console.log("Content copied to clipboard.");
+
+            const previewModalInstance = bootstrap.Modal.getInstance(previewModal);
+            if (previewModalInstance) {
+                previewModal.addEventListener(
+                    "hidden.bs.modal",
+                    function () {
+                        console.log("Preview modal hidden. Showing custom alert modal...");
+                        const customAlertInstance = new bootstrap.Modal(customAlertModal);
+                        customAlertInstance.show();
+                    },
+                    { once: true }
+                );
+                previewModalInstance.hide();
+            } else {
+                console.log("No preview modal instance found. Showing custom alert modal directly...");
+                const customAlertInstance = new bootstrap.Modal(customAlertModal);
+                customAlertInstance.show();
+            }
+        }).catch((err) => {
+            console.error("Failed to copy content: ", err);
+            alert("Failed to copy content.");
+        });
+    });
+
+    // Custom alert button logic
+    customAlertOkButton.addEventListener(
+        "click",
+        function () {
+            const customAlertInstance = bootstrap.Modal.getInstance(customAlertModal);
+            if (customAlertInstance) {
+                customAlertInstance.hide();
+            }
+
+            const previewModalInstance = new bootstrap.Modal(previewModal);
+            previewModalInstance.show();
+        },
+        { once: true }
+    );
+}
+
+// Validation helper functions
+function showErrorMessage(field, message) {
+    const errorElement = document.createElement('small');
+    errorElement.innerHTML = message; // Use innerHTML to render the icon
+    errorElement.style.color = 'red';
+    errorElement.style.fontSize = '0.8rem';
+    errorElement.style.display = 'block';
+    errorElement.style.textAlign = 'left';
+    errorElement.style.paddingTop = '0.2rem';
+    field.parentNode.appendChild(errorElement); 
+    field.classList.add('is-invalid'); 
+}
+
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll('.is-invalid');
+    errorMessages.forEach(function (field) {
+        field.classList.remove('is-invalid');
+    });
+
+    const errorText = document.querySelectorAll('small');
+    errorText.forEach(function (msg) {
+        msg.remove(); 
+    });
+}
+
+function scrollToFirstInvalidField() {
+    const firstInvalidField = document.querySelector('.is-invalid');
+    if (firstInvalidField) {
+        firstInvalidField.scrollIntoView({
+            behavior: 'smooth', // Smooth scrolling
+            block: 'center' // Scroll the field to the center of the viewport
+        });
+    }
+}
+
+
+
+</script>
+

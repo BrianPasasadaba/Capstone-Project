@@ -1,0 +1,1216 @@
+{% extends "res_sidebar.html" %}
+{% load static %}
+{% block title %} True the Fire {% endblock %}
+
+{% block content %}
+<header>
+    <style>
+        span.dt-column-order {
+            display: none !important;
+        }
+
+        table.dataTable thead > tr > th.dt-ordering-asc {
+            padding: 0px !important; 
+        }
+
+        table.dataTable thead > tr > th.dt-ordering-desc{
+            padding: 0px !important;
+        }
+        div.dt-container div.dt-paging {
+            margin: 8px;
+        }
+    </style>
+    <div class="header-content">
+        <div class="header-sb">
+            <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="header-nav">
+            <span class="navigation-title">
+                <h1>Reports</h1>
+            </span>
+            <ul class="navigation-list">
+                <div class="dropdown">
+                    <button class="btn-hotline dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        Hotline
+                    </button>
+                    <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
+                        <li class="dropdown-item"><span>Aplaya</span> 0905-566-6329</li>
+                        <li class="dropdown-item"><span>Balibago</span> 0945-757-8480</li>
+                        <li class="dropdown-item"><span>Caingin</span> 0927-950-0416</li>
+                        <li class="dropdown-item"><span>Dila</span> 0915-284-4003</li>
+                        <li class="dropdown-item"><span>Dita</span> 0949-766-6068</li>
+                        <li class="dropdown-item"><span>Don Jose</span> 0947-631-5504</li>
+                        <li class="dropdown-item"><span>Ibaba</span> 0923-744-0740</li>
+                        <li class="dropdown-item"><span>Kanluran</span> 0923-089-2694</li>
+                        <li class="dropdown-item"><span>Labas</span> 0923-089-2347</li>
+                        <li class="dropdown-item"><span>Macabling</span> 0915-945-1534</li>
+                        <li class="dropdown-item"><span>Malitlit</span> 0975-067-3385</li>
+                        <li class="dropdown-item"><span>Malusak</span> 0908-775-2302</li>
+                        <li class="dropdown-item"><span>Market Area</span> 0923-744-0847</li>
+                        <li class="dropdown-item"><span>Pooc</span> 0906-143-0029</li>
+                        <li class="dropdown-item"><span>P. Sta. Cruz</span> 502-0896</li>
+                        <li class="dropdown-item"><span>Sto. Domingo</span> 0919-932-9353</li>
+                        <li class="dropdown-item"><span>Sinalhan</span> 0943-129-7131</li>
+                        <li class="dropdown-item"><span>Tagapo</span> 0923-406-2704</li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn-profile dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">
+                            <i class="bi bi-person-circle"></i>
+                        </span>
+                        <div class="drop-user">{{ user.name }}</div>
+                    </button>
+                    <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#terms-condition-modal">Terms & Condition</button></li>
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
+                    </ul>
+                </div>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="mn-content-area">
+        <div class="reports-box">
+            <div class="reports-header">
+                <h1>List of Reports</h1>
+            </div>
+            <div class="reports-body">
+
+                <div class="rb-header">
+                    <div class="rbh-left">
+                        <div class="rbh-search">
+                            <input type="text" id="searchInput" class="search-report" placeholder="Search" maxlength="30">
+                            <ul id="suggestionsBox" class="dropdown-menu"></ul>
+                        </div>
+                    <div class="rb-group">
+                        <div class="create-button">
+                            <!-- <a class="btn-create btn-lg btn" data-bs-toggle="modal" data-bs-target="#create-report-modal"><i class="bi bi-plus-circle px-1"></i>Create Report</a> -->
+                            <a class="btn-create btn-lg btn" href="{% url 'create_reports' %}"><i class="bi bi-plus-circle px-1"></i>Create Report</a>
+                            
+                        </div>
+                        <div class="rb-export">
+                            <div class="input-group">
+
+                                <button class="btn btn-excel dropdown-toggle" type="button" id="exportButton" data-bs-toggle="dropdown" aria-expanded="false">Export Options</button>
+
+                                <ul class="dropdown-menu export-opt" aria-labelledby="exportButton" id="yearDropdown">
+                                    {% for year in years %}
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="handleExport({{ year }})">
+                                                Export {{ year }} Reports
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+
+                            </div>          
+                            
+                            <div id="noDataMessage" style="display: none; text-align: center; font-size: 16px;">
+                                No data available.
+                            </div>
+                        </div>
+                    </div>
+                        
+                    </div>
+                    
+                    <div class="rbh-right">
+                        <div class="rbh-filter">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                  Filter
+                                </button>
+                                <ul class="dropdown-menu .dropdown-filter" aria-labelledby="dropdownMenuButton1" id="dropdown-filter-rep">
+                                  <li><a class="dropdown-item" href="#">Latest</a></li>
+                                  <li><a class="dropdown-item" href="#">Oldest</a></li>
+                                  <li><a class="dropdown-item" href="#">Ongoing</a></li>
+                                  <li><a class="dropdown-item" href="#">Case Resolved</a></li>
+                                </ul>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="rb-table">
+                    <div class="rbt-header">
+                        <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="true">REPORTS</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                  <button class="nav-link" id="archives-tab" data-bs-toggle="tab" data-bs-target="#archives" type="button" role="tab" aria-controls="archives" aria-selected="false">ARCHIVES</button>
+                            </li>
+                        </ul>
+                        <div class="rbth-btns">
+                            <button
+                            type="button"
+                            class="btn btn-sm btn-view"
+                            data-bs-toggle="modal"
+                            data-bs-target="#report-preview-modal"
+                            disabled><i class="bi bi-eye-fill" ></i> View</button>
+
+                            <button type="button" class="btn btn-sm btn-archive" id="archiveBtn" disabled><i class="bi bi-archive-fill"  data-report-id="{{ report.id }}" ></i>Archive</button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="reportTabsContent">
+                        <!-- Reports Tab Content -->
+                        <div class="tab-pane fade show active" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+                            <table id="reportsTable">
+                                <thead>
+                                    <tr >
+                                        <th>Select</th>
+                                        <th>Report</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody id="reportTable">
+                                    {% for report in reports %}
+                                    <tr
+                                        data-report-id="{{ report.id|default:0 }}"
+                                        data-status="{{ report.status|default:'None' }}"
+                                        data-location="{{ report.where|default:'None' }}" 
+                                        data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
+                                        data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
+                                        data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-owner="{{ report.name_of_owner|default:'None' }}"
+                                        data-alarm="{{ report.alarm_status|default:'None' }}"
+                                        data-damages="{{ report.estimated_damages|default:0 }}"
+                                        data-establishments="{{ report.no_of_establishments|default:0 }}"
+                                        data-casualties="{{ report.no_of_fatality|default:0 }}" 
+                                        data-injured="{{ report.no_of_injured|default:0 }}"
+                                        data-proof="{{ report.proof|default:'None' }}"
+                                        data-involved="{{ report.involved|default:'None' }}"
+                                        data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
+                                        data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
+                                        data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
+                                        data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
+                                        data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
+                                        data-families-affected="{{ report.no_of_families_affected|default:0 }}"
+                                        data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
+                                        data-ground-commander="{{ report.ground_commander|default:'None' }}"
+                                        data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
+                                        data-safety-officer="{{ report.safety_officer|default:'None' }}"
+                                        data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
+                                        data-sender="{{ report.name_of_sender|default:'None' }}"
+                                        data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
+                                        data-team="{{ report.team|default:'None' }}" 
+                                        
+                                        >
+                                        <td>
+                                            <input class="form-check-input r-check" type="checkbox" value="{{ report.id }}" id="checkbox-{{ report.id }}">
+                                        </td>
+                                        <td>{{ report.fir_number|default:'None' }}</td>
+                                        <td>{{ report.where|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
+                                        <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
+                                        <td>
+                                            <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6">No reports available</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr id="noResultsMessage" style="display: none; width: 100%;">
+                                    <td colspan="6" style="color: red; text-align: center;">No results found. Try again.</td>
+                                </tr>      
+
+                                <tr id="noFoundFilter" style="display: none; width: 100%;">
+                                    <td colspan="6" style="color: red; text-align: center;">No Data to Display.</td>
+                                </tr>           
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="archives" role="tabpanel" aria-labelledby="archives-tab">
+                            <table id="archivesTable">
+                                <thead>
+                                    <tr   >
+                                        <th>Select</th>
+                                        <th>Report</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody id="archiveTable">
+                                    {% for report in archived_Reports %}
+                                    <tr
+                                        data-report-id="{{ report.id|default:0 }}"
+                                        data-status="{{ report.status|default:'None' }}"
+                                        data-location="{{ report.where|default:'None' }}" 
+                                        data-date="{{ report.date_reported|date:'Y-m-d'|default:'None' }}"
+                                        data-time="{{ report.time_reported|time:'H:i'|default:'None' }}"
+                                        data-fireout="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-owner="{{ report.name_of_owner|default:'None' }}"
+                                        data-alarm="{{ report.alarm_status|default:'None' }}"
+                                        data-damages="{{ report.estimated_damages|default:0 }}"
+                                        data-establishments="{{ report.no_of_establishments|default:0 }}"
+                                        data-casualties="{{ report.no_of_fatality|default:0 }}" 
+                                        data-injured="{{ report.no_of_injured|default:0 }}"
+                                        data-proof="{{ report.proof|default:'None' }}"
+                                        data-involved="{{ report.involved|default:'None' }}"
+                                        data-alarm-declared-by="{{ report.alarm_declared_by|default:'None' }}"
+                                        data-time-arrival="{{ report.time_of_arrival|time:'H:i'|default:'None' }}"
+                                        data-time-under-control="{{ report.time_of_fire_under_control|time:'H:i'|default:'None' }}"
+                                        data-date-under-control="{{ report.date_of_fire_under_control|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-under-declared-by="{{ report.fire_under_control_declared_by|default:'None' }}"
+                                        data-time-fire-out="{{ report.time_of_fire_out|time:'H:i'|default:'None' }}"
+                                        data-date-fire-out="{{ report.date_of_fire_out|date:'Y-m-d'|default:'None' }}"
+                                        data-fire-out-declared-by="{{ report.fire_out_declared_by|default:'None' }}"
+                                        data-families-affected="{{ report.no_of_families_affected|default:0 }}"
+                                        data-trucks="{{ report.no_of_fire_trucks|default:0 }}"
+                                        data-ground-commander="{{ report.ground_commander|default:'None' }}"
+                                        data-ground-commander-contact="{{ report.commander_contact_number|default:'None' }}"
+                                        data-safety-officer="{{ report.safety_officer|default:'None' }}"
+                                        data-safety-officer-contact="{{ report.officer_contact_number|default:'None' }}"
+                                        data-sender="{{ report.name_of_sender|default:'None' }}"
+                                        data-sender-contact="{{ report.sender_contact_number|default:'None' }}"
+                                        data-team="{{ report.team|default:'None' }}" 
+                                        data-archive="{{ report.is_archived|yesno:'true,false'}}"                   
+                                        >
+                                        <td>
+                                            <input class="form-check-input r-check" type="checkbox" value="{{ report.id }}" id="checkbox-{{ report.id }}">
+                                        </td>
+                                        <td>{{ report.fir_number|default:'None' }}</td>
+                                        <td>{{ report.where|default:'None' }}</td>
+                                        <td>{{ report.date_reported|date:"Y/m/d"|default:'None' }}</td>
+                                        <td>{{ report.time_reported|time:"h:i A"|default:'None' }}</td>
+                                        
+                                        <td>
+                                            <h6 id="status-text-{{ report.id }}">{{ report.status|default:'None' }}</h6>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6">No reports available</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr id="noResultsMessage" style="display: none;">
+                                    <td colspan="6" style="color: red; text-align: center;">No results found. Try again.</td>
+                                </tr>      
+
+                                <tr id="noFoundFilter" style="display: none;">
+                                    <td colspan="6" style="color: red; text-align: center;">No Data to Display.</td>
+                                </tr>           
+                            </table>
+                        </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+      <!-- Modal -->
+      
+      <!-- Script to Control Modal -->
+
+
+</main>
+
+{% include "modal_createrp_success.html" %}
+{% include "modal_create_report.html" %}
+{% include "modal_preview_report.html" %}
+{% include "modal_change_password.html" %}
+{% include "modal_forgot_success.html" %}
+{% include "modal_unsaved_warning.html" %}
+{% include "modal_remove_account.html" %}
+{% include "modal_copied_success.html" %}
+{% include "modal_terms_condi.html" %}
+{% include "modal_terms_condi_log.html" %}
+{% include "modal_resolve_confirm.html" %}
+{% include "modal_editrp_success.html" %}
+{% include "modal_archive_report.html" %}
+
+{% endblock %}
+
+{% block scripts %}
+<!--ADD SCRIPTS HERE-->
+<script src="{% static 'js/form_controls.js' %}"></script>
+<script src="{% static 'js/table_status.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.23/dist/xlsx-style.full.min.js"></script>
+<!-- <script src="{% static 'js/filter.js' %}"></script> -->
+<script src="{% static 'js/preview.js' %}"></script>
+<!-- <script src="{% static 'js/pagination.js' %}"></script> -->
+<script src="{% static 'js/editing.js' %}"></script>
+<script src="{% static 'js/dropdown_filter.js' %}"></script>
+
+<script>
+    
+    
+    function updateUIElements() {
+        const editButton = document.getElementById('edit-button');
+        const resolveButtons = document.querySelectorAll('.resolve-button');
+        
+        // If no report is selected, hide the elements
+        if (!selectedReportIds) {
+            if (editButton) editButton.style.display = 'none';
+            resolveButtons.forEach(button => button.style.display = 'none');
+            return;
+        }
+    
+        // Find the selected row from either table
+        const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportIds}"]`);
+        
+        if (!selectedRow) {
+            console.log('Selected row not found');
+            return;
+        }
+    
+        // Get the status from the row's dataset
+        const isArchived = selectedRow.dataset.archive === 'true';
+        const isOngoing = selectedRow.dataset.status === 'Ongoing';
+        
+        // Show buttons only if report is ongoing AND not archived
+        const shouldShow = isOngoing && !isArchived;
+        
+        // Set display based on shouldShow condition
+        const displayMode = shouldShow ? 'block' : 'none';
+    
+        // Update butto n visibility
+        if (editButton) editButton.style.display = displayMode;
+        resolveButtons.forEach(button => button.style.display = displayMode);
+    }
+
+    viewButton.addEventListener('click', function (event) {
+        // Ensure exactly one row is selected
+        if (!selectedReportIds) {
+            console.log('No report selected. Preventing modal from opening.');
+            event.preventDefault();
+            return;
+        }
+
+        // Find the row with the selected report ID
+        const selectedRow = document.querySelector(`tr[data-report-id="${selectedReportIds}"]`);
+        
+        if (selectedRow) {
+            console.log('Selected row found:', selectedRow);
+            console.log('Selected report archive:',selectedRow.dataset.archive);
+            console.log('Selected report status:', selectedRow.dataset.status);
+            updateUIElements(); // Update UI elements based on selected row
+            populateModal(selectedRow);
+
+            // Show the modal
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        } else {
+            console.log('Selected row not found.');
+        }
+    });
+
+</script>
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Check if the report_added context variable is true
+        {% if report_added %}
+            const successModal = new bootstrap.Modal(document.getElementById('createrp-success-modal'));
+            successModal.show();
+        {% endif %}
+
+        // Handle the OK button click to redirect
+        const modalOkButton = document.getElementById('modal-ok-button');
+        modalOkButton.addEventListener('click', function () {
+            window.location.href = '{% url "reports" %}'; // Redirect to the reports page
+        });
+    });
+</script>
+
+<script>
+document.querySelectorAll('.r-check').forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+        const selectedReports = [];
+        document.querySelectorAll('.r-check:checked').forEach((checkedCheckbox) => {
+            selectedReports.push(checkedCheckbox.value);
+        });
+        console.log('Selected Report IDs:', selectedReports);
+    });
+});
+
+</script>
+
+<script>
+    var selectedReportIds = []; // Array to store multiple selected report IDs
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const reportTable = document.getElementById('reportTable');
+    const archiveButton = document.getElementById('archiveBtn');
+    const archiveModalElement = document.getElementById('archive-report-modal');
+    const archiveModal = new bootstrap.Modal(archiveModalElement);
+
+    // Function to update the state of the Archive button
+    function updateArchiveButtonState() {
+        if (selectedReportIds.length > 0) {
+            archiveButton.removeAttribute('disabled');
+            archiveButton.style.opacity = '1';
+        } else {
+            archiveButton.setAttribute('disabled', true);
+            archiveButton.style.opacity = '0.5';
+        }
+    }
+
+    // Click event listener for rows in the report table
+    document.querySelectorAll('.r-check').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const reportId = checkbox.value;
+
+            if (checkbox.checked) {
+                // Add the report ID to the array if the checkbox is checked
+                if (!selectedReportIds.includes(reportId)) {
+                    selectedReportIds.push(reportId);
+                }
+            } else {
+                // Remove the report ID from the array if the checkbox is unchecked
+                selectedReportIds = selectedReportIds.filter(id => id !== reportId);
+            }
+            updateArchiveButtonState();
+        });
+    });
+
+    // Click event for the Archive button to show the modal
+    archiveButton.addEventListener('click', function () {
+        if (selectedReportIds.length > 0) {
+            archiveModal.show();
+        }
+    });
+
+    // Event delegation for the Confirm button in the modal
+    archiveModalElement.addEventListener('click', function (event) {
+        if (event.target && event.target.id === 'confirmRemoveButton') {
+            if (selectedReportIds.length > 0) {
+                fetch('/archive-report/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `report_ids=${selectedReportIds.join(',')}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while archiving the reports.');
+                });
+            }
+        }
+    });
+});
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let activeTable;
+        const viewButton = document.querySelector('.btn-view');
+        const archiveButton = document.getElementById('archiveBtn');
+
+    
+        // Initialize DataTables with custom configuration
+        const reportTable = new DataTable('#reportsTable', {
+            responsive: false,
+            searching: true,  // Enable searching
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pagingType: 'full_numbers',
+            pageLength: 10,
+            info: false, 
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found",
+                paginate: {
+                    next: 'Next',
+                    previous: 'Previous'  
+                }
+            },
+            layout: {
+                topEnd: null,
+                bottomEnd: {
+                    paging: {
+                        buttons: 3
+                    }
+                }
+            },
+            drawCallback: function() {
+                document.querySelectorAll('#reportsTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+
+                selectedReportIds = [];
+                console.log("Report ID array after draw:", selectedReportIds);
+                archiveButton.setAttribute('disabled', true);
+                archiveButton.style.opacity = '0.5';
+                archiveButton.removeAttribute('data-report-ids');
+                console.log("Archive Disabled")
+                viewButton.setAttribute('disabled', true);
+                selectedCheckboxCount = 0;
+
+            }
+        });
+    
+        const archiveTable = new DataTable('#archivesTable', {
+            responsive: false,
+            searching: true,
+            lengthChange: false,
+            ordering: true,
+            paging: true,
+            pagingType: 'full_numbers',
+            pageLength: 10,
+            info: false,
+            columnDefs: [
+                { className: "dt-head-center", targets: "_all" },
+                { className: "dt-body-center", targets: "_all"},
+                { targets: "_all", orderable: false}
+
+            ],
+            language: {
+                emptyTable: "No data available",
+                zeroRecords: "No matching records found",
+                paginate: {
+                    next: 'Next',
+                    previous: 'Previous'  
+                }
+            },
+            layout: {
+                topEnd: null,
+                bottomEnd: {
+                    paging: {
+                        buttons: 3
+                    }
+                }
+            },
+            drawCallback: function() {
+                document.querySelectorAll('#archivesTable .form-check-input')
+                .forEach(checkbox => checkbox.checked = false);
+
+                selectedReportIds = [];
+                viewButton.setAttribute('disabled', true);
+                selectedCheckboxCount = 0;
+            }
+        });
+    
+        // Set initial active table
+        activeTable = reportTable;
+    
+        // Hide archive table initially
+        $('#archiveTable_wrapper').hide();
+
+        function updateArchiveButton() {
+            // First check if we're on the archive table
+            if (activeTable === archiveTable) {
+                archiveButton.style.display = 'none'; // Hide the button completely
+                return; // Exit the function early
+            }
+            
+            // Show the button since we're on the report table
+            archiveButton.style.display = 'inline-block';
+            
+            // Then handle the enable/disable state
+            if (selectedReportIds.length > 0) {
+                archiveButton.removeAttribute('disabled');
+                archiveButton.style.opacity = '1';
+                archiveButton.setAttribute('data-report-ids', selectedReportIds.join(','));
+            } else {
+                archiveButton.setAttribute('disabled', true);
+                archiveButton.style.opacity = '0.5';
+                archiveButton.removeAttribute('data-report-ids');
+            }
+        }
+
+        // Tab switching logic with filter reset
+        document.querySelectorAll('#reportTabs button').forEach((tab) => {
+            tab.addEventListener('click', function () {
+                const target = this.getAttribute('data-bs-target');
+                
+                if (target === '#reports') {
+                    $('#archiveTable_wrapper').hide();
+                    $('#reportTable_wrapper').show();
+                    activeTable = reportTable;
+                    
+                    // Clear checkboxes in archive table
+                    document.querySelectorAll('#archiveTable .r-check').forEach(checkbox => {
+                        checkbox.checked = false;
+                    document.querySelectorAll('.resolve-button, .btn-edit, .btn-archive').forEach(button => {
+                        button.style.display = 'block'; // Show buttons in the reports tab
+                    });
+                    viewButton.setAttribute('disabled', true); // Disable the view button
+                    selectedCheckboxCount = 0;
+            
+                    });
+                } else if (target === '#archives') {
+                    $('#reportTable_wrapper').hide();
+                    $('#archiveTable_wrapper').show();
+                    activeTable = archiveTable;
+                    
+                    // Clear checkboxes in report table
+                    document.querySelectorAll('#reportTable .r-check').forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                    viewButton.setAttribute('disabled', true); // Disable the view button
+                    selectedCheckboxCount = 0;
+                }
+        
+                // Reset the selected report ID and hidden input
+                selectedReportIds = [];
+                selectedReportId = null;
+                hiddenReportIdInput.value = '';
+                updateArchiveButton();
+                console.log("Report ID array after switching tabs:", selectedReportIds);
+                console.log("Selected Report ID after switching tabs:", selectedReportId);
+                console.log("Hidden Report ID after switching tabs:", hiddenReportIdInput.value);
+    
+                // Reset search input and filters for the new active table
+                searchInput.value = '';
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                const defaultDropdownItem = document.querySelector('.dropdown-item[data-filter="All"]');
+                if (defaultDropdownItem) defaultDropdownItem.classList.add('active');
+                
+                // Clear any existing filters and searches on the new active table
+                activeTable.search('').order([]).draw();
+            });
+        });
+    
+        // Custom filtering functionality
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const searchInput = document.getElementById('searchInput');
+    
+        // Function to apply filter based on criteria
+        function applyFilter(filterCriteria) {
+            activeTable.search('').columns().search('').draw(); // Clear existing filters
+    
+            if (filterCriteria === 'Latest') {
+                activeTable
+                    .order([[3, 'desc'], [4, 'desc']])  // Sort by date desc, then time desc
+                    .draw();
+            } else if (filterCriteria === 'Oldest') {
+                activeTable
+                    .order([[3, 'asc'], [4, 'asc']])   // Sort by date asc, then time asc
+                    .draw();
+            } else if (filterCriteria === 'Ongoing') {
+                activeTable.column(5).search('Ongoing').draw();
+            } else if (filterCriteria === 'Case Resolved') {
+                activeTable.column(5).search('Case Closed').draw();
+            } else {
+                activeTable.order([]).draw();
+            }
+        }
+    
+        // Event listener for dropdown filter
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                const filterCriteria = e.target.textContent.trim();
+                
+                // Update active state in dropdown
+                dropdownItems.forEach(item => item.classList.remove('active'));
+                e.target.classList.add('active');
+    
+                applyFilter(filterCriteria);
+            });
+        });
+    
+        // Event listener for search input
+        searchInput.addEventListener('input', function () {
+            activeTable.search(this.value).draw();
+        });
+    
+        // Initialize with default view
+        reportTable.draw();
+        archiveTable.draw();
+    });
+</script>
+
+
+<script>
+
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdown = document.getElementById("yearDropdown");
+
+    // Function to fetch unique years from the backend
+    async function fetchUniqueYears() {
+        try {
+            const response = await fetch('/export-years/');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.years;
+        } catch (error) {
+            console.error('Error fetching unique years:', error);
+            return [];
+        }
+    }
+
+    // Function to populate the dropdown with fetched years
+    async function populateYears() {
+        const years = await fetchUniqueYears();
+        dropdown.innerHTML = ""; // Clear existing items
+
+        if (years.length === 0) {
+            const listItem = document.createElement("li");
+            listItem.textContent = "No available years";
+            dropdown.appendChild(listItem);
+            return;
+        }
+
+        years.forEach(year => {
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `
+                <a class="dropdown-item" href="#" onclick="handleExport(${year})">
+                    Export ${year} Reports
+                </a>
+            `;
+            dropdown.appendChild(listItem);
+        });
+    }
+
+    // Call populateYears on page load
+    populateYears();
+});
+
+async function handleExport(year) {
+    try {
+        const response = await fetch(`/export-initial-report/?value=${year}`);
+        if (!response.ok) {
+            console.error('Download failed:', response.statusText);
+            return;
+        }
+
+        // Get the filename from the Content-Disposition header if available
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition
+            ? contentDisposition.split('filename=')[1].replace(/["']/g, '')
+            : `report-${year}.pdf`;
+
+        // Create a blob from the response
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary link and trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL
+        window.URL.revokeObjectURL(url);
+
+        // Validate download success before reloading
+        const validateDownload = () => {
+            return new Promise((resolve) => {
+                // Give time for the download to start
+                setTimeout(() => {
+                    // You could add additional validation here if needed
+                    resolve(true);
+                }, 1000);
+            });
+        };
+
+        // Only reload after successful validation
+        const downloadSuccessful = await validateDownload();
+        if (downloadSuccessful) {
+            window.location.reload();
+        }
+    } catch (error) {
+        console.error('Error during download:', error);
+    }
+}
+
+// Initialize on window load
+window.onload = populateYears;
+</script>
+
+
+
+
+<script>
+document.getElementById('searchInput').addEventListener('input', function (e) {
+    // Allow only alphanumeric characters, '.', '-', '/', and ':'
+    this.value = this.value.replace(/[^a-zA-Z0-9.\-\/:]/g, '');
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const editButton = document.querySelector('.edit-form .btn-edit');
+    const formInputs = document.querySelectorAll('#report-preview-form .form-control, #report-preview-form .form-select');
+    const resolveButton = document.querySelector('.resolve-button');
+    const saveButton = document.querySelector('.save-button'); 
+    const form = document.getElementById('report-preview-form');
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const statusText = document.getElementById('status-text-{{ report.id }}');
+    const previewModal = document.getElementById('previewModal'); 
+    const closeButton = document.getElementById('close-button'); 
+
+    function checkStatusAndDisableEdit() {
+    const isCaseClosed = statusText && statusText.textContent.trim() === 'Case Closed';
+
+    if (isCaseClosed) {
+        // Hide the Edit Button
+        editButton.style.display = 'none';
+
+        // Disable and make the Resolve Button semi-transparent
+        resolveButton.disabled = true;
+        resolveButton.style.opacity = '0.5';
+
+        // Disable all form inputs
+        formInputs.forEach(input => {
+            input.disabled = true;
+            input.readOnly = true;
+        });
+    }
+}
+
+
+
+checkStatusAndDisableEdit();
+// Add event listener to the edit button
+editButton.addEventListener('click', function() {
+    if (!resolveButton.disabled) {
+        formInputs.forEach(input => {
+            input.disabled = !input.disabled;
+            input.readOnly = !input.readOnly;
+        });
+
+        const icon = editButton.querySelector('i');
+        const text = editButton.querySelector('span'); 
+
+        const isEditable = !formInputs[0].disabled; // Check if form inputs are editable
+
+        // Fields to toggle visibility for (the original fields you mentioned)
+        const originalFields = [
+            document.getElementById('involved'),
+            document.getElementById('alarm-dec'),
+            document.getElementById('funder-dec'),
+            document.getElementById('fout-dec'),
+            document.getElementById('ground'),
+            document.getElementById('safety'),
+            document.getElementById('sender')
+        ];
+
+        // Search fields to toggle visibility for (ending with -search)
+        const searchFields = [
+            document.getElementById('involved-search'),
+            document.getElementById('alarm-dec-search'),
+            document.getElementById('funder-dec-search'),
+            document.getElementById('fout-dec-search'),
+            document.getElementById('ground-search'),
+            document.getElementById('safety-search'),
+            document.getElementById('sender-search')
+        ];
+
+        // Check if all original fields and search fields are present in the DOM
+        originalFields.forEach((field, index) => {
+            if (field === null) {
+                console.error(`Original field with ID ${originalFields[index].id} not found.`);
+            }
+        });
+        searchFields.forEach((field, index) => {
+            if (field === null) {
+                console.error(`Search field with ID ${searchFields[index].id} not found.`);
+            }
+        });
+
+        // When entering edit mode, clear 'None' values in all fields
+        if (isEditable) {
+            clearNoneValues(); // This function will clear the 'None' values
+        }
+
+        // When editing, pass the current value of original fields to the search fields
+        originalFields.forEach((originalField, index) => {
+            if (originalField && searchFields[index]) {
+                searchFields[index].value = originalField.value; // Set search field value to original field's value
+            }
+        });
+
+        // Toggle visibility of search fields and original fields
+        searchFields.forEach(searchField => {
+            if (searchField) {
+                searchField.style.display = isEditable ? 'block' : 'none'; // Show or hide search fields based on edit mode
+            }
+        });
+
+        originalFields.forEach(originalField => {
+            if (originalField) {
+                originalField.style.display = isEditable ? 'none' : 'block'; // Hide or show original fields based on edit mode
+            }
+        });
+
+        // Change edit button appearance when in edit mode
+        if (isEditable) {
+            icon.style.display = 'none'; 
+            text.textContent = 'Editing';
+
+            // Change appearance of edit button
+            editButton.style.backgroundColor = 'white';
+            editButton.style.borderColor = '#ED7027';
+            editButton.style.color = '#ED7027';
+            text.style.fontWeight = '500'; // Set text weight to 500
+            editButton.disabled = true; // Disable the button
+        } else {
+            icon.style.display = '';
+            text.textContent = 'Edit';
+        }
+
+        // Show or hide save button based on edit mode
+        saveButton.style.display = isEditable ? 'inline-block' : 'none';
+    }
+});
+// New function to clear 'None' values from all fields
+function clearNoneValues() {
+    const allFields = [
+        document.getElementById('involved'),
+        document.getElementById('alarm-dec'),
+        document.getElementById('funder-dec'),
+        document.getElementById('fout-dec'),
+        document.getElementById('ground'),
+        document.getElementById('safety'),
+        document.getElementById('sender'),
+        document.getElementById('loc'),
+        document.getElementById('team'),
+        document.getElementById('detect'),
+        document.getElementById('date'),
+        document.getElementById('owner'),
+        document.getElementById('alarm'),
+        document.getElementById('time-arrive'),
+        document.getElementById('time-under'),
+        document.getElementById('date-under'),
+        document.getElementById('time-out'),
+        document.getElementById('date-out'),
+        document.getElementById('damage'),
+        document.getElementById('fatality'),
+        document.getElementById('injured'),
+        document.getElementById('affected'),
+        document.getElementById('establishment'),
+        document.getElementById('truck'),
+        document.getElementById('ground-num'),
+        document.getElementById('safety-num'),
+        document.getElementById('sender-num'),
+        document.getElementById('proof'),
+        document.getElementById('modal-proof')
+    ];
+
+    // Loop through each field and clear 'None' value
+    allFields.forEach(field => {
+        if (field && field.value === 'None') {
+            field.value = ''; // Clear the value if it is 'None'
+        }
+    });
+}
+
+
+
+
+
+// Define the function to clear error messages
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll('.is-invalid');
+    errorMessages.forEach(function (field) {
+        field.classList.remove('is-invalid');
+    });
+
+    const errorText = document.querySelectorAll('small');
+    errorText.forEach(function (msg) {
+        msg.remove();
+    });
+}
+
+// Define the function to show error messages
+function showErrorMessage(field, message) {
+    const errorElement = document.createElement('small');
+    errorElement.textContent = message;
+    errorElement.style.color = 'red';
+    errorElement.style.fontSize = '0.8rem';
+    field.parentNode.appendChild(errorElement);
+    field.classList.add('is-invalid');
+}
+
+// Add event listener for the save button
+saveButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    saveButton.disabled = true;
+
+    const locationField = document.getElementById('loc');
+    const detectField = document.getElementById('detect');
+    const dateField = document.getElementById('date');
+    const ownerField = document.getElementById('owner');
+    const alarmDecField = document.getElementById('alarm-dec');
+    const funderDecField = document.getElementById('funder-dec');
+    const foutDecField = document.getElementById('fout-dec');
+    const dateUnderField = document.getElementById('date-under'); // Date of Fire Under Control
+    const dateOutField = document.getElementById('date-out');
+
+    let valid = true;
+    clearErrorMessages();
+
+    // Validate required fields
+    if (!locationField.value.trim()) {
+        showErrorMessage(locationField, 'Location is required.');
+        valid = false;
+    }
+
+    if (!detectField.value) {
+        showErrorMessage(detectField, 'Time Reported is required.');
+        valid = false;
+    }
+
+    if (!dateField.value) {
+        showErrorMessage(dateField, 'Date is required.');
+        valid = false;
+    }
+
+    if (!valid) {
+        return;
+    }
+
+    const reportId = document.getElementById('report-id').value;
+
+    if (!reportId) {
+        console.error('Report ID is missing!');
+        alert('Report ID is missing. Please try again.');
+        return;
+    }
+
+    const formData = new FormData(form);
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Handle numeric fields: Default to 0 if empty
+    const numericFields = ['damage', 'fatality', 'injured', 'affected', 'establishment', 'truck'];
+    numericFields.forEach(field => {
+        const fieldElement = document.getElementById(field);
+        if (!fieldElement.value.trim()) {
+            formData.set(field, '0'); // Default to "0"
+        }
+    });
+
+    const optionalFields = ['owner', 'alarm-dec', 'funder-dec', 'fout-dec'];
+    optionalFields.forEach(field => {
+        const fieldElement = document.getElementById(field);
+        if (!fieldElement.value.trim()) {
+            formData.set(field, 'None'); // Default to "None"
+        }
+    });
+
+    const dateFields = ['date-under', 'date-out'];
+    dateFields.forEach(field => {
+        const fieldElement = document.getElementById(field);
+        if (!fieldElement.value.trim()) {
+            formData.set(field, ''); // Default to "None" for empty date fields
+        }
+    });
+
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+
+    fetch(`/update-report/${reportId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrfToken,
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    console.error('Server error:', err.message);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${err.message}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+            console.log('Report updated successfully.');
+
+            // Close the report preview modal
+            const reportPreviewModalEl = document.getElementById('report-preview-modal');
+            const reportPreviewModal = bootstrap.Modal.getInstance(reportPreviewModalEl);
+            if (reportPreviewModal) {
+                reportPreviewModal.hide();
+            }
+
+            sessionStorage.setItem('reportUpdatedSuccessfully', 'true');
+
+
+            // Refresh the page
+            window.location.reload(); // Refresh the page to load the updated content
+        } else {
+            console.error('Error updating report:', data.message);
+            alert('Error updating report: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        alert('An error occurred. Please try again.');
+    })
+    .finally(() => {
+            saveButton.disabled = false; // Re-enable the button after the request is complete
+        });
+});
+
+// Code to show the success modal after page reload
+window.addEventListener('load', () => {
+    const successModalEl = document.getElementById('editrp-success-modal');
+    if (successModalEl && sessionStorage.getItem('reportUpdatedSuccessfully') === 'true') {
+        const successModal = new bootstrap.Modal(successModalEl);
+        successModal.show();
+
+        // After showing the success modal, remove the flag to prevent it from showing again
+        sessionStorage.removeItem('reportUpdatedSuccessfully');
+    }
+});
+
+
+
+    });
+    </script>
+    
+
+
+
+
+
+{% endblock %}

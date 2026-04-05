@@ -1,0 +1,253 @@
+{% extends "res_sidebar.html" %}
+{% load static %}
+{% block title %} True the Fire {% endblock %}
+
+{% block content %}
+<header>
+    <div class="header-content">
+        <div class="header-sb">
+            <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="header-nav">
+            <span class="navigation-title">
+                <h1>Analytics</h1>
+            </span>
+            <ul class="navigation-list">
+                <div class="dropdown">
+                    <button class="btn-hotline dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        Hotline
+                    </button>
+                    <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
+                        <li class="dropdown-item"><span>Aplaya</span> 0905-566-6329</li>
+                        <li class="dropdown-item"><span>Balibago</span> 0945-757-8480</li>
+                        <li class="dropdown-item"><span>Caingin</span> 0927-950-0416</li>
+                        <li class="dropdown-item"><span>Dila</span> 0915-284-4003</li>
+                        <li class="dropdown-item"><span>Dita</span> 0949-766-6068</li>
+                        <li class="dropdown-item"><span>Don Jose</span> 0947-631-5504</li>
+                        <li class="dropdown-item"><span>Ibaba</span> 0923-744-0740</li>
+                        <li class="dropdown-item"><span>Kanluran</span> 0923-089-2694</li>
+                        <li class="dropdown-item"><span>Labas</span> 0923-089-2347</li>
+                        <li class="dropdown-item"><span>Macabling</span> 0915-945-1534</li>
+                        <li class="dropdown-item"><span>Malitlit</span> 0975-067-3385</li>
+                        <li class="dropdown-item"><span>Malusak</span> 0908-775-2302</li>
+                        <li class="dropdown-item"><span>Market Area</span> 0923-744-0847</li>
+                        <li class="dropdown-item"><span>Pooc</span> 0906-143-0029</li>
+                        <li class="dropdown-item"><span>P. Sta. Cruz</span> 502-0896</li>
+                        <li class="dropdown-item"><span>Sto. Domingo</span> 0919-932-9353</li>
+                        <li class="dropdown-item"><span>Sinalhan</span> 0943-129-7131</li>
+                        <li class="dropdown-item"><span>Tagapo</span> 0923-406-2704</li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn-profile dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">
+                            <i class="bi bi-person-circle"></i>
+                        </span>
+                        <div class="drop-user">{{ user.name }}</div>
+                    </button>
+                    <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#terms-condition-modal">Terms & Condition</button></li>
+                        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
+                    </ul>
+                </div>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="mn-content-area">
+        <div class="analyses-box">
+        <!--4 ANALYSES BOX START-->
+
+        <div class="reported-card">
+            <div class="status">
+                <div class="stat-progress">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="prog-text">
+                        <p>Total: {{ temp_reports_this_month }}</p>
+                    </div>
+                </div>
+                <div class="stat-body">
+                    <div class="stat-info">
+                        <h4>{{ temp_reports_this_month }}</h4>
+                    </div>
+                    <div class="stat-label">
+                        <h6>Detected</h6>
+                        <h5>THIS MONTH</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="responded-card">
+            <div class="status">
+                <div class="stat-progress">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="prog-text">
+                        <p>Total: {{ responded_this_month }}</p>
+                    </div>
+                </div>
+                <div class="stat-body">
+                    <div class="stat-info">
+                        <h4>{{ responded_this_month }}</h4>
+                    </div>
+                    <div class="stat-label">
+                        <h6>Responded</h6>
+                        <h5>THIS MONTH</h5>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+            <div class="total-responded-card">
+                <div class="status">
+                    <div class="stat-progress">
+                        <svg>
+                            <circle cx="38" cy="38"
+                            r="36"></circle>
+                        </svg>
+                        <div class="prog-text">
+                            <p>Total: {{ responded_this_year }}</p>
+                        </div>
+                    </div>
+                    <div class="stat-body">
+                        <div class="stat-info">
+                            <h4>{{ responded_this_year }}</h4>
+                        </div>
+                        <div class="stat-label">
+                            <h6>Responded</h6>
+                            <h5>THIS YEAR</h5>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="chart-detect-box">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2>INCIDENTS</h2>
+                    <div class="ch-options">
+                        <button class="btn btn-prev-summary btn-sm" data-bs-toggle="modal" data-bs-target="#preview-incident-summary">
+                            <i class="bi bi-file-earmark-break"></i>
+                            <span>Preview</span>
+                        </button>
+                        <div class="select-filter">
+                            <select class="form-select" aria-label="Default select example" onchange="updateChart(this.value)">
+                                <option value="yearly" selected>Yearly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="chart-graph">
+<!--CHART START-->
+                    <div class="chart">
+                            <ul class="incident-count">
+                                <li><span>100</span></li>
+                                <li><span>75</span></li>
+                                <li><span>50</span></li>
+                                <li><span>25</span></li>
+                                <li><span>0</span></li>
+                            </ul>
+                            <ul class="incident-bars">
+                            </ul>
+                    </div>
+<!--CHART END-->
+                </div>
+            </div>
+            <div class="detect-card">
+                    <div class="ld-table">
+                        <table>
+                                <thead>
+                                    <tr>
+                                        <th><h2>LATEST DETECTION</h2></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for report in latest_reports %}
+                                    <tr 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#latest-detection-{{ report.id }}"
+                                        data-location="{{ report.where }}"
+                                        data-date="{{ report.date }}"
+                                        data-time="{{ report.time_detected }}"
+                                        data-proof="{{ report.proof }}"
+                                        data-status="{{ report.status }}"
+                                        data-report-id="{{ report.id }}"
+                                    >
+                                        <td class="ld-loc">{{ report.where }}</td>
+                                        <td class="ld-time">{{ report.time_detected }}</td>
+                                        <td class="ld-stat">{{ report.status }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5">No detections available.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>                  
+                                
+                        </table>
+                    </div>
+            </div>
+</main>
+{% include "modal_change_password.html" %}
+{% include "modal_forgot_success.html" %}
+{% include "modal_preview_summary.html" %}
+{% include "modal_latest_detection.html" %}
+{% include "modal_terms_condi.html" %}
+{% endblock %}
+
+{% block scripts %}
+<!-- ADD SCRIPTS HERE -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{%static 'js/chart_analytics.js'%}"></script>
+{% endblock %}
+
+<script>
+    // Add a click event listener to the table body
+    document.querySelector('#reports-table tbody').addEventListener('click', function (event) {
+        // Get the clicked row
+        const clickedRow = event.target.closest('tr');
+        
+        // Ensure a valid row is clicked
+        if (clickedRow && clickedRow.dataset.location) {
+            // Get the data attributes from the clicked row
+            const location = clickedRow.dataset.location;
+            const date = clickedRow.dataset.date;
+            const time = clickedRow.dataset.time;
+            const proof = clickedRow.dataset.proof;
+
+            // Populate the spans and proof image
+            document.getElementById('detection-location').textContent = location;
+            document.getElementById('detection-date').textContent = date;
+            document.getElementById('detection-time').textContent = time;
+
+            // Update the proof image source
+            if (proof) {
+                document.getElementById('detect-proof').src = proof;
+                document.getElementById('detect-proof').alt = "Proof Image";
+            } else {
+                document.getElementById('detect-proof').src = "";
+                document.getElementById('detect-proof').alt = "No proof available.";
+            }
+        }
+    });
+</script>
+
+
+

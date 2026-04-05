@@ -1,0 +1,143 @@
+{% extends "res_sidebar.html" %}
+{% load static %}
+{% block title %} True the Fire {% endblock %}
+
+{% block content %}
+<header>
+  <div class="header-content">
+      <div class="header-sb">
+          <div class="ham-menu" id="sidebar-toggle" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+      </div>
+      <div class="header-nav">
+          <span class="navigation-title">
+              <h1>FAQs</h1>
+          </span>
+          <ul class="navigation-list">
+              <div class="dropdown">
+                  <button class="btn-hotline dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                      Hotline
+                  </button>
+                  <ul class="dropdown-menu drop-hotline" aria-labelledby="dropdownMenu2">
+                    <li class="dropdown-item"><span>Aplaya</span> 0905-566-6329</li>
+                    <li class="dropdown-item"><span>Balibago</span> 0945-757-8480</li>
+                    <li class="dropdown-item"><span>Caingin</span> 0927-950-0416</li>
+                    <li class="dropdown-item"><span>Dila</span> 0915-284-4003</li>
+                    <li class="dropdown-item"><span>Dita</span> 0949-766-6068</li>
+                    <li class="dropdown-item"><span>Don Jose</span> 0947-631-5504</li>
+                    <li class="dropdown-item"><span>Ibaba</span> 0923-744-0740</li>
+                    <li class="dropdown-item"><span>Kanluran</span> 0923-089-2694</li>
+                    <li class="dropdown-item"><span>Labas</span> 0923-089-2347</li>
+                    <li class="dropdown-item"><span>Macabling</span> 0915-945-1534</li>
+                    <li class="dropdown-item"><span>Malitlit</span> 0975-067-3385</li>
+                    <li class="dropdown-item"><span>Malusak</span> 0908-775-2302</li>
+                    <li class="dropdown-item"><span>Market Area</span> 0923-744-0847</li>
+                    <li class="dropdown-item"><span>Pooc</span> 0906-143-0029</li>
+                    <li class="dropdown-item"><span>P. Sta. Cruz</span> 502-0896</li>
+                    <li class="dropdown-item"><span>Sto. Domingo</span> 0919-932-9353</li>
+                    <li class="dropdown-item"><span>Sinalhan</span> 0943-129-7131</li>
+                    <li class="dropdown-item"><span>Tagapo</span> 0923-406-2704</li>
+                </ul>
+              </div>
+              <div class="dropdown">
+                  <button class="btn-profile dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                      <span class="icon">
+                          <i class="bi bi-person-circle"></i>
+                      </span>
+                      <div class="drop-user">{{ user.name }}</div>
+                  </button>
+                  <ul class="dropdown-menu drop-profile" aria-labelledby="dropdownMenu2">
+                    <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#terms-condition-modal">Terms & Condition</button></li>
+                    <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#change-pass-modal">Change Password</button></li>
+                </ul>
+              </div>
+          </ul>
+      </div>
+  </div>
+</header>
+
+<main>
+    <div class="mn-content-area">
+        <div class="faq-box">
+            <div class="faq-header">
+                <img src="{% static 'images/faq_header.png' %}" alt="">
+            </div>
+
+            <div class="faq-body">
+                <div class="accordion" id="faq-accordion">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                          1. General Information
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faq-accordion">
+                        <div class="accordion-body">
+                          This web application is designed to detect fires through video feed analysis. It can alert users to potential fire hazards in real time and allows for reporting fire incidents. The system aims to enhance fire safety by providing timely detection and response.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          2. Legal and Compliance
+                        </button>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faq-accordion">
+                        <div class="accordion-body">
+                          The data collected by this application, including video feeds and incident reports, is used solely for fire detection and reporting purposes. All data is handled in compliance with applicable data protection laws to ensure user privacy and security.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          3.What should I do if I encounter an error during registration?
+                        </button>
+                      </h2>
+                      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faq-accordion">
+                        <div class="accordion-body">
+                          If you encounter an error during registration, please check if all required fields are filled in correctly. Ensure that your email is valid and that you have selected an appropriate role. If the issue persists, contact support with a screenshot of the error message.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            4. Usage and Functionality
+                        </button>
+                      </h2>
+                      <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faq-accordion">
+                        <div class="accordion-body">
+                          To submit a fire incident report, navigate to the "Submit Report" section, fill in the required details such as location, date, time, and any supporting evidence (e.g., images or videos), and click submit. You will receive a confirmation once your report is successfully submitted.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            5. Security and Privacy
+                        </button>
+                      </h2>
+                      <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faq-accordion">
+                        <div class="accordion-body">
+                          The application implements industry-standard security measures to protect your data. All communication between your device and the server is encrypted, and sensitive information such as passwords is securely hashed. Additionally, access to user data is restricted based on user roles and permissions.
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% include "modal_terms_condi.html" %}
+{% include "modal_change_password.html" %}
+{% include "modal_forgot_success.html" %}
+{% endblock %}
+
+{% block scripts %}
+<!-- ADD SCRIPTS HERE -->
+{% endblock %}
